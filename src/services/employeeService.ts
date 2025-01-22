@@ -245,6 +245,11 @@ export class EmployeeService {
       }
     }
   }
+
+  public async modify(id: number, data: RequestEmployeeRegister): Promise<IServiceResponse> {
+    return { result: true };
+  }
+
   // 직원 Email 중복 체크
   public async isUniqueEmail(email: string): Promise<IServiceResponse> {
     try {

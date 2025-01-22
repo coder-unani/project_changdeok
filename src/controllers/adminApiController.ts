@@ -58,4 +58,41 @@ export class AdminApiController {
       res.status(500).send('Internal Server Error');
     }
   };
+
+  public async modify(req: Request, res: Response): Promise<void> {
+    try {
+      // 직원 ID 추출
+      const employeeId = parseInt(req.params.employeeId);
+
+      // ID가 숫자가 아닌 경우 에러 처리
+      if (isNaN(employeeId)) {
+        res.status(400).send('Bad Request');
+        return;
+      }
+
+      // 요청 데이터
+      const requestData = req.body;
+
+      // 직원 정보 수정 처리
+      const employeeService = new EmployeeService();
+      const result = await employeeService.modify(employeeId, requestData);
+
+      // 수정 실패 처리
+      if (!result.result && result.code === 'FAIL_VALIDATION') {
+        res.status(400).send(result);
+        return;
+
+      } else if (!result.result) {
+        res.status(500).send(result);
+        return;
+      }
+
+      // 수정 성공시 200 응답
+      res.status(200).send(result);
+
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  }
 }
