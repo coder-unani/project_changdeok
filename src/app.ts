@@ -3,7 +3,6 @@ import path from 'path';
 import apiRouter from './routes/apiRoutes';
 import adminRouter from './routes/adminRoutes';
 
-
 const app: Application = express();
 const EXPRESS_PORT: number = 3000;
 
