@@ -37,6 +37,6 @@ router.patch('/admin/employee/:employeeId/modify', (req: Request, res: Response)
     res.status(500).send('Internal Server Error');
 
   }
-}
+});
 
 export default router;
