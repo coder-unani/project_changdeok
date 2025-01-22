@@ -1,0 +1,40 @@
+{
+  "name": "express_base",
+  "version": "1.0.0",
+  "main": "src/app.ts",
+  "scripts": {
+    "dev": "concurrently \"nodemon\" \"npm run sass\"",
+    "build": "tsc && npm run copy-files",
+    "start": "node dist/app.js",
+    "sass": "sass --watch src/styles:public/css",
+    "copy-files": "cp -R src/views dist/views && cp -R public dist/static"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://"
+  },
+  "author": "coder-unani",
+  "license": "SEE LICENSE IN LICENSE.txt",
+  "description": "",
+  "devDependencies": {
+    "@types/ejs": "^3.1.5",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.7",
+    "concurrently": "^9.1.2",
+    "css-loader": "^7.1.2",
+    "nodemon": "^3.1.9",
+    "sass": "^1.83.4",
+    "sass-loader": "^16.0.4",
+    "style-loader": "^4.0.0",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.2.1",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.1",
+    "prisma": "^6.2.1"
+  }
+}

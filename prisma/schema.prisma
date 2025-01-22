@@ -1,0 +1,109 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/**
+  * Employee (직원)
+  * - id: ID (자동 증가)
+  * - email: 이메일 (고유)
+  * - name: 이름
+  * - position: 직급
+  * - description: 설명
+  * - phone: 전화번호
+  * - mobile: 휴대폰번호
+  * - hireDate: 고용일
+  * - fireDate: 퇴사일
+  * - birthDate: 생년월일
+  * - photoUrl: 사진 (이미지 URL)
+  * - isActivated: 활성화 여부
+  * - isDeleted: 삭제 여부
+  * - createdAt: 생성시간 (자동 기록)
+  * - updatedAt: 업데이트시간 (자동 기록)
+ **/
+model Employee {
+  id          Int @id @default(autoincrement())
+  email       String @unique
+  name        String
+  password    String
+  position    String?
+  description String?
+  phone       String?
+  mobile      String?
+  address     String?
+  hireDate    DateTime?
+  fireDate    DateTime?
+  birthDate   DateTime?
+  photoUrl    String?
+  isActivated Boolean @default(true)
+  isDeleted   Boolean @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  permissionMaps EmployeePermissionMap[]
+  grantedPermissions EmployeePermissionMap[] @relation("grantedBy")
+
+  @@map("orb_employee")
+}
+
+/**
+  * Permission (권한)
+  * - id: ID (자동 증가)
+  * - title: 권한 명칭
+  * - description: 설명
+  * - isWrite: 쓰기 권한 여부
+  * - isRead: 읽기 권한 여부
+  * - isAdmin: 관리자 권한 여부
+  * - createdAt: 생성시간 (자동 기록)
+  * - updatedAt: 업데이트시간 (자동 기록)
+ **/
+model Permission {
+  id Int @id @default(autoincrement())
+  title String
+  description String?
+  isWrite Boolean @default(false)
+  isRead Boolean @default(false)
+  isAdmin Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  permissionMaps EmployeePermissionMap[]
+
+  @@map("orb_permission")
+}
+
+/**
+  * EmployeePermissionMap (직원-권한 매핑)
+  * - id: ID (자동 증가)
+  * - employeeId: 직원 ID
+  * - permissionId: 권한 ID
+  * - grantedAt: 부여 시간
+  * - grantedById: 부여자 ID
+  * - createdAt: 생성시간 (자동 기록)
+  * - updatedAt: 업데이트시간 (자동 기록)
+ **/
+model EmployeePermissionMap {
+  id Int @id @default(autoincrement())
+  employeeId Int
+  permissionId Int
+  grantedAt DateTime
+  grantedById Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  employee Employee @relation(fields: [employeeId], references: [id])
+  permission Permission @relation(fields: [permissionId], references: [id])
+  grantedBy Employee @relation("grantedBy", fields: [grantedById], references: [id])
+
+  @@map("orb_employee_permission_map")
+}
