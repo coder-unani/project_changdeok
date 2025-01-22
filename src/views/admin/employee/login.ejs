@@ -27,11 +27,11 @@
   </form>
 
   <script>
-    document.querySelector('#formAdminLogin').addEventListener('submit', async (e) => {
+    document.getElementById('formAdminLogin').addEventListener('submit', async (e) => {
       e.preventDefault();
 
       // 폼 데이터 수집
-      const formData = new FormData(this);
+      const formData = new FormData(e.target);
 
       // JSON 변환
       const data = {};
