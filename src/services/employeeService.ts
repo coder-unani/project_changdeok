@@ -1,10 +1,10 @@
-import { RequestEmployeeRegister, RequestEmployeeLogin } from "types/admin/request";
 import { PrismaClient } from '@prisma/client';
-import { validateEmail, validatePassword, validatePhone, validateDate } from "../utils/validate";
-import { IServiceResponse } from "../types/admin/response";
-import { IEmployee } from "../types/admin/employee";
+import { validateEmail, validatePassword, validatePhone, validateDate } from "../utils/validator";
+import { IServiceResponse } from "../types/backend/response";
+import { IEmployee, IEmployeeService } from "../types/backend/employee";
+import { RequestEmployeeRegister, RequestEmployeeUpdate, RequestEmployeeLogin } from "types/backend/request";
 
-export class EmployeeService {
+export class EmployeeService implements IEmployeeService {
 
   private prisma: PrismaClient;
 
@@ -13,7 +13,7 @@ export class EmployeeService {
   }
 
   // 직원 등록
-  public async reqister(data: RequestEmployeeRegister): Promise<IServiceResponse> {
+  public async create(data: RequestEmployeeRegister): Promise<IServiceResponse> {
     // 이메일 유효성 검사
     const validatedEmail = validateEmail(data.email);
     if (!validatedEmail.result) {
@@ -92,9 +92,9 @@ export class EmployeeService {
     }
     
     // 이메일 중복 체크
-    const uniqueEmail = await this.isUniqueEmail(data.email);
-    if (!uniqueEmail.result) {
-      return uniqueEmail;
+    const isUniqueEmail = await this.isUniqueEmail(data.email);
+    if (!isUniqueEmail.result) {
+      return isUniqueEmail;
     }
 
     // 직원 등록
@@ -116,6 +116,9 @@ export class EmployeeService {
         }
       });
 
+      // 성공
+      return { result: true };
+
     } catch (error) {
       console.error(error);
       return {
@@ -125,9 +128,204 @@ export class EmployeeService {
       }
 
     }
-    
-    // 성공
-    return { result: true };
+  }
+
+  public async read(id: number): Promise<IServiceResponse<IEmployee>> {
+    // 직원 조회
+    try {
+      const result = await this.prisma.employee.findUnique({
+        where: {
+          id: id
+        }
+      });
+
+      // 조회 실패
+      if (!result) {
+        return {
+          result: false,
+          code: 'FAIL_VALIDATION',
+          message: '직원을 찾을 수 없습니다.'
+        }
+      }
+
+      // 반환할 직원 정보
+      const employee: IEmployee = {
+        id: result.id,
+        email: result.email,
+        name: result.name,
+        position: result.position,
+        description: result.description,
+        phone: result.phone,
+        mobile: result.mobile,
+        address: result.address,
+        hireDate: result.hireDate?.toISOString(),
+        birthDate: result.birthDate?.toISOString(),
+        fireDate: result.fireDate?.toISOString()
+      };
+
+      // 성공
+      return { 
+        result: true,
+        data: employee
+      };
+
+    } catch (error) {
+      console.error(error);
+      return {
+        result: false,
+        code: 'FAIL_SERVER',
+        message: 'Internal Server Error'
+      }
+    }
+  }
+
+  public async update(id: number, data: RequestEmployeeUpdate): Promise<IServiceResponse> {
+    // Employee 와 다른 데이터만 수정
+
+    // 직원 정보 조회
+    const employee = await this.read(id);
+
+    // 직원 정보가 없는 경우 에러
+    if (!employee.result) {
+      return {
+        result: false,
+        code: 'FAIL_VALIDATION',
+        message: '직원을 찾을 수 없습니다.'
+      };
+    }
+
+    // 수정할 데이터가 없는 경우 에러
+    if (!data) {
+      return {
+        result: false,
+        code: 'FAIL_VALIDATION',
+        message: '수정할 데이터가 없습니다.'
+      };
+    }
+
+    // 전화번호가 있다면 유효성 검사
+    if (data.phone) {
+      const validatedPhone = validatePhone(data.phone);
+      if (!validatedPhone.result) {
+        return {
+          result: false,
+          code: 'FAIL_VALIDATION',
+          message: validatedPhone.message
+        }
+      }
+    }
+
+    // 휴대폰 번호가 있다면 유효성 검사
+    if (data.mobile) {
+      const validatedMobile = validatePhone(data.mobile);
+      if (!validatedMobile.result) {
+        return {
+          result: false,
+          code: 'FAIL_VALIDATION',
+          message: validatedMobile.message
+        }
+      }
+    }
+
+    // 고용일이 있다면 날짜 형식 체크
+    if (data.hireDate) {
+      const validatedHireDate = validateDate(data.hireDate);
+      if (!validatedHireDate.result) {
+        return {
+          result: false,
+          code: 'FAIL_VALIDATION',
+          message: validatedHireDate.message
+        }
+      }
+    }
+
+    // 생년월일이 있다면 날짜 형식 체크
+    if (data.birthDate) {
+      const validatedBirthDate = validateDate(data.birthDate);
+      if (!validatedBirthDate.result) {
+        return {
+          result: false,
+          code: 'FAIL_VALIDATION',
+          message: validatedBirthDate.message
+        }
+      }
+    }
+
+    // 해고 날짜가 있다면 날짜 형식 체크
+    if (data.fireDate) {
+      const validatedFireDate = validateDate(data.fireDate);
+      if (!validatedFireDate.result) {
+        return {
+          result: false,
+          code: 'FAIL_VALIDATION',
+          message: validatedFireDate.message
+        }
+      }
+    }
+
+    try {
+      // 직원 정보 수정
+      await this.prisma.employee.update({
+        where: {
+          id: id
+        },
+        data: {
+          phone: data.phone,
+          mobile: data.mobile,
+          address: data.address,
+          hireDate: data.hireDate ? new Date(data.hireDate) : null,
+          birthDate: data.birthDate ? new Date(data.birthDate) : null,
+          fireDate: data.fireDate ? new Date(data.fireDate) : null
+        }
+      });
+
+      // 성공
+      return { result: true };
+
+    } catch (error) {
+      // 실패
+      console.error(error);
+      return {
+        result: false,
+        code: 'FAIL_SERVER',
+        message: 'Internal Server Error'
+      }
+    }
+  }
+  
+  public async delete(id: number): Promise<IServiceResponse> {
+    // 직원 정보 조회
+    const employee = await this.read(id);
+
+    // 직원 정보가 없는 경우 에러
+    if (!employee.result) {
+      return {
+        result: false,
+        code: 'FAIL_VALIDATION',
+        message: '직원을 찾을 수 없습니다.'
+      };
+    }
+
+    try {
+      // 직원 정보 삭제
+      await this.prisma.employee.delete({
+        where: {
+          id: id
+        }
+      });
+
+      // 성공
+      return { result: true };
+
+    } catch (error) {
+      // 실패
+      console.error(error);
+      return {
+        result: false,
+        code: 'FAIL_SERVER',
+        message: 'Internal Server Error'
+      }
+    }
   }
 
   public async login(data: RequestEmployeeLogin): Promise<IServiceResponse<IEmployee>> {
@@ -197,57 +395,10 @@ export class EmployeeService {
     }
   }
 
-  public async read(id: number): Promise<IServiceResponse<IEmployee>> {
-    // 직원 조회
-    try {
-      const result = await this.prisma.employee.findUnique({
-        where: {
-          id: id
-        }
-      });
+  public async search(keyword: string): Promise<IServiceResponse<IEmployee[]>> {
 
-      // 조회 실패
-      if (!result) {
-        return {
-          result: false,
-          code: 'FAIL_VALIDATION',
-          message: '직원을 찾을 수 없습니다.'
-        }
-      }
+    return { result: true, data: [] };
 
-      // 반환할 직원 정보
-      const employee: IEmployee = {
-        id: result.id,
-        email: result.email,
-        name: result.name,
-        position: result.position,
-        description: result.description,
-        phone: result.phone,
-        mobile: result.mobile,
-        address: result.address,
-        hireDate: result.hireDate?.toISOString(),
-        birthDate: result.birthDate?.toISOString(),
-        fireDate: result.fireDate?.toISOString()
-      };
-
-      // 성공
-      return { 
-        result: true,
-        data: employee
-      };
-
-    } catch (error) {
-      console.error(error);
-      return {
-        result: false,
-        code: 'FAIL_SERVER',
-        message: 'Internal Server Error'
-      }
-    }
-  }
-
-  public async modify(id: number, data: RequestEmployeeRegister): Promise<IServiceResponse> {
-    return { result: true };
   }
 
   // 직원 Email 중복 체크
