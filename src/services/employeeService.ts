@@ -1,8 +1,11 @@
 import { PrismaClient } from '@prisma/client';
-import { validateEmail, validatePassword, validatePhone, validateDate } from "../utils/validator";
+
+import { CODE_FAIL_SERVER, CODE_FAIL_VALIDATION, MESSAGE_FAIL_SERVER } from '../config/constants';
 import { IServiceResponse } from "../types/backend/response";
 import { IEmployee, IEmployeeService } from "../types/backend/employee";
-import { RequestEmployeeRegister, RequestEmployeeUpdate, RequestEmployeeLogin } from "types/backend/request";
+import { RequestEmployeeRegister, RequestEmployeeUpdate, RequestEmployeeLogin, RequestEmployeeDelete } from "../types/backend/request";
+import { validateEmail, validatePassword, validatePhone, validateDate } from "../utils/validator";
+import { formatDate } from "../utils/formattor";
 
 export class EmployeeService implements IEmployeeService {
 
@@ -19,7 +22,7 @@ export class EmployeeService implements IEmployeeService {
     if (!validatedEmail.result) {
       return {
         result: false,
-        code: 'FAIL_VALIDATION',
+        code: CODE_FAIL_VALIDATION,
         message: validatedEmail.message
       }
     }
@@ -28,8 +31,8 @@ export class EmployeeService implements IEmployeeService {
     if (!data.name) {
       return {
         result: false,
-        code: 'FAIL_VALIDATION',
-        message: 'Name is required'
+        code: CODE_FAIL_VALIDATION,
+        message: '이름을 입력해주세요.'
       }
     }
 
@@ -38,7 +41,7 @@ export class EmployeeService implements IEmployeeService {
     if (!validatedPassword.result) {
       return {
         result: false,
-        code: 'FAIL_VALIDATION',
+        code: CODE_FAIL_VALIDATION,
         message: validatedPassword.message
       }
     }
@@ -49,7 +52,7 @@ export class EmployeeService implements IEmployeeService {
       if (!validatedPhone.result) {
         return {
           result: false,
-          code: 'FAIL_VALIDATION',
+          code: CODE_FAIL_VALIDATION,
           message: validatedPhone.message
         }
       }
@@ -61,34 +64,38 @@ export class EmployeeService implements IEmployeeService {
       if (!validatedMobile.result) {
         return {
           result: false,
-          code: 'FAIL_VALIDATION',
+          code: CODE_FAIL_VALIDATION,
           message: validatedMobile.message
         }
       }
     }
 
     // 고용일이 있다면 날짜 형식 체크
+    let hireDate: Date | null = null;
     if (data.hireDate) {
-      const validatedHireDate = validateDate(data.hireDate);
-      if (!validatedHireDate.result) {
+      const formattedHireDate = formatDate(data.hireDate);
+      if (!formattedHireDate.result) {
         return {
           result: false,
-          code: 'FAIL_VALIDATION',
-          message: validatedHireDate.message
+          code: CODE_FAIL_VALIDATION,
+          message: formattedHireDate.message
         }
       }
+      hireDate = formattedHireDate.data;
     }
 
     // 생년월일이 있다면 날짜 형식 체크
+    let birthDate: Date | null = null;
     if (data.birthDate) {
-      const validatedBirthDate = validateDate(data.birthDate);
-      if (!validatedBirthDate.result) {
+      const formattedBirthDate = formatDate(data.birthDate);
+      if (!formattedBirthDate.result) {
         return {
           result: false,
-          code: 'FAIL_VALIDATION',
-          message: validatedBirthDate.message
+          code: CODE_FAIL_VALIDATION,
+          message: formattedBirthDate.message
         }
       }
+      birthDate = formattedBirthDate.data;
     }
     
     // 이메일 중복 체크
@@ -111,8 +118,8 @@ export class EmployeeService implements IEmployeeService {
           phone: data.phone,
           mobile: data.mobile,
           address: data.address,
-          hireDate: data.hireDate ? new Date(data.hireDate) : null,
-          birthDate: data.birthDate ? new Date(data.birthDate) : null
+          hireDate: hireDate,
+          birthDate: birthDate
         }
       });
 
@@ -123,8 +130,8 @@ export class EmployeeService implements IEmployeeService {
       console.error(error);
       return {
         result: false,
-        code: 'FAIL_SERVER',
-        message: 'Internal Server Error'
+        code: CODE_FAIL_SERVER,
+        message: MESSAGE_FAIL_SERVER
       }
 
     }
@@ -143,7 +150,7 @@ export class EmployeeService implements IEmployeeService {
       if (!result) {
         return {
           result: false,
-          code: 'FAIL_VALIDATION',
+          code: CODE_FAIL_VALIDATION,
           message: '직원을 찾을 수 없습니다.'
         }
       }
@@ -173,8 +180,8 @@ export class EmployeeService implements IEmployeeService {
       console.error(error);
       return {
         result: false,
-        code: 'FAIL_SERVER',
-        message: 'Internal Server Error'
+        code: CODE_FAIL_SERVER,
+        message: MESSAGE_FAIL_SERVER
       }
     }
   }
@@ -189,7 +196,7 @@ export class EmployeeService implements IEmployeeService {
     if (!employee.result) {
       return {
         result: false,
-        code: 'FAIL_VALIDATION',
+        code: CODE_FAIL_VALIDATION,
         message: '직원을 찾을 수 없습니다.'
       };
     }
@@ -198,7 +205,7 @@ export class EmployeeService implements IEmployeeService {
     if (!data) {
       return {
         result: false,
-        code: 'FAIL_VALIDATION',
+        code: CODE_FAIL_VALIDATION,
         message: '수정할 데이터가 없습니다.'
       };
     }
@@ -209,7 +216,7 @@ export class EmployeeService implements IEmployeeService {
       if (!validatedPhone.result) {
         return {
           result: false,
-          code: 'FAIL_VALIDATION',
+          code: CODE_FAIL_VALIDATION,
           message: validatedPhone.message
         }
       }
@@ -221,7 +228,7 @@ export class EmployeeService implements IEmployeeService {
       if (!validatedMobile.result) {
         return {
           result: false,
-          code: 'FAIL_VALIDATION',
+          code: CODE_FAIL_VALIDATION,
           message: validatedMobile.message
         }
       }
@@ -233,7 +240,7 @@ export class EmployeeService implements IEmployeeService {
       if (!validatedHireDate.result) {
         return {
           result: false,
-          code: 'FAIL_VALIDATION',
+          code: CODE_FAIL_VALIDATION,
           message: validatedHireDate.message
         }
       }
@@ -245,7 +252,7 @@ export class EmployeeService implements IEmployeeService {
       if (!validatedBirthDate.result) {
         return {
           result: false,
-          code: 'FAIL_VALIDATION',
+          code: CODE_FAIL_VALIDATION,
           message: validatedBirthDate.message
         }
       }
@@ -257,7 +264,7 @@ export class EmployeeService implements IEmployeeService {
       if (!validatedFireDate.result) {
         return {
           result: false,
-          code: 'FAIL_VALIDATION',
+          code: CODE_FAIL_VALIDATION,
           message: validatedFireDate.message
         }
       }
@@ -287,13 +294,13 @@ export class EmployeeService implements IEmployeeService {
       console.error(error);
       return {
         result: false,
-        code: 'FAIL_SERVER',
-        message: 'Internal Server Error'
+        code: CODE_FAIL_SERVER,
+        message: MESSAGE_FAIL_SERVER
       }
     }
   }
   
-  public async delete(id: number): Promise<IServiceResponse> {
+  public async delete(id: number, data: RequestEmployeeDelete): Promise<IServiceResponse> {
     // 직원 정보 조회
     const employee = await this.read(id);
 
@@ -301,16 +308,35 @@ export class EmployeeService implements IEmployeeService {
     if (!employee.result) {
       return {
         result: false,
-        code: 'FAIL_VALIDATION',
+        code: CODE_FAIL_VALIDATION,
         message: '직원을 찾을 수 없습니다.'
       };
     }
 
     try {
-      // 직원 정보 삭제
-      await this.prisma.employee.delete({
+      // fireDate 파라미터가 날짜 형식이 아닌 경우 에러 처리
+      let fireDate: Date | null = null;
+      if (data.fireDate) {
+        const formattedHireDate = formatDate(data.fireDate);
+        if (!formattedHireDate.result) {
+          return {
+            result: false,
+            code: CODE_FAIL_VALIDATION,
+            message: formattedHireDate.message
+          }
+        }
+        fireDate = formattedHireDate.data;
+      }
+      
+      // 직원 정보 삭제(탈퇴) 처리
+      await this.prisma.employee.update({
         where: {
           id: id
+        },
+        data: {
+          fireDate: fireDate,
+          isActivated: true,
+          isDeleted: true,
         }
       });
 
@@ -322,8 +348,8 @@ export class EmployeeService implements IEmployeeService {
       console.error(error);
       return {
         result: false,
-        code: 'FAIL_SERVER',
-        message: 'Internal Server Error'
+        code: CODE_FAIL_SERVER,
+        message: MESSAGE_FAIL_SERVER
       }
     }
   }
@@ -333,7 +359,7 @@ export class EmployeeService implements IEmployeeService {
     if (!data.email) {
       return {
         result: false,
-        code: 'FAIL_VALIDATION',
+        code: CODE_FAIL_VALIDATION,
         message: '이메일을 입력해주세요.'
       }
     }
@@ -342,7 +368,7 @@ export class EmployeeService implements IEmployeeService {
     if (!data.password) {
       return {
         result: false,
-        code: 'FAIL_VALIDATION',
+        code: CODE_FAIL_VALIDATION,
         message: '패스워드를 입력해주세요.'
       }
     }
@@ -362,7 +388,7 @@ export class EmployeeService implements IEmployeeService {
       if (!result) {
         return {
           result: false,
-          code: 'FAIL_VALIDATION',
+          code: CODE_FAIL_VALIDATION,
           message: '이메일 또는 패스워드가 일치하지 않습니다.'
         }
       }
@@ -389,8 +415,8 @@ export class EmployeeService implements IEmployeeService {
       console.error(error);
       return {
         result: false,
-        code: 'FAIL_SERVER',
-        message: 'Internal Server Error'
+        code: CODE_FAIL_SERVER,
+        message: MESSAGE_FAIL_SERVER
       }
     }
   }
@@ -407,7 +433,8 @@ export class EmployeeService implements IEmployeeService {
       // 이메일 중복 체크
       const isUnique = await this.prisma.employee.findUnique({
         where: {
-          email: email
+          email: email,
+          isDeleted: false
         }
       });
 
@@ -415,7 +442,7 @@ export class EmployeeService implements IEmployeeService {
       if (isUnique) {
         return {
           result: false,
-          code: 'FAIL_VALIDATION',
+          code: CODE_FAIL_VALIDATION,
           message: '이미 사용중인 이메일입니다.'
         }
       }
@@ -427,8 +454,8 @@ export class EmployeeService implements IEmployeeService {
       console.error(error);
       return {
         result: false,
-        code: 'FAIL_SERVER',
-        message: 'Internal Server Error'
+        code: CODE_FAIL_SERVER,
+        message: MESSAGE_FAIL_SERVER
       };
     }
     
