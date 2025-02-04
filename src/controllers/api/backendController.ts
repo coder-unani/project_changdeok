@@ -2,8 +2,8 @@ import { Request, Response } from 'express';
 import { RequestEmployeeRegister, RequestEmployeeLogin } from '../../types/backend/request';
 import { EmployeeService } from '../../services/employeeService';
 
-export class ApiAdminController {
-  public async regist(req: Request, res: Response): Promise<void> {
+export class ApiBackendController {
+  public async employeeRegist(req: Request, res: Response): Promise<void> {
     try {
       // 요청 데이터
       const requestData: RequestEmployeeRegister = req.body;
@@ -31,7 +31,7 @@ export class ApiAdminController {
     }
   };
 
-  public async login(req: Request, res: Response): Promise<void> {
+  public async employeeLogin(req: Request, res: Response): Promise<void> {
     try {
       // 요청 데이터
       const requestData: RequestEmployeeLogin = req.body;
@@ -59,7 +59,7 @@ export class ApiAdminController {
     }
   };
 
-  public async modify(req: Request, res: Response): Promise<void> {
+  public async employeeUpdate(req: Request, res: Response): Promise<void> {
     try {
       // 직원 ID 추출
       const employeeId = parseInt(req.params.employeeId);
@@ -96,7 +96,7 @@ export class ApiAdminController {
     }
   }
 
-  public async delete(req: Request, res: Response): Promise<void> {
+  public async employeeDelete(req: Request, res: Response): Promise<void> {
     try {
       // 직원 ID 추출
       const employeeId = parseInt(req.params.employeeId);

@@ -1,12 +1,12 @@
 import { Request, Response, Router } from 'express';
-import { ApiAdminController } from '../../controllers/api/adminController';
+import { ApiBackendController } from '../../controllers/api/backendController';
 
 const router: Router = Router();
 
 router.post('/admin/regist', (req: Request, res: Response) => {
   try {
-    const adminApiController = new ApiAdminController();
-    adminApiController.regist(req, res);
+    const adminApiController = new ApiBackendController();
+    adminApiController.employeeRegist(req, res);
 
   } catch (error) {
     console.error(error);
@@ -17,8 +17,8 @@ router.post('/admin/regist', (req: Request, res: Response) => {
 
 router.post('/admin/login', (req: Request, res: Response) => {
   try {
-    const adminApiController = new ApiAdminController();
-    adminApiController.login(req, res);
+    const adminApiController = new ApiBackendController();
+    adminApiController.employeeLogin(req, res);
 
   } catch (error) {
     console.error(error);
@@ -29,8 +29,8 @@ router.post('/admin/login', (req: Request, res: Response) => {
 
 router.patch('/admin/employee/:employeeId/modify', (req: Request, res: Response) => {
   try {
-    const adminApiController = new ApiAdminController();
-    adminApiController.modify(req, res);
+    const adminApiController = new ApiBackendController();
+    adminApiController.employeeUpdate(req, res);
 
   } catch (error) {
     console.error(error);
@@ -41,8 +41,8 @@ router.patch('/admin/employee/:employeeId/modify', (req: Request, res: Response)
 
 router.delete('/admin/employee/:employeeId/delete', (req: Request, res: Response) => {
   try {
-    const adminApiController = new ApiAdminController();
-    adminApiController.delete(req, res);
+    const adminApiController = new ApiBackendController();
+    adminApiController.employeeDelete(req, res);
 
   } catch (error) {
     console.error(error);
