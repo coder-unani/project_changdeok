@@ -22,6 +22,12 @@ export interface RequestEmployeeUpdate {
   hireDate?: string;
   birthDate?: string;
   fireDate?: string;
+  isActivated?: boolean;
+  isDeleted?: boolean;
+}
+
+export interface RequestEmployeeDelete {
+  fireDate?: string;
 }
 
 export interface RequestEmployeeLogin {

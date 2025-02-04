@@ -25,9 +25,11 @@ export interface IEmployeeUpdate {
   phone?: string;
   mobile?: string;
   address?: string;
-  hireDate?: string;
-  birthDate?: string;
-  fireDate?: string;
+  hireDate?: Date;
+  birthDate?: Date;
+  fireDate?: Date;
+  isActivated?: boolean;
+  isDeleted?: boolean;
 }
 
 export interface IEmployeeService {
