@@ -1,4 +1,5 @@
-import type { typeValidatedResult } from "types/backend/validate";
+import type { typeValidatedResult } from "../types/validate";
+import { REG_DATE_PATTERN, REG_EMAIL_PATTERN, REG_PASSWORD_PATTERN, REG_PHONE_PATTERN } from "../config/constants";
 
 // Email 형식 체크 함수
 export const validateEmail = (email: string): typeValidatedResult => {
@@ -11,8 +12,7 @@ export const validateEmail = (email: string): typeValidatedResult => {
   }
 
   // Email 형식 체크
-  const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  if (!emailPattern.test(email)) {
+  if (!REG_EMAIL_PATTERN.test(email)) {
     return {
       result: false,
       message: '이메일 형식이 올바르지 않습니다.'
@@ -44,9 +44,8 @@ export const validatePassword = (password: string | null | undefined, passwordCo
     }
   }
 
-  // 비밀번호 8자리 이상, 숫자, 문자, 특수문자 포함 체크
-  const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/;
-  if (!passwordPattern.test(password)) {
+  // 비밀번호 형식 체크
+  if (!REG_PASSWORD_PATTERN.test(password)) {
     return {
       result: false,
       message: '비밀번호는 8자리 이상, 숫자, 문자, 특수문자를 포함해야 합니다.'
@@ -66,8 +65,7 @@ export const validatePhone = (phone: string): typeValidatedResult => {
   const phoneNum = phone.replace(/-/g, '');
   
   // 전화번호 형식 체크
-  const phonePattern = /^\d{9,11}$/;
-  if (!phonePattern.test(phoneNum)) {
+  if (!REG_PHONE_PATTERN.test(phoneNum)) {
     return {
       result: false,
       message: '전화번호 형식이 올바르지 않습니다.'
@@ -84,8 +82,7 @@ export const validatePhone = (phone: string): typeValidatedResult => {
 // 날짜 형식 체크 함수
 export const validateDate = (date: string): typeValidatedResult => {
   // 날짜 형식 체크
-  const datePattern = /^\d{4}-\d{2}-\d{2}$/;
-  if (!datePattern.test(date)) {
+  if (!REG_DATE_PATTERN.test(date)) {
     return {
       result: false,
       message: '날짜 형식이 올바르지 않습니다.'
@@ -102,8 +99,7 @@ export const validateDate = (date: string): typeValidatedResult => {
 // 날짜 및 시간 형식 체크 함수
 export const validateDateTime = (dateTime: string): typeValidatedResult => {
   // 날짜 및 시간 형식 체크
-  const dateTimePattern = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
-  if (!dateTimePattern.test(dateTime)) {
+  if (!REG_DATE_PATTERN.test(dateTime)) {
     return {
       result: false,
       message: '날짜 및 시간 형식이 올바르지 않습니다.'
