@@ -6,7 +6,8 @@ import { CorsMiddleware } from './middlewares/api/cors';
 import { LoggerMiddleware } from './middlewares/logger';
 import { ErrorMiddleware } from './middlewares/web/error';
 import { ExpressLogger } from './utils/logger';
-import apiAdminRouter from './routes/api/admin';
+import apiFrontendRouter from './routes/api/frontend';
+import apiBackendRouter from './routes/api/backend';
 import frontendRouter from './routes/web/frontend';
 import backendRouter from './routes/web/backend';
 
@@ -40,7 +41,8 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 }
 const corsMiddleware: IMiddleware = new CorsMiddleware(corsOptions);
-apiAdminRouter.use((req, res, next) => corsMiddleware.handle(req, res, next));
+apiFrontendRouter.use((req, res, next) => corsMiddleware.handle(req, res, next));
+apiBackendRouter.use((req, res, next) => corsMiddleware.handle(req, res, next));
 
 /**
  * WEB 설정
@@ -54,7 +56,8 @@ app.set('view engine', 'ejs');
 /**
  * 라우터 설정
  */
-app.use('/api/admin', apiAdminRouter); // API Admin 라우터
+app.use('/api', apiFrontendRouter); // API Frontend 라우터
+app.use('/api/backend', apiBackendRouter); // API Backend 라우터
 app.use('/', frontendRouter); // Frontend 라우터
 app.use('/admin', backendRouter); // Backend 라우터
 
