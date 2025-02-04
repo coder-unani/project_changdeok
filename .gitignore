@@ -2,8 +2,12 @@
 node_modules
 dist
 
+# Sass
+*.css.map
+
 # Environment
 .env
 .env.local
 .env.development
 .env.production
+
