@@ -4,13 +4,14 @@ import path from 'path';
 import { IMiddleware, IErrorMiddleware } from './types/middleware';
 import { CorsMiddleware } from './middlewares/api/cors';
 import { LoggerMiddleware } from './middlewares/logger';
+import { SanitizeMiddleware } from './middlewares/sanitizer';
 import { ErrorMiddleware } from './middlewares/web/error';
 import { ExpressLogger } from './utils/logger';
 import apiFrontendRouter from './routes/api/frontend';
 import apiBackendRouter from './routes/api/backend';
 import frontendRouter from './routes/web/frontend';
 import backendRouter from './routes/web/backend';
-import { SERVICE_PORT, STATIC_PATH, LOG_PATH, LOG_LEVEL, CORS_OPTIONS, CORS_BACKEND_OPTIONS } from './config/config';
+import { SERVICE_PORT, STATIC_PATH, LOG_PATH, LOG_LEVEL, CORS_OPTIONS, CORS_BACKEND_OPTIONS, ALLOWED_TAGS } from './config/config';
 
 /**
  * 필요한 환경 변수 설정
@@ -31,6 +32,11 @@ const app: Application = express();
 const logger = new ExpressLogger(LOG_PATH, LOG_LEVEL);
 const loggerMiddleware: IMiddleware = new LoggerMiddleware(logger);
 app.use((req, res, next) => loggerMiddleware.handle(req, res, next));
+
+// Sanitize 설정
+const sanitizeMiddleware: IMiddleware = new SanitizeMiddleware(ALLOWED_TAGS);
+app.use((req, res, next) => sanitizeMiddleware.handle(req, res, next));
+
 // Body-parser 설정
 app.use(express.urlencoded({ extended: true })); // URL-encoded 데이터 파싱
 app.use(express.json()); // JSON 데이터 파싱
@@ -48,7 +54,8 @@ apiBackendRouter.use((req, res, next) => backendCorsMiddleware.handle(req, res, 
  * WEB 설정
  */
 // 정적 파일 설정
-app.use(express.static(path.join(__dirname, STATIC_PATH))); 
+
+app.use(express.static(path.resolve(__dirname, STATIC_PATH))); 
 // 템플릿 엔진 (WEB 서비스가 없을 경우 삭제)
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
