@@ -3,52 +3,35 @@ import { ApiBackendController } from '../../controllers/api/backendController';
 
 const router: Router = Router();
 
-router.post('/employee/regist', (req: Request, res: Response) => {
-  try {
-    const adminApiController = new ApiBackendController();
-    adminApiController.employeeRegist(req, res);
+// 라우트 경로
+const ROUTE = {
+  EMPLOYEE_REGIST: '/employee/regist',
+  EMPLOYEE_LOGIN: '/employee/login',
+  EMPLOYEE_UPDATE: '/employee/:employeeId/update',
+  EMPLOYEE_DELETE: '/employee/:employeeId/delete',
+}
 
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Internal Server Error');
+// 컨트롤러
+const apiBackendController = new ApiBackendController();
 
-  }
+// 직원 등록
+router.post(ROUTE.EMPLOYEE_REGIST, (req: Request, res: Response) => {
+  apiBackendController.employeeRegist(req, res);
 });
 
-router.post('/employee/login', (req: Request, res: Response) => {
-  try {
-    const adminApiController = new ApiBackendController();
-    adminApiController.employeeLogin(req, res);
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Internal Server Error');
-
-  }
+// 직원 로그인
+router.post(ROUTE.EMPLOYEE_LOGIN, (req: Request, res: Response) => {
+  apiBackendController.employeeLogin(req, res);
 });
 
-router.patch('/employee/:employeeId/update', (req: Request, res: Response) => {
-  try {
-    const adminApiController = new ApiBackendController();
-    adminApiController.employeeUpdate(req, res);
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Internal Server Error');
-
-  }
+// 직원 정보 수정
+router.patch(ROUTE.EMPLOYEE_UPDATE, (req: Request, res: Response) => {
+  apiBackendController.employeeUpdate(req, res);
 });
 
-router.delete('/employee/:employeeId/delete', (req: Request, res: Response) => {
-  try {
-    const adminApiController = new ApiBackendController();
-    adminApiController.employeeDelete(req, res);
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Internal Server Error');
-
-  }
+// 직원 탈퇴
+router.delete(ROUTE.EMPLOYEE_DELETE, (req: Request, res: Response) => {
+  apiBackendController.employeeDelete(req, res);
 });
 
 export default router;

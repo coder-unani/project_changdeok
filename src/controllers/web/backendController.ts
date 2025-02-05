@@ -4,21 +4,26 @@ import { EmployeeService } from '../../services/employeeService';
 const employeeService = new EmployeeService();
 
 export class BackendController {
+
+  // 관리자 홈
   public index(req: Request, res: Response): void {
     // 1. 관리자 로그인 확인 및 비로그인시 로그인 페이지로 이동
     // 2. 로그인 확인되면 권한이 있는지 확인 후 권한이 없으면 권한이 없다는 페이지로 이동
     res.render('backend/index', { title: 'Admin Page' });
   };
 
+  // 직원 등록
   public regist(req: Request, res: Response): void {
     res.render('backend/employee/regist', { title: 'Register Page' });
   };
 
+  // 직원 로그인
   public login(req: Request, res: Response): void {
     res.render('backend/employee/login', { title: 'Login Page' });
   };
 
-  public async modify(req: Request, res: Response): Promise<void> {
+  // 직원 정보 수정
+  public async update(req: Request, res: Response): Promise<void> {
     // 직원 ID 추출
     const employeeId = parseInt(req.params.employeeId);
 
@@ -42,6 +47,7 @@ export class BackendController {
     res.render('backend/employee/modify', { title: 'Modify Page', data: employee.data });
   };
 
+  // 직원 탈퇴
   public async delete(req: Request, res: Response): Promise<void> {
     // 직원 ID 추출
     const employeeId = parseInt(req.params.employeeId);
@@ -62,5 +68,9 @@ export class BackendController {
     }
 
     res.render('admin/employee/delete', { title: 'Delete Page', data: employee.data });
+  };
+
+  // 직원 목록
+  public async list(req: Request, res: Response): Promise<void> {
   };
 }
