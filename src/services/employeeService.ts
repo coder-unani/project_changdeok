@@ -6,6 +6,7 @@ import { IEmployee, IEmployeeService } from "../types/backend/employee";
 import { RequestEmployeeRegister, RequestEmployeeUpdate, RequestEmployeeLogin, RequestEmployeeDelete } from "../types/backend/request";
 import { validateEmail, validatePassword, validatePhone, validateDate } from "../utils/validator";
 import { formatDate } from "../utils/formattor";
+import { hashPassword, verifyPassword } from "../utils/encryptor";
 
 export class EmployeeService implements IEmployeeService {
 
@@ -104,15 +105,16 @@ export class EmployeeService implements IEmployeeService {
       return isUniqueEmail;
     }
 
-    // 직원 등록
-    // TODO: 입력값 스크립트 제거 필요
-    // TODO: 패스워드 암호화 필요
     try {
+      // 패스워드 암호화
+      const hashedPassword = await hashPassword(data.password);
+
+      // 직원 등록
       const employee = await this.prisma.employee.create({
         data: {
           email: data.email,
           name: data.name,
-          password: data.password,
+          password: hashedPassword,
           position: data.position,
           description: data.description,
           phone: data.phone,
@@ -377,14 +379,16 @@ export class EmployeeService implements IEmployeeService {
 
     // 직원 로그인
     try {
+      // 직원 조회
       const result = await this.prisma.employee.findFirst({
         where: {
           email: data.email,
-          password: data.password
+          isDeleted: false,
+          isActivated: true
         }
       });
 
-      // 로그인 실패
+      // 직원이 없는 경우
       if (!result) {
         return {
           result: false,
@@ -393,6 +397,18 @@ export class EmployeeService implements IEmployeeService {
         }
       }
       
+      // 패스워드 비교
+      const isPasswordMatch = await verifyPassword(data.password, result.password);
+
+      // 패스워드 불일치
+      if (!isPasswordMatch) {
+        return {
+          result: false,
+          code: CODE_FAIL_VALIDATION,
+          message: '이메일 또는 패스워드가 일치하지 않습니다.'
+        }
+      }
+
       // 반환할 직원 정보
       const employee: IEmployee = {
         id: result.id,
