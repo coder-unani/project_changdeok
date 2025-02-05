@@ -1,31 +1,31 @@
 <%- include('../layouts/header') %>
-  <h1>관리자 로그인</h1>
-  <p>관리자 로그인 페이지입니다.</p>
-  <form id="formAdminLogin">
-    <ul>
-      <li>
-        <label for="email">이메일</label>
-        <input type="email" id="email" name="email" placeholder="이메일" required>
-      </li>
-      <li>
-        <div>
-          <label for="password">비밀번호</label>
-          <input type="password" id="password" name="password" placeholder="비밀번호" required>
-          <span>
-            <input type="checkbox" id="showPassword">
-            <label for="showPassword">비밀번호 표시</label>
-          </span>
+  <div class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-md w-96 m-4">
+        <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">관리자 로그인</h2>
+        <form id="formAdminLogin">
+            <div class="mb-4">
+                <label for="email" class="block text-gray-700 text-sm font-bold mb-2">이메일</label>
+                <input type="email" id="email" name="email" required
+                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="이메일 주소를 입력하세요">
+            </div>
+            <div class="mb-6">
+                <label for="password" class="block text-gray-700 text-sm font-bold mb-2">비밀번호</label>
+                <input type="password" id="password" name="password" required
+                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="비밀번호를 입력하세요">
+            </div>
+            <button type="submit"
+                    class="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                로그인
+            </button>
+        </form>
+        <div class="mt-4 text-center">
+            <a href="#" class="text-sm text-blue-500 hover:underline">비밀번호를 잊으셨나요?</a>
         </div>
-        <div>
-          <p>비밀번호는 영문, 숫자, 특수문자를 포함하여 8자 이상으로 입력해주세요.</p>
-        </div>
-      </li>
-      <li>
-        <button type="submit">로그인</button>
-      </li>
-    </ul>
-  </form>
-
+    </div>
+  </div>
+  
   <script>
     document.getElementById('formAdminLogin').addEventListener('submit', async (e) => {
       e.preventDefault();
