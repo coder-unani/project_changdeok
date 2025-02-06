@@ -1,23 +1,24 @@
 import { Request, Response } from 'express';
 
-import { RequestEmployeeRegister, RequestEmployeeLogin } from '../../types/backend/request';
+import { IRequestEmployeeRegister, IRequestEmployeeLogin } from '../../types/backend/request';
 import { EmployeeService } from '../../services/employeeService';
 import { formatApiResponse } from '../../utils/formattor';
 import { CODE_FAIL_SERVER, CODE_FAIL_VALIDATION, MESSAGE_FAIL_SERVER } from '../../config/constants';
+import { createJWT } from '../../utils/jwt';
 
 export class ApiBackendController {
   // 직원 등록
   public async employeeRegist(req: Request, res: Response): Promise<void> {
     try {
       // 요청 데이터
-      const requestData: RequestEmployeeRegister = req.body;
+      const requestData: IRequestEmployeeRegister = req.body;
       
       // 직원 등록 처리
       const employeeService = new EmployeeService();
       const result = await employeeService.create(requestData);
 
       // 등록 실패 처리
-      const response = formatApiResponse(false, result.code, result.message, null);
+      const response = formatApiResponse(false, result.code, result.message);
       if (!result.result && result.code === CODE_FAIL_VALIDATION) {
         res.status(400).json(response);
         return;
@@ -30,7 +31,7 @@ export class ApiBackendController {
       res.status(201).send(null);
 
     } catch (error) {
-      const response = formatApiResponse(false, CODE_FAIL_SERVER, MESSAGE_FAIL_SERVER, null);
+      const response = formatApiResponse(false, CODE_FAIL_SERVER, MESSAGE_FAIL_SERVER);
       res.status(500).json(response);
 
     }
@@ -40,7 +41,7 @@ export class ApiBackendController {
   public async employeeLogin(req: Request, res: Response): Promise<void> {
     try {
       // 요청 데이터
-      const requestData: RequestEmployeeLogin = req.body;
+      const requestData: IRequestEmployeeLogin = req.body;
 
       // 직원 로그인 처리
       const employeeService = new EmployeeService();
@@ -48,7 +49,7 @@ export class ApiBackendController {
 
       // 로그인 실패 처리
       if (!result.result) {
-        const response = formatApiResponse(false, result.code, result.message, null);
+        const response = formatApiResponse(false, result.code, result.message);
         if (result.code === CODE_FAIL_VALIDATION) {
           res.status(400).json(response);
           return;
@@ -60,15 +61,30 @@ export class ApiBackendController {
         }
       }
       
+      // 로그인 성공시 쿠키에 토큰 저장
+      if (result.data) {
+        const tokenData = {
+          id: result.data.id,
+          name: result.data.name
+        }
+        const token = createJWT(tokenData);
+        if (token) {
+          res.cookie('accessToken', token, {
+            httpOnly: true,
+            secure: true, // HTTPS에서만 전송
+            maxAge: 3600 * 1000, // 1시간
+          });
+        }
+      }
+      
       // 응답 데이터 생성
-      const response = formatApiResponse(true, null, null, result.data);
-      console.log(response);
+      const response = formatApiResponse(true, null, null, result.metadata, result.data);
 
       // 로그인 성공시 200 응답
       res.status(200).json(response);
 
     } catch (error) {
-      const response = formatApiResponse(false, CODE_FAIL_SERVER, MESSAGE_FAIL_SERVER, null);
+      const response = formatApiResponse(false, CODE_FAIL_SERVER, MESSAGE_FAIL_SERVER);
       res.status(500).json(response);
 
     }
@@ -82,7 +98,7 @@ export class ApiBackendController {
 
       // ID가 숫자가 아닌 경우 에러 처리
       if (isNaN(employeeId)) {
-        const response = formatApiResponse(false, CODE_FAIL_VALIDATION, 'Bad Request', null);
+        const response = formatApiResponse(false, CODE_FAIL_VALIDATION, 'Bad Request');
         res.status(400).json(response);
         return;
       }
@@ -96,7 +112,7 @@ export class ApiBackendController {
 
       // 수정 실패 처리
       if (!result.result) {
-        const response = formatApiResponse(false, result.code, result.message, null);
+        const response = formatApiResponse(false, result.code, result.message);
         if (result.code === CODE_FAIL_VALIDATION) {
           res.status(400).json(response);
           return;
@@ -111,7 +127,7 @@ export class ApiBackendController {
       res.status(201).send(null);
 
     } catch (error) {
-      const response = formatApiResponse(false, CODE_FAIL_SERVER, MESSAGE_FAIL_SERVER, null);
+      const response = formatApiResponse(false, CODE_FAIL_SERVER, MESSAGE_FAIL_SERVER);
       res.status(500).json(response);
       
     }
@@ -149,8 +165,36 @@ export class ApiBackendController {
       res.status(200).send(result);
 
     } catch (error) {
-      console.error(error);
-      res.status(500).send(MESSAGE_FAIL_SERVER);
+      const response = formatApiResponse(false, CODE_FAIL_SERVER, MESSAGE_FAIL_SERVER);
+      res.status(500).json(response);
+
+    }
+  }
+
+  // 직원 목록
+  public async employeeList(req: Request, res: Response): Promise<void> {
+    try {
+
+      const requestData = req.body;
+
+      // 직원 목록 조회
+      const employeeService = new EmployeeService();
+      const result = await employeeService.list(requestData);
+
+      // 조회 실패 처리
+      if (!result.result) {
+        res.status(500).send(result);
+        return;
+      }
+      
+      // 조회 성공시 200 응답
+      const response = formatApiResponse(true, null, null, result.metadata, result.data);
+      res.status(200).json(response);
+
+    } catch (error) {
+      const response = formatApiResponse(false, CODE_FAIL_SERVER, MESSAGE_FAIL_SERVER);
+      res.status(500).json(response);
+
     }
   }
 }
