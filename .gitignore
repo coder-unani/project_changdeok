@@ -5,6 +5,9 @@ dist
 # Sass
 *.css.map
 
+# tailwindcss
+public/css/tailwind.css
+
 # Environment
 .env
 .env.local
