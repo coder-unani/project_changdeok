@@ -1,0 +1,130 @@
+<!-- Sidebar for PC -->
+<div id="sidebar-pc" class="hidden lg:block bg-gray-100 w-64 shadow-md text-sm">
+  <nav class="flex flex-col p-4">
+    <a href="/admin" class="py-2 px-4 hover:bg-gray-200">대시보드</a>
+    <a href="/admin/employee" class="py-2 px-4 hover:bg-gray-200">직원 관리</a>
+    <div class="relative">
+      <button
+        data-toggle-submenu-pc
+        class="w-full text-left py-2 px-4 hover:bg-gray-200 flex justify-between items-center focus:outline-none"
+      >
+        게시판 관리
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          class="w-5 h-5 transform transition-transform duration-300 ease-in-out rotate-0 submenu-icon-pc"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </button>
+      <div
+        data-submenu-pc
+        class="hidden flex flex-col pl-4 border-l border-gray-300 space-y-2 mt-1"
+      >
+        <a href="#" class="py-2 px-4 hover:bg-gray-200">공지사항</a>
+        <a href="#" class="py-2 px-4 hover:bg-gray-200">문의</a>
+      </div>
+    </div>
+    <a href="#" class="py-2 px-4 hover:bg-gray-200">사이트 관리</a>
+  </nav>
+</div>
+
+<!-- Sidebar for Mobile -->
+<div
+  id="sidebar-mobile"
+  class="fixed inset-y-0 right-0 bg-gray-100 w-64 transform translate-x-full transition-transform duration-300 ease-in-out shadow-md lg:hidden z-50"
+>
+  <nav class="flex flex-col p-4">
+    <button
+      id="close-menu"
+      class="self-end mb-4 text-gray-600 focus:outline-none"
+    >
+      Close
+    </button>
+    <a href="/admin" class="py-2 px-4 hover:bg-gray-200">대시보드</a>
+    <a href="/admin/employee" class="py-2 px-4 hover:bg-gray-200">직원 관리</a>
+    <div class="relative">
+      <button
+        data-toggle-submenu
+        class="w-full text-left py-2 px-4 hover:bg-gray-200 flex justify-between items-center focus:outline-none"
+      >
+        게시판 관리
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          class="w-5 h-5 transform transition-transform duration-300 ease-in-out rotate-0 submenu-icon"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </button>
+      <div
+        data-submenu
+        class="hidden flex flex-col pl-4 border-l border-gray-300 space-y-2 mt-1"
+      >
+        <a href="#" class="py-2 px-4 hover:bg-gray-200">공지사항</a>
+        <a href="#" class="py-2 px-4 hover:bg-gray-200">문의</a>
+      </div>
+    </div>
+    <a href="#" class="py-2 px-4 hover:bg-gray-200">사이트 관리</a>
+  </nav>
+</div>
+
+<script>
+  // PC Submenu toggle logic
+  const pcSubmenuToggles = document.querySelectorAll('[data-toggle-submenu-pc]');
+
+  pcSubmenuToggles.forEach((toggle) => {
+    toggle.addEventListener('click', () => {
+      const submenu = toggle.nextElementSibling;
+      const icon = toggle.querySelector('.submenu-icon-pc');
+      
+      if (submenu.classList.contains('hidden')) {
+        submenu.classList.remove('hidden'); // 하위 메뉴 열기
+        icon.classList.add('rotate-[180deg]'); // 아이콘 회전
+      } else {
+        submenu.classList.add('hidden'); // 하위 메뉴 닫기
+        icon.classList.remove('rotate-[180deg]'); // 아이콘 원래대로
+      }
+    });
+  });
+  // Mobile menu toggle logic
+  const menuToggle = document.getElementById('menu-toggle');
+  const sidebarMobile = document.getElementById('sidebar-mobile');
+  const closeMenu = document.getElementById('close-menu');
+  
+  menuToggle.addEventListener('click', () => {
+    sidebarMobile.classList.toggle('translate-x-full');
+  });
+
+  closeMenu.addEventListener('click', () => {
+    sidebarMobile.classList.add('translate-x-full');
+  });
+
+  // Submenu toggle logic for mobile
+  const submenuToggles = document.querySelectorAll('[data-toggle-submenu]');
+  
+  submenuToggles.forEach((toggle) => {
+    toggle.addEventListener('click', () => {
+      const submenu = toggle.nextElementSibling;
+      const icon = toggle.querySelector('.submenu-icon');
+      
+      if (submenu.classList.contains('hidden')) {
+        submenu.classList.remove('hidden');
+        icon.classList.add('rotate-[180deg]');
+      } else {
+        submenu.classList.add('hidden');
+        icon.classList.remove('rotate-[180deg]');
+      }
+    });
+  });
+</script>

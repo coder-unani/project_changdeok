@@ -1,0 +1,74 @@
+<div class="flex-grow flex items-top justify-center h-full">
+  <table id="employeeTable" class="min-w-full divide-y divide-gray-200">
+    <thead>
+      <tr>
+        <th>아이디</th>
+        <th>이메일</th>
+        <th>이름</th>
+      </tr>
+    </thead>
+    <tbody class="bg-white divide-y divide-gray-200">
+      <% data.forEach(employee => { %>
+        <tr>
+          <td><%=employee.id%></td>
+          <td><%=employee.email%></td>
+          <td><%=employee.name%></td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css" />  
+<script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+<script>
+
+// DOM 로드 후 실행
+document.addEventListener('DOMContentLoaded', async () => {
+  $('#employeeTable').DataTable(
+    {
+      searching: false,
+      ordering:  false
+    }
+  );
+});
+
+
+
+//   // API 호출
+//   const response = await fetch('/api/backend/employee');
+//   const data = await response.json();
+
+//   // 응답 실패
+//   if (!response.ok) {
+//     alert(data.message);
+//     return;
+//   }
+
+//   // 리스트 오류
+//   if (!data.result) {
+//     alert(data.message);
+//     return;
+//   }
+
+  
+//   listTest(data.data);
+  
+
+
+// const listTest = async (data) => {
+//   for (const item of data) {
+//     console.log(item);
+//     const tr = document.createElement('tr');
+//     tr.innerHTML = `
+//       <td>${item.id}</td>
+//       <td>${item.name}</td>
+//       <td>${item.position}</td>
+//     `;
+//     // 테이블에 행 추가
+//     document.querySelector('#employeeTable tbody').appendChild(tr);
+//   }
+// }
+
+</script>

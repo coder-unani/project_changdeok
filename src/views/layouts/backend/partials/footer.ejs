@@ -1,0 +1,15 @@
+<footer class="bg-blue-600 text-white text-sm py-4 mt-auto">
+  <!-- 대표자, 사업자번호, 전화번호, 주소 -->
+  <div class="container mx-auto text-center">
+    <p>
+      <span>대표: <%= company.ceo %></span>&nbsp;|&nbsp;
+      <span>사업자등록번호: <%= company.businessNumber %></span>&nbsp;|&nbsp;
+      <span>전화: <%= company.tel %></span>&nbsp;|&nbsp;
+      <span>주소: <%= company.address %></span>&nbsp;|&nbsp;
+      <span>이메일: <%= company.email %></span>
+    </p>
+  </div>
+  <div class="container mx-auto text-center">
+    &copy; <%= new Date().getFullYear() %> <%= company.name %>. All rights reserved.
+  </div>
+</footer>
