@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { EmployeeService } from '../../services/employeeService';
+import { IRequestEmployeeList } from 'types/backend/request';
 
 const employeeService = new EmployeeService();
 
@@ -14,12 +15,12 @@ export class BackendController {
 
   // 직원 등록
   public regist(req: Request, res: Response): void {
-    res.render('backend/employee/regist', { title: 'Register Page' });
+    res.render('backend/employee/regist', { layout: 'layouts/backend/layout', title: 'Register Page' });
   };
 
   // 직원 로그인
   public login(req: Request, res: Response): void {
-    res.render('backend/employee/login', { title: 'Login Page' });
+    res.render('backend/employee/login', { layout: 'layouts/backend/layout', title: 'Login Page' });
   };
 
   // 직원 정보 수정
@@ -29,7 +30,7 @@ export class BackendController {
 
     // ID가 숫자가 아닌 경우 에러 페이지로 이동
     if (isNaN(employeeId)) {
-      res.render('backend/error', { title: 'Error Page' });
+      res.render('backend/error', { layout: 'layouts/backend/layout', title: 'Error Page' });
       return;
     }
     
@@ -38,12 +39,10 @@ export class BackendController {
 
     // 직원 정보가 없는 경우 에러 페이지로 이동
     if (!employee.result) {
-      res.render('admin/error', { title: 'Error Page' });
+      res.render('admin/error', { layout: 'layouts/backend/layout', title: 'Error Page' });
       return;
     }
 
-    console.log(employee);
-    
     res.render('backend/employee/modify', { title: 'Modify Page', data: employee.data });
   };
 
@@ -54,7 +53,7 @@ export class BackendController {
 
     // ID가 숫자가 아닌 경우 에러 페이지로 이동
     if (isNaN(employeeId)) {
-      res.render('backend/error', { title: 'Error Page' });
+      res.render('backend/error', { layout: 'layouts/backend/layout', title: 'Error Page' });
       return;
     }
 
@@ -63,14 +62,42 @@ export class BackendController {
 
     // 직원 정보가 없는 경우 에러 페이지로 이동
     if (!employee.result) {
-      res.render('backend/error', { title: 'Error Page' });
+      res.render('backend/error', { layout: 'layouts/backend/layout', title: 'Error Page' });
       return;
     }
 
-    res.render('admin/employee/delete', { title: 'Delete Page', data: employee.data });
+    res.render('backend/employee/delete', { layout: 'layouts/backend/layout', title: 'Delete Page', data: employee.data });
   };
 
   // 직원 목록
   public async list(req: Request, res: Response): Promise<void> {
+    try {
+      const requestData = req.body;
+
+      // 직원 목록 조회
+      const employeeService = new EmployeeService();
+      const result = await employeeService.list(requestData);
+
+      // 조회 실패 처리 
+      // TODO: 에러 처리가 필요함
+      if (!result.result) {
+        throw new Error('Error');
+        
+      }
+
+      res.render(
+        'backend/employee/list', 
+        { 
+          layout: 'layouts/backend/layout', 
+          title: 'List Page', 
+          data: result.data,
+          metadata: result.metadata
+        }
+      );
+
+    } catch (error) {
+      res.render('backend/error', { layout: 'layouts/backend/layout', title: 'Error Page' });
+
+    }
   };
 }
