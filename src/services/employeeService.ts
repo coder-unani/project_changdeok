@@ -3,7 +3,13 @@ import { PrismaClient } from '@prisma/client';
 import { CODE_FAIL_SERVER, CODE_FAIL_VALIDATION, MESSAGE_FAIL_SERVER } from '../config/constants';
 import { IServiceResponse } from "../types/backend/response";
 import { IEmployee, IEmployeeService } from "../types/backend/employee";
-import { RequestEmployeeRegister, RequestEmployeeUpdate, RequestEmployeeLogin, RequestEmployeeDelete } from "../types/backend/request";
+import { 
+  IRequestEmployeeRegister, 
+  IRequestEmployeeUpdate, 
+  IRequestEmployeeLogin, 
+  IRequestEmployeeDelete,
+  IRequestEmployeeList
+} from "../types/backend/request";
 import { validateEmail, validatePassword, validatePhone, validateDate } from "../utils/validator";
 import { formatDate } from "../utils/formattor";
 import { hashPassword, verifyPassword } from "../utils/encryptor";
@@ -17,7 +23,7 @@ export class EmployeeService implements IEmployeeService {
   }
 
   // 직원 등록
-  public async create(data: RequestEmployeeRegister): Promise<IServiceResponse> {
+  public async create(data: IRequestEmployeeRegister): Promise<IServiceResponse> {
     // 이메일 유효성 검사
     const validatedEmail = validateEmail(data.email);
     if (!validatedEmail.result) {
@@ -57,6 +63,9 @@ export class EmployeeService implements IEmployeeService {
           message: validatedPhone.message
         }
       }
+
+      // 전화번호 숫자만 남기고 제거
+      data.phone = data.phone.replace(/[^0-9]/g, '');
     }
 
     // 휴대폰 번호가 있다면 유효성 검사
@@ -69,6 +78,9 @@ export class EmployeeService implements IEmployeeService {
           message: validatedMobile.message
         }
       }
+
+      // 휴대폰번호 숫자만 남기고 제거
+      data.mobile = data.mobile.replace(/[^0-9]/g, '');
     }
 
     // 고용일이 있다면 날짜 형식 체크
@@ -188,7 +200,7 @@ export class EmployeeService implements IEmployeeService {
     }
   }
 
-  public async update(id: number, data: RequestEmployeeUpdate): Promise<IServiceResponse> {
+  public async update(id: number, data: IRequestEmployeeUpdate): Promise<IServiceResponse> {
     // Employee 와 다른 데이터만 수정
 
     // 직원 정보 조회
@@ -302,7 +314,7 @@ export class EmployeeService implements IEmployeeService {
     }
   }
   
-  public async delete(id: number, data: RequestEmployeeDelete): Promise<IServiceResponse> {
+  public async delete(id: number, data: IRequestEmployeeDelete): Promise<IServiceResponse> {
     // 직원 정보 조회
     const employee = await this.read(id);
 
@@ -356,7 +368,7 @@ export class EmployeeService implements IEmployeeService {
     }
   }
 
-  public async login(data: RequestEmployeeLogin): Promise<IServiceResponse<IEmployee>> {
+  public async login(data: IRequestEmployeeLogin): Promise<IServiceResponse<IEmployee>> {
     // 이메일 필수 체크
     if (!data.email) {
       return {
@@ -374,8 +386,6 @@ export class EmployeeService implements IEmployeeService {
         message: '패스워드를 입력해주세요.'
       }
     }
-
-    // TODO: 패스워드 암호화 처리 필요
 
     // 직원 로그인
     try {
@@ -421,6 +431,8 @@ export class EmployeeService implements IEmployeeService {
         address: result.address
       };
 
+      
+
       // 성공
       return { 
         result: true,
@@ -437,9 +449,86 @@ export class EmployeeService implements IEmployeeService {
     }
   }
 
-  public async search(keyword: string): Promise<IServiceResponse<IEmployee[]>> {
+  public async list(data: IRequestEmployeeList): Promise<IServiceResponse<IEmployee[]>> {
 
-    return { result: true, data: [] };
+    // 페이지 번호가 없거나 1보다 작은 경우 1로 설정
+    if (!data.page || data.page < 1) {
+      data.page = 1;
+    }
+
+    // 페이지 크기가 작거나 너무 크면 10으로 설정
+    if (!data.pageSize || data.pageSize < 1 || data.pageSize > 100) {
+      data.pageSize = 10;
+    }
+
+    // 정렬이 없는 경우 id로 설정
+    if (!data.sort) {
+      data.sort = 'ID_ASC';
+    }
+
+    let orderBy = {};
+    if (data.sort === 'ID_DESC') {
+      orderBy = {
+        id: 'desc'
+      }
+    } else if (data.sort === 'ID_ASC') {
+      orderBy = {
+        id: 'asc'
+      }
+    } else if (data.sort === 'NAME_DESC') {
+      orderBy = {
+        name: 'desc'
+      }
+    } else if (data.sort === 'NAME_ASC') {
+      orderBy = {
+        name: 'asc'
+      }
+    }
+
+    // 전체 직원 수 조회
+    const totalEmployees = await this.prisma.employee.count({
+      where: {
+        isDeleted: false
+      }
+    });
+
+    // 직원 리스트 조회
+    const employeeInquery = await this.prisma.employee.findMany({
+      where: {
+        isDeleted: false
+      },
+      skip: (data.page - 1) * data.pageSize,
+      take: data.pageSize,
+      orderBy: orderBy
+    });
+
+    // IEmployees 배열로 변환
+    const employees: IEmployee[] = employeeInquery.map(employee => {
+      return {
+        id: employee.id,
+        email: employee.email,
+        name: employee.name,
+        position: employee.position,
+        description: employee.description,
+        phone: employee.phone,
+        mobile: employee.mobile,
+        address: employee.address,
+        hireDate: employee.hireDate?.toISOString(),
+        birthDate: employee.birthDate?.toISOString(),
+        fireDate: employee.fireDate?.toISOString()
+      };
+    });
+
+    // 메타데이터 생성
+    const metadata = {
+      total: totalEmployees,
+      page: data.page,
+      pageSize: data.pageSize,
+      count: employees.length,
+      totalPage: Math.ceil(totalEmployees / data.pageSize)
+    };
+
+    return { result: true, metadata, data: employees };
 
   }
 

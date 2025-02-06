@@ -38,5 +38,5 @@ export interface IEmployeeService {
   update(req: any, res: any): void;
   delete(req: any, res: any): void;
   login(req: any, res: any): Promise<IServiceResponse<IEmployee>>;
-  search(req: any, res: any): Promise<IServiceResponse<IEmployee[]>>;
+  list(req: any, res: any): Promise<IServiceResponse<IEmployee[]>>;
 }

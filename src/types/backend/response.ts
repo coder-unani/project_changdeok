@@ -8,5 +8,6 @@ export interface IServiceResponse<T = undefined> {
   result: boolean;
   code?: typeCode;
   message?: typeMessage;
+  metadata?: any;
   data?: T;
 }
