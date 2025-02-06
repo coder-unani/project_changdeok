@@ -56,19 +56,24 @@ export const formatDate = (date: string | Date | undefined | null): typeFormatte
 // API 응답을 JSON 형식으로 변환하는 함수
 export const formatApiResponse = (
   result: boolean, 
-  code: string | undefined | null, 
-  message: string | undefined | null, 
-  data: any | undefined
+  code: string | undefined | null = null, 
+  message: string | undefined | null = null,
+  metadata: any | undefined | null = null,
+  data: any = null
 ): IApiResponse => {
   code = code || null;
   message = message || null;
   data = data || null;
 
-  return {
+  // 응답 데이터 생성
+  const resultData: IApiResponse = {
     result,
     code,
     message,
+    metadata,
     data
   };
+  
+  return resultData;
 
 }
