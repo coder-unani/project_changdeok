@@ -1,4 +1,4 @@
-<div class="flex-grow flex items-top justify-center h-full">
+<div class="bg-white p-2 lg:p-4 rounded-lg shadow-md w-full h-full">
   <table id="employeeTable" class="min-w-full divide-y divide-gray-200">
     <thead>
       <tr>
@@ -11,12 +11,15 @@
       <% data.forEach(employee => { %>
         <tr>
           <td><%=employee.id%></td>
-          <td><%=employee.email%></td>
+          <td><a href="/admin/employee/<%=employee.id%>"><%=employee.email%></a></td>
           <td><%=employee.name%></td>
         </tr>
       <% }); %>
     </tbody>
   </table>
+  <div class="text-right">
+    <a href="/admin/employee/regist" class="w-full lg:w-auto mt-4 px-4 py-4 lg:py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-blue focus:ring-opacity-75">관리자 등록</a>
+  </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

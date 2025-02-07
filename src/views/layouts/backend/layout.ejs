@@ -3,22 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>관리 도구 | <%= company.name %></title>
+    <title><%=title || '관리도구'%> | <%=company.name%></title>
     <link rel="stylesheet" href="/css/tailwind.css">
     <link rel="stylesheet" href="/css/styles.css">
   </head>
   <body class="flex flex-col min-h-screen">
     <!-- 헤더 -->
     <%- include('partials/header') %>
-    <div class="flex-grow flex">
+    <div class="flex-grow flex lg:h-screen">
       <!-- 사이드바 -->
       <%- include('partials/sidebar') %>
-      <main class="flex-grow flex items-center justify-center p-2 lg:p-4 text-sm">
+      <div class="flex-grow flex flex-col">
         <!-- 메인 컨텐츠 -->
-        <%- body %>
-      </main>
+        <main class="w-full h-full flex-grow p-2 lg:p-4 bg-gray-50 text-sm">
+          <%- body %>
+        </main>
+        <!-- 푸터 -->
+        <%- include('partials/footer') %>
+      </div>
     </div>
-    <!-- 푸터 -->
-    <%- include('partials/footer') %>
   </body>
 </html>

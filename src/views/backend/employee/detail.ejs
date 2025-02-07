@@ -1,0 +1,68 @@
+<div class="bg-white p-2 lg:p-4 rounded-lg shadow-md w-full h-full">
+  <h1 class="text-2xl font-bold mb-4 text-center text-gray-800">관리자 상세</h1>
+  <div id="adminDetails" class="space-y-3 text-sm">
+    <!-- Email -->
+    <div>
+      <label class="block text-gray-600 font-medium">이메일</label>
+      <p class="text-gray-800"><%=data.email%></p>
+    </div>
+
+    <!-- Name -->
+    <div>
+      <label class="block text-gray-600 font-medium">이름</label>
+      <p class="text-gray-800"><%=data.name%></p>
+    </div>
+
+    <!-- Position -->
+    <div>
+      <label class="block text-gray-600 font-medium">직급</label>
+      <p class="text-gray-800"><%=data.position || '없음'%></p>
+    </div>
+
+    <!-- Phone -->
+    <div>
+      <label class="block text-gray-600 font-medium">전화번호</label>
+      <p class="text-gray-800"><%=data.phone%></p>
+    </div>
+
+    <!-- Address -->
+    <div>
+      <label class="block text-gray-600 font-medium">주소</label>
+      <p class="text-gray-800"><%=data.address%></p>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="mt-6 grid grid-cols-3 gap-1.5 text-white font-semibold">
+    <button type="button" onclick="editAdminDetails()" 
+            class="px-4 py-2 bg-blue-500 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-blue focus:ring-opacity:75">
+      수정하기
+    </button>
+    
+    <button type="button" onclick="changePassword()" 
+            class="px-4 py-2 bg-green-500 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-green focus:ring-opacity:75">
+      비밀번호 변경
+    </button>
+
+    <button type="button" onclick="deleteAdmin()" 
+            class="px-4 py-2 bg-red-500 rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-red focus:ring-opacity:75">
+      삭제하기
+    </button>
+  </div>
+</div>
+
+<script>
+  function editAdminDetails() {
+    location.href = "/admin/employee/<%=data.id%>/update";
+  }
+
+  function changePassword() {
+    alert("비밀번호 변경 페이지로 이동합니다!");
+  }
+
+  function deleteAdmin() {
+    if (confirm("정말로 삭제하시겠습니까?")) {
+      alert("관리자가 삭제되었습니다.");
+    }
+  }
+</script>
