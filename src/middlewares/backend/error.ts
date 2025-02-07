@@ -6,7 +6,7 @@ export class ErrorMiddleware implements IErrorMiddleware {
   private logger: IHttpLogger;
   private template: string;
 
-  constructor(logger: IHttpLogger, template: string = 'frontend/error') {
+  constructor(logger: IHttpLogger, template: string = 'backend/error') {
     this.logger = logger;
     this.template = template;
 
