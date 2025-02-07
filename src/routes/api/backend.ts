@@ -13,6 +13,11 @@ router.get(API_BACKEND_ROUTE.EMPLOYEE_LIST, (req: Request, res: Response) => {
   apiBackendController.employeeList(req, res);
 });
 
+// 직원 상세 정보
+router.get(API_BACKEND_ROUTE.EMPLOYEE_READ, (req: Request, res: Response) => {
+  apiBackendController.employeeDetail(req, res);
+});
+
 // 직원 등록
 router.post(API_BACKEND_ROUTE.EMPLOYEE_REGIST, (req: Request, res: Response) => {
   apiBackendController.employeeRegist(req, res);

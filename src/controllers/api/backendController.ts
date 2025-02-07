@@ -197,4 +197,37 @@ export class ApiBackendController {
 
     }
   }
+
+  // 직원 상세
+  public async employeeDetail(req: Request, res: Response): Promise<void> {
+    try {
+      // 직원 ID 추출
+      const employeeId = parseInt(req.params.employeeId);
+
+      // ID가 숫자가 아닌 경우 에러 처리
+      if (isNaN(employeeId)) {
+        res.status(400).send('Bad Request');
+        return;
+      }
+
+      // 직원 상세 조회
+      const employeeService = new EmployeeService();
+      const result = await employeeService.read(employeeId);
+
+      // 조회 실패 처리
+      if (!result.result) {
+        res.status(500).send(result);
+        return;
+      }
+
+      // 조회 성공시 200 응답
+      const response = formatApiResponse(true, null, null, result.metadata, result.data);
+      res.status(200).json(response);
+
+    } catch (error) {
+      const response = formatApiResponse(false, CODE_FAIL_SERVER, MESSAGE_FAIL_SERVER);
+      res.status(500).json(response);
+
+    }
+  }
 }
