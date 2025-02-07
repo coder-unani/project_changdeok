@@ -21,7 +21,7 @@ export const JWT_SECRET_KEY = (process.env.JWT_SECRET_KEY) ? process.env.JWT_SEC
 export const JWT_EXPIRE_SECOND = Number.isNaN(parseInt(process.env.JWT_EXPIRE_SECOND || ''))
   ? 3600
   : parseInt(process.env.JWT_EXPIRE_SECOND || '3600');
-  
+
 // 허용할 HTML 태그
 export const ALLOWED_TAGS = [
   'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul',

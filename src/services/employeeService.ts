@@ -191,12 +191,12 @@ export class EmployeeService implements IEmployeeService {
       };
 
     } catch (error) {
-      console.error(error);
       return {
         result: false,
         code: CODE_FAIL_SERVER,
         message: MESSAGE_FAIL_SERVER
       }
+      
     }
   }
 
@@ -430,8 +430,6 @@ export class EmployeeService implements IEmployeeService {
         mobile: result.mobile,
         address: result.address
       };
-
-      
 
       // 성공
       return { 
