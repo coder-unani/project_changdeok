@@ -5,12 +5,12 @@
     <a href="/admin" class="hover:text-gray-200"><%= company.name %></a>
   </div>
   <nav class="flex flex-col p-4">
-    <a href="/admin" class="py-2 px-4 hover:bg-gray-200">대시보드</a>
+    <a href="/admin" class="py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white">대시보드</a>
     
     <div class="relative">
       <button
         data-toggle-submenu-pc
-        class="w-full text-left py-2 px-4 hover:bg-gray-200 flex justify-between items-center focus:outline-none"
+        class="w-full text-left py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white flex justify-between items-center focus:outline-none"
       >
         게시판 관리
         <svg
@@ -26,17 +26,23 @@
       </button>
       <div
         data-submenu-pc
-        class="hidden flex flex-col pl-4 border-l border-gray-300 space-y-2 mt-1"
+        class="hidden pl-4 border-l border-blue-100 space-y-2 mt-1"
       >
-        <a href="#" class="py-2 px-4 hover:bg-gray-200">공지사항</a>
-        <a href="#" class="py-2 px-4 hover:bg-gray-200">문의</a>
+        <ul>
+          <li class="py-2">
+            <a href="#" class="py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white">공지사항</a>
+          </li>
+          <li class="py-2">
+            <a href="#" class="py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white">문의</a>
+          </li>
+        </ul>
       </div>
     </div>
 
     <div class="relative">
       <button
         data-toggle-submenu-pc
-        class="w-full text-left py-2 px-4 hover:bg-gray-200 flex justify-between items-center focus:outline-none"
+        class="w-full text-left py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white flex justify-between items-center focus:outline-none"
       >
         관리 설정
         <svg
@@ -52,14 +58,20 @@
       </button>
       <div
         data-submenu-pc
-        class="hidden flex flex-col pl-4 border-l border-gray-300 space-y-2 mt-1"
+        class="hidden pl-4 border-l border-blue-100 space-y-2 mt-1"
       >
-        <a href="/admin/employee" class="py-2 px-4 hover:bg-gray-200">관리자</a>
-        <a href="/admin/permission" class="py-2 px-4 hover:bg-gray-200">권한</a>
+        <ul>
+          <li class="py-2">
+            <a href="/admin/employee" class="py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white">관리자</a>
+          </li>
+          <li class="py-2">
+            <a href="/admin/permission" class="py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white">권한</a>
+          </li>
+        </ul>
       </div>
     </div>
 
-    <a href="#" class="py-2 px-4 hover:bg-gray-200">사이트 관리</a>
+    <a href="#" class="py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white">사이트 관리</a>
   </nav>
 </div>
 
@@ -72,11 +84,11 @@
     <button id="close-menu" class="self-end mb-4 text-gray-600 focus:outline-none">
       닫기
     </button>
-    <a href="/admin" class="py-2 px-4 hover:bg-gray-200">대시보드</a>
+    <a href="/admin" class="py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white">대시보드</a>
     <div class="relative">
       <button
         data-toggle-submenu
-        class="w-full text-left py-2 px-4 hover:bg-gray-200 flex justify-between items-center focus:outline-none"
+        class="w-full text-left py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white flex justify-between items-center focus:outline-none"
       >
         게시판 관리
         <svg
@@ -96,17 +108,23 @@
       </button>
       <div
         data-submenu
-        class="hidden flex flex-col pl-4 border-l border-gray-300 space-y-2 mt-1"
+        class="hidden pl-4 border-l border-blue-100 space-y-2 mt-1"
       >
-        <a href="#" class="py-2 px-4 hover:bg-gray-200">공지사항</a>
-        <a href="#" class="py-2 px-4 hover:bg-gray-200">문의</a>
+        <ul>
+          <li class="py-2">
+            <a href="#" class="py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white">공지사항</a>
+          </li>
+          <li class="py-2">
+            <a href="#" class="py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white">문의</a>
+          </li>
+        </ul>
       </div>
     </div>
 
     <div class="relative">
       <button
         data-toggle-submenu
-        class="w-full text-left py-2 px-4 hover:bg-gray-200 flex justify-between items-center focus:outline-none"
+        class="w-full text-left py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white flex justify-between items-center focus:outline-none"
       >
         관리자 설정
         <svg
@@ -124,16 +142,19 @@
           />
         </svg>
       </button>
-      <div
-        data-submenu
-        class="hidden flex flex-col pl-4 border-l border-gray-300 space-y-2 mt-1"
-      >
-        <a href="/admin/employee" class="py-2 px-4 hover:bg-gray-200">관리자</a>
-        <a href="/admin/permission" class="py-2 px-4 hover:bg-gray-200">권한</a>
+      <div class="hidden pl-4 border-l border-blue-100 space-y-2 mt-1" data-submenu>
+        <ul>
+          <li class="py-2">
+            <a href="/admin/employee" class="py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white">관리자</a>
+          </li>
+          <li class="py-2">
+            <a href="/admin/permission" class="py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white">권한</a>
+          </li>
+        </ul>
       </div>
     </div>
 
-    <a href="#" class="py-2 px-4 hover:bg-gray-200">사이트 관리</a>
+    <a href="#" class="py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white">사이트 관리</a>
   </nav>
 </div>
 
