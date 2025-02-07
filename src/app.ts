@@ -1,36 +1,28 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import express, { Application, Request, Response, NextFunction } from 'express';
+import express, { Application } from 'express';
 import expressLayouts from 'express-ejs-layouts';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 
-import { IMiddleware, IErrorMiddleware } from './types/middleware';
-import { AuthMiddleware as BackendAuthMiddleware } from './middlewares/backend/auth';
-import { CorsMiddleware } from './middlewares/api/cors';
+import { SERVICE_PORT, STATIC_PATH, LOG_PATH, LOG_LEVEL, ALLOWED_TAGS } from './config/config';
+import { companyInfo } from './config/base';
+import { IMiddleware } from './types/middleware';
 import { LoggerMiddleware } from './middlewares/logger';
 import { SanitizeMiddleware } from './middlewares/sanitizer';
-import { ErrorMiddleware } from './middlewares/backend/error';
 import { ExpressLogger } from './utils/logger';
+import { WEB_FRONTEND_PREFIX, WEB_BACKEND_PREFIX, API_FRONTEND_PREFIX, API_BACKEND_PREFIX } from './routes/routes';
 import apiFrontendRouter from './routes/api/frontend';
 import apiBackendRouter from './routes/api/backend';
-import frontendRouter from './routes/web/frontend';
-import backendRouter from './routes/web/backend';
-import { SERVICE_PORT, STATIC_PATH, LOG_PATH, LOG_LEVEL, CORS_OPTIONS, CORS_BACKEND_OPTIONS, ALLOWED_TAGS, CRYPTO_SECRET_KEY } from './config/config';
-import { WEB_FRONTEND_PREFIX, WEB_BACKEND_PREFIX, API_FRONTEND_PREFIX, API_BACKEND_PREFIX } from './routes/routes';
-import { companyInfo } from './config/base';
+import frontendRouter from './routes/frontend';
+import backendRouter from './routes/backend';
 
 
 /**
  * 필요한 환경 변수 설정
  */
-if (
-  !SERVICE_PORT 
-  || !STATIC_PATH 
-  || !LOG_PATH 
-  || !LOG_LEVEL
-) {
+if (!SERVICE_PORT || !STATIC_PATH || !LOG_PATH || !LOG_LEVEL) {
   throw new Error('필수 환경변수가 설정되지 않았습니다.');
 }
 
@@ -44,6 +36,7 @@ const app: Application = express();
 /**
  * 공통 미들웨어 설정
  */
+
 // 쿠키 파서 설정
 app.use(cookieParser());
 
@@ -62,18 +55,9 @@ app.use((req, res, next) => sanitizeMiddleware.handle(req, res, next));
 
 
 /**
- * API 설정
- */
-// API CORS 설정
-const corsMiddleware: IMiddleware = new CorsMiddleware(CORS_OPTIONS);
-const backendCorsMiddleware: IMiddleware = new CorsMiddleware(CORS_BACKEND_OPTIONS);
-apiFrontendRouter.use((req, res, next) => corsMiddleware.handle(req, res, next));
-apiBackendRouter.use((req, res, next) => backendCorsMiddleware.handle(req, res, next));
-
-
-/**
  * WEB 설정
  */
+
 // 정적 파일 설정
 app.use(express.static(path.resolve(__dirname, STATIC_PATH))); 
 
@@ -100,17 +84,6 @@ app.use(API_BACKEND_PREFIX, apiBackendRouter); // API Backend 라우터
 app.use(WEB_FRONTEND_PREFIX, frontendRouter); // Frontend 라우터
 app.use(WEB_BACKEND_PREFIX, backendRouter); // Backend 라우터
 
-
-/**
- * 에러 핸들러 설정
- */
-// Frontend Error Middleware
-const frontendErrorMiddleware: IErrorMiddleware = new ErrorMiddleware(logger, 'frontend/error');
-frontendRouter.use((err: any, req: Request, res: Response, next: NextFunction) => frontendErrorMiddleware.handleError(err, req, res, next));
-
-// Backend Error Middleware
-const backendErrorMiddleware: IErrorMiddleware = new ErrorMiddleware(logger, 'backend/error');
-backendRouter.use((err: any, req: Request, res: Response, next: NextFunction) => backendErrorMiddleware.handleError(err, req, res, next));
 
 /**
  * 서버 실행

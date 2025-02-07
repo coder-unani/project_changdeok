@@ -1,14 +1,19 @@
-import { Router } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 
-import { WEB_BACKEND_ROUTE } from '../routes';
-import { IMiddleware } from '../../types/middleware';
-import { AuthMiddleware } from '../../middlewares/backend/auth';
-import { BackendController } from '../../controllers/web/backendController';
+import { LOG_PATH, LOG_LEVEL } from '../config/config';
+import { WEB_BACKEND_ROUTE } from './routes';
+import { IMiddleware, IErrorMiddleware } from '../types/middleware';
+import { AuthMiddleware } from '../middlewares/backend/auth';
+import { ErrorMiddleware } from '../middlewares/backend/error';
+import { BackendController } from '../controllers/backendController';
+import { ExpressLogger } from '../utils/logger';
 
 
 const router: Router = Router();
 
-// Auth 설정
+/**
+ * 미들웨어 설정
+ */
 const authMiddleware: IMiddleware = new AuthMiddleware();
 router.use((req, res, next) => authMiddleware.handle(req, res, next));
 
@@ -55,5 +60,12 @@ router.get(WEB_BACKEND_ROUTE.PERMISSION, function (req, res) {
   backendController.permission(req, res);
 });
 
+
+/**
+ * 에러 핸들러 설정
+ */
+const logger = new ExpressLogger(LOG_PATH, LOG_LEVEL);
+const errorMiddleware: IErrorMiddleware = new ErrorMiddleware(logger, 'backend/error');
+router.use((err: any, req: Request, res: Response, next: NextFunction) => errorMiddleware.handleError(err, req, res, next));
 
 export default router;

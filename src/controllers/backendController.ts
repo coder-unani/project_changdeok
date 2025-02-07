@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { EmployeeService } from '../../services/employeeService';
+import { EmployeeService } from '../services/employeeService';
 import { IRequestEmployeeList } from 'types/backend/request';
 
 const employeeService = new EmployeeService();

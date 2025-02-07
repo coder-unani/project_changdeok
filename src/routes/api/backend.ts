@@ -1,9 +1,16 @@
 import { Request, Response, Router } from 'express';
 
+import { CORS_BACKEND_OPTIONS } from '../../config/config';
+import { IMiddleware } from '../../types/middleware';
+import { CorsMiddleware } from '../../middlewares/api/cors';
 import { ApiBackendController } from '../../controllers/api/backendController';
 import { API_BACKEND_ROUTE } from '../routes';
 
 const router: Router = Router();
+
+// CORS 설정
+const corsMiddleware: IMiddleware = new CorsMiddleware(CORS_BACKEND_OPTIONS);
+router.use((req, res, next) => corsMiddleware.handle(req, res, next));
 
 // 컨트롤러
 const apiBackendController = new ApiBackendController();
