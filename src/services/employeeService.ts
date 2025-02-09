@@ -11,7 +11,7 @@ import {
   IRequestEmployeeList
 } from "../types/backend/request";
 import { validateEmail, validatePassword, validatePhone, validateDate } from "../utils/validator";
-import { formatDate } from "../utils/formattor";
+import { formatDate, formatEmailMasking } from "../utils/formattor";
 import { hashPassword, verifyPassword } from "../utils/encryptor";
 
 export class EmployeeService implements IEmployeeService {
@@ -169,10 +169,19 @@ export class EmployeeService implements IEmployeeService {
         }
       }
 
+      const employeeEmail = formatEmailMasking(result.email);
+      if (!employeeEmail.result) {
+        return {
+          result: false,
+          code: CODE_FAIL_SERVER,
+          message: employeeEmail.message
+        }
+      }
+
       // 반환할 직원 정보
       const employee: IEmployee = {
         id: result.id,
-        email: result.email,
+        email: employeeEmail.data || result.email,
         name: result.name,
         position: result.position,
         description: result.description,
@@ -502,9 +511,12 @@ export class EmployeeService implements IEmployeeService {
 
     // IEmployees 배열로 변환
     const employees: IEmployee[] = employeeInquery.map(employee => {
+      // 이메일 마스킹 처리
+      const employeeEmail = formatEmailMasking(employee.email);
+
       return {
         id: employee.id,
-        email: employee.email,
+        email: employeeEmail.data || employee.email,
         name: employee.name,
         position: employee.position,
         description: employee.description,
@@ -522,6 +534,8 @@ export class EmployeeService implements IEmployeeService {
       total: totalEmployees,
       page: data.page,
       pageSize: data.pageSize,
+      start: (data.page - 1) * data.pageSize + 1,
+      end: (data.page - 1) * data.pageSize + employees.length,
       count: employees.length,
       totalPage: Math.ceil(totalEmployees / data.pageSize)
     };
