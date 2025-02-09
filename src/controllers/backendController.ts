@@ -1,4 +1,6 @@
 import { Request, Response } from 'express';
+
+import { WEB_BACKEND_ROUTE } from '../routes/routes';
 import { EmployeeService } from '../services/employeeService';
 import { IRequestEmployeeList } from 'types/backend/request';
 
@@ -16,17 +18,32 @@ export class BackendController {
   // 관리자 홈
   public index(req: Request, res: Response): void {
     // 2. 로그인 확인되면 권한이 있는지 확인 후 권한이 없으면 권한이 없다는 페이지로 이동
-    res.render('backend/index', { layout: this.layout, title: 'Admin Page' });
+    res.render(
+      WEB_BACKEND_ROUTE.INDEX.VIEW, { 
+        layout: this.layout, 
+        title: WEB_BACKEND_ROUTE.INDEX.TITLE
+      }
+    );
   };
 
   // 직원 등록
   public employeeRegist(req: Request, res: Response): void {
-    res.render('backend/employees/regist', { layout: this.layout, title: 'Register Page' });
+    res.render(
+      WEB_BACKEND_ROUTE.EMPLOYEE_REGIST.VIEW, { 
+        layout: this.layout, 
+        title: WEB_BACKEND_ROUTE.EMPLOYEE_REGIST.TITLE
+      }
+    );
   };
 
   // 직원 로그인
   public employeeLogin(req: Request, res: Response): void {
-    res.render('backend/employees/login', { layout: this.layoutNonHeader, title: 'Login Page' });
+    res.render(
+      WEB_BACKEND_ROUTE.EMPLOYEE_LOGIN.VIEW, { 
+        layout: this.layoutNonHeader, 
+        title: WEB_BACKEND_ROUTE.EMPLOYEE_LOGIN.TITLE
+      }
+    );
   };
 
   // 직원 정보 수정
@@ -55,10 +72,9 @@ export class BackendController {
       const result = await apiResponse.json();
 
       res.render(
-        'backend/employees/update', 
-        { 
+        WEB_BACKEND_ROUTE.EMPLOYEE_UPDATE.VIEW, { 
           layout: this.layout, 
-          title: '관리자 업데이트',
+          title: WEB_BACKEND_ROUTE.EMPLOYEE_UPDATE.TITLE,
           data: result.data,
           metadata: {
             result: result.result,
@@ -94,7 +110,13 @@ export class BackendController {
       return;
     }
 
-    res.render('backend/employees/delete', { layout: this.layout, title: 'Delete Page', data: employee.data });
+    res.render(
+      WEB_BACKEND_ROUTE.EMPLOYEE_DELETE.VIEW, { 
+        layout: this.layout, 
+        title: WEB_BACKEND_ROUTE.EMPLOYEE_DELETE.TITLE, 
+        data: employee.data 
+      }
+    );
   };
 
   // 직원 목록
@@ -118,10 +140,9 @@ export class BackendController {
       const result = await apiResponse.json();
       
       res.render(
-        'backend/employees/list', 
-        { 
+        WEB_BACKEND_ROUTE.EMPLOYEE_LIST.VIEW, { 
           layout: this.layout, 
-          title: 'List Page', 
+          title: WEB_BACKEND_ROUTE.EMPLOYEE_LIST.TITLE, 
           data: result.data,
           metadata: {
             result: result.result,
@@ -164,10 +185,10 @@ export class BackendController {
       const result = await apiResponse.json();
 
       res.render(
-        'backend/employees/detail', 
+        WEB_BACKEND_ROUTE.EMPLOYEE_READ.VIEW, 
         { 
           layout: this.layout, 
-          title: 'Detail Page',
+          title: WEB_BACKEND_ROUTE.EMPLOYEE_READ.TITLE,
           data: result.data,
           metadata: {
             result: result.result,
@@ -186,7 +207,13 @@ export class BackendController {
   // 권한 관리
   public async permission(req: Request, res: Response): Promise<void> {
     try {
-      res.render('backend/permissions', { layout: this.layout, title: 'Permission Page' });
+      res.render(
+        WEB_BACKEND_ROUTE.PERMISSION.VIEW, { 
+          layout: this.layout, 
+          title: WEB_BACKEND_ROUTE.PERMISSION.TITLE
+        }
+      );
+
     } catch (error) {
       res.render('backend/error', { layout: this.layout, title: 'Error Page' });
     }

@@ -21,42 +21,42 @@ router.use((req, res, next) => authMiddleware.handle(req, res, next));
 const backendController = new BackendController();
 
 // 관리자 홈
-router.get(WEB_BACKEND_ROUTE.INDEX, function (req, res) {
+router.get(WEB_BACKEND_ROUTE.INDEX.URL, function (req, res) {
   backendController.index(req, res);
 });
 
 // 직원 목록
-router.get(WEB_BACKEND_ROUTE.EMPLOYEE_LIST, function (req, res) {
+router.get(WEB_BACKEND_ROUTE.EMPLOYEE_LIST.URL, function (req, res) {
   backendController.employeeList(req, res);
 });
 
 // 직원 등록
-router.get(WEB_BACKEND_ROUTE.EMPLOYEE_REGIST, function (req, res) {
+router.get(WEB_BACKEND_ROUTE.EMPLOYEE_REGIST.URL, function (req, res) {
   backendController.employeeRegist(req, res);
 });
 
 // 직원 로그인
-router.get(WEB_BACKEND_ROUTE.EMPLOYEE_LOGIN, function (req, res) {
+router.get(WEB_BACKEND_ROUTE.EMPLOYEE_LOGIN.URL, function (req, res) {
   backendController.employeeLogin(req, res);
 });
 
 // 직원 상세 정보
-router.get(WEB_BACKEND_ROUTE.EMPLOYEE_READ, function (req, res) {
+router.get(WEB_BACKEND_ROUTE.EMPLOYEE_READ.URL, function (req, res) {
   backendController.employeeDetail(req, res);
 });
 
 // 직원 정보 수정
-router.get(WEB_BACKEND_ROUTE.EMPLOYEE_UPDATE, function (req, res) {
+router.get(WEB_BACKEND_ROUTE.EMPLOYEE_UPDATE.URL, function (req, res) {
   backendController.employeeUpdate(req, res);
 });
 
 // 직원 탈퇴
-router.post(WEB_BACKEND_ROUTE.EMPLOYEE_DELETE, function (req, res) {
+router.post(WEB_BACKEND_ROUTE.EMPLOYEE_DELETE.URL, function (req, res) {
   backendController.employeeDelete(req, res);
 });
 
 // 직원 권한 관리
-router.get(WEB_BACKEND_ROUTE.PERMISSION, function (req, res) {
+router.get(WEB_BACKEND_ROUTE.PERMISSION.URL, function (req, res) {
   backendController.permission(req, res);
 });
 
