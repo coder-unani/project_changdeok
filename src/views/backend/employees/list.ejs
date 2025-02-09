@@ -1,0 +1,75 @@
+<div class="max-w-[1024px] h-full bg-white p-2 lg:p-4 rounded-2xl shadow-md">
+  <div class="block mb-4 mx-auto border-b border-slate-300 pb-2 max-w-[360px]">
+    <h1 class='flex justify-center items-center gap-1.5 px-4 py-2 text-center text-slate-700 transition-all'>
+      <span class="font-bold">관리자 목록</span><span class="hidden lg:block">| List of Administrators</span>
+    </h1>
+  </div>
+  <div class="flex justify-between items-center py-3">
+    <div>
+      <a href="/admin/employees/regist" class="orb-btn-primary">관리자 등록</a>
+    </div>
+    <div class="ml-3">
+      <div class="w-full max-w-sm min-w-[200px] relative">
+        <div class="relative">
+            <input
+            class="w-full pr-11 h-10 pl-3 py-2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded transition duration-200 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md"
+            placeholder="Search..."
+            />
+            <button
+            class="absolute h-8 w-8 right-1 top-1 my-auto px-2 flex items-center bg-white rounded "
+            type="button"
+            >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-8 h-8 text-slate-600">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+            </svg>
+            </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="orb-list">
+    <table>
+      <thead>
+      <tr>
+          <th><p>아이디</p></th>
+          <th><p>이름</p></th>
+          <th><p>이메일</p></th>
+          <th class="hidden lg:table-cell"><p>직급</p></th>
+          <th class="hidden lg:table-cell"><p>생성일</p></th>
+      </tr>
+      </thead>
+      <tbody>
+        <% data.forEach(employee => { %>
+          <tr>
+            <td><p><%=employee.id%></p></td>
+            <td><a href="/admin/employees/<%=employee.id%>"><p><%=employee.name%></p></a></td>
+            <td><a href="/admin/employees/<%=employee.id%>"><p><%=employee.email%></p></a></td>
+            <td class="hidden lg:table-cell"><p><%=employee.position%></p></td>
+            <td class="hidden lg:table-cell"><p>2024-08-15</p></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+
+    <div>
+      <!-- 게시물 개수 노출 -->
+      <div>검색 결과: <b><%=metadata.total%></b>개</div>
+      <!-- 페이지 버튼 -->
+      <% if (metadata.totalPage >= 1) { %>
+        <div>
+          <% if (metadata.page > 1) { %> <button><a href="?page=<%=metadata.page - 1%>">이전</a></button> <% } %>
+
+          <% 
+            let startPage = metadata.page - 2;
+            if (startPage < 1) startPage = 1;
+            const endPage = metadata.page + 2 > metadata.totalPage ? metadata.totalPage : metadata.page + 2;
+            for (let i = startPage; i <= endPage; i++) { 
+          %> <button <% if (i === metadata.page) {%>class="active"<%}%>><a href="?page=<%=i%>"><%=i%></a></button> <% } %>
+
+          <% if (metadata.page < metadata.totalPage) { %> <button><a href="?page=<%=metadata.page + 1%>">다음</a></button> <% } %>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>

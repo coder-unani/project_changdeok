@@ -1,9 +1,20 @@
+const defaultTheme = require('tailwindcss/defaultTheme')
 const colors = require('tailwindcss/colors');
 
 module.exports = {
+  content: [
+    './src/views/**/*.ejs',
+    './src/styles/**/*.css',
+  ],
   theme: {
     extend: {
-      colors: colors, // 기본 팔레트 복원
-    },
+      colors: colors,
+      fontFamily: {
+        sans: [
+          'var(--default-font-family)',
+          ...defaultTheme.fontFamily.sans
+        ]
+      }
+    }
   },
 };

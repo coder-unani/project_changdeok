@@ -1,185 +1,278 @@
 <!-- 사이드바 PC -->
-<div id="sidebar-pc" class="hidden lg:block w-64 h-screen shadow-lg shadow-gray-300 text-sm border-r border-gray-300 z-0">
-  <!-- Logo -->
-  <div class="w-full text-center text-lg font-bold p-4">
-    <a href="/admin" class="hover:text-gray-200"><%= company.name %></a>
+<div id="sidebar-pc" class="hidden lg:flex lg:flex-col justify-between w-80 p-4 rounded-2xl shadow-lg z-0 mr-4 text-sm bg-white dark:bg-gray-700">
+  <div>
+    <!-- 로고 -->
+    <div class="flex gap-1.5 items-center justify-center pt-6">
+      <span class="text-slate-700">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 188 189" width="26" height="26">
+          <path fill="currentColor" d="
+            M91.18,189.42C45.16,189.47-1.45,149.34-.2,93.29.5,61.54,14.27,36.62,40.03,18,52.93,8.68,66.77,2.53,82.69.49c46.6-5.96,91.03,24.11,102.43,69.75,13.33,53.33-20.24,106.51-74.21,117.25-6.45,1.28-13.14,1.32-19.72,1.93ZM137.32,82.68c-1.55-4.41-3.06-8.7-4.7-13.37-2.73.32-4.99.91-7.21.78-3.83-.22-7.74-.48-11.41-1.49-3.4-.94-5.14-5.32-3.78-8.68.86-2.11,2.18-4.11,3.65-5.87,1.97-2.35,4.28-4.41,6.67-6.83-3.52-6.01-7.55-10.89-13.17-13.32-10.2,4.92-19.58,9.59-29.09,14-5.33,2.47-10.94,4.13-16.95,3.3-5.48-.76-8.12-4.51-7.02-9.95,1.14-5.62,4.52-9.91,8.83-13.37,3.62-2.91,7.68-5.29,11.46-8.01,1.1-.79,1.91-1.97,4.05-4.24-12.18,1.74-22.63,3.6-31.42,9.52-18.45,12.43-31.19,29.22-35.21,51.54-1.3,7.22-1.64,14.71-1.63,22.07.04,24.42,9.6,44.65,28.36,60.2,13.13,10.89,27.81,18.35,45.55,18.42,17.81.06,34.14-10.7,41.73-28.32-3.01-.67-6.09-1.04-8.94-2.05-4-1.42-6.01-5.3-4.77-9.38.77-2.53,1.92-5.35,3.79-7.05,3.98-3.63,8.44-6.77,12.91-9.8,2.49-1.69,5.41-2.75,8.19-4.11.76-5.32,1.46-10.2,2.19-15.32,3.98-.71,7.45-1.12,10.8-1.97,4.97-1.26,9.56-3.31,12.53-7.87,1.89-2.9,1.31-6.06-1.35-8.27-2.93-2.43-6.41-2.91-9.9-2.61-4.56.39-9.08,1.3-14.18,2.07ZM153.33,138.17c-5.62.84-11.68,1.89-15.38,7.83-1.88,3.02-.58,6.46,2.85,7.2,6.48,1.39,12.24-.04,17.1-4.63,1.74-1.64,2.94-3.54,2.19-6.13-.72-2.48-3.24-4.25-6.76-4.27ZM126.45,33.44c1.19.87,2.76,2.94,4.54,3.14,5.36.6,11.22-4.94,11.58-10.46.14-2.19-1.24-3.75-3.28-4.09-5.85-.98-12.78,4.75-12.85,11.41ZM101.64,18.63c-4.3-2.33-8.08-1.19-11.27,2.01-.87.87-1.34,2.94-.93,4.06.4,1.08,2.17,2.27,3.37,2.31,5.07.17,6.87-1.66,8.82-8.37ZM151.56,58.32c3.68-.11,5.64-1.68,5.86-3.95.19-1.93-1.66-3.81-3.6-3.54-2.45.34-4.78,1.45-4.85,4.03-.04,1.28,1.9,2.61,2.59,3.46ZM170.09,112.78c-.27-2.89-3.09-4.23-5.39-3.27-1.81.76-3.28,2.04-2.64,4.25.68,2.33,2.85,2.45,4.54,1.82,1.47-.55,2.59-2.05,3.48-2.81Z
+          "></path>
+          <path fill="currentColor" d="M67.62,128.64c-1.98-.3-3.53-.44-5.03-.79-5.73-1.35-7.99-6.63-4.97-11.59.6-.99,1.3-1.95,2.13-2.75,8.87-8.43,19.21-14.26,31.05-17.38,4.74-1.25,9.25.13,13.64,1.53,3.93,1.25,5.42,5.74,3.51,9.6-.68,1.37-1.5,2.76-2.56,3.84-10.48,10.73-23.5,15.91-37.78,17.53Z"></path>
+          <path fill="currentColor" d="M80.69,143.54c1.45.15,2.79-.05,3.72.47,1.59.89,3.74,2.02,4.11,3.46.36,1.41-.74,3.84-1.99,4.92-4.78,4.12-10.57,6.4-16.69,7.73-1.47.32-3.09.18-4.62.02-2.55-.27-4.58-1.77-4.88-4.22-.2-1.69.46-3.94,1.56-5.24,3.41-4.02,8.32-5.49,13.28-6.58,1.88-.41,3.85-.4,5.5-.56Z"></path>
+          <path fill="currentColor" d="M72.99,66.79c1.42.27,2.57.39,3.67.7,3.09.88,4.52,4.81,2.77,7.46-3.37,5.11-12.44,9.04-18.24,7.49-1.67-.44-3.56-1.84-4.37-3.33-1.19-2.2-.13-4.54,1.71-6.2,4.17-3.75,9.38-5.06,14.45-6.13Z"></path>
+          <path fill="currentColor" d="M38.21,109.84c.76.49,1.46,1.98,1.29,2.85-.68,3.67-4.3,6.32-9.11,6.48"></path>
+          <path fill="currentColor" d="M37.35,68.07c-1.61,3.37-4.71,4.68-8.6,4.8-.71-.74-1.8-1.41-2.12-2.35"></path>
+        </svg>
+      </span>
+      <span class="text-2xl font-bold text-slate-700">ORBITCODE</span>
+    </div>
+    <!-- 메뉴 -->
+    <nav class="mt-8">
+      <div class="mb-4">
+        <ul class="flex flex-col mt-2 gap-2 text-slate-500 dark:text-slate-100">
+          <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600 orb-hightlight">
+            <a class="flex items-center justify-start p-2" href="#">
+              <span class="text-left">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="currentColor" d="M1024 1131q0-64-9-117.5t-29.5-103-60.5-78-97-28.5q-6 4-30 18t-37.5 21.5-35.5 17.5-43 14.5-42 4.5-42-4.5-43-14.5-35.5-17.5-37.5-21.5-30-18q-57 0-97 28.5t-60.5 78-29.5 103-9 117.5 37 106.5 91 42.5h512q54 0 91-42.5t37-106.5zm-157-520q0-94-66.5-160.5t-160.5-66.5-160.5 66.5-66.5 160.5 66.5 160.5 160.5 66.5 160.5-66.5 66.5-160.5zm925 509v-64q0-14-9-23t-23-9h-576q-14 0-23 9t-9 23v64q0 14 9 23t23 9h576q14 0 23-9t9-23zm0-260v-56q0-15-10.5-25.5t-25.5-10.5h-568q-15 0-25.5 10.5t-10.5 25.5v56q0 15 10.5 25.5t25.5 10.5h568q15 0 25.5-10.5t10.5-25.5zm0-252v-64q0-14-9-23t-23-9h-576q-14 0-23 9t-9 23v64q0 14 9 23t23 9h576q14 0 23-9t9-23zm256-320v1216q0 66-47 113t-113 47h-352v-96q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v96h-768v-96q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v96h-352q-66 0-113-47t-47-113v-1216q0-66 47-113t113-47h1728q66 0 113 47t47 113z">
+                    </path>
+                </svg>
+              </span>
+              <span class="mx-4 font-normal">대시보드</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <!-- 광고 관리 -->
+      <div class="mb-4">
+        <p class="font-normal text-slate-300 py-2 border-b border-slate-100">광고 관리</p>
+        <ul class="flex flex-col mt-2 gap-2 text-slate-500 dark:text-slate-100">
+          <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600">
+            <a class="flex items-center justify-start p-2" href="#">
+              <span class="text-left">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="currentColor" d="M1070 1178l306-564h-654l-306 564h654zm722-282q0 182-71 348t-191 286-286 191-348 71-348-71-286-191-191-286-71-348 71-348 191-286 286-191 348-71 348 71 286 191 191 286 71 348z">
+                    </path>
+                </svg>
+              </span>
+              <span class="mx-4 font-normal">배너 설정</span>
+            </a>
+          </li>
+          <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600">
+            <a class="flex items-center justify-start p-2" href="#">
+              <span class="text-left">
+                <svg width="20" height="20" fill="currentColor" class="m-auto" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="currentColor" d="M960 0l960 384v128h-128q0 26-20.5 45t-48.5 19h-1526q-28 0-48.5-19t-20.5-45h-128v-128zm-704 640h256v768h128v-768h256v768h128v-768h256v768h128v-768h256v768h59q28 0 48.5 19t20.5 45v64h-1664v-64q0-26 20.5-45t48.5-19h59v-768zm1595 960q28 0 48.5 19t20.5 45v128h-1920v-128q0-26 20.5-45t48.5-19h1782z">
+                    </path>
+                </svg>
+              </span>
+              <span class="mx-4 font-normal">팝업 설정</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <!-- 게시판 관리 -->
+      <div class="mb-4">
+        <p class="font-normal text-slate-300 py-2 border-b border-slate-100">게시판 관리</p>
+        <ul class="flex flex-col mt-2 gap-2 text-slate-500 dark:text-slate-100">
+          <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600">
+            <a class="flex items-center justify-start p-2" href="#">
+              <span class="text-left">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="currentColor" d="M1070 1178l306-564h-654l-306 564h654zm722-282q0 182-71 348t-191 286-286 191-348 71-348-71-286-191-191-286-71-348 71-348 191-286 286-191 348-71 348 71 286 191 191 286 71 348z">
+                    </path>
+                </svg>
+              </span>
+              <span class="mx-4 font-normal">공지사항</span>
+            </a>
+          </li>
+          <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600">
+            <a class="flex items-center justify-start p-2" href="#">
+              <span class="text-left">
+                <svg width="20" height="20" fill="currentColor" class="m-auto" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="currentColor" d="M1024 1131q0-64-9-117.5t-29.5-103-60.5-78-97-28.5q-6 4-30 18t-37.5 21.5-35.5 17.5-43 14.5-42 4.5-42-4.5-43-14.5-35.5-17.5-37.5-21.5-30-18q-57 0-97 28.5t-60.5 78-29.5 103-9 117.5 37 106.5 91 42.5h512q54 0 91-42.5t37-106.5zm-157-520q0-94-66.5-160.5t-160.5-66.5-160.5 66.5-66.5 160.5 66.5 160.5 160.5 66.5 160.5-66.5 66.5-160.5zm925 509v-64q0-14-9-23t-23-9h-576q-14 0-23 9t-9 23v64q0 14 9 23t23 9h576q14 0 23-9t9-23zm0-260v-56q0-15-10.5-25.5t-25.5-10.5h-568q-15 0-25.5 10.5t-10.5 25.5v56q0 15 10.5 25.5t25.5 10.5h568q15 0 25.5-10.5t10.5-25.5zm0-252v-64q0-14-9-23t-23-9h-576q-14 0-23 9t-9 23v64q0 14 9 23t23 9h576q14 0 23-9t9-23zm256-320v1216q0 66-47 113t-113 47h-352v-96q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v96h-768v-96q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v96h-352q-66 0-113-47t-47-113v-1216q0-66 47-113t113-47h1728q66 0 113 47t47 113z">
+                    </path>
+                </svg>
+              </span>
+              <span class="mx-4 font-normal">문의</span>
+            </a>
+          </li>
+      </div>
+      <!-- 사이트 관리 -->
+      <div class="mb-4">
+        <p class="font-normal text-slate-300 py-2 border-b border-slate-100">사이트 관리</p>
+        <ul class="flex flex-col mt-2 gap-2 text-slate-500 dark:text-slate-100">
+          <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600">
+            <a class="flex items-center justify-start p-2" href="/admin/employees">
+              <span class="text-left">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="currentColor" d="M1070 1178l306-564h-654l-306 564h654zm722-282q0 182-71 348t-191 286-286 191-348 71-348-71-286-191-191-286-71-348 71-348 191-286 286-191 348-71 348 71 286 191 191 286 71 348z">
+                    </path>
+                </svg>
+              </span>
+              <span class="mx-4 font-normal">관리자 설정</span>
+            </a>
+          </li>
+          <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600">
+            <a class="flex items-center justify-start p-2" href="/admin/employees/permissions">
+              <span class="text-left">
+                <svg width="20" height="20" fill="currentColor" class="m-auto" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="currentColor" d="M685 483q16 0 27.5-11.5t11.5-27.5-11.5-27.5-27.5-11.5-27 11.5-11 27.5 11 27.5 27 11.5zm422 0q16 0 27-11.5t11-27.5-11-27.5-27-11.5-27.5 11.5-11.5 27.5 11.5 27.5 27.5 11.5zm-812 184q42 0 72 30t30 72v430q0 43-29.5 73t-72.5 30-73-30-30-73v-430q0-42 30-72t73-30zm1060 19v666q0 46-32 78t-77 32h-75v227q0 43-30 73t-73 30-73-30-30-73v-227h-138v227q0 43-30 73t-73 30q-42 0-72-30t-30-73l-1-227h-74q-46 0-78-32t-32-78v-666h918zm-232-405q107 55 171 153.5t64 215.5h-925q0-117 64-215.5t172-153.5l-71-131q-7-13 5-20 13-6 20 6l72 132q95-42 201-42t201 42l72-132q7-12 20-6 12 7 5 20zm477 488v430q0 43-30 73t-73 30q-42 0-72-30t-30-73v-430q0-43 30-72.5t72-29.5q43 0 73 29.5t30 72.5z">
+                    </path>
+                </svg>
+              </span>
+              <span class="mx-4 font-normal">권한 설정</span>
+            </a>
+          </li>
+      </div>
+    </nav>
   </div>
-  <nav class="flex flex-col p-4">
-    <a href="/admin" class="py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white">대시보드</a>
-    
-    <div class="relative">
-      <button
-        data-toggle-submenu-pc
-        class="w-full text-left py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white flex justify-between items-center focus:outline-none"
-      >
-        게시판 관리
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="2"
-          stroke="currentColor"
-          class="w-5 h-5 transform transition-transform duration-300 ease-in-out rotate-0 submenu-icon-pc"
-        >
-          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
-        </svg>
-      </button>
-      <div
-        data-submenu-pc
-        class="hidden pl-4 border-l border-blue-100 space-y-2 mt-1"
-      >
-        <ul>
-          <li class="py-2">
-            <a href="#" class="py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white">공지사항</a>
-          </li>
-          <li class="py-2">
-            <a href="#" class="py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white">문의</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="relative">
-      <button
-        data-toggle-submenu-pc
-        class="w-full text-left py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white flex justify-between items-center focus:outline-none"
-      >
-        관리 설정
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="2"
-          stroke="currentColor"
-          class="w-5 h-5 transform transition-transform duration-300 ease-in-out rotate-0 submenu-icon-pc"
-        >
-          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
-        </svg>
-      </button>
-      <div
-        data-submenu-pc
-        class="hidden pl-4 border-l border-blue-100 space-y-2 mt-1"
-      >
-        <ul>
-          <li class="py-2">
-            <a href="/admin/employee" class="py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white">관리자</a>
-          </li>
-          <li class="py-2">
-            <a href="/admin/permission" class="py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white">권한</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <a href="#" class="py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white">사이트 관리</a>
-  </nav>
+  <!-- 로그아웃 -->
+  <div>
+    <ul class="flex flex-col mt-2 gap-2 text-red-500 dark:text-red-500">
+      <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-red-300 dark:hover:bg-red-300">
+        <a class="flex items-center justify-start p-2" href="#">
+          <span class="text-left">
+            <svg width="1.5em" height="1.5em" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor" class="h-[18px] w-[18px]">
+              <path d="M12 12H19M19 12L16 15M19 12L16 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M19 6V5C19 3.89543 18.1046 3 17 3H7C5.89543 3 5 3.89543 5 5V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </span>
+          <span class="mx-4 font-normal">
+            로그아웃
+          </span>
+        </a>    
+      </li>
+    </ul>
+  </div>
 </div>
 
 <!-- 사이드바 MOBILE -->
 <div
   id="sidebar-mobile"
-  class="fixed inset-y-0 right-0 bg-gray-100 w-64 transform translate-x-full transition-transform duration-300 ease-in-out shadow-md lg:hidden z-50"
+  class="fixed flex flex-col justify-between w-64 inset-y-0 right-0 p-4 z-50 bg-white shadow-md transform translate-x-full transition-transform duration-300 ease-in-out lg:hidden"
 >
-  <nav class="flex flex-col p-4">
-    <button id="close-menu" class="self-end mb-4 text-gray-600 focus:outline-none">
-      닫기
-    </button>
-    <a href="/admin" class="py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white">대시보드</a>
-    <div class="relative">
-      <button
-        data-toggle-submenu
-        class="w-full text-left py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white flex justify-between items-center focus:outline-none"
-      >
-        게시판 관리
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="2"
-          stroke="currentColor"
-          class="w-5 h-5 transform transition-transform duration-300 ease-in-out rotate-0 submenu-icon"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
+  <!-- 메뉴 -->
+  <nav>
+    <!-- 닫기 버튼 -->
+    <div class="text-right mx-4 mt-4 mb-8">
+      <button id="menu-close" class="orb-btn-close">
+        Close
       </button>
-      <div
-        data-submenu
-        class="hidden pl-4 border-l border-blue-100 space-y-2 mt-1"
-      >
-        <ul>
-          <li class="py-2">
-            <a href="#" class="py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white">공지사항</a>
-          </li>
-          <li class="py-2">
-            <a href="#" class="py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white">문의</a>
-          </li>
-        </ul>
-      </div>
     </div>
-
-    <div class="relative">
-      <button
-        data-toggle-submenu
-        class="w-full text-left py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white flex justify-between items-center focus:outline-none"
-      >
-        관리자 설정
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="2"
-          stroke="currentColor"
-          class="w-5 h-5 transform transition-transform duration-300 ease-in-out rotate-0 submenu-icon"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
-      </button>
-      <div class="hidden pl-4 border-l border-blue-100 space-y-2 mt-1" data-submenu>
-        <ul>
-          <li class="py-2">
-            <a href="/admin/employee" class="py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white">관리자</a>
-          </li>
-          <li class="py-2">
-            <a href="/admin/permission" class="py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white">권한</a>
-          </li>
-        </ul>
-      </div>
+    <div class="mb-4">
+      <ul class="flex flex-col mt-2 gap-2 text-slate-500 dark:text-slate-100">
+        <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600 orb-hightlight">
+          <a class="flex items-center justify-start p-2" href="#">
+            <span class="text-left">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
+                  <path fill="currentColor" d="M1024 1131q0-64-9-117.5t-29.5-103-60.5-78-97-28.5q-6 4-30 18t-37.5 21.5-35.5 17.5-43 14.5-42 4.5-42-4.5-43-14.5-35.5-17.5-37.5-21.5-30-18q-57 0-97 28.5t-60.5 78-29.5 103-9 117.5 37 106.5 91 42.5h512q54 0 91-42.5t37-106.5zm-157-520q0-94-66.5-160.5t-160.5-66.5-160.5 66.5-66.5 160.5 66.5 160.5 160.5 66.5 160.5-66.5 66.5-160.5zm925 509v-64q0-14-9-23t-23-9h-576q-14 0-23 9t-9 23v64q0 14 9 23t23 9h576q14 0 23-9t9-23zm0-260v-56q0-15-10.5-25.5t-25.5-10.5h-568q-15 0-25.5 10.5t-10.5 25.5v56q0 15 10.5 25.5t25.5 10.5h568q15 0 25.5-10.5t10.5-25.5zm0-252v-64q0-14-9-23t-23-9h-576q-14 0-23 9t-9 23v64q0 14 9 23t23 9h576q14 0 23-9t9-23zm256-320v1216q0 66-47 113t-113 47h-352v-96q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v96h-768v-96q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v96h-352q-66 0-113-47t-47-113v-1216q0-66 47-113t113-47h1728q66 0 113 47t47 113z">
+                  </path>
+              </svg>
+            </span>
+            <span class="mx-4 font-normal">대시보드</span>
+          </a>
+        </li>
+      </ul>
     </div>
-
-    <a href="#" class="py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white">사이트 관리</a>
+    <!-- 광고 관리 -->
+    <div class="mb-4">
+      <p class="font-normal text-slate-300 py-2 border-b border-slate-100">광고 관리</p>
+      <ul class="flex flex-col mt-2 gap-2 text-slate-500 dark:text-slate-100">
+        <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600">
+          <a class="flex items-center justify-start p-2" href="#">
+            <span class="text-left">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
+                  <path fill="currentColor" d="M1070 1178l306-564h-654l-306 564h654zm722-282q0 182-71 348t-191 286-286 191-348 71-348-71-286-191-191-286-71-348 71-348 191-286 286-191 348-71 348 71 286 191 191 286 71 348z">
+                  </path>
+              </svg>
+            </span>
+            <span class="mx-4 font-normal">배너 설정</span>
+          </a>
+        </li>
+        <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600">
+          <a class="flex items-center justify-start p-2" href="#">
+            <span class="text-left">
+              <svg width="20" height="20" fill="currentColor" class="m-auto" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
+                  <path fill="currentColor" d="M960 0l960 384v128h-128q0 26-20.5 45t-48.5 19h-1526q-28 0-48.5-19t-20.5-45h-128v-128zm-704 640h256v768h128v-768h256v768h128v-768h256v768h128v-768h256v768h59q28 0 48.5 19t20.5 45v64h-1664v-64q0-26 20.5-45t48.5-19h59v-768zm1595 960q28 0 48.5 19t20.5 45v128h-1920v-128q0-26 20.5-45t48.5-19h1782z">
+                  </path>
+              </svg>
+            </span>
+            <span class="mx-4 font-normal">팝업 설정</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <!-- 게시판 관리 -->
+    <div class="mb-4">
+      <p class="font-normal text-slate-300 py-2 border-b border-slate-100">게시판 관리</p>
+      <ul class="flex flex-col mt-2 gap-2 text-slate-500 dark:text-slate-100">
+        <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600">
+          <a class="flex items-center justify-start p-2" href="#">
+            <span class="text-left">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
+                  <path fill="currentColor" d="M1070 1178l306-564h-654l-306 564h654zm722-282q0 182-71 348t-191 286-286 191-348 71-348-71-286-191-191-286-71-348 71-348 191-286 286-191 348-71 348 71 286 191 191 286 71 348z">
+                  </path>
+              </svg>
+            </span>
+            <span class="mx-4 font-normal">공지사항</span>
+          </a>
+        </li>
+        <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600">
+          <a class="flex items-center justify-start p-2" href="#">
+            <span class="text-left">
+              <svg width="20" height="20" fill="currentColor" class="m-auto" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
+                  <path fill="currentColor" d="M1024 1131q0-64-9-117.5t-29.5-103-60.5-78-97-28.5q-6 4-30 18t-37.5 21.5-35.5 17.5-43 14.5-42 4.5-42-4.5-43-14.5-35.5-17.5-37.5-21.5-30-18q-57 0-97 28.5t-60.5 78-29.5 103-9 117.5 37 106.5 91 42.5h512q54 0 91-42.5t37-106.5zm-157-520q0-94-66.5-160.5t-160.5-66.5-160.5 66.5-66.5 160.5 66.5 160.5 160.5 66.5 160.5-66.5 66.5-160.5zm925 509v-64q0-14-9-23t-23-9h-576q-14 0-23 9t-9 23v64q0 14 9 23t23 9h576q14 0 23-9t9-23zm0-260v-56q0-15-10.5-25.5t-25.5-10.5h-568q-15 0-25.5 10.5t-10.5 25.5v56q0 15 10.5 25.5t25.5 10.5h568q15 0 25.5-10.5t10.5-25.5zm0-252v-64q0-14-9-23t-23-9h-576q-14 0-23 9t-9 23v64q0 14 9 23t23 9h576q14 0 23-9t9-23zm256-320v1216q0 66-47 113t-113 47h-352v-96q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v96h-768v-96q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v96h-352q-66 0-113-47t-47-113v-1216q0-66 47-113t113-47h1728q66 0 113 47t47 113z">
+                  </path>
+              </svg>
+            </span>
+            <span class="mx-4 font-normal">문의</span>
+          </a>
+        </li>
+    </div>
+    <!-- 사이트 관리 -->
+    <div class="mb-4">
+      <p class="font-normal text-slate-300 py-2 border-b border-slate-100">사이트 관리</p>
+      <ul class="flex flex-col mt-2 gap-2 text-slate-500 dark:text-slate-100">
+        <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600">
+          <a class="flex items-center justify-start p-2" href="/admin/employees">
+            <span class="text-left">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
+                  <path fill="currentColor" d="M1070 1178l306-564h-654l-306 564h654zm722-282q0 182-71 348t-191 286-286 191-348 71-348-71-286-191-191-286-71-348 71-348 191-286 286-191 348-71 348 71 286 191 191 286 71 348z">
+                  </path>
+              </svg>
+            </span>
+            <span class="mx-4 font-normal">관리자 설정</span>
+          </a>
+        </li>
+        <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600">
+          <a class="flex items-center justify-start p-2" href="/admin/employees/permissions">
+            <span class="text-left">
+              <svg width="20" height="20" fill="currentColor" class="m-auto" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
+                  <path fill="currentColor" d="M685 483q16 0 27.5-11.5t11.5-27.5-11.5-27.5-27.5-11.5-27 11.5-11 27.5 11 27.5 27 11.5zm422 0q16 0 27-11.5t11-27.5-11-27.5-27-11.5-27.5 11.5-11.5 27.5 11.5 27.5 27.5 11.5zm-812 184q42 0 72 30t30 72v430q0 43-29.5 73t-72.5 30-73-30-30-73v-430q0-42 30-72t73-30zm1060 19v666q0 46-32 78t-77 32h-75v227q0 43-30 73t-73 30-73-30-30-73v-227h-138v227q0 43-30 73t-73 30q-42 0-72-30t-30-73l-1-227h-74q-46 0-78-32t-32-78v-666h918zm-232-405q107 55 171 153.5t64 215.5h-925q0-117 64-215.5t172-153.5l-71-131q-7-13 5-20 13-6 20 6l72 132q95-42 201-42t201 42l72-132q7-12 20-6 12 7 5 20zm477 488v430q0 43-30 73t-73 30q-42 0-72-30t-30-73v-430q0-43 30-72.5t72-29.5q43 0 73 29.5t30 72.5z">
+                  </path>
+              </svg>
+            </span>
+            <span class="mx-4 font-normal">권한 설정</span>
+          </a>
+        </li>
+    </div>
   </nav>
+  <div>
+    <ul class="flex flex-col mt-2 gap-2 text-red-500 dark:text-red-500">
+      <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-red-300 dark:hover:bg-red-300">
+        <a class="flex items-center justify-start p-2" href="#">
+          <span class="text-left">
+            <svg width="1.5em" height="1.5em" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor" class="h-[18px] w-[18px]">
+              <path d="M12 12H19M19 12L16 15M19 12L16 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M19 6V5C19 3.89543 18.1046 3 17 3H7C5.89543 3 5 3.89543 5 5V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </span>
+          <span class="mx-4 font-normal">
+            로그아웃
+          </span>
+        </a>    
+      </li>
+    </ul>
+  </div>
 </div>
 
 <script>
-  // PC Submenu toggle logic
-  const pcSubmenuToggles = document.querySelectorAll('[data-toggle-submenu-pc]');
-
-  pcSubmenuToggles.forEach((toggle) => {
-    toggle.addEventListener('click', () => {
-      const submenu = toggle.nextElementSibling;
-      const icon = toggle.querySelector('.submenu-icon-pc');
-      
-      if (submenu.classList.contains('hidden')) {
-        submenu.classList.remove('hidden'); // 하위 메뉴 열기
-        icon.classList.add('rotate-[180deg]'); // 아이콘 회전
-      } else {
-        submenu.classList.add('hidden'); // 하위 메뉴 닫기
-        icon.classList.remove('rotate-[180deg]'); // 아이콘 원래대로
-      }
-    });
-  });
   // Mobile menu toggle logic
   const menuToggle = document.getElementById('menu-toggle');
   const sidebarMobile = document.getElementById('sidebar-mobile');
-  const closeMenu = document.getElementById('close-menu');
+  const closeMenu = document.getElementById('menu-close');
   
   menuToggle.addEventListener('click', () => {
     sidebarMobile.classList.toggle('translate-x-full');
@@ -187,23 +280,5 @@
 
   closeMenu.addEventListener('click', () => {
     sidebarMobile.classList.add('translate-x-full');
-  });
-
-  // Submenu toggle logic for mobile
-  const submenuToggles = document.querySelectorAll('[data-toggle-submenu]');
-  
-  submenuToggles.forEach((toggle) => {
-    toggle.addEventListener('click', () => {
-      const submenu = toggle.nextElementSibling;
-      const icon = toggle.querySelector('.submenu-icon');
-      
-      if (submenu.classList.contains('hidden')) {
-        submenu.classList.remove('hidden');
-        icon.classList.add('rotate-[180deg]');
-      } else {
-        submenu.classList.add('hidden');
-        icon.classList.remove('rotate-[180deg]');
-      }
-    });
   });
 </script>
