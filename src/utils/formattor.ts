@@ -1,5 +1,5 @@
 import { typeFormattedResult } from "../types/format";
-import { REG_DATE_PATTERN } from "../config/constants";
+import { REG_DATE_PATTERN, REG_EMAIL_PATTERN } from "../config/constants";
 import { IApiResponse } from "../types/api/response";
 
 export const formatDate = (date: string | Date | undefined | null): typeFormattedResult =>{
@@ -50,6 +50,47 @@ export const formatDate = (date: string | Date | undefined | null): typeFormatte
       message: '날짜 형식이 올바르지 않습니다.'
     }
 
+  }
+}
+
+// email 마스킹 처리
+export const formatEmailMasking = (email: string | undefined | null): typeFormattedResult => {
+  try {
+    // email이 없으면 에러
+    if (email === null || email === undefined) {
+      return {
+        result: false,
+        message: '이메일이 없습니다.'
+      }
+    }
+
+    // email이 email 형식이 아니면 에러
+    if (!REG_EMAIL_PATTERN.test(email)) {
+      return {
+        result: false,
+        message: '이메일 형식이 올바르지 않습니다.'
+      }
+    }
+
+    // email 마스킹 처리
+    const emailArray = email.split('@');
+    const emailId = emailArray[0];
+    const emailDomain = emailArray[1];
+    const emailIdLength = emailId.length;
+    const emailIdMasking = emailId.substr(0, 3) + '*'.repeat(emailIdLength - 3);
+
+    return {
+      result: true,
+      message: '',
+      data: emailIdMasking + '@' + emailDomain
+    }
+
+  } catch (error) {
+    return {
+      result: false,
+      message: '이메일 형식이 올바르지 않습니다.'
+    }
+    
   }
 }
 
