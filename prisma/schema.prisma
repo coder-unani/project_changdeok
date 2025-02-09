@@ -53,6 +53,11 @@ model Employee {
   permissionMaps EmployeePermissionMap[]
   grantedPermissions EmployeePermissionMap[] @relation("grantedBy")
 
+  // 인덱스 설정
+  @@index(email, name: "idx_employee_email")
+  @@index(name, name: "idx_employee_name")
+
+  // 테이블명 설정
   @@map("orb_employee")
 }
 
@@ -79,6 +84,10 @@ model Permission {
 
   permissionMaps EmployeePermissionMap[]
 
+  // 인덱스 설정
+  @@index(title, name: "idx_permission_title")
+
+  // 테이블명 설정
   @@map("orb_permission")
 }
 
@@ -105,5 +114,216 @@ model EmployeePermissionMap {
   permission Permission @relation(fields: [permissionId], references: [id])
   grantedBy Employee @relation("grantedBy", fields: [grantedById], references: [id])
 
+  // 테이블명 설정
   @@map("orb_employee_permission_map")
+}
+
+/**
+  * 사용자 테이블 (User)
+  * - id: ID (자동 증가)
+  * - userType: 사용자 종류 (일반가입, 카카오, 네이버, 구글, 페이스북 ..)
+  * - email: 이메일 (고유)
+  * - password: 비밀번호
+  * - name: 이름
+  * - phone: 전화번호
+  * - mobile: 휴대폰번호
+  * - address: 주소
+  * - birthDate: 생년월일
+  * - photoUrl: 사진 (이미지 URL)
+  * - isEmployee: 직원 여부
+  * - isActivated: 활성화 여부
+  * - isDeleted: 삭제 여부
+  * - externalId: 외부 ID (카카오, 네이버, 구글, 페이스북 ..)
+  * - createdAt: 생성시간 (자동 기록)
+  * - updatedAt: 업데이트시간 (자동 기록)
+  */
+model User {
+  id Int @id @default(autoincrement())
+  userType String @default("email")
+  email String @unique
+  password String?
+  name String
+  phone String?
+  mobile String?
+  address String?
+  birthDate DateTime?
+  photoUrl String?
+  description String?
+  isEmployee Boolean @default(false)
+  isActivated Boolean @default(true)
+  isDeleted Boolean @default(false)
+  externalId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  contents Content[]
+  contentLikes ContentLike[]
+  comments Comment[]
+
+  // 인덱스 설정
+  @@index(email, name: "idx_user_email")
+
+  // 테이블명 설정
+  @@map("orb_user")
+}
+
+ /**
+  * 게시판 그룹 테이블 (ContentGroup)
+  * - id: ID (자동 증가)
+  * - kind: 게시판 종류 (일반 게시판, 관리자 전용 게시판, 갤러리)
+  * - title: 그룹명
+  * - description: 설명
+  * - bannerTopUrl: 게시판 상단 배너 이미지 URL
+  * - sizePerPage: 페이지당 보여질 게시물 수
+  * - isUserWrite: 사용자 작성 가능 여부
+  * - isUserRead: 사용자 읽기 가능 여부
+  * - isUserDisplay: 사용자에게 보여질지 여부
+  * - isNonUserWrite: 비회원 작성 가능 여부
+  * - isNonUserRead: 비회원 읽기 가능 여부
+  * - isNonUserDisplay: 비회원에게 보여질지 여부
+  * - isAnonymous: 익명 게시물 작성 가능 여부
+  * - isLike: 좋아요 기능 여부
+  * - isShare: 공유 기능 여부
+  * - isComment: 댓글 허용 여부
+  * - isActivated: 활성화 여부
+  * - isDeleted: 삭제 여부
+  * - createdAt: 생성시간 (자동 기록)
+  * - updatedAt: 업데이트시간 (자동 기록)
+  */
+model ContentGroup {
+  id Int @id @default(autoincrement())
+  kind String
+  title String
+  description String?
+  bannerTopUrl String?
+  sizePerPage Int @default(10)
+  isUserWrite Boolean @default(false)
+  isUserRead Boolean @default(false)
+  isUserDisplay Boolean @default(false)
+  isNonUserWrite Boolean @default(false)
+  isNonUserRead Boolean @default(false)
+  isNonUserDisplay Boolean @default(false)
+  isAnonymous Boolean @default(false)
+  isLike Boolean @default(false)
+  isShare Boolean @default(false)
+  isComment Boolean @default(false)
+  isActivated Boolean @default(true)
+  isDeleted Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  contents Content[]
+
+  // 인덱스 설정
+  @@index(title, name: "idx_content_group_title")
+
+  // 테이블명 설정
+  @@map("orb_content_group")
+}
+
+/**
+  * 게시물 테이블 (Content)
+  * - id: ID (자동 증가)
+  * - groupId: 그룹 ID
+  * - title: 제목
+  * - content: 내용
+  * - writerId: 작성자 ID
+  * - writerName: 작성자 이름
+  * - writerEmail: 작성자 이메일
+  * - writerPhone: 작성자 전화번호
+  * - isAnonymous: 익명 여부
+  * - isNotice: 공지 여부
+  * - isActivated: 활성화 여부
+  * - isDeleted: 삭제 여부
+  * - createdAt: 생성시간 (자동 기록)
+  * - updatedAt: 업데이트시간 (자동 기록)
+  */
+model Content {
+  id Int @id @default(autoincrement())
+  groupId Int
+  title String
+  content String?
+  writerId Int?
+  writerName String?
+  writerEmail String?
+  writerPhone String?
+  viewCount Int @default(0)
+  likeCount Int @default(0)
+  commentCount Int @default(0)
+  isAnonymous Boolean @default(false)
+  isNotice Boolean @default(false)
+  isActivated Boolean @default(true)
+  isDeleted Boolean @default(false)
+  ip String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  group ContentGroup @relation(fields: [groupId], references: [id])
+  writer User? @relation(fields: [writerId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  comments Comment[]
+  contentLikes ContentLike[]
+
+  // 인덱스 설정
+  @@index(title, name: "idx_content_title")
+
+  // 테이블명 설정
+  @@map("orb_content")
+}
+
+/**
+  * 댓글 테이블 (Comment)
+  * - id: ID (자동 증가)
+  * - contentId: 게시물 ID
+  * - writerId: 작성자 ID
+  * - writerName: 작성자 이름
+  * - writerEmail: 작성자 이메일
+  * - writerPhone: 작성자 전화번호
+  * - comment: 내용
+  * - isAnonymous: 익명 여부
+  * - isActivated: 활성화 여부
+  * - isDeleted: 삭제 여부
+  * - createdAt: 생성시간 (자동 기록)
+  * - updatedAt: 업데이트시간 (자동 기록)
+  */
+model Comment {
+  id Int @id @default(autoincrement())
+  comment String?
+  contentId Int
+  writerId Int?
+  writerName String?
+  writerEmail String?
+  writerPhone String?
+  isAnonymous Boolean @default(false)
+  isActivated Boolean @default(true)
+  isDeleted Boolean @default(false)
+  ip String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  content Content @relation(fields: [contentId], references: [id])
+  writer User? @relation(fields: [writerId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
+  // 테이블명 설정
+  @@map("orb_content_comment")
+}
+
+model ContentLike {
+  id Int @id @default(autoincrement())
+  contentId Int
+  writerId Int?
+  writerName String?
+  writerEmail String?
+  writerPhone String?
+  isActivated Boolean @default(true)
+  isDeleted Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  content Content @relation(fields: [contentId], references: [id])
+  writer User? @relation(fields: [writerId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
+  // 테이블명 설정
+  @@map("orb_content_like")
 }
