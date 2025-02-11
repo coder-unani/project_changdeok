@@ -48,9 +48,9 @@ model Employee {
   isActivated Boolean @default(true)
   isDeleted   Boolean @default(false)
   createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  updatedAt   DateTime? @updatedAt 
 
-  permissionMaps EmployeePermissionMap[]
+  permissions EmployeePermissionMap[]
   grantedPermissions EmployeePermissionMap[] @relation("grantedBy")
 
   // 인덱스 설정
@@ -80,9 +80,9 @@ model Permission {
   isRead Boolean @default(false)
   isAdmin Boolean @default(false)
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime? @updatedAt
 
-  permissionMaps EmployeePermissionMap[]
+  permissions EmployeePermissionMap[]
 
   // 인덱스 설정
   @@index(title, name: "idx_permission_title")
@@ -108,7 +108,7 @@ model EmployeePermissionMap {
   grantedAt DateTime
   grantedById Int
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime? @updatedAt
 
   employee Employee @relation(fields: [employeeId], references: [id])
   permission Permission @relation(fields: [permissionId], references: [id])
@@ -154,7 +154,7 @@ model User {
   isDeleted Boolean @default(false)
   externalId String?
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime? @updatedAt
 
   contents Content[]
   contentLikes ContentLike[]
@@ -210,7 +210,7 @@ model ContentGroup {
   isActivated Boolean @default(true)
   isDeleted Boolean @default(false)
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime? @updatedAt
 
   contents Content[]
 
@@ -257,7 +257,7 @@ model Content {
   ip String?
   userAgent String?
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime? @updatedAt
 
   group ContentGroup @relation(fields: [groupId], references: [id])
   writer User? @relation(fields: [writerId], references: [id], onDelete: SetNull, onUpdate: Cascade)
@@ -300,7 +300,7 @@ model Comment {
   ip String?
   userAgent String?
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime? @updatedAt
 
   content Content @relation(fields: [contentId], references: [id])
   writer User? @relation(fields: [writerId], references: [id], onDelete: SetNull, onUpdate: Cascade)
@@ -319,7 +319,7 @@ model ContentLike {
   isActivated Boolean @default(true)
   isDeleted Boolean @default(false)
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime? @updatedAt
 
   content Content @relation(fields: [contentId], references: [id])
   writer User? @relation(fields: [writerId], references: [id], onDelete: SetNull, onUpdate: Cascade)
