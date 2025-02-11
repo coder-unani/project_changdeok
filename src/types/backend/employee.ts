@@ -14,6 +14,7 @@ export interface IEmployee {
   hireDate?: typeOptionalString;
   birthDate?: typeOptionalString;
   fireDate?: typeOptionalString;
+  isActivated?: boolean;
   // createdAt: string;
   // updatedAt: string;
 }
@@ -26,8 +27,8 @@ export interface IEmployeeUpdate {
   mobile?: string;
   address?: string;
   hireDate?: Date;
-  birthDate?: Date;
   fireDate?: Date;
+  birthDate?: Date;
   isActivated?: boolean;
   isDeleted?: boolean;
 }
@@ -35,7 +36,7 @@ export interface IEmployeeUpdate {
 export interface IEmployeeService {
   create(req: any, res: any): void;
   read(req: any, res: any): void;
-  update(req: any, res: any): void;
+  modify(req: any, res: any): void;
   delete(req: any, res: any): void;
   login(req: any, res: any): Promise<IServiceResponse<IEmployee>>;
   list(req: any, res: any): Promise<IServiceResponse<IEmployee[]>>;

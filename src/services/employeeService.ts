@@ -5,13 +5,14 @@ import { IServiceResponse } from "../types/backend/response";
 import { IEmployee, IEmployeeService } from "../types/backend/employee";
 import { 
   IRequestEmployeeRegister, 
-  IRequestEmployeeUpdate, 
+  IRequestEmployeeModify, 
   IRequestEmployeeLogin, 
   IRequestEmployeeDelete,
-  IRequestEmployeeList
+  IRequestEmployeeList,
+  IRequestEmployeePasswordModify
 } from "../types/backend/request";
 import { validateEmail, validatePassword, validatePhone, validateDate } from "../utils/validator";
-import { formatDate, formatEmailMasking } from "../utils/formattor";
+import { formatDate, formatDateToString, formatEmailMasking } from "../utils/formattor";
 import { hashPassword, verifyPassword } from "../utils/encryptor";
 
 export class EmployeeService implements IEmployeeService {
@@ -179,6 +180,10 @@ export class EmployeeService implements IEmployeeService {
       }
 
       // 반환할 직원 정보
+      const formattedBirthDate = formatDateToString(result.birthDate?.toISOString(), false);
+      const formattedHireDate = formatDateToString(result.hireDate?.toISOString(), false);
+      const formattedFireDate = formatDateToString(result.fireDate?.toISOString(), false);
+      
       const employee: IEmployee = {
         id: result.id,
         email: employeeEmail.data || result.email,
@@ -188,9 +193,10 @@ export class EmployeeService implements IEmployeeService {
         phone: result.phone,
         mobile: result.mobile,
         address: result.address,
-        hireDate: result.hireDate?.toISOString(),
-        birthDate: result.birthDate?.toISOString(),
-        fireDate: result.fireDate?.toISOString()
+        hireDate: formattedHireDate.data || null,
+        fireDate: formattedFireDate.data || null,
+        birthDate: formattedBirthDate.data || null,
+        isActivated: result.isActivated
       };
 
       // 성공
@@ -209,9 +215,7 @@ export class EmployeeService implements IEmployeeService {
     }
   }
 
-  public async update(id: number, data: IRequestEmployeeUpdate): Promise<IServiceResponse> {
-    // Employee 와 다른 데이터만 수정
-
+  public async modify(id: number, data: IRequestEmployeeModify): Promise<IServiceResponse> {
     // 직원 정보 조회
     const employee = await this.read(id);
 
@@ -300,6 +304,9 @@ export class EmployeeService implements IEmployeeService {
           id: id
         },
         data: {
+          name: data.name,
+          position: data.position,
+          description: data.description,
           phone: data.phone,
           mobile: data.mobile,
           address: data.address,
@@ -544,6 +551,101 @@ export class EmployeeService implements IEmployeeService {
 
   }
 
+  // 직원 비밀번호 변경
+  public async modifyPassword(id: number, data: IRequestEmployeePasswordModify): Promise<IServiceResponse> {
+    try {
+      // 수정할 데이터가 없는 경우 에러
+      if (!data) {
+        return {
+          result: false,
+          code: CODE_FAIL_VALIDATION,
+          message: '수정할 데이터가 없습니다.'
+        };
+      }
+
+      // 직원 정보 조회
+      const employee = await this.prisma.employee.findUnique({
+        where: {
+          id: id,
+          isDeleted: false
+        }
+      });
+
+      // 직원 정보가 없는 경우 에러
+      if (!employee) {
+        return {
+          result: false,
+          code: CODE_FAIL_VALIDATION,
+          message: '일치하는 직원 정보가 없습니다.'
+        };
+      }
+
+      // 비활성화 직원
+      if (!employee.isActivated) {
+        return {
+          result: false,
+          code: CODE_FAIL_VALIDATION,
+          message: '비활성화된 직원은 비밀번호를 변경할 수 없습니다.'
+        };
+      }
+
+      // 패스워드 유효성 검사
+      if (data.passwordNew !== data.passwordNewConfirm) {
+        return {
+          result: false,
+          code: CODE_FAIL_VALIDATION,
+          message: '패스워드가 일치하지 않습니다.'
+        }
+      }
+
+      const validatedPassword = validatePassword(data.passwordNew, data.passwordNewConfirm);
+      if (!validatedPassword.result) {
+        return {
+          result: false,
+          code: CODE_FAIL_VALIDATION,
+          message: validatedPassword.message
+        }
+      }
+
+      // 패스워드 비교
+      const isPasswordMatch = await verifyPassword(data.password, employee.password);
+
+      // 패스워드 불일치
+      if (!isPasswordMatch) {
+        return {
+          result: false,
+          code: CODE_FAIL_VALIDATION,
+          message: '아이디 또는 비밀번호가 일치하지 않습니다.'
+        }
+      }
+
+      // 새로운 패스워드 암호화
+      const hashedPasswordNew = await hashPassword(data.passwordNew);
+
+      // 직원 비밀번호 변경
+      await this.prisma.employee.update({
+        where: {
+          id: id,
+          isDeleted: false
+        },
+        data: {
+          password: hashedPasswordNew
+        }
+      });
+
+      // 성공
+      return { result: true };
+
+    } catch (error) {
+      return {
+        result: false,
+        code: CODE_FAIL_SERVER,
+        message: MESSAGE_FAIL_SERVER
+      }
+
+    }
+  }
+  
   // 직원 Email 중복 체크
   public async isUniqueEmail(email: string): Promise<IServiceResponse> {
     try {

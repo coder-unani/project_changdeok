@@ -12,7 +12,7 @@ export interface IRequestEmployeeRegister {
   birthDate?: string; // 선택적 필드 (ISO 날짜 문자열)
 }
 
-export interface IRequestEmployeeUpdate {
+export interface IRequestEmployeeModify {
   name?: string;
   position?: string;
   description?: string;
@@ -40,4 +40,10 @@ export interface IRequestEmployeeList {
   pageSize: number;
   sort?: 'ID_DESC' | 'ID_ASC' | 'NAME_DESC' | 'NAME_ASC';
   query?: string | undefined;
+}
+
+export interface IRequestEmployeePasswordModify {
+  password: string;
+  passwordNew: string;
+  passwordNewConfirm: string;
 }
