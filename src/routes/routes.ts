@@ -4,7 +4,7 @@ export const apiBackendRoutes = {
   employeesRegist: {
     method: 'POST',
     title: '관리자 등록',
-    url: `${apiBackendRoutesPrefix}/employees`,
+    url: `${apiBackendRoutesPrefix}/employees/regist`,
   },
   employeesDetail: {
     method: 'GET',
@@ -26,6 +26,11 @@ export const apiBackendRoutes = {
     title: '관리자 삭제',
     url: `${apiBackendRoutesPrefix}/employees/:employeeId`,
   },
+  employeesPermissions: {
+    method: 'POST',
+    title: '관리자 권한 등록/수정',
+    url: `${apiBackendRoutesPrefix}/employees/:employeeId/permissions`,
+  },
   employees: {
     method: 'GET',
     title: '관리자 목록',
@@ -40,7 +45,7 @@ export const apiBackendRoutes = {
     method: 'GET',
     title: '관리자 로그아웃',
     url: `${apiBackendRoutesPrefix}/employees/logout`,
-  }
+  },
 }
 
 export const backendRoutesPrefix = '/admin';
@@ -102,6 +107,13 @@ export const backendRoutes = {
     view: 'backend/employees/delete',
     layout: backendRoutesLayout
   },
+  employeesPermissions: {
+    method: 'GET',
+    title: '관리자 권한 변경',
+    url: `${backendRoutesPrefix}/employees/:employeeId/permissions`,
+    view: 'backend/employees/permissions',
+    layout: backendRoutesLayout
+  },
   employees: {
     method: 'GET',
     title: '관리자 목록',
@@ -122,14 +134,7 @@ export const backendRoutes = {
     url: `${backendRoutesPrefix}/employees/logout`,
     view: 'backend/employees/logout',
     layout: backendRoutesLayout
-  },
-  permissions: {
-    method: 'GET',
-    title: '권한 설정',
-    url: `${backendRoutesPrefix}/permissions`,
-    view: 'backend/permissions',
-    layout: backendRoutesLayout
-  },
+  }
 }
 
 export const WEB_FRONTEND_PREFIX = '/';

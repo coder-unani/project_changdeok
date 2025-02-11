@@ -49,7 +49,7 @@ export class BackendController {
       }
 
       // 관리자 상세 정보 조회
-      const apiUrl = `${API_BASE_URL}${apiBackendRoutes.employeesModify.url}`.replace(':employeeId', employeeId.toString());
+      const apiUrl = `${API_BASE_URL}${apiBackendRoutes.employeesDetail.url}`.replace(':employeeId', employeeId.toString());
       const apiResponse = await fetch(apiUrl, {
         method: 'GET',
         headers: {
@@ -76,7 +76,7 @@ export class BackendController {
       });
 
     } catch (error) {
-      res.render('backend/error', { layout: this.layout, title: 'Error Page7' });
+      this.renderError(res, error);
 
     }
   };
@@ -141,7 +141,7 @@ export class BackendController {
     try {
       // 직원 ID 추출
       const employeeId = parseInt(req.params.employeeId);
-      
+
       // 직원 ID가 없는 경우 에러 페이지로 이동
       if (!employeeId) {
         throw new Error('직원 아이디가 필요합니다.');
@@ -197,6 +197,19 @@ export class BackendController {
     res.render(view, { layout, title });
   };
 
+  // 직원 권한 변경
+  public async employeesPermissions(req: Request, res: Response): Promise<void> {
+    try {
+      const { title, view, layout } = backendRoutes.employeesPermissions;
+      console.log(title, view, layout);
+      res.render(view, { layout, title });
+
+    } catch (error) {
+      this.renderError(res, error);
+
+    }
+  };
+
   // 직원 목록
   public async employees(req: Request, res: Response): Promise<void> {
     try {
@@ -246,17 +259,6 @@ export class BackendController {
   public employeesLogout(req: Request, res: Response): void {
     const { title, view, layout } = backendRoutes.employeesLogout;
     res.render(view, { layout, title });
-  };
-
-  // 권한 관리
-  public async permissions(req: Request, res: Response): Promise<void> {
-    try {
-      const { title, view, layout } = backendRoutes.permissions;
-      res.render(view, { layout, title });
-
-    } catch (error) {
-      res.render('backend/error', { layout: this.layout, title: 'Error Page6' });
-    }
   };
 
   public renderError(res: Response, error: unknown): void {

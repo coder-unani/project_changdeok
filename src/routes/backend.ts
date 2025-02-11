@@ -67,6 +67,11 @@ router.post(backendRoutes.employeesDelete.url, function (req, res) {
   backendController.employeesDelete(req, res);
 });
 
+// 직원 권한 변경
+router.get(backendRoutes.employeesPermissions.url, function (req, res) {
+  backendController.employeesPermissions(req, res);
+});
+
 // 직원 목록
 router.get(backendRoutes.employees.url, function (req, res) {
   backendController.employees(req, res);
@@ -76,12 +81,6 @@ router.get(backendRoutes.employees.url, function (req, res) {
 router.get(backendRoutes.employeesLogout.url, function (req, res) {
   backendController.employeesLogout(req, res);
 });
-
-// 직원 권한 관리
-router.get(backendRoutes.permissions.url, function (req, res) {
-  backendController.permissions(req, res);
-});
-
 
 /**
  * 에러 핸들러 설정

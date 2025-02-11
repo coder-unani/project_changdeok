@@ -15,6 +15,7 @@ export interface IEmployee {
   birthDate?: typeOptionalString;
   fireDate?: typeOptionalString;
   isActivated?: boolean;
+  permissions?: number[];
   // createdAt: string;
   // updatedAt: string;
 }

@@ -4,6 +4,14 @@ export const CODE_FAIL_VALIDATION = 'FAIL_VALIDATION';
 
 export const MESSAGE_FAIL_SERVER = '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
 
+export const PERMISSIONS_DEFINE = {
+  1: '최고 관리자',
+  2: '직원 관리',
+  3: '권한 관리',
+  4: '게시판 관리',
+  5: '광고 관리',
+  6: '통계 관리',
+}
 /**
  * 허용하는 날짜 형식
  * 2023-10-15
