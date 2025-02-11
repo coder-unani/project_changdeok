@@ -25,10 +25,8 @@ export const formatDate = (date: string | Date | undefined | null): typeFormatte
     // 양 옆 공백 제거
     date = date.trim();
 
-    // date가 .으로 구분되어 있으면 -로 변경
-    date = date.replace(/\./g, '-');
+    console.log('date = ', date);
 
-    
     if (!REG_DATE_PATTERN.test(date)) {
       return {
         result: false,
@@ -49,7 +47,63 @@ export const formatDate = (date: string | Date | undefined | null): typeFormatte
       result: false,
       message: '날짜 형식이 올바르지 않습니다.'
     }
+  }
+}
 
+export const formatDateToString = (date: string | Date | undefined | null, isIncludeTime: boolean = true): typeFormattedResult =>{
+  try {
+    // Date가 없으면 현재 날짜로 설정
+    if (date === null || date === undefined) {
+      return {
+        result: false,
+        message: '날짜가 없습니다.'
+      }
+    }
+
+    let dateObject: Date;
+
+    // Date가 이미 Date 타입이면 그대로 사용
+    if (date instanceof Date) {
+      dateObject = date;
+    } else {
+      // 문자열인 경우 처리
+      date = date.trim();
+
+      if (!REG_DATE_PATTERN.test(date)) {
+        return {
+          result: false,
+          message: '날짜 형식이 올바르지 않습니다.'
+        }
+      }
+
+      dateObject = new Date(date);
+    }
+
+    // 날짜 부분 포맷팅
+    let formattedDate = dateObject.getFullYear() + '-' +
+      String(dateObject.getMonth() + 1).padStart(2, '0') + '-' +
+      String(dateObject.getDate()).padStart(2, '0');
+
+    // 시간 포함 여부에 따라 포맷팅
+    if (isIncludeTime) {
+      formattedDate += ' ' +
+        String(dateObject.getHours()).padStart(2, '0') + ':' +
+        String(dateObject.getMinutes()).padStart(2, '0') + ':' +
+        String(dateObject.getSeconds()).padStart(2, '0');
+    }
+    
+    // 날짜 형식 변환
+    return {
+      result: true,
+      message: '',
+      data: formattedDate
+    }
+
+  } catch (error) {
+    return {
+      result: false,
+      message: '날짜 형식이 올바르지 않습니다.'
+    }
   }
 }
 
