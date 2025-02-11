@@ -13,6 +13,8 @@ export const CORS_BACKEND_OPTIONS = {
   optionsSuccessStatus: 200,
 }
 
+export const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:3000';
+
 // Crypto Secret Key
 export const CRYPTO_SECRET_KEY = (process.env.CRYPTO_SECRET_KEY) ? process.env.CRYPTO_SECRET_KEY : ''; 
 
