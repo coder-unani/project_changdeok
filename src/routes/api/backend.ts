@@ -4,7 +4,7 @@ import { CORS_BACKEND_OPTIONS } from '../../config/config';
 import { IMiddleware } from '../../types/middleware';
 import { CorsMiddleware } from '../../middlewares/api/cors';
 import { ApiBackendController } from '../../controllers/api/backendController';
-import { API_BACKEND_ROUTE } from '../routes';
+import { apiBackendRoutes } from '../routes';
 
 const router: Router = Router();
 
@@ -15,34 +15,44 @@ router.use((req, res, next) => corsMiddleware.handle(req, res, next));
 // 컨트롤러
 const apiBackendController = new ApiBackendController();
 
-// 직원 목록
-router.get(API_BACKEND_ROUTE.EMPLOYEE_LIST, (req: Request, res: Response) => {
-  apiBackendController.employeeList(req, res);
+// 직원 등록
+router.post(apiBackendRoutes.employeesRegist.url, (req: Request, res: Response) => {
+  apiBackendController.employeesRegist(req, res);
 });
 
 // 직원 상세 정보
-router.get(API_BACKEND_ROUTE.EMPLOYEE_READ, (req: Request, res: Response) => {
-  apiBackendController.employeeDetail(req, res);
-});
-
-// 직원 등록
-router.post(API_BACKEND_ROUTE.EMPLOYEE_REGIST, (req: Request, res: Response) => {
-  apiBackendController.employeeRegist(req, res);
-});
-
-// 직원 로그인
-router.post(API_BACKEND_ROUTE.EMPLOYEE_LOGIN, (req: Request, res: Response) => {
-  apiBackendController.employeeLogin(req, res);
+router.get(apiBackendRoutes.employeesDetail.url, (req: Request, res: Response) => {
+  apiBackendController.employeesDetail(req, res);
 });
 
 // 직원 정보 수정
-router.patch(API_BACKEND_ROUTE.EMPLOYEE_UPDATE, (req: Request, res: Response) => {
-  apiBackendController.employeeUpdate(req, res);
+router.put(apiBackendRoutes.employeesModify.url, (req: Request, res: Response) => {
+  apiBackendController.employeesModify(req, res);
+});
+
+// 직원 정보 수정
+router.patch(apiBackendRoutes.employeesModify.url, (req: Request, res: Response) => {
+  apiBackendController.employeesModifyPassword(req, res);
 });
 
 // 직원 탈퇴
-router.delete(API_BACKEND_ROUTE.EMPLOYEE_DELETE, (req: Request, res: Response) => {
-  apiBackendController.employeeDelete(req, res);
+router.delete(apiBackendRoutes.employeesDelete.url, (req: Request, res: Response) => {
+  apiBackendController.employeesDelete(req, res);
+});
+
+// 직원 목록
+router.get(apiBackendRoutes.employees.url, (req: Request, res: Response) => {
+  apiBackendController.employees(req, res);
+});
+
+// 직원 로그인
+router.post(apiBackendRoutes.employeesLogin.url, (req: Request, res: Response) => {
+  apiBackendController.employeesLogin(req, res);
+});
+
+// 직원 로그아웃
+router.post(apiBackendRoutes.employeesLogout.url, (req: Request, res: Response) => {
+  apiBackendController.employeesLogout(req, res);
 });
 
 export default router;

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { WEB_BACKEND_PREFIX, WEB_BACKEND_ROUTE } from '../../routes/routes';
+import { backendRoutes } from '../../routes/routes';
 import { IMiddleware } from '../../types/middleware';
 import { verifyJWT } from '../../utils/jwt';
 
@@ -10,7 +10,7 @@ export class AuthMiddleware implements IMiddleware {
   
   // 생성자
   constructor(exceptPath: string[] = []) {
-    this.loginPath = WEB_BACKEND_PREFIX + WEB_BACKEND_ROUTE.EMPLOYEE_LOGIN;
+    this.loginPath = backendRoutes.employeesLogin.url;
     this.exceptAuth = exceptPath;
     this.exceptAuth.push(this.loginPath);
   }
@@ -20,7 +20,7 @@ export class AuthMiddleware implements IMiddleware {
     // const authHeader = req.headers.authorization;
 
     // 인증 제외된 경로는 미들웨어 실행하지 않음
-    if (this.exceptAuth.includes(WEB_BACKEND_PREFIX + req.path)) {
+    if (this.exceptAuth.includes(req.path)) {
       next();
       return;
     }

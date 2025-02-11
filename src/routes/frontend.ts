@@ -21,8 +21,8 @@ router.get('/error', (req: Request, res: Response) => {
 /**
  * 에러 핸들러 설정
  */
-const logger = new ExpressLogger(LOG_PATH, LOG_LEVEL);
-const errorMiddleware: IErrorMiddleware = new ErrorMiddleware(logger, 'frontend/error');
-router.use((err: any, req: Request, res: Response, next: NextFunction) => errorMiddleware.handleError(err, req, res, next));
+// const logger = new ExpressLogger(LOG_PATH, LOG_LEVEL);
+// const errorMiddleware: IErrorMiddleware = new ErrorMiddleware(logger, 'frontend/error');
+// router.use((err: any, req: Request, res: Response, next: NextFunction) => errorMiddleware.handleError(err, req, res, next));
 
 export default router;

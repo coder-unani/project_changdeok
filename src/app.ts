@@ -12,7 +12,7 @@ import { IMiddleware } from './types/middleware';
 import { LoggerMiddleware } from './middlewares/logger';
 import { SanitizeMiddleware } from './middlewares/sanitizer';
 import { ExpressLogger } from './utils/logger';
-import { WEB_FRONTEND_PREFIX, WEB_BACKEND_PREFIX, API_FRONTEND_PREFIX, API_BACKEND_PREFIX } from './routes/routes';
+import { WEB_FRONTEND_PREFIX, API_FRONTEND_PREFIX, API_BACKEND_PREFIX } from './routes/routes';
 import apiFrontendRouter from './routes/api/frontend';
 import apiBackendRouter from './routes/api/backend';
 import frontendRouter from './routes/frontend';
@@ -79,10 +79,10 @@ app.use((req, res, next) => {
 /**
  * 라우터 설정
  */
-app.use(API_FRONTEND_PREFIX, apiFrontendRouter); // API Frontend 라우터
-app.use(API_BACKEND_PREFIX, apiBackendRouter); // API Backend 라우터
-app.use(WEB_FRONTEND_PREFIX, frontendRouter); // Frontend 라우터
-app.use(WEB_BACKEND_PREFIX, backendRouter); // Backend 라우터
+// app.use(API_FRONTEND_PREFIX, apiFrontendRouter); // API Frontend 라우터
+app.use(apiBackendRouter); // API Backend 라우터
+// app.use(WEB_FRONTEND_PREFIX, frontendRouter); // Frontend 라우터
+app.use(backendRouter); // Backend 라우터
 
 
 /**
