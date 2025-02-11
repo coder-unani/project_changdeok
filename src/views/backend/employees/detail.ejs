@@ -1,7 +1,7 @@
 <div class="max-w-[1024px] h-full bg-white p-2 lg:p-4 rounded-2xl shadow-md">
   <div class="block mb-4 mx-auto border-b border-slate-300 pb-2 max-w-[360px]">
     <h1 class='flex justify-center items-center gap-1.5 px-4 py-2 text-center text-slate-700 transition-all'>
-      <span class="font-bold">관리자 상세정보</span><span class="hidden lg:block">| Administrator Details</span>
+      <span class="font-bold"><%=title%></span>
     </h1>
   </div>
   <div id="adminDetails" class="space-y-3 text-sm">
@@ -38,30 +38,31 @@
 
   <!-- Action Buttons -->
   <div class="mt-6 grid grid-cols-3 gap-1.5 text-white font-semibold">
-    <button type="button" onclick="editAdminDetails()" class="orb-btn-primary">
+    <button type="button" onclick="modifyEmployees()" class="orb-btn-primary">
       수정하기
     </button>
     
-    <button type="button" onclick="changePassword()" class="orb-btn-secondary">
+    <button type="button" onclick="modifyEmployeesPassword()" class="orb-btn-secondary">
       비밀번호 변경
     </button>
 
-    <button type="button" onclick="deleteAdmin()" class="orb-btn-delete">
+    <button type="button" onclick="deleteEmployees()" class="orb-btn-delete">
       삭제하기
     </button>
   </div>
 </div>
 
 <script>
-  function editAdminDetails() {
-    location.href = "/admin/employees/<%=data.id%>/update";
+  function modifyEmployees() {
+    const employeeModifyUrl = "<%=routes.employeesModify.url%>".replace(":employeeId", "<%=data.id%>");
+    location.href = employeeModifyUrl;
   }
 
-  function changePassword() {
+  function modifyEmployeesPassword() {
     alert("비밀번호 변경 페이지로 이동합니다!");
   }
 
-  function deleteAdmin() {
+  function deleteEmployees() {
     if (confirm("정말로 삭제하시겠습니까?")) {
       alert("관리자가 삭제되었습니다.");
     }

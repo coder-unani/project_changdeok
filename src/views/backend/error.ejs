@@ -1,4 +1,15 @@
-<div class="bg-white p-2 lg:p-4 rounded-lg shadow-md w-full h-full"></div>
-  <h1>에러페이지 <%= status %></h1>
-  <p>에러페이지입니다. <%= message %></p>
+<div class="max-w-[1024px] h-full bg-white p-2 lg:p-4 rounded-2xl shadow-md">
+  <div class="block mb-4 mx-auto border-b border-slate-300 pb-2 max-w-[360px]">
+    <h1 class='flex justify-center items-center gap-1.5 px-4 py-2 text-center text-slate-700 transition-all'>
+      <span class="font-bold"><%=title%></span>
+    </h1>
+  </div>
+  <div>
+    <div class="text-center">
+      <h2 class="p-4"><%=message%></h2>
+      <div class="p-4">
+        <button onclick="window.history.back()" class="px-4 py-2 text-white bg-slate-700 rounded-md hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-600 focus:ring-opacity-50">뒤로가기</button>
+      </div>
+    </div>
+  </div>
 </div>
