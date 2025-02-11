@@ -113,6 +113,41 @@ export class ApiBackendController {
     }
   }
 
+  // 직원 비밀번호 변경
+  public async employeesModifyPassword(req: Request, res: Response): Promise<void> {
+    try {
+      // 직원 ID 추출
+      const employeeId = parseInt(req.params.employeeId);
+
+      // ID가 숫자가 아닌 경우 에러 처리
+      if (isNaN(employeeId)) {
+        res.status(400).send('Bad Request');
+        return;
+      }
+
+      // 요청 데이터
+      const requestData = req.body;
+
+      // 직원 비밀번호 변경 처리
+      const employeeService = new EmployeeService();
+      const result = await employeeService.modifyPassword(employeeId, requestData);
+
+      // 변경 실패 처리
+      if (!result.result) {
+        res.status(500).send(result);
+        return;
+      }
+
+      // 변경 성공시 201 응답
+      res.status(201).send(null);
+
+    } catch (error) {
+      const response = formatApiResponse(false, CODE_FAIL_SERVER, MESSAGE_FAIL_SERVER);
+      res.status(500).json(response);
+
+    }
+  }
+
   // 직원 탈퇴
   public async employeesDelete(req: Request, res: Response): Promise<void> {
     try {
@@ -179,41 +214,6 @@ export class ApiBackendController {
     }
   }
 
-  // 직원 비밀번호 변경
-  public async employeesModifyPassword(req: Request, res: Response): Promise<void> {
-    try {
-      // 직원 ID 추출
-      const employeeId = parseInt(req.params.employeeId);
-
-      // ID가 숫자가 아닌 경우 에러 처리
-      if (isNaN(employeeId)) {
-        res.status(400).send('Bad Request');
-        return;
-      }
-
-      // 요청 데이터
-      const requestData = req.body;
-
-      // 직원 비밀번호 변경 처리
-      const employeeService = new EmployeeService();
-      const result = await employeeService.modifyPassword(employeeId, requestData);
-
-      // 변경 실패 처리
-      if (!result.result) {
-        res.status(500).send(result);
-        return;
-      }
-
-      // 변경 성공시 201 응답
-      res.status(201).send(null);
-
-    } catch (error) {
-      const response = formatApiResponse(false, CODE_FAIL_SERVER, MESSAGE_FAIL_SERVER);
-      res.status(500).json(response);
-
-    }
-  }
-
   // 직원 로그인
   public async employeesLogin(req: Request, res: Response): Promise<void> {
     try {
@@ -223,6 +223,8 @@ export class ApiBackendController {
       // 직원 로그인 처리
       const employeeService = new EmployeeService();
       const result = await employeeService.login(requestData);
+
+      console.log(result);
 
       // 로그인 실패 처리
       if (!result.result) {
