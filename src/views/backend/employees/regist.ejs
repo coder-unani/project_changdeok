@@ -84,7 +84,7 @@ document.getElementById('formAdminRegister').addEventListener('submit', async (e
 
     try {
         // POST 요청 보내기
-        const response = await fetch('/api/backend/employees/regist', {
+        const response = await fetch('<%=apiBackendRoutes.employeesRegist.url%>', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -92,20 +92,15 @@ document.getElementById('formAdminRegister').addEventListener('submit', async (e
             body: JSON.stringify(data)
         });
 
-        // 응답 처리
-        if (response.ok) {
-            const result = await response.json();
-            alert('등록 성공: ' + result.message);
-            // 성공 시 추가 동작 (예: 페이지 리다이렉트)
-
-        } else {
-            const error = await response.json();
-            alert('등록 실패: ' + error.message);
-
+        // 응답 오류
+        if (!response.ok) {
+          throw new Error(response.statusText);
         }
 
+        // 응답 성공
+        alert('<%=apiBackendRoutes.employeesRegist.title%> 성공');
+        
     } catch (err) {
-        console.error('Error:', err);
         alert('서버 오류가 발생했습니다.');
         
     }

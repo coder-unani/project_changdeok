@@ -34,18 +34,37 @@
       <label class="block text-gray-600 font-medium">주소</label>
       <p class="text-gray-800"><%=data.address%></p>
     </div>
+
+    <!-- permissions -->
+     <div>
+      <label class="block text-gray-600 font-medium">권한</label>
+      <ul class="flex flex-wrap gap-2 py-2">
+        <% data.permissions.forEach(permission => { %>
+          <li class="text-gray-800 rounded-2xl bg-slate-200 px-2 py-1 border border-slate-300 text-xs">
+            <%if (permission === 1) {%>최고 관리자
+            <%} else if (permission === 2) {%>직원 관리
+            <%} else if (permission === 3) {%>권한 관리
+            <%} else if (permission === 4) {%>게시판 관리
+            <%} else if (permission === 5) {%>광고 관리
+            <%} else if (permission === 6) {%>통계 관리
+            <%}%>
+          </li>
+        <% }) %>
+      </ul>
+     </div>
   </div>
 
   <!-- Action Buttons -->
   <div class="mt-6 grid grid-cols-3 gap-1.5 text-white font-semibold">
-    <button type="button" onclick="modifyEmployees()" class="orb-btn-primary">
+    <a href="<%=routes.employeesModify.url.replace(':employeeId', data.id)%>" class="orb-btn-secondary">
       수정하기
-    </button>
-    
-    <button type="button" onclick="modifyEmployeesPassword()" class="orb-btn-secondary">
+    </a>
+    <a href="<%=routes.employeesModifyPassword.url.replace(':employeeId', data.id)%>" class="orb-btn-secondary">
       비밀번호 변경
-    </button>
-
+    </a>
+    <a href="<%=routes.employeesPermissions.url.replace(':employeeId', data.id)%>" class="orb-btn-secondary">
+      권한 수정
+    </a>
     <button type="button" onclick="deleteEmployees()" class="orb-btn-delete">
       삭제하기
     </button>
@@ -53,18 +72,22 @@
 </div>
 
 <script>
-  function modifyEmployees() {
-    const employeeModifyUrl = "<%=routes.employeesModify.url%>".replace(":employeeId", "<%=data.id%>");
-    location.href = employeeModifyUrl;
-  }
-
-  function modifyEmployeesPassword() {
-    alert("비밀번호 변경 페이지로 이동합니다!");
-  }
-
-  function deleteEmployees() {
+  async function deleteEmployees() {
     if (confirm("정말로 삭제하시겠습니까?")) {
-      alert("관리자가 삭제되었습니다.");
+      const response = await fetch("<%=routes.employeesDelete.url.replace(':employeeId', data.id)%>", {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        alert('삭제에 실패했습니다.');
+        return;
+      }
+
+      alert('삭제되었습니다.');
+      location.href = '<%=routes.employees.url%>';
     }
   }
 </script>
