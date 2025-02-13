@@ -55,4 +55,9 @@ router.post(apiBackendRoutes.employeesLogout.url, (req: Request, res: Response) 
   apiBackendController.employeesLogout(req, res);
 });
 
+// 권한 목록
+router.get(apiBackendRoutes.permissions.url, (req: Request, res: Response) => {
+  apiBackendController.permissions(req, res);
+});
+
 export default router;

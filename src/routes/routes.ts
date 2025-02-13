@@ -46,6 +46,11 @@ export const apiBackendRoutes = {
     title: '관리자 로그아웃',
     url: `${apiBackendRoutesPrefix}/employees/logout`,
   },
+  permissions: {
+    method: 'GET',
+    title: '권한 목록',
+    url: `${apiBackendRoutesPrefix}/permissions`,
+  }
 }
 
 export const backendRoutesPrefix = '/admin';
