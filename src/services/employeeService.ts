@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 
 import { CODE_FAIL_SERVER, CODE_FAIL_VALIDATION, MESSAGE_FAIL_SERVER } from '../config/constants';
-import { IServiceResponse } from "../types/backend/response";
-import { IEmployee, IEmployeeService } from "../types/backend/employee";
+import { IServiceResponse } from "../types/response";
+import { IEmployee, IEmployeeService } from "../types/backend";
 import { 
   IRequestEmployeeRegister, 
   IRequestEmployeeModify, 
@@ -10,7 +10,7 @@ import {
   IRequestEmployeeDelete,
   IRequestEmployeeList,
   IRequestEmployeePasswordModify
-} from "../types/backend/request";
+} from "../types/request";
 import { validateEmail, validatePassword, validatePhone, validateDate } from "../utils/validator";
 import { formatDate, formatDateToString, formatEmailMasking } from "../utils/formattor";
 import { hashPassword, verifyPassword } from "../utils/encryptor";
@@ -487,90 +487,99 @@ export class EmployeeService implements IEmployeeService {
 
   public async list(data: IRequestEmployeeList): Promise<IServiceResponse<IEmployee[]>> {
 
-    // 페이지 번호가 없거나 1보다 작은 경우 1로 설정
-    if (!data.page || data.page < 1) {
-      data.page = 1;
-    }
-
-    // 페이지 크기가 작거나 너무 크면 10으로 설정
-    if (!data.pageSize || data.pageSize < 1 || data.pageSize > 100) {
-      data.pageSize = 10;
-    }
-
-    // 정렬이 없는 경우 id로 설정
-    if (!data.sort) {
-      data.sort = 'ID_ASC';
-    }
-
-    let orderBy = {};
-    if (data.sort === 'ID_DESC') {
-      orderBy = {
-        id: 'desc'
+    try {
+      // 페이지 번호가 없거나 1보다 작은 경우 1로 설정
+      if (!data.page || data.page < 1) {
+        data.page = 1;
       }
-    } else if (data.sort === 'ID_ASC') {
-      orderBy = {
-        id: 'asc'
-      }
-    } else if (data.sort === 'NAME_DESC') {
-      orderBy = {
-        name: 'desc'
-      }
-    } else if (data.sort === 'NAME_ASC') {
-      orderBy = {
-        name: 'asc'
-      }
-    }
 
-    // 전체 직원 수 조회
-    const totalEmployees = await this.prisma.employee.count({
-      where: {
-        isDeleted: false
+      // 페이지 크기가 작거나 너무 크면 10으로 설정
+      if (!data.pageSize || data.pageSize < 1 || data.pageSize > 100) {
+        data.pageSize = 10;
       }
-    });
 
-    // 직원 리스트 조회
-    const employeeInquery = await this.prisma.employee.findMany({
-      where: {
-        isDeleted: false
-      },
-      skip: (data.page - 1) * data.pageSize,
-      take: data.pageSize,
-      orderBy: orderBy
-    });
+      // 정렬이 없는 경우 id로 설정
+      if (!data.sort) {
+        data.sort = 'ID_ASC';
+      }
 
-    // IEmployees 배열로 변환
-    const employees: IEmployee[] = employeeInquery.map(employee => {
-      // 이메일 마스킹 처리
-      const employeeEmail = formatEmailMasking(employee.email);
+      let orderBy = {};
+      if (data.sort === 'ID_DESC') {
+        orderBy = {
+          id: 'desc'
+        }
+      } else if (data.sort === 'ID_ASC') {
+        orderBy = {
+          id: 'asc'
+        }
+      } else if (data.sort === 'NAME_DESC') {
+        orderBy = {
+          name: 'desc'
+        }
+      } else if (data.sort === 'NAME_ASC') {
+        orderBy = {
+          name: 'asc'
+        }
+      }
 
-      return {
-        id: employee.id,
-        email: employeeEmail.data || employee.email,
-        name: employee.name,
-        position: employee.position,
-        description: employee.description,
-        phone: employee.phone,
-        mobile: employee.mobile,
-        address: employee.address,
-        hireDate: employee.hireDate?.toISOString(),
-        birthDate: employee.birthDate?.toISOString(),
-        fireDate: employee.fireDate?.toISOString()
+      // 전체 직원 수 조회
+      const totalEmployees = await this.prisma.employee.count({
+        where: {
+          isDeleted: false
+        }
+      });
+
+      // 직원 리스트 조회
+      const employeeInquery = await this.prisma.employee.findMany({
+        where: {
+          isDeleted: false
+        },
+        skip: (data.page - 1) * data.pageSize,
+        take: data.pageSize,
+        orderBy: orderBy
+      });
+
+      // IEmployees 배열로 변환
+      const employees: IEmployee[] = employeeInquery.map(employee => {
+        // 이메일 마스킹 처리
+        const employeeEmail = formatEmailMasking(employee.email);
+
+        return {
+          id: employee.id,
+          email: employeeEmail.data || employee.email,
+          name: employee.name,
+          position: employee.position,
+          description: employee.description,
+          phone: employee.phone,
+          mobile: employee.mobile,
+          address: employee.address,
+          hireDate: employee.hireDate?.toISOString(),
+          birthDate: employee.birthDate?.toISOString(),
+          fireDate: employee.fireDate?.toISOString()
+        };
+      });
+
+      // 메타데이터 생성
+      const metadata = {
+        total: totalEmployees,
+        page: data.page,
+        pageSize: data.pageSize,
+        start: (data.page - 1) * data.pageSize + 1,
+        end: (data.page - 1) * data.pageSize + employees.length,
+        count: employees.length,
+        totalPage: Math.ceil(totalEmployees / data.pageSize)
       };
-    });
 
-    // 메타데이터 생성
-    const metadata = {
-      total: totalEmployees,
-      page: data.page,
-      pageSize: data.pageSize,
-      start: (data.page - 1) * data.pageSize + 1,
-      end: (data.page - 1) * data.pageSize + employees.length,
-      count: employees.length,
-      totalPage: Math.ceil(totalEmployees / data.pageSize)
-    };
+      return { result: true, metadata, data: employees };
 
-    return { result: true, metadata, data: employees };
+    } catch (error) {
+      return {
+        result: false,
+        code: CODE_FAIL_SERVER,
+        message: MESSAGE_FAIL_SERVER
+      }
 
+    }
   }
 
   public async login(data: IRequestEmployeeLogin): Promise<IServiceResponse<IEmployee>> {
@@ -661,7 +670,7 @@ export class EmployeeService implements IEmployeeService {
     }
   }
 
-  public async getPermissions(id: number): Promise<IServiceResponse> {
+  public async permissions(id: number): Promise<IServiceResponse> {
     try {
       const permissions = await this.prisma.employee.findUnique({
         where: {
