@@ -1,7 +1,18 @@
 import { Request, Response } from 'express';
 
-import { IRequestEmployeeRegister, IRequestEmployeeLogin } from '../../types/backend/request';
+import { IEmployeeService, IPermissionService } from '../../types/backend';
+import { 
+  typeListSort, 
+  IRequestEmployeeRegister, 
+  IRequestEmployeeModify,
+  IRequestEmployeePasswordModify,
+  IRequestEmployeeDelete,
+  IRequestEmployeeLogin, 
+  IRequestEmployeeList, 
+  IRequestDefaultList
+} from '../../types/request';
 import { EmployeeService } from '../../services/employeeService';
+import { PermissionService } from '../../services/permissionService';
 import { formatApiResponse } from '../../utils/formattor';
 import { CODE_FAIL_SERVER, CODE_FAIL_VALIDATION, MESSAGE_FAIL_SERVER } from '../../config/constants';
 import { createJWT } from '../../utils/jwt';
@@ -14,7 +25,7 @@ export class ApiBackendController {
       const requestData: IRequestEmployeeRegister = req.body;
       
       // 직원 등록 처리
-      const employeeService = new EmployeeService();
+      const employeeService: IEmployeeService = new EmployeeService();
       const result = await employeeService.create(requestData);
 
       // 등록 실패 처리
@@ -50,7 +61,7 @@ export class ApiBackendController {
       }
 
       // 직원 상세 조회
-      const employeeService = new EmployeeService();
+      const employeeService: IEmployeeService = new EmployeeService();
       const result = await employeeService.read(employeeId);
 
       // 조회 실패 처리
@@ -84,10 +95,10 @@ export class ApiBackendController {
       }
 
       // 요청 데이터
-      const requestData = req.body;
+      const requestData: IRequestEmployeeModify = req.body;
 
       // 직원 정보 수정 처리
-      const employeeService = new EmployeeService();
+      const employeeService: IEmployeeService = new EmployeeService();
       const result = await employeeService.modify(employeeId, requestData);
 
       // 수정 실패 처리
@@ -126,10 +137,10 @@ export class ApiBackendController {
       }
 
       // 요청 데이터
-      const requestData = req.body;
+      const requestData: IRequestEmployeePasswordModify = req.body;
 
       // 직원 비밀번호 변경 처리
-      const employeeService = new EmployeeService();
+      const employeeService: IEmployeeService = new EmployeeService();
       const result = await employeeService.modifyPassword(employeeId, requestData);
 
       // 변경 실패 처리
@@ -161,10 +172,10 @@ export class ApiBackendController {
       }
 
       // 요청 데이터
-      const requestData = req.body;
+      const requestData: IRequestEmployeeDelete = req.body;
 
       // 직원 탈퇴 처리
-      const employeeService = new EmployeeService();
+      const employeeService: IEmployeeService = new EmployeeService();
       const result = await employeeService.delete(employeeId, requestData);
 
       // 탈퇴 실패 처리
@@ -191,10 +202,15 @@ export class ApiBackendController {
   public async employees(req: Request, res: Response): Promise<void> {
     try {
       // 요청 데이터
-      const requestData = req.body;
+      const requestData: IRequestEmployeeList = {
+        page: parseInt(req.query.page as string) || 1,
+        pageSize: parseInt(req.query.pageSize as string) || 10,
+        sort: req.params.sort as typeListSort,
+        query: req.query.query as string || '',
+      }
 
       // 직원 목록 조회
-      const employeeService = new EmployeeService();
+      const employeeService: IEmployeeService = new EmployeeService();
       const result = await employeeService.list(requestData);
 
       // 조회 실패 처리
@@ -221,7 +237,7 @@ export class ApiBackendController {
       const requestData: IRequestEmployeeLogin = req.body;
 
       // 직원 로그인 처리
-      const employeeService = new EmployeeService();
+      const employeeService: IEmployeeService = new EmployeeService();
       const result = await employeeService.login(requestData);
 
       console.log(result);
@@ -277,6 +293,37 @@ export class ApiBackendController {
 
       // 로그아웃 성공시 200 응답
       res.status(200).send(null);
+
+    } catch (error) {
+      const response = formatApiResponse(false, CODE_FAIL_SERVER, MESSAGE_FAIL_SERVER);
+      res.status(500).json(response);
+
+    }
+  }
+
+  // 권한 목록
+  public async permissions(req: Request, res: Response): Promise<void> {
+    try {
+      // 요청 데이터
+      const requestData: IRequestDefaultList = {
+        page: parseInt(req.query.page as string) || 1,
+        pageSize: parseInt(req.query.pageSize as string) || 10,
+        query: req.query.query as string || '',
+      }
+
+      // 권한 목록 조회
+      const permissionService: IPermissionService = new PermissionService();
+      const result = await permissionService.list(requestData);
+
+      // 조회 실패 처리
+      if (!result.result) {
+        res.status(500).send(result);
+        return;
+      }
+
+      // 조회 성공시 200 응답
+      const response = formatApiResponse(true, null, null, result.metadata, result.data);
+      res.status(200).json(response);
 
     } catch (error) {
       const response = formatApiResponse(false, CODE_FAIL_SERVER, MESSAGE_FAIL_SERVER);

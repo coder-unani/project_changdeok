@@ -1,6 +1,5 @@
-
-import { IServiceResponse } from "../types/backend/response";
-import { IContentGroup, IContent, IContentService } from "../types/backend/content";
+import { IServiceResponse } from "../types/response";
+import { IContentGroup, IContent, IContentService } from "../types/content";
 
 export class ContentService implements IContentService {
   async create(data: IContent): Promise<void> {

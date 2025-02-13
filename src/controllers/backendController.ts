@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { API_BASE_URL } from '../config/config';
 import { backendRoutes, apiBackendRoutes } from '../routes/routes';
 import { EmployeeService } from '../services/employeeService';
-import { IRequestEmployeeList } from 'types/backend/request';
+import { IRequestEmployeeList } from 'types/request';
 
 const employeeService = new EmployeeService();
 
@@ -62,11 +62,6 @@ export class BackendController {
       this.renderError(res, error);
 
     }
-    
-
-    
-
-
 
     const { title, view, layout } = backendRoutes.contents;
     res.render(view, { layout, title });
@@ -244,8 +239,26 @@ export class BackendController {
   // 직원 권한 변경
   public async employeesPermissions(req: Request, res: Response): Promise<void> {
     try {
+      // 권한 목록 조회
+      // const params = new URLSearchParams({"page": "1", "pageSize": "10"}).toString();
+      const apiResponse = await fetch(`${API_BASE_URL}${apiBackendRoutes.permissions.url}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!apiResponse.ok) {
+        throw new Error(apiResponse.statusText);
+      }
+
+      const result = await apiResponse.json();
+      const permissions = result.data;
+
+      console.log(permissions);
+
       const { title, view, layout } = backendRoutes.employeesPermissions;
-      res.render(view, { layout, title });
+      res.render(view, { layout, title, data: { permissions } });
 
     } catch (error) {
       this.renderError(res, error);

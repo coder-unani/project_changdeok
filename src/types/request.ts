@@ -1,3 +1,5 @@
+export type typeListSort = 'ID_DESC' | 'ID_ASC' | 'NAME_DESC' | 'NAME_ASC';
+
 export interface IRequestEmployeeRegister {
   email: string;
   name: string;
@@ -35,11 +37,14 @@ export interface IRequestEmployeeLogin {
   password: string;
 }
 
-export interface IRequestEmployeeList {
+export interface IRequestDefaultList {
   page: number;
   pageSize: number;
-  sort?: 'ID_DESC' | 'ID_ASC' | 'NAME_DESC' | 'NAME_ASC';
   query?: string | undefined;
+}
+
+export interface IRequestEmployeeList extends IRequestDefaultList {
+  sort?: typeListSort;
 }
 
 export interface IRequestEmployeePasswordModify {
