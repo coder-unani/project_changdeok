@@ -30,6 +30,48 @@ export class BackendController {
     res.render(view, { layout, title });
   };
 
+  // 화면 관리: 배너
+  public screensBanner(req: Request, res: Response): void {
+    const { title, view, layout } = backendRoutes.screensBanner;
+    res.render(view, { layout, title });
+  };
+
+  // 화면 관리: 팝업
+  public screensPopup(req: Request, res: Response): void {
+    const { title, view, layout } = backendRoutes.screensPopup;
+    res.render(view, { layout, title });
+  };
+
+  // 게시판 관리
+  public contents(req: Request, res: Response): void {
+    try {
+      // 게시판 ID 추출
+      const contentId = req.params.contentId;
+
+      // 게시판 ID가 없는 경우
+      if (!contentId) {
+        throw new Error('존재하지 않는 게시판입니다.');
+      }
+
+      // ID가 숫자가 아닌 경우
+      if (isNaN(parseInt(contentId))) {
+        throw new Error('게시판 아이디가 형식에 맞지 않습니다.');
+      }
+
+    } catch (error) {
+      this.renderError(res, error);
+
+    }
+    
+
+    
+
+
+
+    const { title, view, layout } = backendRoutes.contents;
+    res.render(view, { layout, title });
+  }
+
   // 직원 등록
   public employeesRegist(req: Request, res: Response): void {
     const { title, view, layout } = backendRoutes.employeesRegist;
@@ -44,8 +86,7 @@ export class BackendController {
 
       // ID가 숫자가 아닌 경우 에러 페이지로 이동
       if (isNaN(employeeId)) {
-        res.render('backend/error', { layout: this.layout, title: 'Error Page8' });
-        return;
+        throw new Error('직원 아이디가 형식에 맞지 않습니다.');
       }
 
       // 관리자 상세 정보 조회
@@ -57,10 +98,12 @@ export class BackendController {
         },
       });
 
+      // API 호출 실패
       if (!apiResponse.ok) {
-        throw new Error('Error');
+        throw new Error(apiResponse.statusText);
       }
 
+      // API 결과 파싱
       const result = await apiResponse.json();
 
       const { title, view, layout } = backendRoutes.employeesDetail;
@@ -89,8 +132,7 @@ export class BackendController {
 
       // ID가 숫자가 아닌 경우 에러 페이지로 이동
       if (isNaN(employeeId)) {
-        res.render('backend/error', { layout: this.layout, title: 'Error Page1' });
-        return;
+        throw new Error('직원 아이디가 형식에 맞지 않습니다.');
       }
 
       // 로그인 확인
@@ -112,9 +154,9 @@ export class BackendController {
         },
       });
 
-      // API 호출 실패 시 에러 페이지로 이동
+      // API 호출 실패
       if (!apiResponse.ok) {
-        throw new Error('Error');
+        throw new Error(apiResponse.statusText);
       }
 
       // API 결과 파싱
@@ -122,8 +164,7 @@ export class BackendController {
 
       // 결과가 없는 경우 에러 페이지로 이동
       if (!result.result) {
-        res.render('backend/error', { layout: this.layout, title: 'Error Page2' });
-        return;
+        throw new Error('데이터 조회에 없습니다.');
       }
 
       // 결과가 있는 경우 수정 페이지로 이동
@@ -131,7 +172,7 @@ export class BackendController {
       res.render(view, { layout, title, data: result.data });
 
     } catch (error) {
-      res.render('backend/error', { layout: this.layout, title: 'Error Page3' });
+      this.renderError(res, error);
 
     }
   };
@@ -150,7 +191,6 @@ export class BackendController {
       // ID가 숫자가 아닌 경우 에러 페이지로 이동
       if (isNaN(employeeId)) {
         throw new Error('직원 아이디가 형식에 맞지 않습니다.');
-        return;
       }
 
       // 로그인 확인
@@ -178,10 +218,14 @@ export class BackendController {
     // 직원 ID 추출
     const employeeId = parseInt(req.params.employeeId);
 
+    // 직원 ID가 없는 경우 에러 페이지로 이동
+    if (!employeeId) {
+      throw new Error('직원 아이디가 필요합니다.');
+    }
+
     // ID가 숫자가 아닌 경우 에러 페이지로 이동
     if (isNaN(employeeId)) {
-      res.render('backend/error', { layout: this.layout, title: 'Error Page4' });
-      return;
+      throw new Error('직원 아이디가 형식에 맞지 않습니다.');
     }
 
     // 직원 정보 조회
@@ -201,7 +245,6 @@ export class BackendController {
   public async employeesPermissions(req: Request, res: Response): Promise<void> {
     try {
       const { title, view, layout } = backendRoutes.employeesPermissions;
-      console.log(title, view, layout);
       res.render(view, { layout, title });
 
     } catch (error) {
@@ -251,8 +294,14 @@ export class BackendController {
 
   // 직원 로그인
   public employeesLogin(req: Request, res: Response): void {
-    const { title, view, layout } = backendRoutes.employeesLogin;
-    res.render(view, { layout, title });
+    try {
+      const { title, view, layout } = backendRoutes.employeesLogin;
+      res.render(view, { layout, title });
+
+    } catch (error) {
+      this.renderError(res, error);
+
+    }
   };
 
   // 직원 로그아웃
@@ -261,6 +310,21 @@ export class BackendController {
     res.render(view, { layout, title });
   };
 
+  // 직원 비밀번호 찾기
+  public employeesForgotPassword(req: Request, res: Response): void {
+    // 관리자 시스템이므로 직원 비밀번호 찾기는 없음
+    // 담당자에게 문의하기로 대체
+    try {
+      const { title, view, layout } = backendRoutes.employeesForgotPassword;
+      res.render(view, { layout, title });
+
+    } catch (error) {
+      this.renderError(res, error);
+      
+    }
+  };
+
+  // 에러 페이지
   public renderError(res: Response, error: unknown): void {
     const { title, view, layout } = backendRoutes.error;
     console.log('error = ', error);

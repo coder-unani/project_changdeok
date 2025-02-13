@@ -50,6 +50,7 @@ export const apiBackendRoutes = {
 
 export const backendRoutesPrefix = '/admin';
 export const backendRoutesLayout = 'layouts/backend/layout';
+export const backendRoutesNonHeaderLayout = 'layouts/backend/layoutNonHeader';
 export const backendRoutes = {
   index: {
     method: 'GET',
@@ -63,8 +64,9 @@ export const backendRoutes = {
     title: 'ERROR',
     url: `${backendRoutesPrefix}/error`,
     view: 'backend/error',
-    layout: backendRoutesLayout
+    layout: backendRoutesNonHeaderLayout
   },
+  // 대시보드
   dashboard: {
     method: 'GET',
     title: '대시보드',
@@ -72,6 +74,30 @@ export const backendRoutes = {
     view: 'backend/dashboard',
     layout: backendRoutesLayout
   },
+  // 화면관리
+  screensBanner: {
+    method: 'GET',
+    title: '배너 관리',
+    url: `${backendRoutesPrefix}/screens/banners`,
+    view: 'backend/screens/banner',
+    layout: backendRoutesLayout
+  },
+  screensPopup: {
+    method: 'GET',
+    title: '팝업 관리',
+    url: `${backendRoutesPrefix}/screens/popups`,
+    view: 'backend/screens/popup',
+    layout: backendRoutesLayout
+  },
+  // 게시판 관리
+  contents: {
+    method: 'GET',
+    title: '게시판 관리',
+    url: `${backendRoutesPrefix}/contents/:contentId`,
+    view: 'backend/contents/list',
+    layout: backendRoutesLayout
+  },
+  // 사이트관리
   employeesRegist: {
     method: 'GET',
     title: '관리자 등록',
@@ -97,7 +123,7 @@ export const backendRoutes = {
     method: 'GET',
     title: '관리자 비밀번호 수정',
     url: `${backendRoutesPrefix}/employees/:employeeId/modify-password`,
-    view: 'backend/employees/modify-password',
+    view: 'backend/employees/password-modify',
     layout: backendRoutesLayout
   },
   employeesDelete: {
@@ -126,7 +152,7 @@ export const backendRoutes = {
     title: '관리자 로그인',
     url: `${backendRoutesPrefix}/employees/login`,
     view: 'backend/employees/login',
-    layout: 'layouts/backend/layoutNonHeader'
+    layout: backendRoutesNonHeaderLayout
   },
   employeesLogout: {
     method: 'GET',
@@ -134,7 +160,14 @@ export const backendRoutes = {
     url: `${backendRoutesPrefix}/employees/logout`,
     view: 'backend/employees/logout',
     layout: backendRoutesLayout
-  }
+  },
+  employeesForgotPassword: {
+    method: 'GET',
+    title: '비밀번호 찾기',
+    url: `${backendRoutesPrefix}/employees/forgot-password`,
+    view: 'backend/employees/password-forgot',
+    layout: backendRoutesNonHeaderLayout
+  },
 }
 
 export const WEB_FRONTEND_PREFIX = '/';
