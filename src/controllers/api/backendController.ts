@@ -240,8 +240,6 @@ export class ApiBackendController {
       const employeeService: IEmployeeService = new EmployeeService();
       const result = await employeeService.login(requestData);
 
-      console.log(result);
-
       // 로그인 실패 처리
       if (!result.result) {
         const response = formatApiResponse(false, result.code, result.message);

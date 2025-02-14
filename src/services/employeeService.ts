@@ -203,8 +203,6 @@ export class EmployeeService implements IEmployeeService {
         permissions: result.permissions.map(permission => permission.permissionId)
       };
 
-      console.log(employee);
-
       // 성공
       return { 
         result: true,
@@ -615,8 +613,6 @@ export class EmployeeService implements IEmployeeService {
         }
       });
       
-      console.log(result);
-
       // 직원이 없는 경우
       if (!result) {
         return {
@@ -640,8 +636,7 @@ export class EmployeeService implements IEmployeeService {
 
       // 권한의 permissionId를 배열로 변환
       const permissions = result.permissions.map(permission => permission.permissionId);
-      console.log(permissions);
-
+      
       // 반환할 직원 정보
       const employee: IEmployee = {
         id: result.id,

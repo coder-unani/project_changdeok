@@ -255,8 +255,6 @@ export class BackendController {
       const result = await apiResponse.json();
       const permissions = result.data;
 
-      console.log(permissions);
-
       const { title, view, layout } = backendRoutes.employeesPermissions;
       res.render(view, { layout, title, data: { permissions } });
 
@@ -340,7 +338,6 @@ export class BackendController {
   // 에러 페이지
   public renderError(res: Response, error: unknown): void {
     const { title, view, layout } = backendRoutes.error;
-    console.log('error = ', error);
     if (error instanceof Error) {
       res.status(500).render(view, { 
         layout, 
