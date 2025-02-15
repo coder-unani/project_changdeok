@@ -3,6 +3,8 @@ import { Request, Response, NextFunction } from 'express';
 import { backendRoutes } from '../../routes/routes';
 import { IMiddleware } from '../../types/middleware';
 import { verifyJWT } from '../../utils/jwt';
+import { removeCookie } from '../../utils/cookies';
+import { remove } from 'winston';
 
 export class AuthMiddleware implements IMiddleware {
   private loginPath: string;
@@ -37,9 +39,10 @@ export class AuthMiddleware implements IMiddleware {
 
     const token = req.cookies.accessToken;
 
-    // 토큰 유무 확인
+    // 토큰 없음. 로그인 페이지로 이동
     if (!token) {
-      // 토큰 없음. 로그인 페이지로 이동
+      removeCookie(res, 'accessToken');
+      removeCookie(res, 'employee');
       res.redirect(this.loginPath);
       return;
     }
@@ -49,12 +52,16 @@ export class AuthMiddleware implements IMiddleware {
     
     // 유효하지 않은 토큰. 로그인 페이지로 이동
     if (!decodedToken) {
+      removeCookie(res, 'accessToken');
+      removeCookie(res, 'employee');
       res.redirect(this.loginPath);
       return;
     }
 
     // 토큰 검증 성공. 사용자 정보 저장
-    res.locals.employee = decodedToken;
+    if (!res.locals.employee || res.locals.employee !== decodedToken) {
+      res.locals.employee = decodedToken;
+    }
 
     // 다음 미들웨어로 이동
     next();
