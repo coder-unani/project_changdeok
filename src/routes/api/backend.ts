@@ -26,18 +26,22 @@ router.get(apiBackendRoutes.employeesDetail.url, (req: Request, res: Response) =
 });
 
 // 직원 정보 수정
-router.put(apiBackendRoutes.employeesModify.url, (req: Request, res: Response) => {
-  apiBackendController.employeesModify(req, res);
+router.put(apiBackendRoutes.employeesUpdate.url, (req: Request, res: Response) => {
+  apiBackendController.employeesUpdate(req, res);
 });
 
-// 직원 정보 수정
-router.patch(apiBackendRoutes.employeesModify.url, (req: Request, res: Response) => {
-  apiBackendController.employeesModifyPassword(req, res);
+// 직원 비밀번호 수정
+router.patch(apiBackendRoutes.employeesUpdate.url, (req: Request, res: Response) => {
+  apiBackendController.employeesUpdatePassword(req, res);
 });
 
 // 직원 탈퇴
 router.delete(apiBackendRoutes.employeesDelete.url, (req: Request, res: Response) => {
   apiBackendController.employeesDelete(req, res);
+});
+
+router.patch(apiBackendRoutes.employeesPermissions.url, (req: Request, res: Response) => {
+  apiBackendController.employeesPermissions(req, res);
 });
 
 // 직원 목록

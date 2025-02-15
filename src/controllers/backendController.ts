@@ -1,21 +1,19 @@
 import { Request, Response } from 'express';
 
 import { API_BASE_URL } from '../config/config';
+import { IEmployeeToken } from '../types/backend';
 import { backendRoutes, apiBackendRoutes } from '../routes/routes';
 import { EmployeeService } from '../services/employeeService';
-import { IRequestEmployeeList } from 'types/request';
+import { getApiEmployeeDetail, getApiPermissionList } from '../utils/api';
+import { verifyJWT } from '../utils/jwt';
+import { ALL } from 'dns';
+
 
 const employeeService = new EmployeeService();
 
 // TODO: 권한을 체크해서 다른 계정도 수정하게 할 것인지 확인 필요
 export class BackendController {
-  private layout: string;
-  private layoutNonHeader: string;
-
-  constructor() {
-    this.layout = 'layouts/backend/layout';
-    this.layoutNonHeader = 'layouts/backend/layoutNonHeader';
-  }
+  constructor() { }
 
   // 관리자 홈
   public index(req: Request, res: Response): void {
@@ -85,32 +83,20 @@ export class BackendController {
       }
 
       // 관리자 상세 정보 조회
-      const apiUrl = `${API_BASE_URL}${apiBackendRoutes.employeesDetail.url}`.replace(':employeeId', employeeId.toString());
-      const apiResponse = await fetch(apiUrl, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const { metadata, data: employee } = await getApiEmployeeDetail(employeeId);
 
-      // API 호출 실패
-      if (!apiResponse.ok) {
-        throw new Error(apiResponse.statusText);
+      // 결과가 없는 경우 에러 페이지로 이동
+      if (!employee) {
+        throw new Error('직원 정보 조회에 실패했습니다.');
       }
-
-      // API 결과 파싱
-      const result = await apiResponse.json();
-
+      
+      // 상세 정보 페이지로 이동
       const { title, view, layout } = backendRoutes.employeesDetail;
       res.render(view, { 
         layout, 
         title,
-        data: result.data,
-        metadata: {
-          result: result.result,
-          code: result.code,
-          message: result.message,
-        }
+        metadata,
+        data: employee,
       });
 
     } catch (error) {
@@ -120,7 +106,9 @@ export class BackendController {
   };
 
   // 직원 정보 수정
-  public async employeesModify(req: Request, res: Response): Promise<void> {
+  public async employeesUpdate(req: Request, res: Response): Promise<void> {
+    const ALLOWED_PERMISSIONS = [1, 2];
+    const ALLOWED_MYSELF = true;
     try {
       // 직원 ID 추출
       const employeeId = parseInt(req.params.employeeId);
@@ -141,30 +129,12 @@ export class BackendController {
       }
 
       // 관리자 정보 조회
-      const apiUrl = `${API_BASE_URL}${apiBackendRoutes.employeesModify.url}`.replace(':employeeId', employeeId.toString());
-      const apiResponse = await fetch(apiUrl, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      // API 호출 실패
-      if (!apiResponse.ok) {
-        throw new Error(apiResponse.statusText);
-      }
-
-      // API 결과 파싱
-      const result = await apiResponse.json();
-
-      // 결과가 없는 경우 에러 페이지로 이동
-      if (!result.result) {
-        throw new Error('데이터 조회에 없습니다.');
-      }
-
+      const { data: employee } = await getApiEmployeeDetail(employeeId);
+      
+      
       // 결과가 있는 경우 수정 페이지로 이동
-      const { title, view, layout } = backendRoutes.employeesModify;
-      res.render(view, { layout, title, data: result.data });
+      const { title, view, layout } = backendRoutes.employeesUpdate;
+      res.render(view, { layout, title, data: employee });
 
     } catch (error) {
       this.renderError(res, error);
@@ -173,7 +143,7 @@ export class BackendController {
   };
 
   // 직원 비밀번호 수정
-  public async employeesModifyPassword(req: Request, res: Response): Promise<void> {
+  public async employeesUpdatePassword(req: Request, res: Response): Promise<void> {
     try {
       // 직원 ID 추출
       const employeeId = parseInt(req.params.employeeId);
@@ -199,7 +169,7 @@ export class BackendController {
       }
 
       // 직원 비밀번호 수정 페이지로 이동
-      const { title, view, layout } = backendRoutes.employeesModifyPassword;
+      const { title, view, layout } = backendRoutes.employeesUpdatePassword;
       res.render(view, { layout, title });
 
     } catch (error) {
@@ -210,53 +180,94 @@ export class BackendController {
 
   // 직원 탈퇴
   public async employeesDelete(req: Request, res: Response): Promise<void> {
-    // 직원 ID 추출
-    const employeeId = parseInt(req.params.employeeId);
+    try {
+      // 직원 ID 추출
+      const employeeId = parseInt(req.params.employeeId);
 
-    // 직원 ID가 없는 경우 에러 페이지로 이동
-    if (!employeeId) {
-      throw new Error('직원 아이디가 필요합니다.');
+      // 직원 ID가 없는 경우 에러 페이지로 이동
+      if (!employeeId) {
+        throw new Error('직원 아이디가 필요합니다.');
+      }
+
+      // ID가 숫자가 아닌 경우 에러 페이지로 이동
+      if (isNaN(employeeId)) {
+        throw new Error('직원 아이디가 형식에 맞지 않습니다.');
+      }
+
+      // 직원 정보 조회
+      const employee = await employeeService.read(employeeId);
+
+      // 직원 정보가 없는 경우 에러 페이지로 이동
+      if (!employee.result) {
+        throw new Error('직원 정보 조회에 실패했습니다.');
+      }
+
+      const { title, view, layout } = backendRoutes.employeesDelete;
+      res.render(view, { layout, title });
+
+    } catch (error) {
+      this.renderError(res, error);
+
     }
-
-    // ID가 숫자가 아닌 경우 에러 페이지로 이동
-    if (isNaN(employeeId)) {
-      throw new Error('직원 아이디가 형식에 맞지 않습니다.');
-    }
-
-    // 직원 정보 조회
-    const employee = await employeeService.read(employeeId);
-
-    // 직원 정보가 없는 경우 에러 페이지로 이동
-    if (!employee.result) {
-      res.render('backend/error', { layout: this.layout, title: 'Error Page5' });
-      return;
-    }
-
-    const { title, view, layout } = backendRoutes.employeesDelete;
-    res.render(view, { layout, title });
   };
 
   // 직원 권한 변경
   public async employeesPermissions(req: Request, res: Response): Promise<void> {
+    // 라우팅 정보
+    const { title, view, layout, permissions } = backendRoutes.employeesPermissions;
+    
     try {
-      // 권한 목록 조회
-      // const params = new URLSearchParams({"page": "1", "pageSize": "10"}).toString();
-      const apiResponse = await fetch(`${API_BASE_URL}${apiBackendRoutes.permissions.url}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
 
-      if (!apiResponse.ok) {
-        throw new Error(apiResponse.statusText);
+      console.log(res.locals.employee);
+
+      // 직원 ID 추출
+      const employeeId = parseInt(req.params.employeeId);
+
+      // 직원 ID가 없는 경우 에러 페이지로 이동
+      if (!employeeId) {
+        throw new Error('직원 아이디가 필요합니다.');
       }
 
-      const result = await apiResponse.json();
-      const permissions = result.data;
+      // ID가 숫자가 아닌 경우 에러 페이지로 이동
+      if (isNaN(employeeId)) {
+        throw new Error('직원 아이디가 형식에 맞지 않습니다.');
+      }
 
-      const { title, view, layout } = backendRoutes.employeesPermissions;
-      res.render(view, { layout, title, data: { permissions } });
+      // 직원 정보 조회
+      const accessToken = req.cookies.accessToken;
+      const decodedToken = (accessToken) ? verifyJWT(accessToken) : null;
+
+      // Access Token이 없는 경우 에러 페이지로 이동
+      if (!decodedToken) {
+        throw new Error('로그인이 필요합니다.');
+      }
+
+      // 현재 로그인한 직원 정보 조회
+      const { data: grantedByEmployee } = await getApiEmployeeDetail(decodedToken.id);
+      
+      if (!grantedByEmployee) {
+        throw new Error('직원 정보 조회에 실패했습니다.');
+      }
+
+      // 권한이 있는지 확인  
+      // const hasPermission = 
+      //   (grantedByEmployee.permissions) 
+      //   ? grantedByEmployee.permissions.some(permission => ALLOWED_PERMISSIONS.includes(permission)) 
+      //   : false;
+
+      // 현재 로그인한 직원과 권한을 부여할 직원이 같은지 확인
+      // const isSameEmployee = (ALLOWED_MYSELF && employeeId === grantedByEmployee.id);
+
+      // 권한이 없는 경우 에러 페이지로 이동
+      // if (!hasPermission && !isSameEmployee) {
+      //   throw new Error('권한이 없습니다.');
+      // }
+       
+      // 전체 권한 목록
+      const { data: permissions } = await getApiPermissionList(1, 10);
+
+      
+      res.render(view, { layout, title, data: { employeeId, grantedByEmployee, permissions } });
 
     } catch (error) {
       this.renderError(res, error);
@@ -334,6 +345,15 @@ export class BackendController {
       
     }
   };
+
+  // 접근 권한 확인
+  public verifyPermission(allowedPermissions: number[]): void {
+    
+  }
+
+  public verifySameEmployee(employeeId: number, targetEmployeeId: number): void {
+
+  }
 
   // 에러 페이지
   public renderError(res: Response, error: unknown): void {

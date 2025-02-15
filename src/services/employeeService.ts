@@ -5,11 +5,11 @@ import { IServiceResponse } from "../types/response";
 import { IEmployee, IEmployeeService } from "../types/backend";
 import { 
   IRequestEmployeeRegister, 
-  IRequestEmployeeModify, 
+  IRequestEmployeeUpdate, 
   IRequestEmployeeLogin, 
   IRequestEmployeeDelete,
   IRequestEmployeeList,
-  IRequestEmployeePasswordModify
+  IRequestEmployeeUpdatePassword
 } from "../types/request";
 import { validateEmail, validatePassword, validatePhone, validateDate } from "../utils/validator";
 import { formatDate, formatDateToString, formatEmailMasking } from "../utils/formattor";
@@ -219,7 +219,7 @@ export class EmployeeService implements IEmployeeService {
     }
   }
 
-  public async modify(id: number, data: IRequestEmployeeModify): Promise<IServiceResponse> {
+  public async update(id: number, data: IRequestEmployeeUpdate): Promise<IServiceResponse<IEmployee>> {
     // 직원 정보 조회
     const employee = await this.read(id);
 
@@ -302,8 +302,8 @@ export class EmployeeService implements IEmployeeService {
     }
 
     try {
-      // 직원 정보 수정
-      await this.prisma.employee.update({
+      // 직원 정보 수정. 변경된 데이터 리턴
+      const updatedEmployee = await this.prisma.employee.update({
         where: {
           id: id
         },
@@ -319,9 +319,23 @@ export class EmployeeService implements IEmployeeService {
           fireDate: data.fireDate ? new Date(data.fireDate) : null
         }
       });
+      
+      const employee: IEmployee = {
+        id: updatedEmployee.id,
+        email: updatedEmployee.email,
+        name: updatedEmployee.name,
+        position: updatedEmployee.position,
+        description: updatedEmployee.description,
+        phone: updatedEmployee.phone,
+        mobile: updatedEmployee.mobile,
+        address: updatedEmployee.address,
+        hireDate: updatedEmployee.hireDate?.toISOString(),
+        birthDate: updatedEmployee.birthDate?.toISOString(),
+        fireDate: updatedEmployee.fireDate?.toISOString()
+      };
 
       // 성공
-      return { result: true };
+      return { result: true, data: employee };
 
     } catch (error) {
       // 실패
@@ -335,7 +349,7 @@ export class EmployeeService implements IEmployeeService {
   }
 
   // 직원 비밀번호 변경
-  public async modifyPassword(id: number, data: IRequestEmployeePasswordModify): Promise<IServiceResponse> {
+  public async updatePassword(id: number, data: IRequestEmployeeUpdatePassword): Promise<IServiceResponse> {
     try {
       // 수정할 데이터가 없는 경우 에러
       if (!data) {
@@ -646,7 +660,8 @@ export class EmployeeService implements IEmployeeService {
         description: result.description,
         phone: result.phone,
         mobile: result.mobile,
-        address: result.address
+        address: result.address,
+        permissions: permissions
       };
 
       // 성공

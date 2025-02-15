@@ -1,7 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 
 import { LOG_PATH, LOG_LEVEL } from '../config/config';
-import { WEB_FRONTEND_ROUTE } from './routes';
 import { IMiddleware, IErrorMiddleware } from '../types/middleware';
 import { ErrorMiddleware } from '../middlewares/backend/error';
 import { ExpressLogger } from '../utils/logger';

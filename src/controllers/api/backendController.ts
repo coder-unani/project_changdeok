@@ -1,11 +1,13 @@
 import { Request, Response } from 'express';
 
-import { IEmployeeService, IPermissionService } from '../../types/backend';
+import { JWT_EXPIRE_SECOND } from '../../config/config';
+import { CODE_FAIL_SERVER, CODE_FAIL_VALIDATION, MESSAGE_FAIL_SERVER } from '../../config/constants';
+import { IEmployeeService, IEmployeeToken, IPermissionService } from '../../types/backend';
 import { 
   typeListSort, 
   IRequestEmployeeRegister, 
-  IRequestEmployeeModify,
-  IRequestEmployeePasswordModify,
+  IRequestEmployeeUpdate,
+  IRequestEmployeeUpdatePassword,
   IRequestEmployeeDelete,
   IRequestEmployeeLogin, 
   IRequestEmployeeList, 
@@ -14,8 +16,9 @@ import {
 import { EmployeeService } from '../../services/employeeService';
 import { PermissionService } from '../../services/permissionService';
 import { formatApiResponse } from '../../utils/formattor';
-import { CODE_FAIL_SERVER, CODE_FAIL_VALIDATION, MESSAGE_FAIL_SERVER } from '../../config/constants';
-import { createJWT } from '../../utils/jwt';
+import { createJWT, verifyJWT } from '../../utils/jwt';
+import { setCookie, removeCookie } from '../../utils/cookies';
+import { remove } from 'winston';
 
 export class ApiBackendController {
   // 직원 등록
@@ -82,7 +85,7 @@ export class ApiBackendController {
   }
 
   // 직원 정보 수정
-  public async employeesModify(req: Request, res: Response): Promise<void> {
+  public async employeesUpdate(req: Request, res: Response): Promise<void> {
     try {
       // 직원 ID 추출
       const employeeId = parseInt(req.params.employeeId);
@@ -95,23 +98,37 @@ export class ApiBackendController {
       }
 
       // 요청 데이터
-      const requestData: IRequestEmployeeModify = req.body;
+      const requestData: IRequestEmployeeUpdate = req.body;
 
       // 직원 정보 수정 처리
       const employeeService: IEmployeeService = new EmployeeService();
-      const result = await employeeService.modify(employeeId, requestData);
+      const updatedEmployee = await employeeService.update(employeeId, requestData);
 
       // 수정 실패 처리
-      if (!result.result) {
-        const response = formatApiResponse(false, result.code, result.message);
-        if (result.code === CODE_FAIL_VALIDATION) {
+      if (!updatedEmployee.result) {
+        const response = formatApiResponse(false, updatedEmployee.code, updatedEmployee.message);
+        if (updatedEmployee.code === CODE_FAIL_VALIDATION) {
           res.status(400).json(response);
           return;
 
         } else {
           res.status(500).json(response);
           return;
+
         }
+      }
+
+      // 쿠키 업데이트
+      if (updatedEmployee.data) {
+        setCookie(
+          res, 
+          'employee', 
+          JSON.stringify({
+            id: updatedEmployee.data.id,
+            name: updatedEmployee.data.name,
+            permissions: updatedEmployee.data.permissions,
+          })
+        );
       }
       
       // 수정 성공시 200 응답
@@ -125,7 +142,7 @@ export class ApiBackendController {
   }
 
   // 직원 비밀번호 변경
-  public async employeesModifyPassword(req: Request, res: Response): Promise<void> {
+  public async employeesUpdatePassword(req: Request, res: Response): Promise<void> {
     try {
       // 직원 ID 추출
       const employeeId = parseInt(req.params.employeeId);
@@ -137,11 +154,11 @@ export class ApiBackendController {
       }
 
       // 요청 데이터
-      const requestData: IRequestEmployeePasswordModify = req.body;
+      const requestData: IRequestEmployeeUpdatePassword = req.body;
 
       // 직원 비밀번호 변경 처리
       const employeeService: IEmployeeService = new EmployeeService();
-      const result = await employeeService.modifyPassword(employeeId, requestData);
+      const result = await employeeService.updatePassword(employeeId, requestData);
 
       // 변경 실패 처리
       if (!result.result) {
@@ -184,12 +201,76 @@ export class ApiBackendController {
         return;
 
       } else if (!result.result) {
-        res.status(500).send(result);
-        return;
+        throw new Error('탈퇴 처리에 실패했습니다.');
       }
+
+      // 쿠키 삭제
+      removeCookie(res, 'accessToken');
+      removeCookie(res, 'employee');
 
       // 탈퇴 성공시 200 응답
       res.status(200).send(result);
+
+    } catch (error) {
+      const response = formatApiResponse(false, CODE_FAIL_SERVER, MESSAGE_FAIL_SERVER);
+      res.status(500).json(response);
+
+    }
+  }
+
+  // 직원 권한 수정/변경
+  public async employeesPermissions(req: Request, res: Response): Promise<void> {
+    try {
+      // 직원 ID 추출
+      const employeeId = parseInt(req.params.employeeId);
+
+      // ID가 숫자가 아닌 경우 에러 처리
+      if (isNaN(employeeId)) {
+        res.status(400).send('Bad Request');
+        return;
+      }
+
+      // 요청 데이터
+      const requestData = req.body;
+      const permissions = requestData.permissions.map((permission: any) => parseInt(permission));
+
+      // 로그인 유저 정보
+      const decodedToken = verifyJWT(req.cookies.accessToken);
+      const grantedById = decodedToken ? parseInt(decodedToken.id) : null;
+
+      // 로그인 확인
+      if (!grantedById) {
+        const response = formatApiResponse(false, CODE_FAIL_VALIDATION, '로그인이 필요합니다.');
+        res.status(400).json(response);
+        return;
+      }
+
+      // 직원 권한 수정 처리
+      const permissionService: IPermissionService = new PermissionService();
+      const updatedEmployee = await permissionService.updateEmployeesPermissions(employeeId, permissions, grantedById);
+
+      // 쿠키 업데이트
+      if (updatedEmployee.data) {
+        setCookie(
+          res,
+          'employee',
+          JSON.stringify({
+            id: updatedEmployee.data.id,
+            name: updatedEmployee.data.name,
+            permissions: updatedEmployee.data.permissions,
+          })
+        );
+      }
+      
+      // 수정 실패 처리
+      if (!updatedEmployee.result) {
+        const response = formatApiResponse(false, CODE_FAIL_SERVER, MESSAGE_FAIL_SERVER);
+        res.status(500).send(response);
+        return;
+      }
+
+      // 수정 성공시 201 응답
+      res.status(201).send(null);
 
     } catch (error) {
       const response = formatApiResponse(false, CODE_FAIL_SERVER, MESSAGE_FAIL_SERVER);
@@ -256,17 +337,15 @@ export class ApiBackendController {
       
       // 로그인 성공시 쿠키에 토큰 저장
       if (result.data) {
-        const tokenData = {
+        const tokenData: IEmployeeToken = {
           id: result.data.id,
-          name: result.data.name
+          name: result.data.name,
+          permissions: result.data.permissions,
         }
         const token = createJWT(tokenData);
         if (token) {
-          res.cookie('accessToken', token, {
-            httpOnly: true,
-            secure: true, // HTTPS에서만 전송
-            maxAge: 3600 * 1000, // 1시간
-          });
+          setCookie(res, 'accessToken', token);
+          setCookie(res, 'employee', JSON.stringify(tokenData));
         }
       }
       
@@ -287,10 +366,11 @@ export class ApiBackendController {
   public async employeesLogout(req: Request, res: Response): Promise<void> {
     try {
       // 쿠키 삭제
-      res.clearCookie('accessToken');
+      removeCookie(res, 'employee');
+      removeCookie(res, 'accessToken');
 
       // 로그아웃 성공시 200 응답
-      res.status(200).send(null);
+      res.status(201).send(null);
 
     } catch (error) {
       const response = formatApiResponse(false, CODE_FAIL_SERVER, MESSAGE_FAIL_SERVER);

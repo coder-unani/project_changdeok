@@ -12,7 +12,6 @@ import { IMiddleware } from './types/middleware';
 import { LoggerMiddleware } from './middlewares/logger';
 import { SanitizeMiddleware } from './middlewares/sanitizer';
 import { ExpressLogger } from './utils/logger';
-import { WEB_FRONTEND_PREFIX, API_FRONTEND_PREFIX, API_BACKEND_PREFIX } from './routes/routes';
 import apiFrontendRouter from './routes/api/frontend';
 import apiBackendRouter from './routes/api/backend';
 import frontendRouter from './routes/frontend';
