@@ -1,8 +1,8 @@
 import { 
   IRequestDefaultList,
   IRequestEmployeeRegister, 
-  IRequestEmployeeModify, 
-  IRequestEmployeePasswordModify, 
+  IRequestEmployeeUpdate, 
+  IRequestEmployeeUpdatePassword, 
   IRequestEmployeeDelete, 
   IRequestEmployeeList, 
   IRequestEmployeeLogin 
@@ -29,6 +29,12 @@ export interface IEmployee {
   // updatedAt: string;
 }
 
+export interface IEmployeeToken {
+  id: number;
+  name: string;
+  permissions: number[] | undefined | null;
+}
+
 export interface IEmployeeUpdate {
   name?: string;
   position?: string;
@@ -46,8 +52,8 @@ export interface IEmployeeUpdate {
 export interface IEmployeeService {
   create(data: IRequestEmployeeRegister): Promise<IServiceResponse>
   read(id: number): Promise<IServiceResponse<IEmployee>>;
-  modify(id: number, data: IRequestEmployeeModify): Promise<IServiceResponse>;
-  modifyPassword(id: number, data: IRequestEmployeePasswordModify): Promise<IServiceResponse>;
+  update(id: number, data: IRequestEmployeeUpdate): Promise<IServiceResponse<IEmployee>>
+  updatePassword(id: number, data: IRequestEmployeeUpdatePassword): Promise<IServiceResponse>;
   delete(id: number, data: IRequestEmployeeDelete): Promise<IServiceResponse>;
   list(data: IRequestEmployeeList): Promise<IServiceResponse<IEmployee[]>>;
   login(data: IRequestEmployeeLogin): Promise<IServiceResponse<IEmployee>>;
@@ -55,6 +61,7 @@ export interface IEmployeeService {
 
 export interface IPermissionService {
   list(data: IRequestDefaultList): Promise<IServiceResponse<IPermission[]>>;
+  updateEmployeesPermissions(employeeId: number, permissionIds: number[], grantedById: number): Promise<IServiceResponse<IEmployee>>
 }
 
 export interface IPermission {

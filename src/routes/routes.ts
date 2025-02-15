@@ -1,3 +1,5 @@
+import { permission } from "process";
+
 export const apiBackendBaseUrl = 'http://localhost:3000';
 export const apiBackendRoutesPrefix = '/api/backend';
 export const apiBackendRoutes = {
@@ -11,12 +13,12 @@ export const apiBackendRoutes = {
     title: '관리자 상세 정보',
     url: `${apiBackendRoutesPrefix}/employees/:employeeId`,
   },
-  employeesModify: {
+  employeesUpdate: {
     method: 'PUT',
     title: '관리자 정보 수정',
     url: `${apiBackendRoutesPrefix}/employees/:employeeId`,
   },
-  employeesModifyPassword: {
+  employeesUpdatePassword: {
     method: 'PATCH',
     title: '관리자 비밀번호 수정',
     url: `${apiBackendRoutesPrefix}/employees/:employeeId/password`,
@@ -27,7 +29,7 @@ export const apiBackendRoutes = {
     url: `${apiBackendRoutesPrefix}/employees/:employeeId`,
   },
   employeesPermissions: {
-    method: 'POST',
+    method: 'PATCH',
     title: '관리자 권한 등록/수정',
     url: `${apiBackendRoutesPrefix}/employees/:employeeId/permissions`,
   },
@@ -77,7 +79,8 @@ export const backendRoutes = {
     title: '대시보드',
     url: `${backendRoutesPrefix}/dashboard`,
     view: 'backend/dashboard',
-    layout: backendRoutesLayout
+    layout: backendRoutesLayout,
+    permissions: [1, 6]
   },
   // 화면관리
   screensBanner: {
@@ -85,14 +88,16 @@ export const backendRoutes = {
     title: '배너 관리',
     url: `${backendRoutesPrefix}/screens/banners`,
     view: 'backend/screens/banner',
-    layout: backendRoutesLayout
+    layout: backendRoutesLayout,
+    permissions: [1, 5]
   },
   screensPopup: {
     method: 'GET',
     title: '팝업 관리',
     url: `${backendRoutesPrefix}/screens/popups`,
     view: 'backend/screens/popup',
-    layout: backendRoutesLayout
+    layout: backendRoutesLayout,
+    permissions: [1, 5]
   },
   // 게시판 관리
   contents: {
@@ -100,7 +105,8 @@ export const backendRoutes = {
     title: '게시판 관리',
     url: `${backendRoutesPrefix}/contents/:contentId`,
     view: 'backend/contents/list',
-    layout: backendRoutesLayout
+    layout: backendRoutesLayout,
+    permissions: [1, 4]
   },
   // 사이트관리
   employeesRegist: {
@@ -108,42 +114,48 @@ export const backendRoutes = {
     title: '관리자 등록',
     url: `${backendRoutesPrefix}/employees/regist`,
     view: 'backend/employees/regist',
-    layout: backendRoutesLayout
+    layout: backendRoutesLayout,
+    permissions: [1, 2]
   },
   employeesDetail: {
     method: 'GET',
     title: '관리자 상세 정보',
     url: `${backendRoutesPrefix}/employees/:employeeId`, 
     view: 'backend/employees/detail',
-    layout: backendRoutesLayout
+    layout: backendRoutesLayout,
+    permissions: [1, 2]
   },
-  employeesModify: {
+  employeesUpdate: {
     method: 'GET',
     title: '관리자 정보 수정',
-    url: `${backendRoutesPrefix}/employees/:employeeId/modify`,
-    view: 'backend/employees/modify',
-    layout: backendRoutesLayout
+    url: `${backendRoutesPrefix}/employees/:employeeId/update`,
+    view: 'backend/employees/update',
+    layout: backendRoutesLayout,
+    permissions: [1, 2]
   },
-  employeesModifyPassword: {
+  employeesUpdatePassword: {
     method: 'GET',
     title: '관리자 비밀번호 수정',
-    url: `${backendRoutesPrefix}/employees/:employeeId/modify-password`,
-    view: 'backend/employees/password-modify',
-    layout: backendRoutesLayout
+    url: `${backendRoutesPrefix}/employees/:employeeId/update-password`,
+    view: 'backend/employees/update-password',
+    layout: backendRoutesLayout,
+    permissions: [1, 2]
   },
   employeesDelete: {
     method: 'GET',
     title: '관리자 삭제',
     url: `${backendRoutesPrefix}/employees/:employeeId/delete`,
     view: 'backend/employees/delete',
-    layout: backendRoutesLayout
+    layout: backendRoutesLayout,
+    permissions: [1, 2]
   },
   employeesPermissions: {
     method: 'GET',
     title: '관리자 권한 변경',
     url: `${backendRoutesPrefix}/employees/:employeeId/permissions`,
     view: 'backend/employees/permissions',
-    layout: backendRoutesLayout
+    layout: backendRoutesLayout,
+    permissions: [1, 3]
   },
   employees: {
     method: 'GET',
@@ -170,27 +182,7 @@ export const backendRoutes = {
     method: 'GET',
     title: '비밀번호 찾기',
     url: `${backendRoutesPrefix}/employees/forgot-password`,
-    view: 'backend/employees/password-forgot',
+    view: 'backend/employees/forgot-password',
     layout: backendRoutesNonHeaderLayout
   },
-}
-
-export const WEB_FRONTEND_PREFIX = '/';
-export const WEB_FRONTEND_ROUTE = {
-  INDEX: '/',
-  ERROR: '/error',
-}
-
-export const API_BACKEND_PREFIX = '/api/backend';
-export const API_BACKEND_ROUTE = {
-  EMPLOYEE_LIST: '/employees',
-  EMPLOYEE_READ: '/employees/:employeeId',
-  EMPLOYEE_REGIST: '/employees/regist',
-  EMPLOYEE_LOGIN: '/employees/login',
-  EMPLOYEE_UPDATE: '/employees/:employeeId/update',
-  EMPLOYEE_DELETE: '/employees/:employeeId/delete',
-}
-
-export const API_FRONTEND_PREFIX = '/api';
-export const API_FRONTEND_ROUTE = {
 }

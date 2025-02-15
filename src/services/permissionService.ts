@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 import { CODE_FAIL_SERVER, CODE_FAIL_VALIDATION, MESSAGE_FAIL_SERVER } from '../config/constants';
 import { IServiceResponse } from 'types/response';
-import { IPermission, IPermissionService } from '../types/backend';
+import { IEmployee, IPermission, IPermissionService } from '../types/backend';
 import { IRequestDefaultList } from '../types/request';
 
 export class PermissionService implements IPermissionService {
@@ -65,6 +65,55 @@ export class PermissionService implements IPermissionService {
       return { result: true, metadata, data: permissions };
 
     } catch (error) {
+      return {
+        result: false,
+        code: CODE_FAIL_SERVER,
+        message: MESSAGE_FAIL_SERVER
+      }
+
+    }
+  }
+
+  public async updateEmployeesPermissions(employeeId: number, permissionIds: number[], grantedById: number): Promise<IServiceResponse<IEmployee>> {
+    try {
+      // 직원 권한 수정
+      const updatedEmployee = await this.prisma.employee.update({
+        where: { id: employeeId },
+        data: {
+          permissions: {
+            deleteMany: {}, // 기존 권한 매핑 모두 삭제
+            create: permissionIds.map(permissionId => ({
+              permission: { connect: { id: permissionId } },
+              grantedBy: { connect: { id: grantedById } },
+              grantedAt: new Date()
+            }))
+          }
+        },
+        include: {
+          permissions: true
+        }
+      });
+
+      const employee: IEmployee = {
+        id: updatedEmployee.id,
+        email: updatedEmployee.email,
+        name: updatedEmployee.name,
+        position: updatedEmployee.position,
+        description: updatedEmployee.description,
+        phone: updatedEmployee.phone,
+        mobile: updatedEmployee.mobile,
+        address: updatedEmployee.address,
+        hireDate: updatedEmployee.hireDate ? updatedEmployee.hireDate.toISOString() : undefined,
+        birthDate: updatedEmployee.birthDate ? updatedEmployee.birthDate.toISOString() : undefined,
+        fireDate: updatedEmployee.fireDate ? updatedEmployee.fireDate.toISOString() : undefined,
+        isActivated: updatedEmployee.isActivated,
+        permissions: updatedEmployee.permissions.map(permission => permission.permissionId)
+      };
+
+      return { result: true, data: employee };
+
+    } catch (error) {
+      console.log(error);
       return {
         result: false,
         code: CODE_FAIL_SERVER,

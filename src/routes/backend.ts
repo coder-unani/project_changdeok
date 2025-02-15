@@ -1,12 +1,15 @@
 import { Router, Request, Response, NextFunction } from 'express';
 
 import { LOG_PATH, LOG_LEVEL, API_BASE_URL } from '../config/config';
-import { backendRoutes, apiBackendRoutes } from './routes';
 import { IMiddleware, IErrorMiddleware } from '../types/middleware';
+import { backendRoutes, apiBackendRoutes } from './routes';
 import { AuthMiddleware } from '../middlewares/backend/auth';
+import { PermissionMiddleware } from '../middlewares/backend/permission';
 import { ErrorMiddleware } from '../middlewares/backend/error';
 import { BackendController } from '../controllers/backendController';
 import { ExpressLogger } from '../utils/logger';
+
+
 
 
 const router: Router = Router();
@@ -27,6 +30,9 @@ const exceptPath: string[] = [
 ];
 const authMiddleware: IMiddleware = new AuthMiddleware(exceptPath);
 router.use((req, res, next) => authMiddleware.handle(req, res, next));
+
+const permissionMiddleware: IMiddleware = new PermissionMiddleware();
+router.use((req, res, next) => permissionMiddleware.handle(req, res, next));
 
 // 컨트롤러
 const backendController = new BackendController();
@@ -62,13 +68,13 @@ router.get(backendRoutes.employeesRegist.url, function (req, res) {
 });
 
 // 직원: 정보수정
-router.get(backendRoutes.employeesModify.url, function (req, res) {
-  backendController.employeesModify(req, res);
+router.get(backendRoutes.employeesUpdate.url, function (req, res) {
+  backendController.employeesUpdate(req, res);
 });
 
 // 직원: 비밀번호 수정
-router.get(backendRoutes.employeesModifyPassword.url, function (req, res) {
-  backendController.employeesModifyPassword(req, res);
+router.get(backendRoutes.employeesUpdatePassword.url, function (req, res) {
+  backendController.employeesUpdatePassword(req, res);
 });
 
 // 직원: 탈퇴
