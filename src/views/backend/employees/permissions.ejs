@@ -4,4 +4,63 @@
       <span class="font-bold"><%=title%></span>
     </h1>
   </div>
+  <form id="formEmployeePermissions" class="space-y-4 text-sm">
+    <ul>
+      <% data.permissions.forEach((permission, index) => { %>
+        <li>
+          <input 
+            type="checkbox" 
+            id="permission<%=index%>" 
+            name="permission" 
+            class="w-4 h-4 text-blue-500 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" 
+            value="<%=permission.id%>" 
+            <%= employee.permissions.includes(permission.id) ? 'checked' : '' %>
+          >
+          <label for="permission<%=index%>" class="text-gray-700"><%=permission.title%></label>
+        </li>
+      <% }); %>
+    </ul>
+    <div class="text-right">
+      <button type="submit" class="w-full lg:w-auto mt-4 px-4 py-4 lg:py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">
+        저장
+      </button>
+    </div>
+  </form>
 </div>
+
+<script>
+  document.getElementById('formEmployeePermissions').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    console.log('submit');
+
+    const permissions = Array.from(document.querySelectorAll('input[name="permission"]:checked')).map(checkbox => checkbox.value);
+
+    const data = {
+      permissions
+    };
+
+    try {
+      // POST 요청 보내기
+      const apiUrl = '<%=apiBackendRoutes.employeesPermissions.url%>'.replace(':employeeId', '<%=data.employeeId%>');
+      const response = await fetch(apiUrl, {
+          method: '<%=apiBackendRoutes.employeesPermissions.method%>',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+      });
+
+      // 응답 오류
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      
+      // 응답 성공
+      alert('<%=apiBackendRoutes.employeesPermissions.title%> 성공');
+      
+    } catch (err) {
+      alert('서버 오류가 발생했습니다.');
+        
+    }
+  });
+</script>

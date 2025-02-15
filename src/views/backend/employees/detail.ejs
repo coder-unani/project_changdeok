@@ -56,10 +56,10 @@
 
   <!-- Action Buttons -->
   <div class="mt-6 grid grid-cols-3 gap-1.5 text-white font-semibold">
-    <a href="<%=routes.employeesModify.url.replace(':employeeId', data.id)%>" class="orb-btn-secondary">
+    <a href="<%=routes.employeesUpdate.url.replace(':employeeId', data.id)%>" class="orb-btn-secondary">
       수정하기
     </a>
-    <a href="<%=routes.employeesModifyPassword.url.replace(':employeeId', data.id)%>" class="orb-btn-secondary">
+    <a href="<%=routes.employeesUpdatePassword.url.replace(':employeeId', data.id)%>" class="orb-btn-secondary">
       비밀번호 변경
     </a>
     <a href="<%=routes.employeesPermissions.url.replace(':employeeId', data.id)%>" class="orb-btn-secondary">

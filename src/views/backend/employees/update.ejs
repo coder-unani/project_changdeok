@@ -78,9 +78,9 @@
 
       try {
           // POST 요청 보내기
-          const apiUrl = '<%=apiBackendRoutes.employeesModify.url%>'.replace(':employeeId', '<%=data.id%>');
+          const apiUrl = '<%=apiBackendRoutes.employeesUpdate.url%>'.replace(':employeeId', '<%=data.id%>');
           const response = await fetch(apiUrl, {
-              method: '<%=apiBackendRoutes.employeesModify.method%>',
+              method: '<%=apiBackendRoutes.employeesUpdate.method%>',
               headers: {
                   'Content-Type': 'application/json'
               },
@@ -93,7 +93,7 @@
           }
           
           // 응답 성공
-          alert('<%=apiBackendRoutes.employeesModify.title%> 성공');
+          alert('<%=apiBackendRoutes.employeesUpdate.title%> 성공');
           
       } catch (err) {
           console.error('Error:', err.message);
