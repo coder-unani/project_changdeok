@@ -384,28 +384,7 @@ export class BackendController {
     const { title, view, layout, permissions } = backendRoutes.employeesLogin;
 
     try {
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-
       // 로그인 페이지 렌더링
-      res.render(view, { layout, title });
-
-    } catch (error) {
-      this.renderError(res, error);
-
-    }
-  };
-
-  // 직원 로그아웃
-  public employeesLogout(req: Request, res: Response): void {
-    // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.employeesLogout;
-
-    try {
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-
-      // 로그아웃 페이지 렌더링
       res.render(view, { layout, title });
 
     } catch (error) {
@@ -420,9 +399,6 @@ export class BackendController {
     const { title, view, layout, permissions } = backendRoutes.employeesForgotPassword;
 
     try {
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-      
       // 비밀번호 찾기 페이지 렌더링
       res.render(view, { layout, title });
 
