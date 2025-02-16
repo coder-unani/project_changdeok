@@ -44,7 +44,7 @@ export const apiBackendRoutes = {
     url: `${apiBackendRoutesPrefix}/employees/login`,
   },
   employeesLogout: {
-    method: 'GET',
+    method: 'POST',
     title: '관리자 로그아웃',
     url: `${apiBackendRoutesPrefix}/employees/logout`,
   },
@@ -171,14 +171,6 @@ export const backendRoutes = {
     url: `${backendRoutesPrefix}/employees/login`,
     view: 'backend/employees/login',
     layout: backendRoutesNonHeaderLayout,
-    permissions: []
-  },
-  employeesLogout: {
-    method: 'GET',
-    title: '관리자 로그아웃',
-    url: `${backendRoutesPrefix}/employees/logout`,
-    view: 'backend/employees/logout',
-    layout: backendRoutesLayout,
     permissions: []
   },
   employeesForgotPassword: {

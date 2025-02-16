@@ -92,14 +92,8 @@ router.get(backendRoutes.employees.url, function (req, res) {
   backendController.employees(req, res);
 });
 
-// 직원: 로그아웃
-router.get(backendRoutes.employeesLogout.url, function (req, res) {
-  backendController.employeesLogout(req, res);
-});
-
 // 직원: 비밀번호 찾기
 router.get(backendRoutes.employeesForgotPassword.url, function (req, res) {
-  console.log('employeesForgotPassword');
   backendController.employeesForgotPassword(req, res);
 });
 

@@ -105,7 +105,7 @@
   <div>
     <ul class="flex flex-col mt-2 gap-2 text-red-500 dark:text-red-500">
       <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-red-300 dark:hover:bg-red-300 <%if (routes.employeesLogout.title === title) {%>orb-hightlight-error<% }%>"">
-        <a class="flex items-center justify-start p-2" href="<%=routes.employeesLogout.url%>">
+        <button id="logout" class="flex items-center justify-start p-2">
           <span class="text-left">
             <svg width="1.5em" height="1.5em" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor" class="h-[18px] w-[18px]">
               <path d="M12 12H19M19 12L16 15M19 12L16 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -113,7 +113,7 @@
             </svg>
           </span>
           <span class="mx-4 font-normal"><%=routes.employeesLogout.title%></span>
-        </a>    
+        </button>    
       </li>
     </ul>
   </div>
@@ -223,7 +223,7 @@
   <div>
     <ul class="flex flex-col mt-2 gap-2 text-red-500 dark:text-red-500">
       <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-red-300 dark:hover:bg-red-300 <%if (routes.employeesLogout.title === title) {%>orb-hightlight-error<% }%>">
-        <a class="flex items-center justify-start p-2" href="<%=routes.employeesLogout.url%>">
+        <button id="logout-mobile" class="flex items-center justify-start p-2">
           <span class="text-left">
             <svg width="1.5em" height="1.5em" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor" class="h-[18px] w-[18px]">
               <path d="M12 12H19M19 12L16 15M19 12L16 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -233,14 +233,13 @@
           <span class="mx-4 font-normal">
             <%=routes.employeesLogout.title%>
           </span>
-        </a>    
+        </button>    
       </li>
     </ul>
   </div>
 </div>
 
 <script>
-  // Mobile menu toggle logic
   const menuToggle = document.getElementById('menu-toggle');
   const sidebarMobile = document.getElementById('sidebar-mobile');
   const closeMenu = document.getElementById('menu-close');
@@ -252,4 +251,41 @@
   closeMenu.addEventListener('click', () => {
     sidebarMobile.classList.add('translate-x-full');
   });
+
+  const buttonLogout = document.getElementById('logout');
+  const buttonLogoutMobile = document.getElementById('logout-mobile');
+
+  buttonLogout.addEventListener('click', () => {
+    if (confirm('로그아웃 하시겠습니까?')) {
+      logout();
+    }
+  });
+
+  buttonLogoutMobile.addEventListener('click', () => {
+    if (confirm('로그아웃 하시겠습니까?')) {
+      logout();
+    }
+  });
+
+  const logout = async () => {
+    try {
+      const response = await fetch('<%=apiBackendRoutes.employeesLogout.url%>', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}),
+      });
+
+      if (!response.ok) {
+        throw new Error('로그아웃에 실패했습니다.');
+      }
+
+      window.location.href = '<%=routes.employeesLogin.url%>';
+
+    } catch (error) {
+      console.error(error);
+
+    }
+  }
 </script>
