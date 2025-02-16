@@ -24,24 +24,63 @@ export class BackendController {
 
   // 대시보드
   public dashboard(req: Request, res: Response): void {
-    const { title, view, layout } = backendRoutes.dashboard;
-    res.render(view, { layout, title });
+    // 라우팅 정보
+    const { title, view, layout, permissions } = backendRoutes.dashboard;
+
+    try {
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+      
+      // 대시보드 페이지 렌더링
+      res.render(view, { layout, title });
+
+    } catch (error) {
+      this.renderError(res, error);
+
+    }
   };
 
   // 화면 관리: 배너
   public screensBanner(req: Request, res: Response): void {
-    const { title, view, layout } = backendRoutes.screensBanner;
-    res.render(view, { layout, title });
+    // 라우팅 정보
+    const { title, view, layout, permissions } = backendRoutes.screensBanner;
+
+    try {
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+      
+      // 배너 관리 페이지 렌더링
+      res.render(view, { layout, title });
+
+    } catch (error) {
+      this.renderError(res, error);
+
+    }
   };
 
   // 화면 관리: 팝업
   public screensPopup(req: Request, res: Response): void {
-    const { title, view, layout } = backendRoutes.screensPopup;
-    res.render(view, { layout, title });
+    // 라우팅 정보
+    const { title, view, layout, permissions } = backendRoutes.screensPopup;
+
+    try {
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+
+      // 팝업 관리 페이지 렌더링
+      res.render(view, { layout, title });
+
+    } catch (error) {
+      this.renderError(res, error);
+
+    }
   };
 
   // 게시판 관리
   public contents(req: Request, res: Response): void {
+    // 라우팅 정보
+    const { title, view, layout, permissions } = backendRoutes.contents;
+
     try {
       // 게시판 ID 추출
       const contentId = req.params.contentId;
@@ -56,13 +95,16 @@ export class BackendController {
         throw new Error('게시판 아이디가 형식에 맞지 않습니다.');
       }
 
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+
+      // 게시판 관리 페이지 렌더링
+      res.render(view, { layout, title });
+
     } catch (error) {
       this.renderError(res, error);
 
     }
-
-    const { title, view, layout } = backendRoutes.contents;
-    res.render(view, { layout, title });
   }
 
   // 직원 등록
