@@ -6,7 +6,7 @@ import { backendRoutes, apiBackendRoutes } from '../routes/routes';
 import { EmployeeService } from '../services/employeeService';
 import { getApiEmployeeDetail, getApiPermissionList } from '../utils/api';
 import { verifyJWT } from '../utils/jwt';
-import { ALL } from 'dns';
+import { getCookie } from '../utils/cookies';
 
 
 const employeeService = new EmployeeService();
@@ -67,12 +67,27 @@ export class BackendController {
 
   // 직원 등록
   public employeesRegist(req: Request, res: Response): void {
-    const { title, view, layout } = backendRoutes.employeesRegist;
-    res.render(view, { layout, title });
+    // 라우팅 정보
+    const { title, view, layout, permissions } = backendRoutes.employeesRegist;
+
+    try {
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+
+      // 직원 등록 페이지 렌더링
+      res.render(view, { layout, title });
+
+    } catch (error) {
+      this.renderError(res, error);
+
+    }
   };
 
   // 직원 상세 정보
   public async employeesDetail(req: Request, res: Response): Promise<void> {
+    // 라우팅 정보
+    const { title, view, layout, permissions } = backendRoutes.employeesDetail;
+
     try {
       // 직원 ID 추출
       const employeeId = parseInt(req.params.employeeId);
@@ -82,16 +97,18 @@ export class BackendController {
         throw new Error('직원 아이디가 형식에 맞지 않습니다.');
       }
 
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions, employeeId);
+
       // 관리자 상세 정보 조회
       const { metadata, data: employee } = await getApiEmployeeDetail(employeeId);
 
-      // 결과가 없는 경우 에러 페이지로 이동
+      // 결과가 없는 경우 에러 페이지 이동
       if (!employee) {
         throw new Error('직원 정보 조회에 실패했습니다.');
       }
       
-      // 상세 정보 페이지로 이동
-      const { title, view, layout } = backendRoutes.employeesDetail;
+      // 상세 정보 페이지 렌더링
       res.render(view, { 
         layout, 
         title,
@@ -107,8 +124,9 @@ export class BackendController {
 
   // 직원 정보 수정
   public async employeesUpdate(req: Request, res: Response): Promise<void> {
-    const ALLOWED_PERMISSIONS = [1, 2];
-    const ALLOWED_MYSELF = true;
+    // 라우팅 정보
+    const { title, view, layout, permissions } = backendRoutes.employeesUpdate;
+
     try {
       // 직원 ID 추출
       const employeeId = parseInt(req.params.employeeId);
@@ -118,22 +136,13 @@ export class BackendController {
         throw new Error('직원 아이디가 형식에 맞지 않습니다.');
       }
 
-      // 로그인 확인
-      if (!res.locals.employee) {
-        throw new Error('로그인이 필요합니다.');
-      }
-
-      // 직원 ID와 로그인 ID가 다른 경우 에러 페이지로 이동
-      if (res.locals.employee.id !== employeeId) {
-        throw new Error('다른 계정의 정보는 수정 할 수 없습니다.');
-      }
-
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions, employeeId);
+      
       // 관리자 정보 조회
       const { data: employee } = await getApiEmployeeDetail(employeeId);
       
-      
-      // 결과가 있는 경우 수정 페이지로 이동
-      const { title, view, layout } = backendRoutes.employeesUpdate;
+      // 직원 정보 수정 페이지 렌더링
       res.render(view, { layout, title, data: employee });
 
     } catch (error) {
@@ -144,6 +153,9 @@ export class BackendController {
 
   // 직원 비밀번호 수정
   public async employeesUpdatePassword(req: Request, res: Response): Promise<void> {
+    // 라우팅 정보
+    const { title, view, layout, permissions } = backendRoutes.employeesUpdatePassword;
+
     try {
       // 직원 ID 추출
       const employeeId = parseInt(req.params.employeeId);
@@ -158,18 +170,10 @@ export class BackendController {
         throw new Error('직원 아이디가 형식에 맞지 않습니다.');
       }
 
-      // 로그인 확인
-      if (!res.locals.employee) {
-        throw new Error('로그인이 필요합니다.');
-      }
-
-      // 직원 ID와 로그인 ID가 다른 경우 에러 페이지로 이동
-      if (res.locals.employee.id !== employeeId) {
-        throw new Error('다른 계정의 비밀번호는 수정 할 수 없습니다.');
-      }
-
-      // 직원 비밀번호 수정 페이지로 이동
-      const { title, view, layout } = backendRoutes.employeesUpdatePassword;
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions, employeeId);
+      
+      // 직원 비밀번호 수정 페이지 렌더링
       res.render(view, { layout, title });
 
     } catch (error) {
@@ -180,6 +184,9 @@ export class BackendController {
 
   // 직원 탈퇴
   public async employeesDelete(req: Request, res: Response): Promise<void> {
+    // 라우팅 정보
+    const { title, view, layout, permissions } = backendRoutes.employeesDelete;
+
     try {
       // 직원 ID 추출
       const employeeId = parseInt(req.params.employeeId);
@@ -194,6 +201,9 @@ export class BackendController {
         throw new Error('직원 아이디가 형식에 맞지 않습니다.');
       }
 
+      // 접근 권한 체크
+      this.verifyPermission(req, [], employeeId);
+
       // 직원 정보 조회
       const employee = await employeeService.read(employeeId);
 
@@ -202,7 +212,7 @@ export class BackendController {
         throw new Error('직원 정보 조회에 실패했습니다.');
       }
 
-      const { title, view, layout } = backendRoutes.employeesDelete;
+      // 직원 삭제 페이지 렌더링
       res.render(view, { layout, title });
 
     } catch (error) {
@@ -217,9 +227,6 @@ export class BackendController {
     const { title, view, layout, permissions } = backendRoutes.employeesPermissions;
     
     try {
-
-      console.log(res.locals.employee);
-
       // 직원 ID 추출
       const employeeId = parseInt(req.params.employeeId);
 
@@ -233,6 +240,9 @@ export class BackendController {
         throw new Error('직원 아이디가 형식에 맞지 않습니다.');
       }
 
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+
       // 직원 정보 조회
       const accessToken = req.cookies.accessToken;
       const decodedToken = (accessToken) ? verifyJWT(accessToken) : null;
@@ -245,29 +255,33 @@ export class BackendController {
       // 현재 로그인한 직원 정보 조회
       const { data: grantedByEmployee } = await getApiEmployeeDetail(decodedToken.id);
       
+      // 현재 로그인한 직원 정보가 없는 경우 에러 페이지로 이동
       if (!grantedByEmployee) {
+        throw new Error('사용자의 정보 조회에 실패했습니다.');
+      }
+
+      // 권한을 수정하려는 직원 정보 조회
+      const { data: employee } = await getApiEmployeeDetail(employeeId);
+
+      // 직원 정보가 없는 경우 에러 페이지로 이동
+      if (!employee) {
         throw new Error('직원 정보 조회에 실패했습니다.');
       }
 
-      // 권한이 있는지 확인  
-      // const hasPermission = 
-      //   (grantedByEmployee.permissions) 
-      //   ? grantedByEmployee.permissions.some(permission => ALLOWED_PERMISSIONS.includes(permission)) 
-      //   : false;
-
-      // 현재 로그인한 직원과 권한을 부여할 직원이 같은지 확인
-      // const isSameEmployee = (ALLOWED_MYSELF && employeeId === grantedByEmployee.id);
-
-      // 권한이 없는 경우 에러 페이지로 이동
-      // if (!hasPermission && !isSameEmployee) {
-      //   throw new Error('권한이 없습니다.');
-      // }
-       
       // 전체 권한 목록
-      const { data: permissions } = await getApiPermissionList(1, 10);
+      const { data: permissionsAll } = await getApiPermissionList(1, 10);
 
-      
-      res.render(view, { layout, title, data: { employeeId, grantedByEmployee, permissions } });
+      // 직원 권한 수정 페이지 렌더링
+      res.render(view, { 
+        layout, 
+        title, 
+        data: { 
+          employeeId,
+          employee,
+          grantedByEmployee,
+          permissions: permissionsAll,
+        }
+      });
 
     } catch (error) {
       this.renderError(res, error);
@@ -277,7 +291,13 @@ export class BackendController {
 
   // 직원 목록
   public async employees(req: Request, res: Response): Promise<void> {
+    // 라우팅 정보
+    const { title, view, layout, permissions } = backendRoutes.employees;
+
     try {
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+
       // 쿼리 파라미터 생성
       const queryParams = new URLSearchParams(req.body).toString();
 
@@ -289,13 +309,15 @@ export class BackendController {
         },
       });
 
+      // 응답 오류
       if (!apiResponse.ok) {
         throw new Error(apiResponse.statusText);
       }
 
+      // JSON 파싱
       const result = await apiResponse.json();
       
-      const { title, view, layout } = backendRoutes.employees;
+      // 직원 목록 페이지 렌더링
       res.render(view, { 
         layout, 
         title,
@@ -316,8 +338,14 @@ export class BackendController {
 
   // 직원 로그인
   public employeesLogin(req: Request, res: Response): void {
+    // 라우팅 정보
+    const { title, view, layout, permissions } = backendRoutes.employeesLogin;
+
     try {
-      const { title, view, layout } = backendRoutes.employeesLogin;
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+
+      // 로그인 페이지 렌더링
       res.render(view, { layout, title });
 
     } catch (error) {
@@ -328,16 +356,32 @@ export class BackendController {
 
   // 직원 로그아웃
   public employeesLogout(req: Request, res: Response): void {
-    const { title, view, layout } = backendRoutes.employeesLogout;
-    res.render(view, { layout, title });
+    // 라우팅 정보
+    const { title, view, layout, permissions } = backendRoutes.employeesLogout;
+
+    try {
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+
+      // 로그아웃 페이지 렌더링
+      res.render(view, { layout, title });
+
+    } catch (error) {
+      this.renderError(res, error);
+
+    }
   };
 
   // 직원 비밀번호 찾기
   public employeesForgotPassword(req: Request, res: Response): void {
-    // 관리자 시스템이므로 직원 비밀번호 찾기는 없음
-    // 담당자에게 문의하기로 대체
+    // 라우팅 정보
+    const { title, view, layout, permissions } = backendRoutes.employeesForgotPassword;
+
     try {
-      const { title, view, layout } = backendRoutes.employeesForgotPassword;
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+      
+      // 비밀번호 찾기 페이지 렌더링
       res.render(view, { layout, title });
 
     } catch (error) {
@@ -347,12 +391,56 @@ export class BackendController {
   };
 
   // 접근 권한 확인
-  public verifyPermission(allowedPermissions: number[]): void {
-    
-  }
+  public verifyPermission(req: Request, allowedPermissions: number[] = [], allowedEmployeeId: number | undefined | null = null): void {
+    try {
+      // Cookie에서 직원 정보 추출
+      const cookieEmployee = getCookie(req, 'employee');
+      if (!cookieEmployee) {
+        throw new Error('로그인이 필요합니다.');
+      }
 
-  public verifySameEmployee(employeeId: number, targetEmployeeId: number): void {
+      // Cookie 직원 정보 파싱
+      const employee: IEmployeeToken = JSON.parse(cookieEmployee);
 
+      // 권한 확인용 변수
+      let hasPermission = false;
+
+      // 권한이 필요없는 페이지이면 접근 가능
+      console.log("권한이 필요한지 체크합니다.");
+      if (allowedPermissions.length === 0 && !allowedEmployeeId) {
+        hasPermission = true;
+      }
+      console.log("hasPermission = ", hasPermission);
+
+      // 특정 직원 ID가 허용되어 있으면 해당 직원은 접근 가능
+      console.log("특정 아이디만 접근이 가능한지 체크합니다.");
+      if (allowedEmployeeId && employee.id === allowedEmployeeId) {
+        hasPermission = true;
+      }
+      console.log("hasPermission = ", hasPermission, "employee.id = ", employee.id, "allowedEmployeeId = ", allowedEmployeeId);
+      
+      // 특정 권한이 허용되어 있으면 해당 직원은 접근 가능
+      console.log("특정 권한만 접근이 가능한지 체크합니다.");
+      if (
+        allowedPermissions 
+        && (
+          employee.permissions
+          && employee.permissions.some(permission => allowedPermissions.includes(permission))
+        )
+      ) {
+        hasPermission = true;
+      }
+      console.log("hasPermission = ", hasPermission, "employee.permissions = ", employee.permissions, "allowedPermissions = ", allowedPermissions);
+
+      // 권한이 없으면 에러 페이지로 이동
+      if (!hasPermission) {
+        throw new Error('권한이 없습니다.');
+      }
+      
+    } catch (error) {
+      throw error;
+
+    }
   }
 
   // 에러 페이지

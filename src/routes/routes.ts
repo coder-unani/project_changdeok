@@ -162,27 +162,31 @@ export const backendRoutes = {
     title: '관리자 목록',
     url: `${backendRoutesPrefix}/employees`,
     view: 'backend/employees/list',
-    layout: backendRoutesLayout
+    layout: backendRoutesLayout,
+    permissions: [1, 2]
   },
   employeesLogin: {
     method: 'GET',
     title: '관리자 로그인',
     url: `${backendRoutesPrefix}/employees/login`,
     view: 'backend/employees/login',
-    layout: backendRoutesNonHeaderLayout
+    layout: backendRoutesNonHeaderLayout,
+    permissions: []
   },
   employeesLogout: {
     method: 'GET',
     title: '관리자 로그아웃',
     url: `${backendRoutesPrefix}/employees/logout`,
     view: 'backend/employees/logout',
-    layout: backendRoutesLayout
+    layout: backendRoutesLayout,
+    permissions: []
   },
   employeesForgotPassword: {
     method: 'GET',
     title: '비밀번호 찾기',
     url: `${backendRoutesPrefix}/employees/forgot-password`,
     view: 'backend/employees/forgot-password',
-    layout: backendRoutesNonHeaderLayout
+    layout: backendRoutesNonHeaderLayout,
+    permissions: []
   },
 }
