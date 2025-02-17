@@ -104,7 +104,7 @@
   <!-- 로그아웃 -->
   <div>
     <ul class="flex flex-col mt-2 gap-2 text-red-500 dark:text-red-500">
-      <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-red-300 dark:hover:bg-red-300 <%if (routes.employeesLogout.title === title) {%>orb-hightlight-error<% }%>"">
+      <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-red-300 dark:hover:bg-red-300">
         <button id="logout" class="flex items-center justify-start p-2">
           <span class="text-left">
             <svg width="1.5em" height="1.5em" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor" class="h-[18px] w-[18px]">
@@ -112,7 +112,7 @@
               <path d="M19 6V5C19 3.89543 18.1046 3 17 3H7C5.89543 3 5 3.89543 5 5V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
             </svg>
           </span>
-          <span class="mx-4 font-normal"><%=routes.employeesLogout.title%></span>
+          <span class="mx-4 font-normal">관리자 로그아웃</span>
         </button>    
       </li>
     </ul>
@@ -222,7 +222,7 @@
   </nav>
   <div>
     <ul class="flex flex-col mt-2 gap-2 text-red-500 dark:text-red-500">
-      <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-red-300 dark:hover:bg-red-300 <%if (routes.employeesLogout.title === title) {%>orb-hightlight-error<% }%>">
+      <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-red-300 dark:hover:bg-red-300">
         <button id="logout-mobile" class="flex items-center justify-start p-2">
           <span class="text-left">
             <svg width="1.5em" height="1.5em" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor" class="h-[18px] w-[18px]">
@@ -230,9 +230,7 @@
               <path d="M19 6V5C19 3.89543 18.1046 3 17 3H7C5.89543 3 5 3.89543 5 5V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
             </svg>
           </span>
-          <span class="mx-4 font-normal">
-            <%=routes.employeesLogout.title%>
-          </span>
+          <span class="mx-4 font-normal">관리자 로그아웃</span>
         </button>    
       </li>
     </ul>

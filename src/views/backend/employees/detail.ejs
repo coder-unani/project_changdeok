@@ -65,9 +65,9 @@
     <a href="<%=routes.employeesPermissions.url.replace(':employeeId', data.id)%>" class="orb-btn-secondary">
       권한 수정
     </a>
-    <button type="button" onclick="deleteEmployees()" class="orb-btn-delete">
+    <a href="<%=routes.employeesDelete.url.replace(':employeeId', data.id)%>" class="orb-btn-delete">
       삭제하기
-    </button>
+    </a>
   </div>
 </div>
 
