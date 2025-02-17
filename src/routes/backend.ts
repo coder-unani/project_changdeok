@@ -9,9 +9,6 @@ import { ErrorMiddleware } from '../middlewares/backend/error';
 import { BackendController } from '../controllers/backendController';
 import { ExpressLogger } from '../utils/logger';
 
-
-
-
 const router: Router = Router();
 
 router.use((req, res, next) => {
@@ -78,7 +75,7 @@ router.get(backendRoutes.employeesUpdatePassword.url, function (req, res) {
 });
 
 // 직원: 탈퇴
-router.post(backendRoutes.employeesDelete.url, function (req, res) {
+router.get(backendRoutes.employeesDelete.url, function (req, res) {
   backendController.employeesDelete(req, res);
 });
 
