@@ -31,6 +31,7 @@ export interface IEmployee {
 
 export interface IEmployeeToken {
   id: number;
+  email: string;
   name: string;
   permissions: number[] | undefined | null;
 }
