@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { backendRoutes } from '../../routes/routes';
 import { IMiddleware } from '../../types/middleware';
+import { IEmployeeToken } from '../../types/backend';
+import { backendRoutes } from '../../routes/routes';
 import { verifyJWT } from '../../utils/jwt';
 import { removeCookie } from '../../utils/cookies';
-import { remove } from 'winston';
 
 export class AuthMiddleware implements IMiddleware {
   private loginPath: string;
@@ -48,7 +48,7 @@ export class AuthMiddleware implements IMiddleware {
     }
 
     // JWT 검증
-    const decodedToken = verifyJWT(token);
+    const decodedToken: IEmployeeToken = verifyJWT(token);
     
     // 유효하지 않은 토큰. 로그인 페이지로 이동
     if (!decodedToken) {
