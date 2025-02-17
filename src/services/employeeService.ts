@@ -477,8 +477,8 @@ export class EmployeeService implements IEmployeeService {
           id: id
         },
         data: {
-          fireDate: fireDate,
-          isActivated: true,
+          fireDate: fireDate || new Date(),
+          isActivated: false,
           isDeleted: true,
         }
       });
@@ -487,8 +487,6 @@ export class EmployeeService implements IEmployeeService {
       return { result: true };
 
     } catch (error) {
-      // 실패
-      console.error(error);
       return {
         result: false,
         code: CODE_FAIL_SERVER,
@@ -706,7 +704,7 @@ export class EmployeeService implements IEmployeeService {
   public async isUniqueEmail(email: string): Promise<IServiceResponse> {
     try {
       // 이메일 중복 체크
-      const isUnique = await this.prisma.employee.findUnique({
+      const isUnique = await this.prisma.employee.findFirst({
         where: {
           email: email,
           isDeleted: false

@@ -224,7 +224,7 @@ export class BackendController {
     }
   };
 
-  // 직원 탈퇴
+  // 직원 삭제
   public async employeesDelete(req: Request, res: Response): Promise<void> {
     // 라우팅 정보
     const { title, view, layout, permissions } = backendRoutes.employeesDelete;
@@ -244,7 +244,7 @@ export class BackendController {
       }
 
       // 접근 권한 체크
-      this.verifyPermission(req, [], employeeId);
+      this.verifyPermission(req, permissions, employeeId);
 
       // 직원 정보 조회
       const employee = await employeeService.read(employeeId);
@@ -255,7 +255,7 @@ export class BackendController {
       }
 
       // 직원 삭제 페이지 렌더링
-      res.render(view, { layout, title });
+      res.render(view, { layout, title, data: employee.data });
 
     } catch (error) {
       this.renderError(res, error);

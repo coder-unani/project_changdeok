@@ -18,7 +18,6 @@ import { PermissionService } from '../../services/permissionService';
 import { formatApiResponse } from '../../utils/formattor';
 import { createJWT, verifyJWT } from '../../utils/jwt';
 import { setCookie, removeCookie } from '../../utils/cookies';
-import { remove } from 'winston';
 
 export class ApiBackendController {
   // 직원 등록
@@ -176,7 +175,7 @@ export class ApiBackendController {
     }
   }
 
-  // 직원 탈퇴
+  // 직원 삭제
   public async employeesDelete(req: Request, res: Response): Promise<void> {
     try {
       // 직원 ID 추출
@@ -184,37 +183,44 @@ export class ApiBackendController {
 
       // ID가 숫자가 아닌 경우 에러 처리
       if (isNaN(employeeId)) {
-        res.status(400).send('Bad Request');
-        return;
+        throw new Error('직원 ID가 올바르지 않습니다.');
       }
 
       // 요청 데이터
       const requestData: IRequestEmployeeDelete = req.body;
 
-      // 직원 탈퇴 처리
+      // 직원 삭제 처리
       const employeeService: IEmployeeService = new EmployeeService();
       const result = await employeeService.delete(employeeId, requestData);
 
-      // 탈퇴 실패 처리
+      // 삭제 처리 실패
       if (!result.result && result.code === CODE_FAIL_VALIDATION) {
-        res.status(400).send(result);
-        return;
+        throw new Error(result.message);
 
       } else if (!result.result) {
         throw new Error('탈퇴 처리에 실패했습니다.');
       }
 
       // 쿠키 삭제
-      removeCookie(res, 'accessToken');
-      removeCookie(res, 'employee');
+      // 다른 계정을 삭제할 수 있으므로 쿠키 삭제하지 않음
+      // removeCookie(res, 'accessToken');
+      // removeCookie(res, 'employee');
 
       // 탈퇴 성공시 200 응답
-      res.status(200).send(result);
+      res.status(201).send(result);
 
     } catch (error) {
-      const response = formatApiResponse(false, CODE_FAIL_SERVER, MESSAGE_FAIL_SERVER);
-      res.status(500).json(response);
+      if (error instanceof Error) {
+        const response = formatApiResponse(false, CODE_FAIL_VALIDATION, error.message);
+        res.status(400).json(response);
+        return;
 
+      } else {
+        const response = formatApiResponse(false, CODE_FAIL_SERVER, MESSAGE_FAIL_SERVER);
+        res.status(500).json(response);
+        return;
+        
+      }
     }
   }
 
@@ -339,6 +345,7 @@ export class ApiBackendController {
       if (result.data) {
         const tokenData: IEmployeeToken = {
           id: result.data.id,
+          email: result.data.email,
           name: result.data.name,
           permissions: result.data.permissions,
         }
