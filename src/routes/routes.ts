@@ -22,6 +22,7 @@ export const apiBackendRoutes = {
     method: 'PATCH',
     title: '관리자 비밀번호 수정',
     url: `${apiBackendRoutesPrefix}/employees/:employeeId/password`,
+    permissions: [1, 2]
   },
   employeesDelete: {
     method: 'DELETE',
