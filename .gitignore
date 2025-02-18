@@ -20,3 +20,6 @@ public/css/tailwind.css
 # log
 logs
 
+# MacOS
+.DS_Store
+
