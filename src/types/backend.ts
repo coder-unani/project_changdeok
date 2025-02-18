@@ -3,6 +3,7 @@ import {
   IRequestEmployeeRegister, 
   IRequestEmployeeUpdate, 
   IRequestEmployeeUpdatePassword, 
+  IRequestEmployeeForceUpdatePassword,
   IRequestEmployeeDelete, 
   IRequestEmployeeList, 
   IRequestEmployeeLogin 
@@ -55,6 +56,7 @@ export interface IEmployeeService {
   read(id: number): Promise<IServiceResponse<IEmployee>>;
   update(id: number, data: IRequestEmployeeUpdate): Promise<IServiceResponse<IEmployee>>
   updatePassword(id: number, data: IRequestEmployeeUpdatePassword): Promise<IServiceResponse>;
+  updatePasswordForce(id: number, data: IRequestEmployeeForceUpdatePassword): Promise<IServiceResponse>;
   delete(id: number, data: IRequestEmployeeDelete): Promise<IServiceResponse>;
   list(data: IRequestEmployeeList): Promise<IServiceResponse<IEmployee[]>>;
   login(data: IRequestEmployeeLogin): Promise<IServiceResponse<IEmployee>>;

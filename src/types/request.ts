@@ -47,8 +47,12 @@ export interface IRequestEmployeeList extends IRequestDefaultList {
   sort?: typeListSort;
 }
 
-export interface IRequestEmployeeUpdatePassword {
-  password: string;
+
+export interface IRequestEmployeeForceUpdatePassword {
   passwordNew: string;
   passwordNewConfirm: string;
+}
+
+export interface IRequestEmployeeUpdatePassword extends IRequestEmployeeForceUpdatePassword {
+  password: string;
 }

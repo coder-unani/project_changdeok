@@ -9,7 +9,8 @@ import {
   IRequestEmployeeLogin, 
   IRequestEmployeeDelete,
   IRequestEmployeeList,
-  IRequestEmployeeUpdatePassword
+  IRequestEmployeeUpdatePassword,
+  IRequestEmployeeForceUpdatePassword
 } from "../types/request";
 import { validateEmail, validatePassword, validatePhone, validateDate } from "../utils/validator";
 import { formatDate, formatDateToString, formatEmailMasking } from "../utils/formattor";
@@ -387,14 +388,6 @@ export class EmployeeService implements IEmployeeService {
       }
 
       // 패스워드 유효성 검사
-      if (data.passwordNew !== data.passwordNewConfirm) {
-        return {
-          result: false,
-          code: CODE_FAIL_VALIDATION,
-          message: '패스워드가 일치하지 않습니다.'
-        }
-      }
-
       const validatedPassword = validatePassword(data.passwordNew, data.passwordNewConfirm);
       if (!validatedPassword.result) {
         return {
@@ -443,6 +436,81 @@ export class EmployeeService implements IEmployeeService {
     }
   }
   
+  // 직원 비밀번호 강제 변경
+  public async updatePasswordForce(id: number, data: IRequestEmployeeForceUpdatePassword): Promise<IServiceResponse> {
+    try {
+      // 수정할 데이터가 없는 경우 에러
+      if (!data) {
+        return {
+          result: false,
+          code: CODE_FAIL_VALIDATION,
+          message: '수정할 데이터가 없습니다.'
+        };
+      }
+
+      // 직원 정보 조회
+      const employee = await this.prisma.employee.findUnique({
+        where: {
+          id: id,
+          isDeleted: false
+        }
+      });
+
+      // 직원 정보가 없는 경우 에러
+      if (!employee) {
+        return {
+          result: false,
+          code: CODE_FAIL_VALIDATION,
+          message: '일치하는 직원 정보가 없습니다.'
+        };
+      }
+
+      // 비활성화 직원
+      if (!employee.isActivated) {
+        return {
+          result: false,
+          code: CODE_FAIL_VALIDATION,
+          message: '비활성화된 직원은 비밀번호를 변경할 수 없습니다.'
+        };
+      }
+
+      // 패스워드 유효성 검사
+      const validatedPassword = validatePassword(data.passwordNew, data.passwordNewConfirm);
+      if (!validatedPassword.result) {
+        return {
+          result: false,
+          code: CODE_FAIL_VALIDATION,
+          message: validatedPassword.message
+        }
+      }
+
+      // 새로운 패스워드 암호화
+      const hashedPasswordNew = await hashPassword(data.passwordNew);
+
+      // 직원 비밀번호 변경
+      await this.prisma.employee.update({
+        where: {
+          id: id,
+          isDeleted: false
+        },
+        data: {
+          password: hashedPasswordNew
+        }
+      });
+
+      // 성공
+      return { result: true };
+
+    } catch (error) {
+      return {
+        result: false,
+        code: CODE_FAIL_SERVER,
+        message: MESSAGE_FAIL_SERVER
+      }
+      
+    }
+  }
+
   public async delete(id: number, data: IRequestEmployeeDelete): Promise<IServiceResponse> {
     // 직원 정보 조회
     const employee = await this.read(id);

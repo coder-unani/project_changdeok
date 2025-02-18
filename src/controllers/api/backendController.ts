@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 
-import { JWT_EXPIRE_SECOND } from '../../config/config';
 import { CODE_FAIL_SERVER, CODE_FAIL_VALIDATION, MESSAGE_FAIL_SERVER } from '../../config/constants';
 import { IEmployeeService, IEmployeeToken, IPermissionService } from '../../types/backend';
 import { 
@@ -8,16 +7,18 @@ import {
   IRequestEmployeeRegister, 
   IRequestEmployeeUpdate,
   IRequestEmployeeUpdatePassword,
+  IRequestEmployeeForceUpdatePassword,
   IRequestEmployeeDelete,
   IRequestEmployeeLogin, 
   IRequestEmployeeList, 
   IRequestDefaultList
 } from '../../types/request';
+import { apiBackendRoutes } from '../../routes/routes';
 import { EmployeeService } from '../../services/employeeService';
 import { PermissionService } from '../../services/permissionService';
 import { formatApiResponse } from '../../utils/formattor';
 import { createJWT, verifyJWT } from '../../utils/jwt';
-import { setCookie, removeCookie } from '../../utils/cookies';
+import { getCookie, setCookie, removeCookie } from '../../utils/cookies';
 
 export class ApiBackendController {
   // 직원 등록
@@ -148,23 +149,70 @@ export class ApiBackendController {
 
       // ID가 숫자가 아닌 경우 에러 처리
       if (isNaN(employeeId)) {
-        res.status(400).send('Bad Request');
+        res.status(400).send('잘못된 요청입니다.');
         return;
       }
 
-      // 요청 데이터
-      const requestData: IRequestEmployeeUpdatePassword = req.body;
+      // 로그인 확인
+      const accessToken = getCookie(req, 'accessToken');
+      const tokenEmployee = (accessToken) ? verifyJWT(accessToken) : null;
+      if (!tokenEmployee) {
+        const response = formatApiResponse(false, CODE_FAIL_VALIDATION, '로그인 정보가 없습니다.');
+        res.status(400).json(response);
+        return;
+      }
+
+      // 접근 권한 확인
+      let hasPermission = false;
+      // 강제 비밀번호 변경 여부
+      let isForceUpdatePassword = false;
+
+      // 접근 가능 권한
+      const accessPermissions = apiBackendRoutes.employeesUpdatePassword.permissions;
+
+      // 접근 권한 확인
+      if (accessPermissions.includes(tokenEmployee.permissions)) {
+        hasPermission = true;
+      }
+
+      // 접근 권한이 있고 본인인 경우
+      if (tokenEmployee.id === employeeId) {
+        hasPermission = true;
+
+      // 접근 권한이 있고 다른 계정인 경우
+      } else {
+        isForceUpdatePassword = true;
+      }
+
+      // 권한 없음 처리
+      if (!hasPermission) {
+        const response = formatApiResponse(false, CODE_FAIL_VALIDATION, '권한이 없습니다.');
+        res.status(400).json(response);
+        return;
+      }
 
       // 직원 비밀번호 변경 처리
       const employeeService: IEmployeeService = new EmployeeService();
-      const result = await employeeService.updatePassword(employeeId, requestData);
+
+      let result = null;
+
+      // 강제 비밀번호 변경
+      if (isForceUpdatePassword) {
+        const requestForceData: IRequestEmployeeForceUpdatePassword = req.body;
+        result = await employeeService.updatePasswordForce(employeeId, requestForceData);
+      
+      // 일반 비밀번호 변경
+      } else {
+        const requestData: IRequestEmployeeUpdatePassword = req.body;
+        result = await employeeService.updatePassword(employeeId, requestData);
+      }
 
       // 변경 실패 처리
       if (!result.result) {
         res.status(500).send(result);
         return;
       }
-
+      
       // 변경 성공시 201 응답
       res.status(201).send(null);
 
