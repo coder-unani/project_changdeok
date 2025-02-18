@@ -154,8 +154,10 @@ export class BackendController {
       res.render(view, { 
         layout, 
         title,
-        metadata,
-        data: employee,
+        data: {
+          employee,
+          metadata
+        },
       });
 
     } catch (error) {
@@ -180,12 +182,12 @@ export class BackendController {
 
       // 접근 권한 체크
       this.verifyPermission(req, permissions, employeeId);
-      
+
       // 관리자 정보 조회
       const { data: employee } = await getApiEmployeeDetail(employeeId);
-      
+
       // 직원 정보 수정 페이지 렌더링
-      res.render(view, { layout, title, data: employee });
+      res.render(view, { layout, title, data: { employee } });
 
     } catch (error) {
       this.renderError(res, error);
@@ -214,9 +216,19 @@ export class BackendController {
 
       // 접근 권한 체크
       this.verifyPermission(req, permissions, employeeId);
+
+      // 로그인한 직원과 수정하려는 직원이 다른 경우
+      let isForceUpdatePassword = false;
+      const cookieEmployee = getCookie(req, 'employee');
+      if (cookieEmployee) {
+        const loggedInEmployee: IEmployeeToken = JSON.parse(cookieEmployee);
+        if (loggedInEmployee.id !== employeeId) {
+          isForceUpdatePassword = true;
+        }
+      }
       
       // 직원 비밀번호 수정 페이지 렌더링
-      res.render(view, { layout, title });
+      res.render(view, { layout, title, data: { employeeId, isForceUpdatePassword } });
 
     } catch (error) {
       this.renderError(res, error);
