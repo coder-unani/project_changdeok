@@ -29,8 +29,8 @@
 </div>
 
 <script>
-  document.getElementById('formEmployeePermissions').addEventListener('submit', async function(event) {
-    event.preventDefault();
+  document.getElementById('formEmployeePermissions').addEventListener('submit', async function(e) {
+    e.preventDefault();
 
     const permissions = Array.from(document.querySelectorAll('input[name="permission"]:checked')).map(checkbox => checkbox.value);
 
