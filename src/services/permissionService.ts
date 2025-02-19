@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
-import { CODE_FAIL_SERVER, CODE_FAIL_VALIDATION, MESSAGE_FAIL_SERVER } from '../config/constants';
+import { CODE_FAIL_SERVER, CODE_BAD_REQUEST, MESSAGE_FAIL_SERVER } from '../config/constants';
 import { IServiceResponse } from 'types/response';
 import { IEmployee, IPermission, IPermissionService } from '../types/backend';
 import { IRequestDefaultList } from '../types/request';

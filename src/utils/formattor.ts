@@ -1,6 +1,6 @@
 import { typeFormattedResult } from "../types/format";
 import { REG_DATE_PATTERN, REG_EMAIL_PATTERN } from "../config/constants";
-import { IApiResponse } from "../types/api/response";
+import { IApiResponse } from "../types/response";
 
 export const formatDate = (date: string | Date | undefined | null): typeFormattedResult =>{
   try {
@@ -151,12 +151,12 @@ export const formatEmailMasking = (email: string | undefined | null): typeFormat
 // API 응답을 JSON 형식으로 변환하는 함수
 export const formatApiResponse = (
   result: boolean, 
-  code: string | undefined | null = null, 
+  code: number | undefined | null = null, 
   message: string | undefined | null = null,
   metadata: any | undefined | null = null,
   data: any = null
 ): IApiResponse => {
-  code = code || null;
+  code = code;
   message = message || null;
   data = data || null;
 

@@ -1,6 +1,7 @@
-export const CODE_ERROR = 'ERR';
-export const CODE_FAIL_SERVER = 'FAIL_SERVER';
-export const CODE_FAIL_VALIDATION = 'FAIL_VALIDATION';
+export const CODE_FAIL_SERVER = 500;
+export const CODE_BAD_REQUEST = 400;
+export const CODE_UNAUTHORIZED = 401;
+export const CODE_FORBIDDEN = 403;
 
 export const MESSAGE_FAIL_SERVER = '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
 

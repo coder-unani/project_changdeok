@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
-import { CODE_FAIL_SERVER, CODE_FAIL_VALIDATION, MESSAGE_FAIL_SERVER } from '../config/constants';
+import { CODE_BAD_REQUEST, CODE_FAIL_SERVER, CODE_UNAUTHORIZED, CODE_FORBIDDEN, MESSAGE_FAIL_SERVER } from '../config/constants';
 import { IServiceResponse } from "../types/response";
 import { IEmployee, IEmployeeService } from "../types/backend";
 import { 
@@ -31,7 +31,7 @@ export class EmployeeService implements IEmployeeService {
     if (!validatedEmail.result) {
       return {
         result: false,
-        code: CODE_FAIL_VALIDATION,
+        code: CODE_BAD_REQUEST,
         message: validatedEmail.message
       }
     }
@@ -40,7 +40,7 @@ export class EmployeeService implements IEmployeeService {
     if (!data.name) {
       return {
         result: false,
-        code: CODE_FAIL_VALIDATION,
+        code: CODE_BAD_REQUEST,
         message: '이름을 입력해주세요.'
       }
     }
@@ -50,7 +50,7 @@ export class EmployeeService implements IEmployeeService {
     if (!validatedPassword.result) {
       return {
         result: false,
-        code: CODE_FAIL_VALIDATION,
+        code: CODE_BAD_REQUEST,
         message: validatedPassword.message
       }
     }
@@ -61,7 +61,7 @@ export class EmployeeService implements IEmployeeService {
       if (!validatedPhone.result) {
         return {
           result: false,
-          code: CODE_FAIL_VALIDATION,
+          code: CODE_BAD_REQUEST,
           message: validatedPhone.message
         }
       }
@@ -76,7 +76,7 @@ export class EmployeeService implements IEmployeeService {
       if (!validatedMobile.result) {
         return {
           result: false,
-          code: CODE_FAIL_VALIDATION,
+          code: CODE_BAD_REQUEST,
           message: validatedMobile.message
         }
       }
@@ -92,7 +92,7 @@ export class EmployeeService implements IEmployeeService {
       if (!formattedHireDate.result) {
         return {
           result: false,
-          code: CODE_FAIL_VALIDATION,
+          code: CODE_BAD_REQUEST,
           message: formattedHireDate.message
         }
       }
@@ -106,7 +106,7 @@ export class EmployeeService implements IEmployeeService {
       if (!formattedBirthDate.result) {
         return {
           result: false,
-          code: CODE_FAIL_VALIDATION,
+          code: CODE_BAD_REQUEST,
           message: formattedBirthDate.message
         }
       }
@@ -169,7 +169,7 @@ export class EmployeeService implements IEmployeeService {
       if (!result) {
         return {
           result: false,
-          code: CODE_FAIL_VALIDATION,
+          code: CODE_BAD_REQUEST,
           message: '직원을 찾을 수 없습니다.'
         }
       }
@@ -228,7 +228,7 @@ export class EmployeeService implements IEmployeeService {
     if (!employee.result) {
       return {
         result: false,
-        code: CODE_FAIL_VALIDATION,
+        code: CODE_BAD_REQUEST,
         message: '직원을 찾을 수 없습니다.'
       };
     }
@@ -237,7 +237,7 @@ export class EmployeeService implements IEmployeeService {
     if (!data) {
       return {
         result: false,
-        code: CODE_FAIL_VALIDATION,
+        code: CODE_BAD_REQUEST,
         message: '수정할 데이터가 없습니다.'
       };
     }
@@ -248,7 +248,7 @@ export class EmployeeService implements IEmployeeService {
       if (!validatedPhone.result) {
         return {
           result: false,
-          code: CODE_FAIL_VALIDATION,
+          code: CODE_BAD_REQUEST,
           message: validatedPhone.message
         }
       }
@@ -260,7 +260,7 @@ export class EmployeeService implements IEmployeeService {
       if (!validatedMobile.result) {
         return {
           result: false,
-          code: CODE_FAIL_VALIDATION,
+          code: CODE_BAD_REQUEST,
           message: validatedMobile.message
         }
       }
@@ -272,7 +272,7 @@ export class EmployeeService implements IEmployeeService {
       if (!validatedHireDate.result) {
         return {
           result: false,
-          code: CODE_FAIL_VALIDATION,
+          code: CODE_BAD_REQUEST,
           message: validatedHireDate.message
         }
       }
@@ -284,7 +284,7 @@ export class EmployeeService implements IEmployeeService {
       if (!validatedBirthDate.result) {
         return {
           result: false,
-          code: CODE_FAIL_VALIDATION,
+          code: CODE_BAD_REQUEST,
           message: validatedBirthDate.message
         }
       }
@@ -296,7 +296,7 @@ export class EmployeeService implements IEmployeeService {
       if (!validatedFireDate.result) {
         return {
           result: false,
-          code: CODE_FAIL_VALIDATION,
+          code: CODE_BAD_REQUEST,
           message: validatedFireDate.message
         }
       }
@@ -356,7 +356,7 @@ export class EmployeeService implements IEmployeeService {
       if (!data) {
         return {
           result: false,
-          code: CODE_FAIL_VALIDATION,
+          code: CODE_BAD_REQUEST,
           message: '수정할 데이터가 없습니다.'
         };
       }
@@ -373,7 +373,7 @@ export class EmployeeService implements IEmployeeService {
       if (!employee) {
         return {
           result: false,
-          code: CODE_FAIL_VALIDATION,
+          code: CODE_BAD_REQUEST,
           message: '일치하는 직원 정보가 없습니다.'
         };
       }
@@ -382,7 +382,7 @@ export class EmployeeService implements IEmployeeService {
       if (!employee.isActivated) {
         return {
           result: false,
-          code: CODE_FAIL_VALIDATION,
+          code: CODE_BAD_REQUEST,
           message: '비활성화된 직원은 비밀번호를 변경할 수 없습니다.'
         };
       }
@@ -392,7 +392,7 @@ export class EmployeeService implements IEmployeeService {
       if (!validatedPassword.result) {
         return {
           result: false,
-          code: CODE_FAIL_VALIDATION,
+          code: CODE_BAD_REQUEST,
           message: validatedPassword.message
         }
       }
@@ -404,7 +404,7 @@ export class EmployeeService implements IEmployeeService {
       if (!isPasswordMatch) {
         return {
           result: false,
-          code: CODE_FAIL_VALIDATION,
+          code: CODE_UNAUTHORIZED,
           message: '아이디 또는 비밀번호가 일치하지 않습니다.'
         }
       }
@@ -443,7 +443,7 @@ export class EmployeeService implements IEmployeeService {
       if (!data) {
         return {
           result: false,
-          code: CODE_FAIL_VALIDATION,
+          code: CODE_BAD_REQUEST,
           message: '수정할 데이터가 없습니다.'
         };
       }
@@ -460,7 +460,7 @@ export class EmployeeService implements IEmployeeService {
       if (!employee) {
         return {
           result: false,
-          code: CODE_FAIL_VALIDATION,
+          code: CODE_BAD_REQUEST,
           message: '일치하는 직원 정보가 없습니다.'
         };
       }
@@ -469,7 +469,7 @@ export class EmployeeService implements IEmployeeService {
       if (!employee.isActivated) {
         return {
           result: false,
-          code: CODE_FAIL_VALIDATION,
+          code: CODE_BAD_REQUEST,
           message: '비활성화된 직원은 비밀번호를 변경할 수 없습니다.'
         };
       }
@@ -479,7 +479,7 @@ export class EmployeeService implements IEmployeeService {
       if (!validatedPassword.result) {
         return {
           result: false,
-          code: CODE_FAIL_VALIDATION,
+          code: CODE_BAD_REQUEST,
           message: validatedPassword.message
         }
       }
@@ -507,7 +507,7 @@ export class EmployeeService implements IEmployeeService {
         code: CODE_FAIL_SERVER,
         message: MESSAGE_FAIL_SERVER
       }
-      
+
     }
   }
 
@@ -519,7 +519,7 @@ export class EmployeeService implements IEmployeeService {
     if (!employee.result) {
       return {
         result: false,
-        code: CODE_FAIL_VALIDATION,
+        code: CODE_BAD_REQUEST,
         message: '직원을 찾을 수 없습니다.'
       };
     }
@@ -532,7 +532,7 @@ export class EmployeeService implements IEmployeeService {
         if (!formattedHireDate.result) {
           return {
             result: false,
-            code: CODE_FAIL_VALIDATION,
+            code: CODE_BAD_REQUEST,
             message: formattedHireDate.message
           }
         }
@@ -665,7 +665,7 @@ export class EmployeeService implements IEmployeeService {
     if (!data.email) {
       return {
         result: false,
-        code: CODE_FAIL_VALIDATION,
+        code: CODE_BAD_REQUEST,
         message: '이메일을 입력해주세요.'
       }
     }
@@ -674,7 +674,7 @@ export class EmployeeService implements IEmployeeService {
     if (!data.password) {
       return {
         result: false,
-        code: CODE_FAIL_VALIDATION,
+        code: CODE_BAD_REQUEST,
         message: '패스워드를 입력해주세요.'
       }
     }
@@ -697,7 +697,7 @@ export class EmployeeService implements IEmployeeService {
       if (!result) {
         return {
           result: false,
-          code: CODE_FAIL_VALIDATION,
+          code: CODE_BAD_REQUEST,
           message: '이메일 또는 패스워드가 일치하지 않습니다.'
         }
       }
@@ -709,7 +709,7 @@ export class EmployeeService implements IEmployeeService {
       if (!isPasswordMatch) {
         return {
           result: false,
-          code: CODE_FAIL_VALIDATION,
+          code: CODE_BAD_REQUEST,
           message: '이메일 또는 패스워드가 일치하지 않습니다.'
         }
       }
@@ -783,7 +783,7 @@ export class EmployeeService implements IEmployeeService {
       if (isUnique) {
         return {
           result: false,
-          code: CODE_FAIL_VALIDATION,
+          code: CODE_BAD_REQUEST,
           message: '이미 사용중인 이메일입니다.'
         }
       }
@@ -792,11 +792,10 @@ export class EmployeeService implements IEmployeeService {
       return { result: true };
 
     } catch (error) {
-      console.error(error);
       return {
         result: false,
         code: CODE_FAIL_SERVER,
-        message: MESSAGE_FAIL_SERVER
+        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
       };
     }
     
