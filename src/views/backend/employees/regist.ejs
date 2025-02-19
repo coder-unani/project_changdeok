@@ -85,7 +85,7 @@ document.getElementById('formAdminRegister').addEventListener('submit', async (e
     try {
       // 직원 등록 API 호출
       const response = await fetch('<%=apiBackendRoutes.employeesRegist.url%>', {
-        method: 'POST',
+        method: '<%=apiBackendRoutes.employeesRegist.method%>',
         headers: {
             'Content-Type': 'application/json'
         },
