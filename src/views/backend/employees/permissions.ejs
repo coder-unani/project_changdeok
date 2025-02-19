@@ -14,7 +14,7 @@
             name="permission" 
             class="w-4 h-4 text-blue-500 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" 
             value="<%=permission.id%>" 
-            <%= data.grantedByEmployee.permissions.includes(permission.id) ? 'checked' : '' %>
+            <%= data.employee.permissions.includes(permission.id) ? 'checked' : '' %>
           >
           <label for="permission<%=index%>" class="text-gray-700"><%=permission.title%></label>
         </li>
@@ -34,13 +34,11 @@
 
     const permissions = Array.from(document.querySelectorAll('input[name="permission"]:checked')).map(checkbox => checkbox.value);
 
-    const data = {
-      permissions
-    };
+    const data = { permissions };
 
     try {
       // 권한 부여 API 호출
-      const apiUrl = '<%=apiBackendRoutes.employeesPermissions.url%>'.replace(':employeeId', '<%=data.employeeId%>');
+      const apiUrl = '<%=apiBackendRoutes.employeesPermissions.url%>'.replace(':employeeId', '<%=data.employee.id%>');
       const response = await fetch(apiUrl, {
         method: '<%=apiBackendRoutes.employeesPermissions.method%>',
         headers: {

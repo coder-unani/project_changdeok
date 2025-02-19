@@ -329,8 +329,7 @@ export class BackendController {
       res.render(view, { 
         layout, 
         title, 
-        data: { 
-          employeeId,
+        data: {
           employee,
           grantedByEmployee,
           permissions: permissionsAll,
