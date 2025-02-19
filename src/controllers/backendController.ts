@@ -1,12 +1,14 @@
 import { Request, Response } from 'express';
 
 import { API_BASE_URL } from '../config/config';
-import { IEmployeeToken } from '../types/backend';
+import { IRequestContents, typeListSort } from '../types/request';
+import { IEmployeeToken } from '../types/object';
 import { backendRoutes, apiBackendRoutes } from '../routes/routes';
 import { EmployeeService } from '../services/employeeService';
-import { getApiEmployeeDetail, getApiPermissionList } from '../utils/api';
+import { getApiContents, getApiEmployeeDetail, getApiPermissionList } from '../utils/api';
 import { verifyJWT } from '../utils/jwt';
 import { getCookie } from '../utils/cookies';
+
 
 
 const employeeService = new EmployeeService();
@@ -77,28 +79,86 @@ export class BackendController {
   };
 
   // 게시판 관리
-  public contents(req: Request, res: Response): void {
+  public async contents(req: Request, res: Response): Promise<void> {
     // 라우팅 정보
     const { title, view, layout, permissions } = backendRoutes.contents;
 
     try {
       // 게시판 ID 추출
-      const contentId = req.params.contentId;
+      const groupId = parseInt(req.params.groupId);
 
       // 게시판 ID가 없는 경우
-      if (!contentId) {
+      if (!groupId) {
         throw new Error('존재하지 않는 게시판입니다.');
       }
 
       // ID가 숫자가 아닌 경우
-      if (isNaN(parseInt(contentId))) {
+      if (isNaN(groupId)) {
         throw new Error('게시판 아이디가 형식에 맞지 않습니다.');
       }
 
       // 접근 권한 체크
       this.verifyPermission(req, permissions);
 
+      const data: IRequestContents = {
+        page: req.query.page ? parseInt(req.query.page as string) : 1,
+        pageSize: req.query.pageSize ? parseInt(req.query.pageSize as string) : 10,
+        query: req.query.query ? req.query.query as string : '',
+        sort: req.query.sort ? req.query.sort as typeListSort : 'ID_DESC',
+      }
+
+      const { metadata, data: contents } = await getApiContents(groupId, data);
+
       // 게시판 관리 페이지 렌더링
+      res.render(view, { layout, title: metadata.title, data: { contents, metadata } });
+
+    } catch (error) {
+      this.renderError(res, error);
+
+    }
+  }
+
+  // 게시글 작성
+  public contentsWrite(req: Request, res: Response): void {
+    // 라우팅 정보
+    const { title, view, layout, permissions } = backendRoutes.contentsWrite;
+
+    try {
+      // 게시판 ID 추출
+      const groupId = parseInt(req.params.groupId);
+
+      // 게시판 ID가 없는 경우
+      if (!groupId) {
+        throw new Error('존재하지 않는 게시판입니다.');
+      }
+
+      // ID가 숫자가 아닌 경우
+      if (isNaN(groupId)) {
+        throw new Error('게시판 아이디가 형식에 맞지 않습니다.');
+      }
+
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+
+      // 게시글 작성 페이지 렌더링
+      res.render(view, { layout, title, data: { groupId } });
+
+    } catch (error) {
+      this.renderError(res, error);
+
+    }
+  }
+
+  // 게시글 상세 정보
+  public contentsDetail(req: Request, res: Response): void {
+    // 라우팅 정보
+    const { title, view, layout, permissions } = backendRoutes.contentsDetail;
+
+    try {
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+
+      // 게시글 상세 정보 페이지 렌더링
       res.render(view, { layout, title });
 
     } catch (error) {

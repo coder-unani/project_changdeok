@@ -44,6 +44,11 @@ router.get(backendRoutes.dashboard.url, function (req, res) {
   backendController.dashboard(req, res);
 });
 
+
+/**
+ * 화면 관리
+ */
+
 // 화면관리: 배너 관리
 router.get(backendRoutes.screensBanner.url, function (req, res) {
   backendController.screensBanner(req, res);
@@ -53,6 +58,30 @@ router.get(backendRoutes.screensBanner.url, function (req, res) {
 router.get(backendRoutes.screensPopup.url, function (req, res) {
   backendController.screensPopup(req, res);
 });
+
+
+/**
+ * 게시판 관리
+ */
+
+// 게시판: 게시물 목록
+router.get(backendRoutes.contents.url, function (req, res) {
+  backendController.contents(req, res);
+});
+
+// 게시판: 게시물 작성
+router.get(backendRoutes.contentsWrite.url, function (req, res) {
+  backendController.contentsWrite(req, res);
+});
+
+// 게시판: 게시물 상세
+router.get(backendRoutes.contentsDetail.url, function (req, res) {
+  backendController.contentsDetail(req, res);
+});
+
+/**
+ * 직원 관리
+ */
 
 // 직원: 로그인
 router.get(backendRoutes.employeesLogin.url, function (req, res) {
