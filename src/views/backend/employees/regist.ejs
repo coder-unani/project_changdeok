@@ -76,32 +76,33 @@ document.getElementById('formAdminRegister').addEventListener('submit', async (e
     // 폼 데이터 수집
     const formData = new FormData(e.target);
 
-    // JSON 변환
+    // 폼 데이터 변환
     const data = {};
     formData.forEach((value, key) => {
         data[key] = value;
     });
 
     try {
-        // POST 요청 보내기
-        const response = await fetch('<%=apiBackendRoutes.employeesRegist.url%>', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
+      // 직원 등록 API 호출
+      const response = await fetch('<%=apiBackendRoutes.employeesRegist.url%>', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
 
-        // 응답 오류
-        if (!response.ok) {
-          throw new Error(response.statusText);
-        }
+      // 응답 오류
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || response.statusText);
+      }
 
-        // 응답 성공
-        alert('<%=apiBackendRoutes.employeesRegist.title%> 성공');
+      // 응답 성공
+      alert('<%=apiBackendRoutes.employeesRegist.title%> 성공');
         
     } catch (err) {
-        alert('서버 오류가 발생했습니다.');
+      alert(error.message || '서버 오류가 발생했습니다.');
         
     }
 });

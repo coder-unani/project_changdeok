@@ -31,7 +31,6 @@
 <script>
   document.getElementById('formEmployeePermissions').addEventListener('submit', async function(event) {
     event.preventDefault();
-    console.log('submit');
 
     const permissions = Array.from(document.querySelectorAll('input[name="permission"]:checked')).map(checkbox => checkbox.value);
 
@@ -40,26 +39,27 @@
     };
 
     try {
-      // POST 요청 보내기
+      // 권한 부여 API 호출
       const apiUrl = '<%=apiBackendRoutes.employeesPermissions.url%>'.replace(':employeeId', '<%=data.employeeId%>');
       const response = await fetch(apiUrl, {
-          method: '<%=apiBackendRoutes.employeesPermissions.method%>',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(data)
+        method: '<%=apiBackendRoutes.employeesPermissions.method%>',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
       });
 
       // 응답 오류
       if (!response.ok) {
-        throw new Error(response.statusText);
+        const errorData = await response.json();
+        throw new Error(errorData.message || response.statusText);
       }
       
       // 응답 성공
       alert('<%=apiBackendRoutes.employeesPermissions.title%> 성공');
       
     } catch (err) {
-      alert('서버 오류가 발생했습니다.');
+      alert(error.message || '서버 오류가 발생했습니다.');
         
     }
   });

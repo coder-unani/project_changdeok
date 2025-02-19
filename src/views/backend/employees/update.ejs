@@ -70,34 +70,34 @@
       // 폼 데이터 수집
       const formData = new FormData(this);
 
-      // JSON 변환
+      // 폼 데이터 변환
       const data = {};
       formData.forEach((value, key) => {
           data[key] = value;
       });
 
       try {
-          // POST 요청 보내기
-          const apiUrl = '<%=apiBackendRoutes.employeesUpdate.url%>'.replace(':employeeId', '<%=data.employee.id%>');
-          const response = await fetch(apiUrl, {
-              method: '<%=apiBackendRoutes.employeesUpdate.method%>',
-              headers: {
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(data)
-          });
+        // 직원 수정 API 호출
+        const apiUrl = '<%=apiBackendRoutes.employeesUpdate.url%>'.replace(':employeeId', '<%=data.employee.id%>');
+        const response = await fetch(apiUrl, {
+          method: '<%=apiBackendRoutes.employeesUpdate.method%>',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
 
-          // 응답 오류
-          if (!response.ok) {
-            throw new Error(response.statusText);
-          }
-          
-          // 응답 성공
-          alert('<%=apiBackendRoutes.employeesUpdate.title%> 성공');
+        // 응답 오류
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || response.statusText);
+        }
+        
+        // 응답 성공
+        alert('<%=apiBackendRoutes.employeesUpdate.title%> 성공');
           
       } catch (err) {
-          console.error('Error:', err.message);
-          alert('서버 오류가 발생했습니다.');
+        alert(error.message || '서버 오류가 발생했습니다.');
           
       }
   });
