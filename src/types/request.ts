@@ -1,4 +1,10 @@
-export type typeListSort = 'ID_DESC' | 'ID_ASC' | 'NAME_DESC' | 'NAME_ASC';
+export type typeListSort = 'ID_DESC' | 'ID_ASC' | 'TITLE_DESC' | 'TITLE_ASC';
+
+export interface IRequestContentWrite {
+  title: string;
+  content: string;
+  isAnonymous?: boolean;
+}
 
 export interface IRequestEmployeeRegister {
   email: string;
@@ -43,7 +49,11 @@ export interface IRequestDefaultList {
   query?: string | undefined;
 }
 
-export interface IRequestEmployeeList extends IRequestDefaultList {
+export interface IRequestContents extends IRequestDefaultList {
+  sort?: typeListSort;
+}
+
+export interface IRequestEmployees extends IRequestDefaultList {
   sort?: typeListSort;
 }
 

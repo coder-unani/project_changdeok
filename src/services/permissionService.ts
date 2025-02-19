@@ -1,9 +1,10 @@
 import { PrismaClient } from '@prisma/client';
 
-import { CODE_FAIL_SERVER, CODE_BAD_REQUEST, MESSAGE_FAIL_SERVER } from '../config/constants';
-import { IServiceResponse } from 'types/response';
-import { IEmployee, IPermission, IPermissionService } from '../types/backend';
+import { CODE_FAIL_SERVER, MESSAGE_FAIL_SERVER } from '../config/constants';
 import { IRequestDefaultList } from '../types/request';
+import { IServiceResponse } from 'types/response';
+import { IEmployee, IPermission } from '../types/object';
+import { IPermissionService } from '../types/service';
 
 export class PermissionService implements IPermissionService {
 
@@ -113,7 +114,6 @@ export class PermissionService implements IPermissionService {
       return { result: true, data: employee };
 
     } catch (error) {
-      console.log(error);
       return {
         result: false,
         code: CODE_FAIL_SERVER,

@@ -1,0 +1,94 @@
+type typeOptionalNumber = number | null | undefined;
+type typeOptionalString = string | null | undefined;
+
+export interface IEmployee {
+  id: number;
+  email: string;
+  name: string;
+  position?: typeOptionalString;
+  description?: typeOptionalString;
+  phone?: typeOptionalString;
+  mobile?: typeOptionalString;
+  address?: typeOptionalString;
+  hireDate?: typeOptionalString;
+  birthDate?: typeOptionalString;
+  fireDate?: typeOptionalString;
+  isActivated?: boolean;
+  permissions?: number[];
+  // createdAt: string;
+  // updatedAt: string;
+}
+
+export interface IEmployeeToken {
+  id: number;
+  email: string;
+  name: string;
+  permissions: number[] | undefined | null;
+}
+
+export interface IEmployeeUpdate {
+  name?: string;
+  position?: string;
+  description?: string;
+  phone?: string;
+  mobile?: string;
+  address?: string;
+  hireDate?: Date;
+  fireDate?: Date;
+  birthDate?: Date;
+  isActivated?: boolean;
+  isDeleted?: boolean;
+}
+
+export interface IPermission {
+  id: number;
+  title: string;
+  description: string | null;
+}
+
+export interface IContentGroup {
+  id: number,
+  kind: string,
+  title: string,
+  description?: typeOptionalString,
+  bannerTopUrl?: typeOptionalString,
+  sizePerPage: number,
+  isUserWrite: boolean,
+  isUserRead: boolean,
+  isUserDisplay: boolean,
+  isNonUserWrite: boolean,
+  isNonUserRead: boolean,
+  isNonUserDisplay: boolean,
+  isAnonymous: boolean,
+  isLike: boolean,
+  isShare: boolean,
+  isComment: boolean,
+  isActivated: boolean,
+}
+
+export interface IContent {
+  id: number,
+  groupId: number,
+  title: string,
+  content?: typeOptionalString,
+  writerId?: number | null,
+  writerName?: typeOptionalString,
+  writerEmail?: typeOptionalString,
+  writerPhone?: typeOptionalString,
+  isActivated?: boolean,
+  isAnonymous?: boolean,
+  ip?: typeOptionalString,
+  userAgent?: typeOptionalString,
+}
+
+export interface IContentUpdate {
+  groupId: number,
+  title: string,
+  content?: typeOptionalString,
+  writerId?: typeOptionalNumber,
+  writerName?: typeOptionalString,
+  writerEmail?: typeOptionalString,
+  writerPhone?: typeOptionalString,
+  isActivated?: boolean,
+  isAnonymous?: boolean,
+}

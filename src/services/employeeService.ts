@@ -1,23 +1,23 @@
 import { PrismaClient } from '@prisma/client';
 
 import { CODE_BAD_REQUEST, CODE_FAIL_SERVER, CODE_UNAUTHORIZED, CODE_FORBIDDEN, MESSAGE_FAIL_SERVER } from '../config/constants';
-import { IServiceResponse } from "../types/response";
-import { IEmployee, IEmployeeService } from "../types/backend";
 import { 
   IRequestEmployeeRegister, 
   IRequestEmployeeUpdate, 
   IRequestEmployeeLogin, 
   IRequestEmployeeDelete,
-  IRequestEmployeeList,
+  IRequestEmployees,
   IRequestEmployeeUpdatePassword,
   IRequestEmployeeForceUpdatePassword
 } from "../types/request";
+import { IServiceResponse } from "../types/response";
+import { IEmployee } from "../types/object";
+import { IEmployeeService } from "../types/service";
 import { validateEmail, validatePassword, validatePhone, validateDate } from "../utils/validator";
 import { formatDate, formatDateToString, formatEmailMasking } from "../utils/formattor";
 import { hashPassword, verifyPassword } from "../utils/encryptor";
 
 export class EmployeeService implements IEmployeeService {
-
   private prisma: PrismaClient;
 
   constructor() {
@@ -563,7 +563,7 @@ export class EmployeeService implements IEmployeeService {
     }
   }
 
-  public async list(data: IRequestEmployeeList): Promise<IServiceResponse<IEmployee[]>> {
+  public async list(data: IRequestEmployees): Promise<IServiceResponse<IEmployee[] | []>> {
 
     try {
       // 페이지 번호가 없거나 1보다 작은 경우 1로 설정
@@ -590,11 +590,11 @@ export class EmployeeService implements IEmployeeService {
         orderBy = {
           id: 'asc'
         }
-      } else if (data.sort === 'NAME_DESC') {
+      } else if (data.sort === 'TITLE_DESC') {
         orderBy = {
           name: 'desc'
         }
-      } else if (data.sort === 'NAME_ASC') {
+      } else if (data.sort === 'TITLE_ASC') {
         orderBy = {
           name: 'asc'
         }
