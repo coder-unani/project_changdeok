@@ -421,7 +421,7 @@ export class BackendController {
   };
 
   // 접근 권한 확인
-  public verifyPermission(req: Request, allowedPermissions: number[] = [], allowedEmployeeId: number | undefined | null = null): void {
+  public verifyPermission(req: Request, accessPermissions: number[] = [], accessEmployeeId: number | undefined | null = null): void {
     try {
       // Cookie에서 직원 정보 추출
       const cookieEmployee = getCookie(req, 'employee');
@@ -430,37 +430,29 @@ export class BackendController {
       }
 
       // Cookie 직원 정보 파싱
-      const employee: IEmployeeToken = JSON.parse(cookieEmployee);
+      const loggedInEmployee: IEmployeeToken = JSON.parse(cookieEmployee);
 
       // 권한 확인용 변수
       let hasPermission = false;
 
       // 권한이 필요없는 페이지이면 접근 가능
-      console.log("권한이 필요한지 체크합니다.");
-      if (allowedPermissions.length === 0 && !allowedEmployeeId) {
+      if (accessPermissions.length === 0 && !accessEmployeeId) {
         hasPermission = true;
       }
-      console.log("hasPermission = ", hasPermission);
 
       // 특정 직원 ID가 허용되어 있으면 해당 직원은 접근 가능
-      console.log("특정 아이디만 접근이 가능한지 체크합니다.");
-      if (allowedEmployeeId && employee.id === allowedEmployeeId) {
+      if (accessEmployeeId && loggedInEmployee.id === accessEmployeeId) {
         hasPermission = true;
       }
-      console.log("hasPermission = ", hasPermission, "employee.id = ", employee.id, "allowedEmployeeId = ", allowedEmployeeId);
       
       // 특정 권한이 허용되어 있으면 해당 직원은 접근 가능
-      console.log("특정 권한만 접근이 가능한지 체크합니다.");
       if (
-        allowedPermissions 
-        && (
-          employee.permissions
-          && employee.permissions.some(permission => allowedPermissions.includes(permission))
-        )
-      ) {
+        accessPermissions && (
+          loggedInEmployee.permissions
+          && loggedInEmployee.permissions.some(permission => accessPermissions.includes(permission))
+        )) {
         hasPermission = true;
       }
-      console.log("hasPermission = ", hasPermission, "employee.permissions = ", employee.permissions, "allowedPermissions = ", allowedPermissions);
 
       // 권한이 없으면 에러 페이지로 이동
       if (!hasPermission) {

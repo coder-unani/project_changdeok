@@ -20,18 +20,13 @@ router.post(apiBackendRoutes.employeesRegist.url, (req: Request, res: Response) 
   apiBackendController.employeesRegist(req, res);
 });
 
-// 직원 상세 정보
-router.get(apiBackendRoutes.employeesDetail.url, (req: Request, res: Response) => {
-  apiBackendController.employeesDetail(req, res);
-});
-
 // 직원 정보 수정
 router.put(apiBackendRoutes.employeesUpdate.url, (req: Request, res: Response) => {
   apiBackendController.employeesUpdate(req, res);
 });
 
 // 직원 비밀번호 수정
-router.patch(apiBackendRoutes.employeesUpdate.url, (req: Request, res: Response) => {
+router.patch(apiBackendRoutes.employeesUpdatePassword.url, (req: Request, res: Response) => {
   apiBackendController.employeesUpdatePassword(req, res);
 });
 
@@ -57,6 +52,11 @@ router.post(apiBackendRoutes.employeesLogin.url, (req: Request, res: Response) =
 // 직원 로그아웃
 router.post(apiBackendRoutes.employeesLogout.url, (req: Request, res: Response) => {
   apiBackendController.employeesLogout(req, res);
+});
+
+// 직원 상세 정보
+router.get(apiBackendRoutes.employeesDetail.url, (req: Request, res: Response) => {
+  apiBackendController.employeesDetail(req, res);
 });
 
 // 권한 목록
