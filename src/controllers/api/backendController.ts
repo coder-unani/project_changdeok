@@ -1,26 +1,105 @@
 import { Request, Response } from 'express';
 
 import { CODE_FAIL_SERVER, CODE_BAD_REQUEST, CODE_UNAUTHORIZED, CODE_FORBIDDEN, MESSAGE_FAIL_SERVER } from '../../config/constants';
-import { IEmployeeService, IEmployeeToken, IPermissionService } from '../../types/backend';
 import { 
   typeListSort, 
+  IRequestContentWrite,
   IRequestEmployeeRegister, 
   IRequestEmployeeUpdate,
   IRequestEmployeeUpdatePassword,
   IRequestEmployeeForceUpdatePassword,
   IRequestEmployeeDelete,
   IRequestEmployeeLogin, 
-  IRequestEmployeeList, 
-  IRequestDefaultList
+  IRequestEmployees, 
+  IRequestDefaultList,
+  IRequestContents
 } from '../../types/request';
+import { IEmployeeToken } from '../../types/object';
+import { IContentService, IEmployeeService, IPermissionService } from '../../types/service';
 import { apiBackendRoutes } from '../../routes/routes';
 import { EmployeeService } from '../../services/employeeService';
 import { PermissionService } from '../../services/permissionService';
+import { ContentService } from '../../services/contentService';
 import { formatApiResponse } from '../../utils/formattor';
 import { createJWT, verifyJWT } from '../../utils/jwt';
 import { getCookie, setCookie, removeCookie } from '../../utils/cookies';
 
+
 export class ApiBackendController {
+  // 컨텐츠 목록
+  public async contents(req: Request, res: Response): Promise<void> {
+    try {
+      // 컨텐츠 그룹 ID 추출
+      const groupId = parseInt(req.params.groupId);
+
+      // ID가 숫자가 아닌 경우 에러 처리
+      if (isNaN(groupId)) {
+        res.status(CODE_BAD_REQUEST).json({ message: '잘못된 요청입니다.' });
+        return;
+      }
+
+      // 요청 데이터
+      const requestData: IRequestContents = {
+        page: parseInt(req.query.page as string) || 1,
+        pageSize: parseInt(req.query.pageSize as string) || 10,
+        query: req.query.query as string || '',
+        sort: req.query.sort as typeListSort || 'ID_DESC',
+      }
+
+      // 컨텐츠 목록 조회
+      const contentService: IContentService = new ContentService();
+      const result = await contentService.list(groupId, requestData);
+
+      // 조회 실패 처리
+      if (!result.result) {
+        res.status(result.code || CODE_FAIL_SERVER).json({ message: result.message || MESSAGE_FAIL_SERVER });
+        return;
+      }
+
+      // 조회 성공시 200 응답
+      const response = formatApiResponse(true, null, null, result.metadata, result.data);
+      res.status(200).json(response);
+
+    } catch (error) {
+      res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
+
+    }
+  }
+
+  // 컨텐츠 등록
+  public async contentsWrite(req: Request, res: Response): Promise<void> {
+    try {
+      // 컨텐츠 그룹 ID 추출
+      const groupId = parseInt(req.params.groupId);
+
+      // ID가 숫자가 아닌 경우 에러 처리
+      if (isNaN(groupId)) {
+        res.status(CODE_BAD_REQUEST).json({ message: '잘못된 요청입니다.' });
+        return;
+      }
+
+      // 요청 데이터
+      const requestData: IRequestContentWrite = req.body;
+
+      // 컨텐츠 등록 처리
+      const contentService: IContentService = new ContentService();
+      const result = await contentService.create(groupId, requestData);
+
+      // 등록 실패 처리
+      if (!result.result) {
+        res.status(result.code || CODE_FAIL_SERVER).json({ message: result.message || MESSAGE_FAIL_SERVER });
+        return;
+      }
+
+      // 등록 성공시 201 응답
+      res.status(201).send(null);
+
+    } catch (error) {
+      res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
+
+    }
+  }
+
   // 직원 등록
   public async employeesRegist(req: Request, res: Response): Promise<void> {
     try {
@@ -312,7 +391,7 @@ export class ApiBackendController {
   public async employees(req: Request, res: Response): Promise<void> {
     try {
       // 요청 데이터
-      const requestData: IRequestEmployeeList = {
+      const requestData: IRequestEmployees = {
         page: parseInt(req.query.page as string) || 1,
         pageSize: parseInt(req.query.pageSize as string) || 10,
         sort: req.params.sort as typeListSort,

@@ -3,6 +3,18 @@ import { permission } from "process";
 export const apiBackendBaseUrl = 'http://localhost:3000';
 export const apiBackendRoutesPrefix = '/api/backend';
 export const apiBackendRoutes = {
+  contents: {
+    method: 'GET',
+    title: '게시판 관리',
+    url: `${apiBackendRoutesPrefix}/contents/:groupId`,
+    permissions: [1, 4]
+  },
+  contentsWrite: {
+    method: 'POST',
+    title: '게시글 작성',
+    url: `${apiBackendRoutesPrefix}/contents/:groupId/write`,
+    permissions: [1, 4]
+  },
   employeesRegist: {
     method: 'POST',
     title: '관리자 등록',
@@ -104,8 +116,32 @@ export const backendRoutes = {
   contents: {
     method: 'GET',
     title: '게시판 관리',
-    url: `${backendRoutesPrefix}/contents/:contentId`,
+    url: `${backendRoutesPrefix}/contents/:groupId`,
     view: 'backend/contents/list',
+    layout: backendRoutesLayout,
+    permissions: [1, 4]
+  },
+  contentsWrite: {
+    method: 'GET',
+    title: '게시글 작성',
+    url: `${backendRoutesPrefix}/contents/:groupId/write`,
+    view: 'backend/contents/write',
+    layout: backendRoutesLayout,
+    permissions: [1, 4]
+  },
+  contentsDetail: {
+    method: 'GET',
+    title: '게시글 상세',
+    url: `${backendRoutesPrefix}/contents/:groupId/:contentId`,
+    view: 'backend/contents/detail',
+    layout: backendRoutesLayout,
+    permissions: [1, 4]
+  },
+  contentsUpdate: {
+    method: 'GET',
+    title: '게시글 수정',
+    url: `${backendRoutesPrefix}/contents/:groupId/:contentId/update`,
+    view: 'backend/contents/update',
     layout: backendRoutesLayout,
     permissions: [1, 4]
   },

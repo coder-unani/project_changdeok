@@ -15,6 +15,16 @@ router.use((req, res, next) => corsMiddleware.handle(req, res, next));
 // 컨트롤러
 const apiBackendController = new ApiBackendController();
 
+// 컨텐츠 목록
+router.get(apiBackendRoutes.contents.url, (req: Request, res: Response) => {
+  apiBackendController.contents(req, res);
+});
+
+// 컨텐츠 등록
+router.post(apiBackendRoutes.contentsWrite.url, (req: Request, res: Response) => {
+  apiBackendController.contentsWrite(req, res);
+});
+
 // 직원 등록
 router.post(apiBackendRoutes.employeesRegist.url, (req: Request, res: Response) => {
   apiBackendController.employeesRegist(req, res);
