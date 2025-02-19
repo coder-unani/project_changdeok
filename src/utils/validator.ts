@@ -112,3 +112,20 @@ export const validateDateTime = (dateTime: string): typeValidatedResult => {
     message: ''
   }
 }
+
+// 문자열 길이 체크 함수
+export const validateStringLength = (value: string, min: number, max: number): typeValidatedResult => {
+  // 문자열 길이 체크
+  if (value.length < min || value.length > max) {
+    return {
+      result: false,
+      message: `${min}자 이상 ${max}자 이하로 입력해주세요.`
+    }
+  }
+
+  // 모든 체크 통과
+  return {
+    result: true,
+    message: ''
+  }
+}
