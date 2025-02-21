@@ -42,8 +42,8 @@ export class ContentService implements IContentService {
           groupId: groupId,
           title: data.title,
           content: data.content,
-          ip: '1111',
-          userAgent: '2222',
+          ip: data.ip || '',
+          userAgent: data.userAgent || '',
         }
       });
 

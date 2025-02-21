@@ -4,6 +4,8 @@ export interface IRequestContentWrite {
   title: string;
   content: string;
   isAnonymous?: boolean;
+  ip?: string;
+  userAgent?: string;
 }
 
 export interface IRequestEmployeeRegister {

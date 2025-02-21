@@ -81,6 +81,15 @@ export class ApiBackendController {
       // 요청 데이터
       const requestData: IRequestContentWrite = req.body;
 
+      // IP 주소 얻기
+      // requestData.ip = req.headers['x-forwarded-for'] || req.ip || req.socket.remoteAddress;
+      requestData.ip = req.ip || req.socket.remoteAddress;
+      // User-Agent 얻기
+      requestData.userAgent = req.get('user-agent') || '';
+
+      // User-Agent 얻기
+      const userAgent = req.get('user-agent') || '';
+
       // 컨텐츠 등록 처리
       const contentService: IContentService = new ContentService();
       const result = await contentService.create(groupId, requestData);
