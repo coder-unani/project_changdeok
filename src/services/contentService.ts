@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { CODE_BAD_REQUEST, CODE_FAIL_SERVER, MESSAGE_FAIL_SERVER } from "../config/constants";
 import { IContentGroup, IContent } from "../types/object";
 import { IContentService } from '../types/service';
-import { IRequestContents, IRequestContentWrite } from "../types/request";
+import { IRequestContents, IRequestContentWrite, IRequestContentUpdate } from "../types/request";
 import { IServiceResponse } from "../types/response";
 import { validateStringLength } from "../utils/validator";
 
@@ -59,15 +59,135 @@ export class ContentService implements IContentService {
   }
 
   async read(contentId: number): Promise<IServiceResponse<IContent>> {
-    console.log('read content');
+    try {
+      const prismaContent = await this.prisma.content.findUnique({
+        where: {
+          id: contentId,
+          isDeleted: false
+        }
+      });
 
-    return {
-      result: true,
+      if (!prismaContent) {
+        return {
+          result: false,
+          code: CODE_BAD_REQUEST,
+          message: '컨텐츠가 존재하지 않습니다.'
+        }
+      }
+
+      if (!prismaContent.isActivated) {
+        return {
+          result: false,
+          code: CODE_BAD_REQUEST,
+          message: '비활성화된 컨텐츠입니다.'
+        }
+      }
+
+      const groupInfo = await this.prisma.contentGroup.findUnique({
+        where: {
+          id: prismaContent.groupId,
+          isDeleted: false,
+          isActivated: true,
+        }
+      });
+
+      if (!groupInfo) {
+        return {
+          result: false,
+          code: CODE_BAD_REQUEST,
+          message: '컨텐츠 그룹이 존재하지 않습니다.'
+        }
+      }
+
+      const content: IContent = {
+        id: prismaContent.id,
+        groupId: prismaContent.groupId,
+        title: prismaContent.title,
+        content: prismaContent.content ?? null,
+        writerId: prismaContent.writerId ?? null,
+        writerName: prismaContent.writerName ?? null,
+        writerEmail: prismaContent.writerEmail ?? null,
+        writerPhone: prismaContent.writerPhone ?? null,
+        isActivated: prismaContent.isActivated,
+        isAnonymous: prismaContent.isAnonymous,
+        ip: prismaContent.ip ?? null,
+        userAgent: prismaContent.userAgent ?? null,
+      }
+
+      return {
+        result: true,
+        metadata: {
+          groupId: groupInfo.id,
+          kind: groupInfo.kind,
+          title: groupInfo.title,
+          description: groupInfo.description ?? null,
+          bannerTopUrl: groupInfo.bannerTopUrl ?? null,
+        },
+        data: content
+      }
+
+    } catch (error) {
+      return {
+        result: false,
+        code: CODE_FAIL_SERVER,
+        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
+      }
+
     }
   }
 
-  async update(data: IContent): Promise<void> {
-    console.log('modify content');
+  async update(contentId: number, data: IRequestContentUpdate): Promise<IServiceResponse> {
+    try {
+      const updateData: Partial<IRequestContentUpdate> = {};
+
+      if (data.title !== undefined) updateData.title = data.title;
+      if (data.content !== undefined) updateData.content = data.content;
+      if (data.isAnonymous !== undefined) updateData.isAnonymous = data.isAnonymous;
+      if (data.isActivated !== undefined) updateData.isActivated = data.isActivated;
+
+      // 제목 길이 검증
+      if (updateData.title) {
+        const validateTitle = validateStringLength(updateData.title, 1, 50);
+        if (!validateTitle.result) {
+          return {
+            result: false,
+            code: CODE_BAD_REQUEST,
+            message: validateTitle.message
+          }
+        }
+      }
+
+      // 내용 길이 검증
+      if (updateData.content) {
+        const validateContent = validateStringLength(updateData.content, 1, 1000);
+        if (!validateContent.result) {
+          return {
+            result: false,
+            code: CODE_BAD_REQUEST,
+            message: validateContent.message
+          }
+        }
+      }
+
+      // 컨텐츠 업데이트
+      await this.prisma.content.update({
+        where: {
+          id: contentId
+        },
+        data: updateData
+      });
+
+      // 성공
+      return { result: true };
+
+    } catch (error) {
+      return {
+        result: false,
+        code: CODE_FAIL_SERVER,
+        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
+      }
+
+    }
   }
 
   async delete(contentId: number): Promise<void> {

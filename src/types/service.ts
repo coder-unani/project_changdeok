@@ -2,6 +2,7 @@ import { IContentGroup, IContent, IContentUpdate, IEmployee, IPermission } from 
 import { 
   IRequestDefaultList,
   IRequestContentWrite,
+  IRequestContentUpdate,
   IRequestContents,
   IRequestEmployeeRegister, 
   IRequestEmployeeUpdate, 
@@ -16,7 +17,7 @@ import { IServiceResponse } from './response';
 export interface IContentService {
   create(groupId: number, data: IRequestContentWrite): Promise<IServiceResponse>
   read(contentId: number): Promise<IServiceResponse<IContent>>;
-  update(data: IContentUpdate): void;
+  update(contentId: number, data: IRequestContentUpdate): Promise<IServiceResponse>;
   delete(contentId: number): void;
   list(groupId: number, data: IRequestContents): Promise<IServiceResponse<IContent[] | []>>
   groupInfo(groupId: number): Promise<IServiceResponse<IContentGroup>>;
