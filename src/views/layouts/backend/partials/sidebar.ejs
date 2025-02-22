@@ -1,9 +1,9 @@
 <!-- 사이드바 PC -->
-<div id="sidebar-pc" class="hidden lg:flex lg:flex-col justify-between w-80 p-4 rounded-2xl shadow-lg z-0 mr-4 text-sm bg-white dark:bg-gray-700">
+<div id="sidebar-pc" class="hidden lg:flex lg:flex-col justify-between w-[260px] p-4 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)] z-0 mr-6 text-sm bg-white dark:bg-gray-700">
   <div>
     <!-- 로고 -->
     <a href="<%=routes.index.url%>">
-      <div class="flex gap-1.5 items-center justify-center pt-6">
+      <div class="flex gap-1.5 items-center justify-center pt-2">
         <span class="text-slate-700">
           <img src="<%=company.logo%>" alt="<%=company.name%>" class="w-6 h-6">
         </span>
@@ -11,90 +11,91 @@
       </div>
     </a>
     <!-- 메뉴 -->
-    <nav class="mt-8">
-      <div class="mb-4">
-        <ul class="flex flex-col mt-2 gap-2 text-slate-500 dark:text-slate-100">
-          <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600 <%if (routes.dashboard.title === title) {%>orb-hightlight<% }%>">
+    <nav class="mt-6">
+      <div class="mb-2 border-t border-slate-100">
+        <p class="text-xs font-normal text-slate-400 py-2 mt-2"><%=company.name%></p>
+        <ul class="flex flex-col gap-2 text-slate-500 dark:text-slate-100">
+          <li class="font-thin rounded-lg transition-all dark:hover:text-white hover:bg-slate-100 dark:hover:bg-gray-600 <%if (routes.dashboard.title === title) {%>orb-hightlight<% }%>">
             <a class="flex items-center justify-start p-2" href="<%=routes.dashboard.url%>">
               <span class="text-left">
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
                     <path fill="currentColor" d="M1024 1131q0-64-9-117.5t-29.5-103-60.5-78-97-28.5q-6 4-30 18t-37.5 21.5-35.5 17.5-43 14.5-42 4.5-42-4.5-43-14.5-35.5-17.5-37.5-21.5-30-18q-57 0-97 28.5t-60.5 78-29.5 103-9 117.5 37 106.5 91 42.5h512q54 0 91-42.5t37-106.5zm-157-520q0-94-66.5-160.5t-160.5-66.5-160.5 66.5-66.5 160.5 66.5 160.5 160.5 66.5 160.5-66.5 66.5-160.5zm925 509v-64q0-14-9-23t-23-9h-576q-14 0-23 9t-9 23v64q0 14 9 23t23 9h576q14 0 23-9t9-23zm0-260v-56q0-15-10.5-25.5t-25.5-10.5h-568q-15 0-25.5 10.5t-10.5 25.5v56q0 15 10.5 25.5t25.5 10.5h568q15 0 25.5-10.5t10.5-25.5zm0-252v-64q0-14-9-23t-23-9h-576q-14 0-23 9t-9 23v64q0 14 9 23t23 9h576q14 0 23-9t9-23zm256-320v1216q0 66-47 113t-113 47h-352v-96q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v96h-768v-96q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v96h-352q-66 0-113-47t-47-113v-1216q0-66 47-113t113-47h1728q66 0 113 47t47 113z">
                     </path>
                 </svg>
               </span>
-              <span class="mx-4 font-normal"><%=routes.dashboard.title%></span>
+              <span class="mx-3 font-normal"><%=routes.dashboard.title%></span>
             </a>
           </li>
         </ul>
       </div>
       <!-- 화면 관리 -->
-      <div class="mb-4">
-        <p class="font-normal text-slate-300 py-2 border-b border-slate-100">화면 관리</p>
-        <ul class="flex flex-col mt-2 gap-2 text-slate-500 dark:text-slate-100">
-          <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600">
+      <div class="mb-2 border-t border-slate-100">
+        <p class="text-xs font-normal text-slate-400 py-2 mt-2">화면 관리</p>
+        <ul class="flex flex-col gap-2 text-slate-500 dark:text-slate-100">
+          <li class="font-thin rounded-lg transition-all dark:hover:text-white hover:bg-slate-100 dark:hover:bg-gray-600">
             <a class="flex items-center justify-start p-2" href="<%=routes.screensBanner.url%>">
               <span class="text-left">
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
                     <path fill="currentColor" d="M1070 1178l306-564h-654l-306 564h654zm722-282q0 182-71 348t-191 286-286 191-348 71-348-71-286-191-191-286-71-348 71-348 191-286 286-191 348-71 348 71 286 191 191 286 71 348z">
                     </path>
                 </svg>
               </span>
-              <span class="mx-4 font-normal"><%=routes.screensBanner.title%></span>
+              <span class="mx-3 font-normal"><%=routes.screensBanner.title%></span>
             </a>
           </li>
-          <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600">
+          <li class="font-thin rounded-lg transition-all dark:hover:text-white hover:bg-slate-100 dark:hover:bg-gray-600">
             <a class="flex items-center justify-start p-2" href="<%=routes.screensPopup.url%>">
               <span class="text-left">
-                <svg width="20" height="20" fill="currentColor" class="m-auto" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
+                <svg width="16" height="16" fill="currentColor" class="m-auto" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
                     <path fill="currentColor" d="M960 0l960 384v128h-128q0 26-20.5 45t-48.5 19h-1526q-28 0-48.5-19t-20.5-45h-128v-128zm-704 640h256v768h128v-768h256v768h128v-768h256v768h128v-768h256v768h59q28 0 48.5 19t20.5 45v64h-1664v-64q0-26 20.5-45t48.5-19h59v-768zm1595 960q28 0 48.5 19t20.5 45v128h-1920v-128q0-26 20.5-45t48.5-19h1782z">
                     </path>
                 </svg>
               </span>
-              <span class="mx-4 font-normal"><%=routes.screensPopup.title%></span>
+              <span class="mx-3 font-normal"><%=routes.screensPopup.title%></span>
             </a>
           </li>
         </ul>
       </div>
       <!-- 게시판 관리 -->
-      <div class="mb-4">
-        <p class="font-normal text-slate-300 py-2 border-b border-slate-100">게시판 관리</p>
-        <ul class="flex flex-col mt-2 gap-2 text-slate-500 dark:text-slate-100">
-          <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600">
+      <div class="mb-2 border-t border-slate-100">
+        <p class="text-xs font-normal text-slate-400 py-2 mt-2">게시판 관리</p>
+        <ul class="flex flex-col gap-2 text-slate-500 dark:text-slate-100">
+          <li class="font-thin rounded-lg transition-all dark:hover:text-white hover:bg-slate-100 dark:hover:bg-gray-600">
             <a class="flex items-center justify-start p-2" href="/admin/contents/1">
               <span class="text-left">
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
                     <path fill="currentColor" d="M1070 1178l306-564h-654l-306 564h654zm722-282q0 182-71 348t-191 286-286 191-348 71-348-71-286-191-191-286-71-348 71-348 191-286 286-191 348-71 348 71 286 191 191 286 71 348z">
                     </path>
                 </svg>
               </span>
-              <span class="mx-4 font-normal">공지사항</span>
+              <span class="mx-3 font-normal">공지사항</span>
             </a>
           </li>
-          <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600">
+          <li class="font-thin rounded-lg transition-all dark:hover:text-white hover:bg-slate-100 dark:hover:bg-gray-600">
             <a class="flex items-center justify-start p-2" href="/admin/contents/2">
               <span class="text-left">
-                <svg width="20" height="20" fill="currentColor" class="m-auto" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
+                <svg width="16" height="16" fill="currentColor" class="m-auto" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
                     <path fill="currentColor" d="M1024 1131q0-64-9-117.5t-29.5-103-60.5-78-97-28.5q-6 4-30 18t-37.5 21.5-35.5 17.5-43 14.5-42 4.5-42-4.5-43-14.5-35.5-17.5-37.5-21.5-30-18q-57 0-97 28.5t-60.5 78-29.5 103-9 117.5 37 106.5 91 42.5h512q54 0 91-42.5t37-106.5zm-157-520q0-94-66.5-160.5t-160.5-66.5-160.5 66.5-66.5 160.5 66.5 160.5 160.5 66.5 160.5-66.5 66.5-160.5zm925 509v-64q0-14-9-23t-23-9h-576q-14 0-23 9t-9 23v64q0 14 9 23t23 9h576q14 0 23-9t9-23zm0-260v-56q0-15-10.5-25.5t-25.5-10.5h-568q-15 0-25.5 10.5t-10.5 25.5v56q0 15 10.5 25.5t25.5 10.5h568q15 0 25.5-10.5t10.5-25.5zm0-252v-64q0-14-9-23t-23-9h-576q-14 0-23 9t-9 23v64q0 14 9 23t23 9h576q14 0 23-9t9-23zm256-320v1216q0 66-47 113t-113 47h-352v-96q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v96h-768v-96q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v96h-352q-66 0-113-47t-47-113v-1216q0-66 47-113t113-47h1728q66 0 113 47t47 113z">
                     </path>
                 </svg>
               </span>
-              <span class="mx-4 font-normal">문의</span>
+              <span class="mx-3 font-normal">문의</span>
             </a>
           </li>
       </div>
       <!-- 사이트 관리 -->
-      <div class="mb-4">
-        <p class="font-normal text-slate-300 py-2 border-b border-slate-100">사이트 관리</p>
-        <ul class="flex flex-col mt-2 gap-2 text-slate-500 dark:text-slate-100">
-          <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600 <%if (routes.employees.title === title) {%>orb-hightlight<% }%>">
+      <div class="mb-2 border-t border-slate-100">
+        <p class="text-xs font-normal text-slate-400 py-2 mt-2">사이트 관리</p>
+        <ul class="flex flex-col gap-2 text-slate-500 dark:text-slate-100">
+          <li class="font-thin rounded-lg transition-all dark:hover:text-white hover:bg-slate-100 dark:hover:bg-gray-600 <%if (routes.employees.title === title) {%>orb-hightlight<% }%>">
             <a class="flex items-center justify-start p-2" href="<%=routes.employees.url%>">
               <span class="text-left">
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
                     <path fill="currentColor" d="M1070 1178l306-564h-654l-306 564h654zm722-282q0 182-71 348t-191 286-286 191-348 71-348-71-286-191-191-286-71-348 71-348 191-286 286-191 348-71 348 71 286 191 191 286 71 348z">
                     </path>
                 </svg>
               </span>
-              <span class="mx-4 font-normal"><%=routes.employees.title%></span>
+              <span class="mx-3 font-normal"><%=routes.employees.title%></span>
             </a>
           </li>
         </ul>
@@ -102,17 +103,17 @@
     </nav>
   </div>
   <!-- 로그아웃 -->
-  <div>
-    <ul class="flex flex-col mt-2 gap-2 text-red-500 dark:text-red-500">
-      <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-red-300 dark:hover:bg-red-300">
-        <button id="logout" class="flex items-center justify-start p-2">
+  <div class="border-t border-slate-100">
+    <ul class="flex flex-col gap-2 text-slate-500 dark:text-red-500">
+      <li class="flex mt-2 font-thin rounded-lg transition-all dark:hover:text-white hover:bg-slate-100 dark:hover:bg-red-600">
+        <button id="logout" class="flex flex-1 items-center justify-start p-2 cursor-pointer">
           <span class="text-left">
-            <svg width="1.5em" height="1.5em" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor" class="h-[18px] w-[18px]">
+            <svg width="1.5em" height="1.5em" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor" class="h-[16px] w-[16px]">
               <path d="M12 12H19M19 12L16 15M19 12L16 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
               <path d="M19 6V5C19 3.89543 18.1046 3 17 3H7C5.89543 3 5 3.89543 5 5V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
             </svg>
           </span>
-          <span class="mx-4 font-normal">관리자 로그아웃</span>
+          <span class="mx-3 font-normal">관리자 로그아웃</span>
         </button>    
       </li>
     </ul>
