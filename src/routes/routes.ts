@@ -15,6 +15,12 @@ export const apiBackendRoutes = {
     url: `${apiBackendRoutesPrefix}/contents/:groupId/write`,
     permissions: [1, 4]
   },
+  contentsDetail: {
+    method: 'GET',
+    title: '게시글 상세',
+    url: `${apiBackendRoutesPrefix}/contents/:groupId/:contentId`,
+    permissions: [1, 4]
+  },
   employeesRegist: {
     method: 'POST',
     title: '관리자 등록',

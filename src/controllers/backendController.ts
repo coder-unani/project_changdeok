@@ -1,15 +1,14 @@
 import { Request, Response } from 'express';
 
+import { prisma } from '../config/database';
 import { API_BASE_URL } from '../config/config';
 import { IRequestContents, typeListSort } from '../types/request';
 import { IEmployeeToken } from '../types/object';
 import { backendRoutes, apiBackendRoutes } from '../routes/routes';
 import { EmployeeService } from '../services/employeeService';
-import { getApiContents, getApiEmployeeDetail, getApiPermissionList } from '../utils/api';
+import { getApiContents, getApicontentsDetail, getApiEmployeeDetail, getApiPermissionList } from '../utils/api';
 import { verifyJWT } from '../utils/jwt';
 import { getCookie } from '../utils/cookies';
-
-const employeeService = new EmployeeService();
 
 // TODO: 권한을 체크해서 다른 계정도 수정하게 할 것인지 확인 필요
 export class BackendController {
@@ -138,7 +137,7 @@ export class BackendController {
   }
 
   // 게시글 상세 정보
-  public contentsDetail(req: Request, res: Response): void {
+  public async contentsDetail(req: Request, res: Response): Promise<void> {
     // 라우팅 정보
     const { title, view, layout, permissions } = backendRoutes.contentsDetail;
 
@@ -146,8 +145,27 @@ export class BackendController {
       // 접근 권한 체크
       this.verifyPermission(req, permissions);
 
+      // 게시판 ID와 게시글 ID 추출
+      const groupId = parseInt(req.params.groupId);
+      const contentId = parseInt(req.params.contentId);
+
+      // 컨텐츠 그룹 ID가 없는 경우
+      if (!groupId) {
+        throw new Error("존재하지 않는 게시판입니다.");
+      }
+
+      // 컨텐츠 ID가 없는 경우
+      if (!contentId) {
+        throw new Error("존재하지 않는 게시글입니다.");
+      }
+
+      // API 호출
+      const { metadata, data: content } = await getApicontentsDetail(parseInt(req.params.groupId), parseInt(req.params.contentId));
+      console.log(content);
+
       // 게시글 상세 정보 페이지 렌더링
-      res.render(view, { layout, title });
+      res.render(view, { layout, title, data: { content, metadata } });
+
     } catch (error) {
       this.renderError(res, error);
     }
@@ -297,6 +315,7 @@ export class BackendController {
       this.verifyPermission(req, permissions, employeeId);
 
       // 직원 정보 조회
+      const employeeService = new EmployeeService(prisma);
       const employee = await employeeService.read(employeeId);
 
       // 직원 정보가 없는 경우 에러 페이지로 이동

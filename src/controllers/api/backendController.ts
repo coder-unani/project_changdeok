@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 
 import { CODE_FAIL_SERVER, CODE_BAD_REQUEST, CODE_UNAUTHORIZED, CODE_FORBIDDEN, MESSAGE_FAIL_SERVER } from '../../config/constants';
+import { prisma } from '../../config/database';
 import { 
   typeListSort, 
   IRequestContentWrite,
@@ -47,7 +48,7 @@ export class ApiBackendController {
       }
 
       // 컨텐츠 목록 조회
-      const contentService: IContentService = new ContentService();
+      const contentService: IContentService = new ContentService(prisma);
       const result = await contentService.list(groupId, requestData);
 
       // 조회 실패 처리
@@ -91,7 +92,7 @@ export class ApiBackendController {
       const userAgent = req.get('user-agent') || '';
 
       // 컨텐츠 등록 처리
-      const contentService: IContentService = new ContentService();
+      const contentService: IContentService = new ContentService(prisma);
       const result = await contentService.create(groupId, requestData);
 
       // 등록 실패 처리
@@ -109,6 +110,40 @@ export class ApiBackendController {
     }
   }
 
+  // 컨텐츠 상세 정보
+  public async contentsDetail(req: Request, res: Response): Promise<void> {
+    try {
+      // 컨텐츠 그룹 ID 추출
+      const groupId = parseInt(req.params.groupId);
+
+      // 컨텐츠 ID 추출
+      const contentId = parseInt(req.params.contentId);
+
+      // ID가 숫자가 아닌 경우 에러 처리
+      if (isNaN(groupId) || isNaN(contentId)) {
+        res.status(CODE_BAD_REQUEST).json({ message: '잘못된 요청입니다.' });
+        return;
+      }
+
+      // 컨텐츠 상세 조회
+      const contentService: IContentService = new ContentService(prisma);
+      const result = await contentService.read(contentId);
+
+      // 조회 실패 처리
+      if (!result.result) {
+        res.status(result.code || CODE_FAIL_SERVER).json({ message: result.message || MESSAGE_FAIL_SERVER });
+        return;
+      }
+
+      // 조회 성공시 200 응답
+      const response = formatApiResponse(true, null, null, result.metadata, result.data);
+      res.status(200).json(response);
+
+    } catch (error) {
+      res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
+    }
+  }
+
   // 직원 등록
   public async employeesRegist(req: Request, res: Response): Promise<void> {
     try {
@@ -116,7 +151,7 @@ export class ApiBackendController {
       const requestData: IRequestEmployeeRegister = req.body;
       
       // 직원 등록 처리
-      const employeeService: IEmployeeService = new EmployeeService();
+      const employeeService: IEmployeeService = new EmployeeService(prisma);
       const result = await employeeService.create(requestData);
 
       // 등록 실패 처리
@@ -148,7 +183,7 @@ export class ApiBackendController {
       }
 
       // 직원 상세 조회
-      const employeeService: IEmployeeService = new EmployeeService();
+      const employeeService: IEmployeeService = new EmployeeService(prisma);
       const result = await employeeService.read(employeeId);
 
       // 조회 실패 처리
@@ -183,7 +218,7 @@ export class ApiBackendController {
       const requestData: IRequestEmployeeUpdate = req.body;
 
       // 직원 정보 수정 처리
-      const employeeService: IEmployeeService = new EmployeeService();
+      const employeeService: IEmployeeService = new EmployeeService(prisma);
       const updatedEmployee = await employeeService.update(employeeId, requestData);
 
       // 수정 실패 처리
@@ -269,7 +304,7 @@ export class ApiBackendController {
       }
 
       // 직원 비밀번호 변경 처리
-      const employeeService: IEmployeeService = new EmployeeService();
+      const employeeService: IEmployeeService = new EmployeeService(prisma);
 
       let result = null;
 
@@ -314,7 +349,7 @@ export class ApiBackendController {
       const requestData: IRequestEmployeeDelete = req.body;
 
       // 직원 삭제 처리
-      const employeeService: IEmployeeService = new EmployeeService();
+      const employeeService: IEmployeeService = new EmployeeService(prisma);
       const result = await employeeService.delete(employeeId, requestData);
 
       // 삭제 처리 실패
@@ -408,7 +443,7 @@ export class ApiBackendController {
       }
 
       // 직원 목록 조회
-      const employeeService: IEmployeeService = new EmployeeService();
+      const employeeService: IEmployeeService = new EmployeeService(prisma);
       const result = await employeeService.list(requestData);
 
       // 조회 실패 처리
@@ -434,7 +469,7 @@ export class ApiBackendController {
       const requestData: IRequestEmployeeLogin = req.body;
 
       // 직원 로그인 처리
-      const employeeService: IEmployeeService = new EmployeeService();
+      const employeeService: IEmployeeService = new EmployeeService(prisma);
       const result = await employeeService.login(requestData);
 
       // 로그인 실패 처리

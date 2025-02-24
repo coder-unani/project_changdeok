@@ -49,6 +49,44 @@ export const getApiContents = async (groupId: number, data: IRequestContents): P
   }
 };
 
+export const getApicontentsDetail = async (groupId: number, contentId: number): Promise<IApiResponse<IContent>> => {
+  try {
+    // API 호출
+    const apiResponse = await fetch(
+      `${API_BASE_URL}${apiBackendRoutes.contentsDetail.url}`.replace(':groupId', groupId.toString()).replace(':contentId', contentId.toString()
+      ), {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    // JSON 파싱
+    const responseToJson = await apiResponse.json();
+
+    // 응답 오류
+    if (!apiResponse.ok) {
+      throw new Error(responseToJson.message || apiResponse.statusText);
+    }
+
+    // API 조회 실패
+    if (!responseToJson.result) {
+      throw new Error(responseToJson.message);
+    }
+
+    // 응답 성공
+    return {
+      result: responseToJson.result,
+      metadata: responseToJson.metadata,
+      data: responseToJson.data
+    };
+    
+  } catch (error) {
+    throw error;
+
+  }
+}
+
 export const getApiEmployeeDetail = async (employeeId: number): Promise<IApiResponse<IEmployee>> => {
   try {
     // API 호출

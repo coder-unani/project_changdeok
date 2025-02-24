@@ -25,6 +25,11 @@ router.post(apiBackendRoutes.contentsWrite.url, (req: Request, res: Response) =>
   apiBackendController.contentsWrite(req, res);
 });
 
+// 컨텐츠 상세 정보
+router.get(apiBackendRoutes.contentsDetail.url, (req: Request, res: Response) => {
+  apiBackendController.contentsDetail(req, res);
+});
+
 // 직원 등록
 router.post(apiBackendRoutes.employeesRegist.url, (req: Request, res: Response) => {
   apiBackendController.employeesRegist(req, res);
