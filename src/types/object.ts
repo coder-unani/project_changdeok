@@ -75,10 +75,16 @@ export interface IContent {
   writerName?: typeOptionalString,
   writerEmail?: typeOptionalString,
   writerPhone?: typeOptionalString,
-  isActivated?: boolean,
+  viewCount: number,
+  likeCount: number,
+  commentCount: number,
   isAnonymous?: boolean,
+  isNotice?: boolean,
+  isActivated?: boolean,
   ip?: typeOptionalString,
   userAgent?: typeOptionalString,
+  createdAt: string,
+  updatedAt?: typeOptionalString,
 }
 
 export interface IContentUpdate {
