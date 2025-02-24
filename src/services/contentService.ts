@@ -1,6 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-
 import { CODE_BAD_REQUEST, CODE_FAIL_SERVER, MESSAGE_FAIL_SERVER } from "../config/constants";
+import { ExtendedPrismaClient } from "../config/database";
 import { IContentGroup, IContent } from "../types/object";
 import { IContentService } from '../types/service';
 import { IRequestContents, IRequestContentWrite, IRequestContentUpdate } from "../types/request";
@@ -9,9 +8,9 @@ import { validateStringLength } from "../utils/validator";
 import { formatDateToString } from "../utils/formattor";
 
 export class ContentService implements IContentService {
-  private prisma: PrismaClient;
+  private prisma: ExtendedPrismaClient;
 
-  constructor(prisma: PrismaClient) {
+  constructor(prisma: ExtendedPrismaClient) { 
     this.prisma = prisma;
   }
 

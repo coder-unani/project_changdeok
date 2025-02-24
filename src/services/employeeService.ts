@@ -1,6 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-
 import { CODE_BAD_REQUEST, CODE_FAIL_SERVER, CODE_UNAUTHORIZED, CODE_FORBIDDEN, MESSAGE_FAIL_SERVER } from '../config/constants';
+import { ExtendedPrismaClient } from "../config/database";
 import { 
   IRequestEmployeeRegister, 
   IRequestEmployeeUpdate, 
@@ -18,9 +17,9 @@ import { formatDate, formatDateToString, formatEmailMasking } from "../utils/for
 import { hashPassword, verifyPassword } from "../utils/encryptor";
 
 export class EmployeeService implements IEmployeeService {
-  private prisma: PrismaClient;
+  private prisma: ExtendedPrismaClient;
 
-  constructor(prisma: PrismaClient) {
+  constructor(prisma: ExtendedPrismaClient) { 
     this.prisma = prisma;
   }
 
