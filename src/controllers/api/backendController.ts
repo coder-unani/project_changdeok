@@ -5,6 +5,7 @@ import { prisma } from '../../config/database';
 import { 
   typeListSort, 
   IRequestContentWrite,
+  IRequestContentUpdate,
   IRequestEmployeeRegister, 
   IRequestEmployeeUpdate,
   IRequestEmployeeUpdatePassword,
@@ -141,6 +142,76 @@ export class ApiBackendController {
 
     } catch (error) {
       res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
+    }
+  }
+
+  // 컨텐츠 수정
+  public async contentsUpdate(req: Request, res: Response): Promise<void> {
+    try {
+      // 컨텐츠 그룹 ID 추출
+      const groupId = parseInt(req.params.groupId);
+
+      // 컨텐츠 ID 추출
+      const contentId = parseInt(req.params.contentId);
+
+      // ID가 숫자가 아닌 경우 에러 처리
+      if (isNaN(groupId) || isNaN(contentId)) {
+        res.status(CODE_BAD_REQUEST).json({ message: '잘못된 요청입니다.' });
+        return;
+      }
+
+      // 요청 데이터
+      const requestData: IRequestContentUpdate = req.body;
+
+      // 컨텐츠 수정 처리
+      const contentService: IContentService = new ContentService(prisma);
+      const updatedContent = await contentService.update(contentId, requestData);
+
+      // 수정 실패 처리
+      if (!updatedContent.result) {
+        res.status(updatedContent.code || CODE_FAIL_SERVER).json({ message: updatedContent.message || MESSAGE_FAIL_SERVER });
+        return;
+      }
+
+      // 수정 성공시 201 응답
+      res.status(201).send(null);
+
+    } catch (error) {
+      res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
+    }
+  }
+
+  // 컨텐츠 삭제
+  public async contentsDelete(req: Request, res: Response): Promise<void> {
+    try {
+      // 컨텐츠 그룹 ID 추출
+      const groupId = parseInt(req.params.groupId);
+
+      // 컨텐츠 ID 추출
+      const contentId = parseInt(req.params.contentId);
+
+      // ID가 숫자가 아닌 경우 에러 처리
+      if (isNaN(groupId) || isNaN(contentId)) {
+        res.status(CODE_BAD_REQUEST).json({ message: '잘못된 요청입니다.' });
+        return;
+      }
+
+      // 컨텐츠 삭제 처리
+      const contentService: IContentService = new ContentService(prisma);
+      const result = await contentService.delete(contentId);
+
+      // 삭제 실패 처리
+      if (!result.result) {
+        res.status(result.code || CODE_FAIL_SERVER).json({ message: result.message || MESSAGE_FAIL_SERVER });
+        return;
+      }
+
+      // 삭제 성공시 201 응답
+      res.status(201).send(null);
+
+    } catch (error) {
+      res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
+
     }
   }
 

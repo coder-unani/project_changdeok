@@ -21,6 +21,18 @@ export const apiBackendRoutes = {
     url: `${apiBackendRoutesPrefix}/contents/:groupId/:contentId`,
     permissions: [1, 4]
   },
+  contentsUpdate: {
+    method: 'PUT',
+    title: '게시글 수정',
+    url: `${apiBackendRoutesPrefix}/contents/:groupId/:contentId`,
+    permissions: [1, 4]
+  },
+  contentsDelete: {
+    method: 'DELETE',
+    title: '게시글 삭제',
+    url: `${apiBackendRoutesPrefix}/contents/:groupId/:contentId`,
+    permissions: [1, 4]
+  },
   employeesRegist: {
     method: 'POST',
     title: '관리자 등록',

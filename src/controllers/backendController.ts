@@ -91,6 +91,7 @@ export class BackendController {
       // 접근 권한 체크
       this.verifyPermission(req, permissions);
 
+      // params 생성
       const data: IRequestContents = {
         page: req.query.page ? parseInt(req.query.page as string) : 1,
         pageSize: req.query.pageSize ? parseInt(req.query.pageSize as string) : 10,
@@ -98,12 +99,15 @@ export class BackendController {
         sort: req.query.sort ? (req.query.sort as typeListSort) : "ID_DESC",
       };
 
+      // API 호출
       const { metadata, data: contents } = await getApiContents(groupId, data);
 
       // 게시판 관리 페이지 렌더링
       res.render(view, { layout, title: metadata.title, data: { contents, metadata } });
+
     } catch (error) {
       this.renderError(res, error);
+
     }
   }
 
@@ -162,6 +166,40 @@ export class BackendController {
       // API 호출
       const { metadata, data: content } = await getApicontentsDetail(parseInt(req.params.groupId), parseInt(req.params.contentId));
       console.log(content);
+
+      // 게시글 상세 정보 페이지 렌더링
+      res.render(view, { layout, title, data: { content, metadata } });
+
+    } catch (error) {
+      this.renderError(res, error);
+    }
+  }
+
+  // 게시글 업데이트
+  public async contentsUpdate(req: Request, res: Response): Promise<void> {
+    // 라우팅 정보
+    const { title, view, layout, permissions } = backendRoutes.contentsUpdate;
+
+    try {
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+
+      // 게시판 ID와 게시글 ID 추출
+      const groupId = parseInt(req.params.groupId);
+      const contentId = parseInt(req.params.contentId);
+
+      // 컨텐츠 그룹 ID가 없는 경우
+      if (!groupId) {
+        throw new Error("존재하지 않는 게시판입니다.");
+      }
+
+      // 컨텐츠 ID가 없는 경우
+      if (!contentId) {
+        throw new Error("존재하지 않는 게시글입니다.");
+      }
+
+      // API 호출
+      const { metadata, data: content } = await getApicontentsDetail(parseInt(req.params.groupId), parseInt(req.params.contentId));
 
       // 게시글 상세 정보 페이지 렌더링
       res.render(view, { layout, title, data: { content, metadata } });

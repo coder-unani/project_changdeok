@@ -30,6 +30,16 @@ router.get(apiBackendRoutes.contentsDetail.url, (req: Request, res: Response) =>
   apiBackendController.contentsDetail(req, res);
 });
 
+// 컨텐츠 수정
+router.put(apiBackendRoutes.contentsUpdate.url, (req: Request, res: Response) => {
+  apiBackendController.contentsUpdate(req, res);
+});
+
+// 컨텐츠 삭제
+router.delete(apiBackendRoutes.contentsDelete.url, (req: Request, res: Response) => {
+  apiBackendController.contentsDelete(req, res);
+});
+
 // 직원 등록
 router.post(apiBackendRoutes.employeesRegist.url, (req: Request, res: Response) => {
   apiBackendController.employeesRegist(req, res);

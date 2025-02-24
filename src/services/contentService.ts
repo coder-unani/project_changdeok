@@ -6,6 +6,7 @@ import { IContentService } from '../types/service';
 import { IRequestContents, IRequestContentWrite, IRequestContentUpdate } from "../types/request";
 import { IServiceResponse } from "../types/response";
 import { validateStringLength } from "../utils/validator";
+import { formatDateToString } from "../utils/formattor";
 
 export class ContentService implements IContentService {
   private prisma: PrismaClient;
@@ -15,7 +16,6 @@ export class ContentService implements IContentService {
   }
 
   async create(groupId: number, data: IRequestContentWrite): Promise<IServiceResponse> {
-
     try {
       // 제목 길이 검증
       const validateTitle = validateStringLength(data.title, 1, 50);
@@ -37,7 +37,8 @@ export class ContentService implements IContentService {
         }
       }
 
-      const content = await this.prisma.content.create({
+      // 컨텐츠 생성
+      await this.prisma.content.create({
         data: {
           groupId: groupId,
           title: data.title,
@@ -47,6 +48,7 @@ export class ContentService implements IContentService {
         }
       });
 
+      // 성공
       return { result: true };
 
     } catch (error) {
@@ -60,6 +62,7 @@ export class ContentService implements IContentService {
 
   async read(contentId: number): Promise<IServiceResponse<IContent>> {
     try {
+      // 컨텐츠 정보 조회
       const prismaContent = await this.prisma.content.findUnique({
         where: {
           id: contentId,
@@ -67,6 +70,7 @@ export class ContentService implements IContentService {
         }
       });
 
+      // 컨텐츠가 없는 경우
       if (!prismaContent) {
         return {
           result: false,
@@ -75,6 +79,7 @@ export class ContentService implements IContentService {
         }
       }
 
+      // 컨텐츠 활성화 여부 확인
       if (!prismaContent.isActivated) {
         return {
           result: false,
@@ -83,6 +88,7 @@ export class ContentService implements IContentService {
         }
       }
 
+      // 컨텐츠 그룹 정보 조회
       const groupInfo = await this.prisma.contentGroup.findUnique({
         where: {
           id: prismaContent.groupId,
@@ -91,6 +97,7 @@ export class ContentService implements IContentService {
         }
       });
 
+      // 컨텐츠 그룹이 없는 경우
       if (!groupInfo) {
         return {
           result: false,
@@ -99,6 +106,13 @@ export class ContentService implements IContentService {
         }
       }
 
+      // 날짜 형식 변환
+      const convertCreatedAtToString = formatDateToString(prismaContent.createdAt.toISOString());
+      const convertUpdatedAtToString = prismaContent.updatedAt ? formatDateToString(prismaContent.updatedAt.toISOString()) : null;
+      const createdAtToString = (convertCreatedAtToString.result) ? convertCreatedAtToString.data : null;
+      const updatedAtToString = (convertUpdatedAtToString?.result) ? convertUpdatedAtToString.data : null;
+
+      // 컨텐츠 정보 생성
       const content: IContent = {
         id: prismaContent.id,
         groupId: prismaContent.groupId,
@@ -108,20 +122,27 @@ export class ContentService implements IContentService {
         writerName: prismaContent.writerName ?? null,
         writerEmail: prismaContent.writerEmail ?? null,
         writerPhone: prismaContent.writerPhone ?? null,
-        isActivated: prismaContent.isActivated,
+        viewCount: prismaContent.viewCount ?? 0,
+        likeCount: prismaContent.likeCount ?? 0,
+        commentCount: prismaContent.commentCount ?? 0,
         isAnonymous: prismaContent.isAnonymous,
+        isNotice: prismaContent.isNotice ?? false,
+        isActivated: prismaContent.isActivated,
         ip: prismaContent.ip ?? null,
         userAgent: prismaContent.userAgent ?? null,
+        createdAt: createdAtToString,
+        updatedAt: updatedAtToString,
       }
 
+      // 성공
       return {
         result: true,
         metadata: {
           groupId: groupInfo.id,
-          kind: groupInfo.kind,
-          title: groupInfo.title,
-          description: groupInfo.description ?? null,
-          bannerTopUrl: groupInfo.bannerTopUrl ?? null,
+          groupKind: groupInfo.kind,
+          groupTitle: groupInfo.title,
+          groupDescription: groupInfo.description ?? null,
+          groupBannerTopUrl: groupInfo.bannerTopUrl ?? null,
         },
         data: content
       }
@@ -138,6 +159,7 @@ export class ContentService implements IContentService {
 
   async update(contentId: number, data: IRequestContentUpdate): Promise<IServiceResponse> {
     try {
+      // 업데이트 데이터 생성
       const updateData: Partial<IRequestContentUpdate> = {};
 
       if (data.title !== undefined) updateData.title = data.title;
@@ -174,7 +196,10 @@ export class ContentService implements IContentService {
         where: {
           id: contentId
         },
-        data: updateData
+        data: {
+          ...updateData,
+          updatedAt: new Date()
+        }
       });
 
       // 성공
@@ -190,12 +215,51 @@ export class ContentService implements IContentService {
     }
   }
 
-  async delete(contentId: number): Promise<void> {
-    console.log('delete content');
+  // 컨텐츠 삭제
+  async delete(contentId: number): Promise<IServiceResponse> {
+    try {
+      const prismaContent = await this.prisma.content.findUnique({
+        where: {
+          id: contentId,
+          isDeleted: false
+        }
+      });
+
+      // 컨텐츠가 없는 경우
+      if (!prismaContent) {
+        return {
+          result: false,
+          code: CODE_BAD_REQUEST,
+          message: '컨텐츠가 존재하지 않습니다.'
+        }
+      }
+
+      // 컨텐츠 삭제
+      await this.prisma.content.update({
+        where: {
+          id: contentId
+        },
+        data: {
+          isDeleted: true,
+          updatedAt: new Date()
+        }
+      });
+
+      // 성공
+      return { result: true };
+
+    } catch (error) {
+      return {
+        result: false,
+        code: CODE_FAIL_SERVER,
+        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
+      }
+
+    }
   }
 
+  // 컨텐츠 목록 조회
   async list(groupId: number, data: IRequestContents): Promise<IServiceResponse<IContent[] | []>> {
-    
     try {
       // 페이지 번호가 없거나 1보다 작은 경우 1로 설정
       if (!data.page || data.page < 1) {
@@ -260,7 +324,7 @@ export class ContentService implements IContentService {
       });
 
       // 컨텐츠 목록 조회
-      const contentInquery = await this.prisma.content.findMany({
+      const prismaContents = await this.prisma.content.findMany({
         where: {
           groupId,
           title: data.query ? { contains: data.query } : {},
@@ -272,7 +336,15 @@ export class ContentService implements IContentService {
         orderBy: orderBy
       });
 
-      const contents: IContent[] = contentInquery.map((content) => {
+      // 컨텐츠 목록 생성
+      const contents: IContent[] = prismaContents.map((content) => {
+        // 날짜 형식 변환
+        const convertCreatedAtToString = formatDateToString(content.createdAt.toISOString());
+        const convertUpdatedAtToString = content.updatedAt ? formatDateToString(content.updatedAt.toISOString()) : null;
+        const createdAtToString = (convertCreatedAtToString.result) ? convertCreatedAtToString.data : null;
+        const updatedAtToString = (convertUpdatedAtToString?.result) ? convertUpdatedAtToString.data : null;
+        
+        // 컨텐츠 정보 생성
         return {
           id: content.id,
           groupId: content.groupId,
@@ -282,10 +354,16 @@ export class ContentService implements IContentService {
           writerName: content.writerName ?? null,
           writerEmail: content.writerEmail ?? null,
           writerPhone: content.writerPhone ?? null,
-          isActivated: content.isActivated,
+          viewCount: content.viewCount ?? 0,
+          likeCount: content.likeCount ?? 0,
+          commentCount: content.commentCount ?? 0,
           isAnonymous: content.isAnonymous,
+          isNotice: content.isNotice ?? false,
+          isActivated: content.isActivated,
           ip: content.ip ?? null,
           userAgent: content.userAgent ?? null,
+          createdAt: createdAtToString,
+          updatedAt: updatedAtToString,
         }
       });
 
@@ -305,6 +383,7 @@ export class ContentService implements IContentService {
         totalPage: Math.ceil(totalContents / data.pageSize)
       };
 
+      // 성공
       return { result: true, metadata, data: contents };
 
     } catch (error) {
@@ -314,11 +393,6 @@ export class ContentService implements IContentService {
         message: MESSAGE_FAIL_SERVER
       }
 
-    }
-
-    return {
-      result: true,
-      data: []
     }
   }
 

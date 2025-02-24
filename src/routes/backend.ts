@@ -79,6 +79,11 @@ router.get(backendRoutes.contentsDetail.url, function (req, res) {
   backendController.contentsDetail(req, res);
 });
 
+// 게시판: 게시물 수정
+router.get(backendRoutes.contentsUpdate.url, function (req, res) {
+  backendController.contentsUpdate(req, res);
+});
+
 /**
  * 직원 관리
  */

@@ -18,7 +18,7 @@ export interface IContentService {
   create(groupId: number, data: IRequestContentWrite): Promise<IServiceResponse>
   read(contentId: number): Promise<IServiceResponse<IContent>>;
   update(contentId: number, data: IRequestContentUpdate): Promise<IServiceResponse>;
-  delete(contentId: number): void;
+  delete(contentId: number): Promise<IServiceResponse>
   list(groupId: number, data: IRequestContents): Promise<IServiceResponse<IContent[] | []>>
   groupInfo(groupId: number): Promise<IServiceResponse<IContentGroup>>;
 }
