@@ -4,6 +4,86 @@
       <span class="font-bold"><%=title%></span>
     </h1>
   </div>
-  <div class="flex justify-between items-center py-3">
+  <div class="flex flex-col justify-between items-center py-3">
+    <div>
+      <p>
+        <span class="font-bold">Title:</span> <%=data.content.title%>
+      </p>
+    </div>
+    <div>
+      <p>
+        <span class="font-bold">Content:</span> <%=data.content.content%>
+      </p>
+    </div>
+    <div>
+      <p>
+        <span class="font-bold">작성자:</span> <%=data.content.writerId || 'null'%> <%=data.content.writerName || 'null'%> <%=data.content.writerId || 'null'%>
+      </p>
+    </div>
+    <div>
+      <p>
+        <span class="font-bold">조회수:</span> <%=data.content.viewCount%>
+      </p>
+    </div>
+    <div>
+      <p>
+        <span class="font-bold">좋아요:</span> <%=data.content.likeCount%>
+      </p>
+    </div>
+    <div>
+      <p>
+        <span class="font-bold">댓글수:</span> <%=data.content.commentCount%>
+      </p>
+    </div>
+    <div>
+      <p>
+        <span class="font-bold">작성일:</span> <%=data.content.createdAt%>
+      </p>
+    </div>
   </div>
+
+  <div class="mt-6 grid grid-cols-3 gap-1.5 text-white font-semibold">
+    <a href="<%=routes.contentsUpdate.url.replace(':groupId', data.metadata.groupId).replace(':contentId', data.content.id)%>" class="orb-btn-secondary">
+      수정하기
+    </a>
+    <a href="#" id="btn-delete" class="orb-btn-delete">
+      삭제하기
+    </a>
+  </div>
+
 </div>
+
+<script>
+document.getElementById('btn-delete').addEventListener('click', async (e) => {
+  e.preventDefault();
+
+  if (!confirm('정말 삭제하시겠습니까?')) {
+    return;
+  }
+
+  try {
+    // 컨텐츠 삭제 API 호출
+    const apiUrl = '<%=apiBackendRoutes.contentsDelete.url%>'.replace(':groupId', '<%=data.metadata.groupId%>').replace(':contentId', '<%=data.content.id%>');
+    const response = await fetch(apiUrl, {
+      method: '<%=apiBackendRoutes.contentsDelete.method%>',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    // 응답 오류
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || response.statusText);
+    }
+
+    // 응답 성공
+    alert('<%=apiBackendRoutes.contentsDelete.title%> 성공');
+    window.location.href = "<%=routes.contents.url%>".replace(':groupId', '<%=data.metadata.groupId%>');
+
+  } catch (error) {
+    alert(error.message || '서버 오류가 발생했습니다.');
+
+  }
+});
+</script>
