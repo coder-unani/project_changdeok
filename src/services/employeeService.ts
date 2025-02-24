@@ -143,7 +143,6 @@ export class EmployeeService implements IEmployeeService {
       return { result: true };
 
     } catch (error) {
-      console.error(error);
       return {
         result: false,
         code: CODE_FAIL_SERVER,
