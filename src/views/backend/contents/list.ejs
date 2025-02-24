@@ -1,48 +1,50 @@
-<div class="max-w-[1024px] h-full bg-white p-2 lg:p-4 rounded-2xl shadow-md">
-  <div class="block mb-4 mx-auto border-b border-slate-300 pb-2 max-w-[360px]">
-    <h1 class='flex justify-center items-center gap-1.5 px-4 py-2 text-center text-slate-700 transition-all'>
-      <span class="font-bold"><%=title%></span>
-    </h1>
-  </div>
-  <div class="flex justify-between items-center py-3">
+<div class="block pt-2">
+  <h1 class='flex justify-start items-center gap-1.5 py-2 text-center text-slate-700 transition-all'>
+    <span class="font-bold text-xl"><%=title%></span>
+  </h1>
+</div>
+<div class="py-2 mb-2 rounded-xl">
+  <div class="flex justify-between items-center">
     <div>
       <a href="<%=routes.contentsWrite.url.replace(':groupId', data.metadata.groupId)%>" class="orb-btn-primary">게시글 등록</a>
     </div>
     <div class="ml-3">
       <div class="w-full max-w-sm min-w-[200px] relative">
         <div class="relative">
-            <input
-            class="w-full pr-11 h-10 pl-3 py-2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded transition duration-200 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md"
-            placeholder="Search..."
-            />
-            <button
-            class="absolute h-8 w-8 right-1 top-1 my-auto px-2 flex items-center bg-white rounded "
-            type="button"
-            >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-8 h-8 text-slate-600">
-                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-            </svg>
-            </button>
+          <input
+          class="w-full pr-11 h-10 pl-3 py-2 bg-gray-200 placeholder:text-gray-400 text-gray-700 text-sm rounded-lg transition duration-200 ease focus:outline-none focus:bg-gray-300 hover:bg-gray-300"
+          placeholder="게시물 검색"
+          />
+          <button
+          class="absolute h-8 w-8 right-1 top-1 my-auto px-2 flex items-center bg-transparent rounded "
+          type="button"
+          >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-8 h-8 text-gray-600">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+          </svg>
+          </button>
         </div>
       </div>
     </div>
   </div>
+</div>  
   
-  <div class="orb-list">
+<div class="orb-list">
+  <div class="bg-white p-2 mb-4 lg:p-4 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
     <table>
       <thead>
       <tr>
-          <th><p>글번호</p></th>
-          <th><p>제목</p></th>
-          <th><p>작성자</p></th>
-          <th class="hidden lg:table-cell"><p>작성일</p></th>
+        <th><p>글번호</p></th>
+        <th><p>제목</p></th>
+        <th><p>작성자</p></th>
+        <th class="hidden lg:table-cell"><p>작성일</p></th>
       </tr>
       </thead>
       <tbody>
         <% data.contents.forEach(content => { %>
           <tr>
             <td><p><%=content.id%></p></td>
-            <td><a href="<%=routes.contentsDetail.url.replace(':groupId', data.metadata.groupId).replace(':contentId', content.id)%>"><p><%=content.title%></p></a></td>
+            <td><a href="<%=routes.contentsDetail.url.replace(':groupId', data.metadata.groupId).replace(':contentId', content.id)%>" class="hover:underline decoration-gray-500"><p><%=content.title%></p></a></td>
             <td><p><%=content.writer%></p></td>
             <td class="hidden lg:table-cell"><p><%=content.createdAt%></p></td>
           </tr>

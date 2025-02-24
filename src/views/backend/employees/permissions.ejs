@@ -1,10 +1,10 @@
-<div class="max-w-[1024px] h-full bg-white p-2 lg:p-4 rounded-2xl shadow-md">
-  <div class="block mb-4 mx-auto border-b border-slate-300 pb-2 max-w-[360px]">
-    <h1 class='flex justify-center items-center gap-1.5 px-4 py-2 text-center text-slate-700 transition-all'>
-      <span class="font-bold"><%=title%></span>
-    </h1>
-  </div>
-  <form id="formEmployeePermissions" class="space-y-4 text-sm">
+<div class="block pt-2 mb-2">
+  <h1 class='flex justify-self-start items-center gap-1.5 py-2 text-center text-slate-700 transition-all'>
+    <span class="font-bold text-xl"><%=title%></span>
+  </h1>
+</div>
+<form id="formEmployeePermissions" class="space-y-4 text-sm">
+  <div class="space-y-4 text-sm bg-white p-2 mb-4 lg:p-4 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
     <ul>
       <% data.permissions.forEach((permission, index) => { %>
         <li>
@@ -19,14 +19,14 @@
           <label for="permission<%=index%>" class="text-gray-700"><%=permission.title%></label>
         </li>
       <% }); %>
-    </ul>
+      </ul>
+    </div>
     <div class="text-right">
-      <button type="submit" class="w-full lg:w-auto mt-4 px-4 py-4 lg:py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">
+      <button type="submit" class="orb-btn-primary">
         저장
       </button>
     </div>
   </form>
-</div>
 
 <script>
   document.getElementById('formEmployeePermissions').addEventListener('submit', async function(e) {
