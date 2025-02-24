@@ -20,8 +20,8 @@ import { hashPassword, verifyPassword } from "../utils/encryptor";
 export class EmployeeService implements IEmployeeService {
   private prisma: PrismaClient;
 
-  constructor() {
-    this.prisma = new PrismaClient();
+  constructor(prisma: PrismaClient) {
+    this.prisma = prisma;
   }
 
   // 직원 등록

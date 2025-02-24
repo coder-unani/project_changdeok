@@ -10,8 +10,8 @@ import { validateStringLength } from "../utils/validator";
 export class ContentService implements IContentService {
   private prisma: PrismaClient;
 
-  constructor() {
-    this.prisma = new PrismaClient();
+  constructor(prisma: PrismaClient) {
+    this.prisma = prisma;
   }
 
   async create(groupId: number, data: IRequestContentWrite): Promise<IServiceResponse> {
