@@ -1,5 +1,5 @@
 <!-- 사이드바 PC -->
-<div id="sidebar-pc" class="hidden lg:flex lg:flex-col justify-between w-[260px] p-4 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)] z-0 mr-6 text-sm bg-white dark:bg-gray-700">
+<div id="sidebar-pc" class="hidden lg:flex lg:flex-col justify-between w-[260px] p-4 mr-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)] z-0 text-sm bg-white dark:bg-gray-700">
   <div>
     <!-- 로고 -->
     <a href="<%=routes.index.url%>">
@@ -15,12 +15,11 @@
       <div class="mb-2 border-t border-slate-100">
         <p class="text-xs font-normal text-slate-400 py-2 mt-2"><%=company.name%></p>
         <ul class="flex flex-col gap-2 text-slate-500 dark:text-slate-100">
-          <li class="font-thin rounded-lg transition-all dark:hover:text-white hover:bg-slate-100 dark:hover:bg-gray-600 <%if (routes.dashboard.title === title) {%>orb-hightlight<% }%>">
+          <li class="font-thin rounded-lg transition-all dark:hover:text-white dark:hover:bg-gray-600 <%if (routes.dashboard.title === title) {%>orb-hightlight<%} else {%>hover:bg-gray-100<%}%>">
             <a class="flex items-center justify-start p-2" href="<%=routes.dashboard.url%>">
               <span class="text-left">
-                <svg width="16" height="16" fill="currentColor" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
-                    <path fill="currentColor" d="M1024 1131q0-64-9-117.5t-29.5-103-60.5-78-97-28.5q-6 4-30 18t-37.5 21.5-35.5 17.5-43 14.5-42 4.5-42-4.5-43-14.5-35.5-17.5-37.5-21.5-30-18q-57 0-97 28.5t-60.5 78-29.5 103-9 117.5 37 106.5 91 42.5h512q54 0 91-42.5t37-106.5zm-157-520q0-94-66.5-160.5t-160.5-66.5-160.5 66.5-66.5 160.5 66.5 160.5 160.5 66.5 160.5-66.5 66.5-160.5zm925 509v-64q0-14-9-23t-23-9h-576q-14 0-23 9t-9 23v64q0 14 9 23t23 9h576q14 0 23-9t9-23zm0-260v-56q0-15-10.5-25.5t-25.5-10.5h-568q-15 0-25.5 10.5t-10.5 25.5v56q0 15 10.5 25.5t25.5 10.5h568q15 0 25.5-10.5t10.5-25.5zm0-252v-64q0-14-9-23t-23-9h-576q-14 0-23 9t-9 23v64q0 14 9 23t23 9h576q14 0 23-9t9-23zm256-320v1216q0 66-47 113t-113 47h-352v-96q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v96h-768v-96q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v96h-352q-66 0-113-47t-47-113v-1216q0-66 47-113t113-47h1728q66 0 113 47t47 113z">
-                    </path>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" fill="currentColor" class="h-[14px] w-[14px]">
+                  <path d="M64 64l0 288 512 0 0-288L64 64zM0 64C0 28.7 28.7 0 64 0L576 0c35.3 0 64 28.7 64 64l0 288c0 35.3-28.7 64-64 64L64 416c-35.3 0-64-28.7-64-64L0 64zM128 448l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-384 0c-17.7 0-32-14.3-32-32s14.3-32 32-32z"/>
                 </svg>
               </span>
               <span class="mx-3 font-normal"><%=routes.dashboard.title%></span>
@@ -32,23 +31,21 @@
       <div class="mb-2 border-t border-slate-100">
         <p class="text-xs font-normal text-slate-400 py-2 mt-2">화면 관리</p>
         <ul class="flex flex-col gap-2 text-slate-500 dark:text-slate-100">
-          <li class="font-thin rounded-lg transition-all dark:hover:text-white hover:bg-slate-100 dark:hover:bg-gray-600">
+          <li class="font-thin rounded-lg transition-all dark:hover:text-white dark:hover:bg-gray-600 <%if (routes.screensBanner.title === title) {%>orb-hightlight<%} else {%>hover:bg-gray-100<%}%>">
             <a class="flex items-center justify-start p-2" href="<%=routes.screensBanner.url%>">
               <span class="text-left">
-                <svg width="16" height="16" fill="currentColor" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
-                    <path fill="currentColor" d="M1070 1178l306-564h-654l-306 564h654zm722-282q0 182-71 348t-191 286-286 191-348 71-348-71-286-191-191-286-71-348 71-348 191-286 286-191 348-71 348 71 286 191 191 286 71 348z">
-                    </path>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" class="h-[14px] w-[14px]">
+                  <path d="M0 128C0 92.7 28.7 64 64 64l384 0c35.3 0 64 28.7 64 64l0 256c0 35.3-28.7 64-64 64L64 448c-35.3 0-64-28.7-64-64L0 128zm64 32l0 64c0 17.7 14.3 32 32 32l320 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32L96 128c-17.7 0-32 14.3-32 32zM80 320c-13.3 0-24 10.7-24 24s10.7 24 24 24l56 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-56 0zm136 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l48 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-48 0z"/>
                 </svg>
               </span>
               <span class="mx-3 font-normal"><%=routes.screensBanner.title%></span>
             </a>
           </li>
-          <li class="font-thin rounded-lg transition-all dark:hover:text-white hover:bg-slate-100 dark:hover:bg-gray-600">
+          <li class="font-thin rounded-lg transition-all dark:hover:text-white dark:hover:bg-gray-600 <%if (routes.screensPopup.title === title) {%>orb-hightlight<%} else {%>hover:bg-gray-100<%}%>">
             <a class="flex items-center justify-start p-2" href="<%=routes.screensPopup.url%>">
               <span class="text-left">
-                <svg width="16" height="16" fill="currentColor" class="m-auto" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
-                    <path fill="currentColor" d="M960 0l960 384v128h-128q0 26-20.5 45t-48.5 19h-1526q-28 0-48.5-19t-20.5-45h-128v-128zm-704 640h256v768h128v-768h256v768h128v-768h256v768h128v-768h256v768h59q28 0 48.5 19t20.5 45v64h-1664v-64q0-26 20.5-45t48.5-19h59v-768zm1595 960q28 0 48.5 19t20.5 45v128h-1920v-128q0-26 20.5-45t48.5-19h1782z">
-                    </path>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" class="h-[14px] w-[14px]">
+                  <path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l82.7 0L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3l0 82.7c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160c0-17.7-14.3-32-32-32L320 0zM80 32C35.8 32 0 67.8 0 112L0 432c0 44.2 35.8 80 80 80l320 0c44.2 0 80-35.8 80-80l0-112c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 112c0 8.8-7.2 16-16 16L80 448c-8.8 0-16-7.2-16-16l0-320c0-8.8 7.2-16 16-16l112 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L80 32z"/>
                 </svg>
               </span>
               <span class="mx-3 font-normal"><%=routes.screensPopup.title%></span>
@@ -60,23 +57,21 @@
       <div class="mb-2 border-t border-slate-100">
         <p class="text-xs font-normal text-slate-400 py-2 mt-2">게시판 관리</p>
         <ul class="flex flex-col gap-2 text-slate-500 dark:text-slate-100">
-          <li class="font-thin rounded-lg transition-all dark:hover:text-white hover:bg-slate-100 dark:hover:bg-gray-600">
+          <li class="font-thin rounded-lg transition-all dark:hover:text-white dark:hover:bg-gray-600 <%if (title === '공지사항') {%>orb-hightlight<%} else {%>hover:bg-gray-100<%}%>">
             <a class="flex items-center justify-start p-2" href="/admin/contents/1">
               <span class="text-left">
-                <svg width="16" height="16" fill="currentColor" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
-                    <path fill="currentColor" d="M1070 1178l306-564h-654l-306 564h654zm722-282q0 182-71 348t-191 286-286 191-348 71-348-71-286-191-191-286-71-348 71-348 191-286 286-191 348-71 348 71 286 191 191 286 71 348z">
-                    </path>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" fill="currentColor" class="h-[14px] w-[14px]">
+                  <path d="M32 32C32 14.3 46.3 0 64 0L320 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-29.5 0 11.4 148.2c36.7 19.9 65.7 53.2 79.5 94.7l1 3c3.3 9.8 1.6 20.5-4.4 28.8s-15.7 13.3-26 13.3L32 352c-10.3 0-19.9-4.9-26-13.3s-7.7-19.1-4.4-28.8l1-3c13.8-41.5 42.8-74.8 79.5-94.7L93.5 64 64 64C46.3 64 32 49.7 32 32zM160 384l64 0 0 96c0 17.7-14.3 32-32 32s-32-14.3-32-32l0-96z"/>
                 </svg>
               </span>
               <span class="mx-3 font-normal">공지사항</span>
             </a>
           </li>
-          <li class="font-thin rounded-lg transition-all dark:hover:text-white hover:bg-slate-100 dark:hover:bg-gray-600">
+          <li class="font-thin rounded-lg transition-all dark:hover:text-white dark:hover:bg-gray-600 <%if (title === '문의') {%>orb-hightlight<%} else {%>hover:bg-gray-100<%}%>">
             <a class="flex items-center justify-start p-2" href="/admin/contents/2">
               <span class="text-left">
-                <svg width="16" height="16" fill="currentColor" class="m-auto" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
-                    <path fill="currentColor" d="M1024 1131q0-64-9-117.5t-29.5-103-60.5-78-97-28.5q-6 4-30 18t-37.5 21.5-35.5 17.5-43 14.5-42 4.5-42-4.5-43-14.5-35.5-17.5-37.5-21.5-30-18q-57 0-97 28.5t-60.5 78-29.5 103-9 117.5 37 106.5 91 42.5h512q54 0 91-42.5t37-106.5zm-157-520q0-94-66.5-160.5t-160.5-66.5-160.5 66.5-66.5 160.5 66.5 160.5 160.5 66.5 160.5-66.5 66.5-160.5zm925 509v-64q0-14-9-23t-23-9h-576q-14 0-23 9t-9 23v64q0 14 9 23t23 9h576q14 0 23-9t9-23zm0-260v-56q0-15-10.5-25.5t-25.5-10.5h-568q-15 0-25.5 10.5t-10.5 25.5v56q0 15 10.5 25.5t25.5 10.5h568q15 0 25.5-10.5t10.5-25.5zm0-252v-64q0-14-9-23t-23-9h-576q-14 0-23 9t-9 23v64q0 14 9 23t23 9h576q14 0 23-9t9-23zm256-320v1216q0 66-47 113t-113 47h-352v-96q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v96h-768v-96q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v96h-352q-66 0-113-47t-47-113v-1216q0-66 47-113t113-47h1728q66 0 113 47t47 113z">
-                    </path>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" class="h-[14px] w-[14px]">
+                  <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM169.8 165.3c7.9-22.3 29.1-37.3 52.8-37.3l58.3 0c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24l0-13.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1l-58.3 0c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/>
                 </svg>
               </span>
               <span class="mx-3 font-normal">문의</span>
@@ -87,12 +82,11 @@
       <div class="mb-2 border-t border-slate-100">
         <p class="text-xs font-normal text-slate-400 py-2 mt-2">사이트 관리</p>
         <ul class="flex flex-col gap-2 text-slate-500 dark:text-slate-100">
-          <li class="font-thin rounded-lg transition-all dark:hover:text-white hover:bg-slate-100 dark:hover:bg-gray-600 <%if (routes.employees.title === title) {%>orb-hightlight<% }%>">
+          <li class="font-thin rounded-lg transition-all dark:hover:text-white dark:hover:bg-gray-600 <%if (routes.employees.title === title) {%>orb-hightlight<%} else {%>hover:bg-gray-100<%}%>">
             <a class="flex items-center justify-start p-2" href="<%=routes.employees.url%>">
               <span class="text-left">
-                <svg width="16" height="16" fill="currentColor" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
-                    <path fill="currentColor" d="M1070 1178l306-564h-654l-306 564h654zm722-282q0 182-71 348t-191 286-286 191-348 71-348-71-286-191-191-286-71-348 71-348 191-286 286-191 348-71 348 71 286 191 191 286 71 348z">
-                    </path>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" fill="currentColor" class="h-[14px] w-[14px]">
+                  <path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304l91.4 0C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7L29.7 512C13.3 512 0 498.7 0 482.3zM609.3 512l-137.8 0c5.4-9.4 8.6-20.3 8.6-32l0-8c0-60.7-27.1-115.2-69.8-151.8c2.4-.1 4.7-.2 7.1-.2l61.4 0C567.8 320 640 392.2 640 481.3c0 17-13.8 30.7-30.7 30.7zM432 256c-31 0-59-12.6-79.3-32.9C372.4 196.5 384 163.6 384 128c0-26.8-6.6-52.1-18.3-74.3C384.3 40.1 407.2 32 432 32c61.9 0 112 50.1 112 112s-50.1 112-112 112z"/>
                 </svg>
               </span>
               <span class="mx-3 font-normal"><%=routes.employees.title%></span>
@@ -105,12 +99,11 @@
   <!-- 로그아웃 -->
   <div class="border-t border-slate-100">
     <ul class="flex flex-col gap-2 text-slate-500 dark:text-red-500">
-      <li class="flex mt-2 font-thin rounded-lg transition-all dark:hover:text-white hover:bg-slate-100 dark:hover:bg-red-600">
+      <li class="flex mt-2 font-thin rounded-lg transition-all dark:hover:text-white hover:bg-gray-100 dark:hover:bg-red-600">
         <button id="logout" class="flex flex-1 items-center justify-start p-2 cursor-pointer">
           <span class="text-left">
-            <svg width="1.5em" height="1.5em" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor" class="h-[16px] w-[16px]">
-              <path d="M12 12H19M19 12L16 15M19 12L16 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
-              <path d="M19 6V5C19 3.89543 18.1046 3 17 3H7C5.89543 3 5 3.89543 5 5V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" class="h-[14px] w-[14px]">
+              <path d="M502.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224 192 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128zM160 96c17.7 0 32-14.3 32-32s-14.3-32-32-32L96 32C43 32 0 75 0 128L0 384c0 53 43 96 96 96l64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l64 0z"/>
             </svg>
           </span>
           <span class="mx-3 font-normal">관리자 로그아웃</span>
@@ -135,7 +128,7 @@
     </div>
     <div class="mb-4">
       <ul class="flex flex-col mt-2 gap-2 text-slate-500 dark:text-slate-100">
-        <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600 <%if (routes.dashboard.title === title) {%>orb-hightlight<% }%>">
+        <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600 <%if (routes.dashboard.title === title) {%>orb-hightlight<%}%>">
           <a class="flex items-center justify-start p-2" href="<%=routes.dashboard.url%>">
             <span class="text-left">
               <svg width="20" height="20" fill="currentColor" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
@@ -207,7 +200,7 @@
     <div class="mb-4">
       <p class="font-normal text-slate-300 py-2 border-b border-slate-100">사이트 관리</p>
       <ul class="flex flex-col mt-2 gap-2 text-slate-500 dark:text-slate-100">
-        <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600 <%if (routes.employees.title === title) {%>orb-hightlight<% }%>">
+        <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600 <%if (routes.employees.title === title) {%>orb-hightlight<%}%>">
           <a class="flex items-center justify-start p-2" href="<%=routes.employees.url%>">
             <span class="text-left">
               <svg width="20" height="20" fill="currentColor" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">

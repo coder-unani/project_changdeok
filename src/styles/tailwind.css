@@ -29,8 +29,7 @@
 
 @layer components {
   .orb-hightlight {
-    /* @apply text-white dark:text-white bg-blue-500 dark:bg-gray-600; */
-    @apply text-blue-500 dark:text-white bg-slate-100 dark:bg-gray-600;
+    @apply text-blue-500 dark:text-white bg-blue-50 dark:bg-gray-600;
   }
 
   .orb-hightlight-warning {
@@ -42,28 +41,27 @@
   }
 
   .orb-btn-close {
-    @apply rounded-full bg-gradient-to-tr from-slate-800 to-slate-700 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
+    @apply rounded-full bg-gradient-to-tr from-slate-800 to-slate-700 py-2 px-4 border border-transparent text-center text-sm text-white transition-all focus:bg-slate-700 active:bg-slate-700 hover:bg-slate-700 disabled:pointer-events-none disabled:opacity-50 cursor-pointer;
   }
 
   .orb-btn-primary {
-    @apply w-full lg:w-auto rounded-md bg-gradient-to-tr from-blue-600 to-blue-500 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-blue-500 focus:shadow-none active:bg-blue-500 hover:bg-blue-500 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
+    @apply w-full lg:w-auto rounded-lg bg-gradient-to-tr from-blue-600 to-blue-500 py-2 px-4 border border-transparent text-center text-sm text-white transition-all focus:bg-blue-500 active:bg-blue-500 hover:bg-blue-500 disabled:pointer-events-none disabled:opacity-50 cursor-pointer;
   }
 
   .orb-btn-secondary {
-    @apply w-full lg:w-auto rounded-md bg-gradient-to-tr from-gray-600 to-gray-500 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-gray-500 focus:shadow-none active:bg-gray-500 hover:bg-gray-500 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
+    @apply w-full lg:w-auto rounded-lg bg-gradient-to-tr from-gray-600 to-gray-500 py-2 px-4 border border-transparent text-center text-sm text-white transition-all focus:bg-gray-500 active:bg-gray-500 hover:bg-gray-500 disabled:pointer-events-none disabled:opacity-50 cursor-pointer;
   }
 
   .orb-btn-third {
-    @apply w-full lg:w-auto rounded-md bg-gradient-to-tr from-green-600 to-green-500 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-green-500 focus:shadow-none active:bg-green-500 hover:bg-green-500 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
+    @apply w-full lg:w-auto rounded-lg bg-gradient-to-tr from-green-600 to-green-500 py-2 px-4 border border-transparent text-center text-sm text-white transition-all focus:bg-green-500 active:bg-green-500 hover:bg-green-500 disabled:pointer-events-none disabled:opacity-50 cursor-pointer;
   }
 
   .orb-btn-delete {
-    @apply w-full lg:w-auto rounded-md bg-gradient-to-tr from-red-600 to-red-500 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-red-500 focus:shadow-none active:bg-red-500 hover:bg-red-500 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
+    @apply w-full lg:w-auto rounded-lg bg-gradient-to-tr from-red-600 to-red-500 py-2 px-4 border border-transparent text-center text-sm text-white transition-all focus:bg-red-500 active:bg-red-500 hover:bg-red-500 disabled:pointer-events-none disabled:opacity-50 cursor-pointer;
   }
 
   .orb-list {
-    /* @apply relative flex flex-col overflow-x-auto overflow-scroll text-gray-700 bg-white shadow-md rounded-lg bg-clip-border */
-    @apply relative flex flex-col overflow-auto text-gray-700 bg-white bg-clip-border;
+    @apply relative flex flex-col text-gray-700;
   }
 
   .orb-list table {
@@ -71,42 +69,30 @@
   }
 
   .orb-list table th {
-    @apply p-4 border-b border-slate-200 bg-slate-50;
+    @apply p-4 border-b border-gray-200;
   }
 
   .orb-list table th p {
-    @apply font-normal leading-none text-slate-500 text-xs lg:text-sm;
+    @apply font-semibold leading-none text-gray-800 text-xs lg:text-sm;
   }
 
-  .orb-list table tbody tr {
-    @apply hover:bg-slate-50 border-b border-slate-200;
+  .orb-list table tbody tr:not(:last-child) {
+    @apply border-b border-gray-100;
   }
 
   .orb-list table tbody td {
-    @apply p-4 py-5;
+    @apply p-4;
   }
 
   .orb-list table tbody td p {
-    @apply text-slate-800 text-xs lg:text-sm;
-  }
-
-  .orb-list div {
-    @apply flex justify-center lg:justify-between items-center px-4 py-3;
-  }
-
-  .orb-list div div:first-child {
-    @apply text-xs text-slate-500 hidden lg:block;
-  }
-
-  .orb-list div div:last-child {
-    @apply flex space-x-1;
+    @apply text-gray-500 text-xs lg:text-sm;
   }
 
   .orb-list button {
-    @apply px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease-in;
+    @apply px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white rounded-lg hover:underline transition duration-200 ease-in;
   }
 
   .orb-list button.active {
-    @apply text-white bg-slate-800;
+    @apply text-blue-500 bg-blue-50;
   }
 }
