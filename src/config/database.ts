@@ -58,4 +58,4 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // Prisma 인스턴스를 외부에서 사용할 수 있도록 export
-export { PrismaClientSingleton, prisma };
+export { ExtendedPrismaClient, prisma };
