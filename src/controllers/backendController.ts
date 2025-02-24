@@ -165,7 +165,6 @@ export class BackendController {
 
       // API 호출
       const { metadata, data: content } = await getApicontentsDetail(parseInt(req.params.groupId), parseInt(req.params.contentId));
-      console.log(content);
 
       // 게시글 상세 정보 페이지 렌더링
       res.render(view, { layout, title, data: { content, metadata } });
