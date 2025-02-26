@@ -8,38 +8,38 @@
     <!-- Email -->
     <div>
       <label class="block text-gray-600 font-medium">이메일</label>
-      <p class="text-gray-800"><%=data.employee.email%></p>
+      <p class="text-gray-800"><%=data.email%></p>
     </div>
 
     <!-- Name -->
     <div>
       <label class="block text-gray-600 font-medium">이름</label>
-      <p class="text-gray-800"><%=data.employee.name%></p>
+      <p class="text-gray-800"><%=data.name%></p>
     </div>
 
     <!-- Position -->
     <div>
       <label class="block text-gray-600 font-medium">직급</label>
-      <p class="text-gray-800"><%=data.employee.position || '없음'%></p>
+      <p class="text-gray-800"><%=data.position || '없음'%></p>
     </div>
 
     <!-- Phone -->
     <div>
       <label class="block text-gray-600 font-medium">전화번호</label>
-      <p class="text-gray-800"><%=data.employee.phone%></p>
+      <p class="text-gray-800"><%=data.phone%></p>
     </div>
 
     <!-- Address -->
     <div>
       <label class="block text-gray-600 font-medium">주소</label>
-      <p class="text-gray-800"><%=data.employee.address%></p>
+      <p class="text-gray-800"><%=data.address%></p>
     </div>
 
     <!-- permissions -->
      <div>
       <label class="block text-gray-600 font-medium">권한</label>
       <ul class="flex flex-wrap gap-2 py-2">
-        <% data.employee.permissions.forEach(permission => { %>
+        <% data.permissions.forEach(permission => { %>
           <li class="text-gray-800 rounded-2xl bg-slate-200 px-2 py-1 border border-slate-300 text-xs">
             <%if (permission === 1) {%>최고 관리자
             <%} else if (permission === 2) {%>직원 관리
@@ -57,16 +57,16 @@
 
 <!-- Action Buttons -->
 <div class="grid grid-cols-3 gap-1.5 text-white font-semibold">
-  <a href="<%=routes.employeesUpdate.url.replace(':employeeId', data.employee.id)%>" class="orb-btn-secondary">
+  <a href="<%=routes.employeesUpdate.url.replace(':employeeId', data.id)%>" class="orb-btn-secondary">
     수정하기
   </a>
-  <a href="<%=routes.employeesUpdatePassword.url.replace(':employeeId', data.employee.id)%>" class="orb-btn-secondary">
+  <a href="<%=routes.employeesUpdatePassword.url.replace(':employeeId', data.id)%>" class="orb-btn-secondary">
     비밀번호 변경
   </a>
-  <a href="<%=routes.employeesPermissions.url.replace(':employeeId', data.employee.id)%>" class="orb-btn-secondary">
+  <a href="<%=routes.employeesPermissions.url.replace(':employeeId', data.id)%>" class="orb-btn-secondary">
     권한 수정
   </a>
-  <a href="<%=routes.employeesDelete.url.replace(':employeeId', data.employee.id)%>" class="orb-btn-delete">
+  <a href="<%=routes.employeesDelete.url.replace(':employeeId', data.id)%>" class="orb-btn-delete">
     삭제하기
   </a>
 </div>

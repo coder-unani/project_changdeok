@@ -103,7 +103,12 @@ export class BackendController {
       const { metadata, data: contents } = await getApiContents(groupId, data);
 
       // 게시판 관리 페이지 렌더링
-      res.render(view, { layout, title: metadata.title, data: { contents, metadata } });
+      res.render(view, { 
+        layout, 
+        title: metadata.title, 
+        metadata, 
+        data: contents
+      });
 
     } catch (error) {
       this.renderError(res, error);
@@ -167,7 +172,7 @@ export class BackendController {
       const { metadata, data: content } = await getApicontentsDetail(parseInt(req.params.groupId), parseInt(req.params.contentId));
 
       // 게시글 상세 정보 페이지 렌더링
-      res.render(view, { layout, title, data: { content, metadata } });
+      res.render(view, { layout, title, metadata, data: content });
 
     } catch (error) {
       this.renderError(res, error);
@@ -201,7 +206,7 @@ export class BackendController {
       const { metadata, data: content } = await getApicontentsDetail(parseInt(req.params.groupId), parseInt(req.params.contentId));
 
       // 게시글 상세 정보 페이지 렌더링
-      res.render(view, { layout, title, data: { content, metadata } });
+      res.render(view, { layout, title, metadata, data: content });
 
     } catch (error) {
       this.renderError(res, error);
@@ -219,8 +224,10 @@ export class BackendController {
 
       // 직원 등록 페이지 렌더링
       res.render(view, { layout, title });
+
     } catch (error) {
       this.renderError(res, error);
+
     }
   }
 
@@ -253,10 +260,8 @@ export class BackendController {
       res.render(view, {
         layout,
         title,
-        data: {
-          employee,
-          metadata,
-        },
+        metadata,
+        data: employee,
       });
     } catch (error) {
       this.renderError(res, error);
@@ -285,8 +290,10 @@ export class BackendController {
 
       // 직원 정보 수정 페이지 렌더링
       res.render(view, { layout, title, data: { employee } });
+
     } catch (error) {
       this.renderError(res, error);
+
     }
   }
 
@@ -324,8 +331,10 @@ export class BackendController {
 
       // 직원 비밀번호 수정 페이지 렌더링
       res.render(view, { layout, title, data: { employeeId, isForceUpdatePassword } });
+
     } catch (error) {
       this.renderError(res, error);
+
     }
   }
 
@@ -362,8 +371,10 @@ export class BackendController {
 
       // 직원 삭제 페이지 렌더링
       res.render(view, { layout, title, data: employee.data });
+
     } catch (error) {
       this.renderError(res, error);
+
     }
   }
 
@@ -428,8 +439,10 @@ export class BackendController {
           permissions: permissionsAll,
         },
       });
+
     } catch (error) {
       this.renderError(res, error);
+
     }
   }
 
@@ -473,8 +486,10 @@ export class BackendController {
           ...result.metadata,
         },
       });
+
     } catch (error) {
       this.renderError(res, error);
+
     }
   }
 
@@ -486,8 +501,10 @@ export class BackendController {
     try {
       // 로그인 페이지 렌더링
       res.render(view, { layout, title });
+
     } catch (error) {
       this.renderError(res, error);
+
     }
   }
 
@@ -499,8 +516,10 @@ export class BackendController {
     try {
       // 비밀번호 찾기 페이지 렌더링
       res.render(view, { layout, title });
+
     } catch (error) {
       this.renderError(res, error);
+
     }
   }
 
@@ -546,8 +565,10 @@ export class BackendController {
       if (!hasPermission) {
         throw new Error("권한이 없습니다.");
       }
+
     } catch (error) {
       throw error;
+
     }
   }
 
@@ -560,12 +581,14 @@ export class BackendController {
         title,
         message: error.message || "일시적인 오류가 발생했습니다.",
       });
+
     } else {
       res.status(500).render(view, {
         layout,
         title,
         message: "알 수 없는 오류가 발생했습니다.",
       });
+
     }
   }
 }

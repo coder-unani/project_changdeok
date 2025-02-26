@@ -7,44 +7,44 @@
   <div class="flex flex-col justify-between items-center">
     <div>
       <p>
-        <span class="font-bold">Title:</span> <%=data.content.title%>
+        <span class="font-bold">Title:</span> <%=data.title%>
       </p>
     </div>
     <div>
       <p>
-        <span class="font-bold">Content:</span> <%=data.content.content%>
+        <span class="font-bold">Content:</span> <%=data.content%>
       </p>
     </div>
     <div>
       <p>
-        <span class="font-bold">작성자:</span> <%=data.content.writerId || 'null'%> <%=data.content.writerName || 'null'%> <%=data.content.writerId || 'null'%>
+        <span class="font-bold">작성자:</span> <%=data.writerId || 'null'%> <%=data.writerName || 'null'%> <%=data.writerId || 'null'%>
       </p>
     </div>
     <div>
       <p>
-        <span class="font-bold">조회수:</span> <%=data.content.viewCount%>
+        <span class="font-bold">조회수:</span> <%=data.viewCount%>
       </p>
     </div>
     <div>
       <p>
-        <span class="font-bold">좋아요:</span> <%=data.content.likeCount%>
+        <span class="font-bold">좋아요:</span> <%=data.likeCount%>
       </p>
     </div>
     <div>
       <p>
-        <span class="font-bold">댓글수:</span> <%=data.content.commentCount%>
+        <span class="font-bold">댓글수:</span> <%=data.commentCount%>
       </p>
     </div>
     <div>
       <p>
-        <span class="font-bold">작성일:</span> <%=data.content.createdAt%>
+        <span class="font-bold">작성일:</span> <%=data.createdAt%>
       </p>
     </div>
   </div>
 </div>
 
 <div class=" grid grid-cols-3 gap-1.5 text-white font-semibold">
-  <a href="<%=routes.contentsUpdate.url.replace(':groupId', data.metadata.groupId).replace(':contentId', data.content.id)%>" class="orb-btn-secondary">
+  <a href="<%=routes.contentsUpdate.url.replace(':groupId', metadata.groupId).replace(':contentId', data.id)%>" class="orb-btn-secondary">
     수정하기
   </a>
   <a href="#" id="btn-delete" class="orb-btn-delete">
@@ -62,7 +62,7 @@ document.getElementById('btn-delete').addEventListener('click', async (e) => {
 
   try {
     // 컨텐츠 삭제 API 호출
-    const apiUrl = '<%=apiBackendRoutes.contentsDelete.url%>'.replace(':groupId', '<%=data.metadata.groupId%>').replace(':contentId', '<%=data.content.id%>');
+    const apiUrl = '<%=apiBackendRoutes.contentsDelete.url%>'.replace(':groupId', '<%=metadata.groupId%>').replace(':contentId', '<%=data.id%>');
     const response = await fetch(apiUrl, {
       method: '<%=apiBackendRoutes.contentsDelete.method%>',
       headers: {
@@ -78,7 +78,7 @@ document.getElementById('btn-delete').addEventListener('click', async (e) => {
 
     // 응답 성공
     alert('<%=apiBackendRoutes.contentsDelete.title%> 성공');
-    window.location.href = "<%=routes.contents.url%>".replace(':groupId', '<%=data.metadata.groupId%>');
+    window.location.href = "<%=routes.contents.url%>".replace(':groupId', '<%=metadata.groupId%>');
 
   } catch (error) {
     alert(error.message || '서버 오류가 발생했습니다.');
