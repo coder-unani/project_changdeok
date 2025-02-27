@@ -38,9 +38,9 @@ export class BackendController {
   }
 
   // 화면 관리: 배너
-  public screensBanner(req: Request, res: Response): void {
+  public bannersScreen(req: Request, res: Response): void {
     // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.screensBanner;
+    const { title, view, layout, permissions } = backendRoutes.bannersScreen;
 
     try {
       // 접근 권한 체크
@@ -54,9 +54,9 @@ export class BackendController {
   }
 
   // 화면 관리: 팝업
-  public screensPopup(req: Request, res: Response): void {
+  public bannersPopup(req: Request, res: Response): void {
     // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.screensPopup;
+    const { title, view, layout, permissions } = backendRoutes.bannersPopup;
 
     try {
       // 접근 권한 체크

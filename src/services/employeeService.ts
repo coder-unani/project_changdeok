@@ -125,14 +125,14 @@ export class EmployeeService implements IEmployeeService {
       // 직원 등록
       const employee = await this.prisma.employee.create({
         data: {
-          email: data.email,
-          name: data.name,
+          email: data.email.trim(),
+          name: data.name.trim(),
           password: hashedPassword,
-          position: data.position,
-          description: data.description,
-          phone: data.phone,
-          mobile: data.mobile,
-          address: data.address,
+          position: data.position?.trim(),
+          description: data.description?.trim(),
+          phone: data.phone?.trim(),
+          mobile: data.mobile?.trim(),
+          address: data.address?.trim(),
           hireDate: hireDate,
           birthDate: birthDate
         }
@@ -145,7 +145,7 @@ export class EmployeeService implements IEmployeeService {
       return {
         result: false,
         code: CODE_FAIL_SERVER,
-        message: MESSAGE_FAIL_SERVER
+        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
       }
 
     }
@@ -212,7 +212,7 @@ export class EmployeeService implements IEmployeeService {
       return {
         result: false,
         code: CODE_FAIL_SERVER,
-        message: MESSAGE_FAIL_SERVER
+        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
       }
       
     }
@@ -302,17 +302,17 @@ export class EmployeeService implements IEmployeeService {
 
     try {
       // 직원 정보 수정. 변경된 데이터 리턴
-      const updatedEmployee = await this.prisma.employee.update({
+      const prismaUpdatedEmployee = await this.prisma.employee.update({
         where: {
           id: id
         },
         data: {
-          name: data.name,
-          position: data.position,
-          description: data.description,
-          phone: data.phone,
-          mobile: data.mobile,
-          address: data.address,
+          name: data.name?.trim(),
+          position: data.position?.trim(),
+          description: data.description?.trim(),
+          phone: data.phone?.trim(),
+          mobile: data.mobile?.trim(),
+          address: data.address?.trim(),
           hireDate: data.hireDate ? new Date(data.hireDate) : null,
           birthDate: data.birthDate ? new Date(data.birthDate) : null,
           fireDate: data.fireDate ? new Date(data.fireDate) : null
@@ -320,30 +320,29 @@ export class EmployeeService implements IEmployeeService {
       });
       
       const employee: IEmployee = {
-        id: updatedEmployee.id,
-        email: updatedEmployee.email,
-        name: updatedEmployee.name,
-        position: updatedEmployee.position,
-        description: updatedEmployee.description,
-        phone: updatedEmployee.phone,
-        mobile: updatedEmployee.mobile,
-        address: updatedEmployee.address,
-        hireDate: updatedEmployee.hireDate?.toISOString(),
-        birthDate: updatedEmployee.birthDate?.toISOString(),
-        fireDate: updatedEmployee.fireDate?.toISOString()
+        id: prismaUpdatedEmployee.id,
+        email: prismaUpdatedEmployee.email,
+        name: prismaUpdatedEmployee.name,
+        position: prismaUpdatedEmployee.position,
+        description: prismaUpdatedEmployee.description,
+        phone: prismaUpdatedEmployee.phone,
+        mobile: prismaUpdatedEmployee.mobile,
+        address: prismaUpdatedEmployee.address,
+        hireDate: prismaUpdatedEmployee.hireDate?.toISOString(),
+        birthDate: prismaUpdatedEmployee.birthDate?.toISOString(),
+        fireDate: prismaUpdatedEmployee.fireDate?.toISOString()
       };
 
       // 성공
       return { result: true, data: employee };
 
     } catch (error) {
-      // 실패
-      console.error(error);
       return {
         result: false,
         code: CODE_FAIL_SERVER,
-        message: MESSAGE_FAIL_SERVER
+        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
       }
+
     }
   }
 
@@ -428,7 +427,7 @@ export class EmployeeService implements IEmployeeService {
       return {
         result: false,
         code: CODE_FAIL_SERVER,
-        message: MESSAGE_FAIL_SERVER
+        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
       }
 
     }
@@ -447,7 +446,7 @@ export class EmployeeService implements IEmployeeService {
       }
 
       // 직원 정보 조회
-      const employee = await this.prisma.employee.findUnique({
+      const prismaEmployee = await this.prisma.employee.findUnique({
         where: {
           id: id,
           isDeleted: false
@@ -455,7 +454,7 @@ export class EmployeeService implements IEmployeeService {
       });
 
       // 직원 정보가 없는 경우 에러
-      if (!employee) {
+      if (!prismaEmployee) {
         return {
           result: false,
           code: CODE_BAD_REQUEST,
@@ -464,7 +463,7 @@ export class EmployeeService implements IEmployeeService {
       }
 
       // 비활성화 직원
-      if (!employee.isActivated) {
+      if (!prismaEmployee.isActivated) {
         return {
           result: false,
           code: CODE_BAD_REQUEST,
@@ -503,7 +502,7 @@ export class EmployeeService implements IEmployeeService {
       return {
         result: false,
         code: CODE_FAIL_SERVER,
-        message: MESSAGE_FAIL_SERVER
+        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
       }
 
     }
@@ -556,13 +555,13 @@ export class EmployeeService implements IEmployeeService {
       return {
         result: false,
         code: CODE_FAIL_SERVER,
-        message: MESSAGE_FAIL_SERVER
+        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
       }
+
     }
   }
 
   public async list(data: IRequestEmployees): Promise<IServiceResponse<IEmployee[] | []>> {
-
     try {
       // 페이지 번호가 없거나 1보다 작은 경우 1로 설정
       if (!data.page || data.page < 1) {
@@ -599,14 +598,14 @@ export class EmployeeService implements IEmployeeService {
       }
 
       // 전체 직원 수 조회
-      const totalEmployees = await this.prisma.employee.count({
+      const prismaTotal = await this.prisma.employee.count({
         where: {
           isDeleted: false
         }
       });
 
       // 직원 리스트 조회
-      const employeeInquery = await this.prisma.employee.findMany({
+      const prismaEmployee = await this.prisma.employee.findMany({
         where: {
           isDeleted: false
         },
@@ -616,7 +615,7 @@ export class EmployeeService implements IEmployeeService {
       });
 
       // IEmployees 배열로 변환
-      const employees: IEmployee[] = employeeInquery.map(employee => {
+      const employees: IEmployee[] = prismaEmployee.map(employee => {
         // 이메일 마스킹 처리
         const employeeEmail = formatEmailMasking(employee.email);
 
@@ -637,13 +636,13 @@ export class EmployeeService implements IEmployeeService {
 
       // 메타데이터 생성
       const metadata = {
-        total: totalEmployees,
+        total: prismaTotal,
         page: data.page,
         pageSize: data.pageSize,
         start: (data.page - 1) * data.pageSize + 1,
         end: (data.page - 1) * data.pageSize + employees.length,
         count: employees.length,
-        totalPage: Math.ceil(totalEmployees / data.pageSize)
+        totalPage: Math.ceil(prismaTotal / data.pageSize)
       };
 
       return { result: true, metadata, data: employees };
@@ -652,7 +651,7 @@ export class EmployeeService implements IEmployeeService {
       return {
         result: false,
         code: CODE_FAIL_SERVER,
-        message: MESSAGE_FAIL_SERVER
+        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
       }
 
     }
@@ -680,7 +679,7 @@ export class EmployeeService implements IEmployeeService {
     // 직원 로그인
     try {
       // 직원 조회
-      const result = await this.prisma.employee.findFirst({
+      const prismaEmployee = await this.prisma.employee.findFirst({
         where: {
           email: data.email,
           isDeleted: false,
@@ -692,7 +691,7 @@ export class EmployeeService implements IEmployeeService {
       });
       
       // 직원이 없는 경우
-      if (!result) {
+      if (!prismaEmployee) {
         return {
           result: false,
           code: CODE_BAD_REQUEST,
@@ -701,7 +700,7 @@ export class EmployeeService implements IEmployeeService {
       }
 
       // 패스워드 비교
-      const isPasswordMatch = await verifyPassword(data.password, result.password);
+      const isPasswordMatch = await verifyPassword(data.password, prismaEmployee.password);
 
       // 패스워드 불일치
       if (!isPasswordMatch) {
@@ -713,18 +712,18 @@ export class EmployeeService implements IEmployeeService {
       }
 
       // 권한의 permissionId를 배열로 변환
-      const permissions = result.permissions.map(permission => permission.permissionId);
+      const permissions = prismaEmployee.permissions.map(permission => permission.permissionId);
       
       // 반환할 직원 정보
       const employee: IEmployee = {
-        id: result.id,
-        email: result.email,
-        name: result.name,
-        position: result.position,
-        description: result.description,
-        phone: result.phone,
-        mobile: result.mobile,
-        address: result.address,
+        id: prismaEmployee.id,
+        email: prismaEmployee.email,
+        name: prismaEmployee.name,
+        position: prismaEmployee.position,
+        description: prismaEmployee.description,
+        phone: prismaEmployee.phone,
+        mobile: prismaEmployee.mobile,
+        address: prismaEmployee.address,
         permissions: permissions
       };
 
@@ -735,35 +734,13 @@ export class EmployeeService implements IEmployeeService {
       };
 
     } catch (error) {
-      console.error(error);
       return {
         result: false,
         code: CODE_FAIL_SERVER,
-        message: MESSAGE_FAIL_SERVER
+        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
       }
+
     }
-  }
-
-  public async permissions(id: number): Promise<IServiceResponse> {
-    try {
-      const permissions = await this.prisma.employee.findUnique({
-        where: {
-          id: id
-        },
-        select: {
-          permissions: true
-        }
-      });
-
-
-    } catch (error) {
-      return {
-        result: false,
-        code: CODE_FAIL_SERVER,
-        message: MESSAGE_FAIL_SERVER
-      }
-    }
-    return { result: true };
   }
 
   // 직원 Email 중복 체크
@@ -795,6 +772,7 @@ export class EmployeeService implements IEmployeeService {
         code: CODE_FAIL_SERVER,
         message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
       };
+
     }
     
   }

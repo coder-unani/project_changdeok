@@ -69,7 +69,7 @@ export class PermissionService implements IPermissionService {
       return {
         result: false,
         code: CODE_FAIL_SERVER,
-        message: MESSAGE_FAIL_SERVER
+        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
       }
 
     }
@@ -117,7 +117,7 @@ export class PermissionService implements IPermissionService {
       return {
         result: false,
         code: CODE_FAIL_SERVER,
-        message: MESSAGE_FAIL_SERVER
+        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
       }
 
     }

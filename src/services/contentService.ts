@@ -40,8 +40,8 @@ export class ContentService implements IContentService {
       await this.prisma.content.create({
         data: {
           groupId: groupId,
-          title: data.title,
-          content: data.content,
+          title: data.title.trim(),
+          content: data.content?.trim(),
           ip: data.ip || '',
           userAgent: data.userAgent || '',
         }
@@ -54,7 +54,7 @@ export class ContentService implements IContentService {
       return {
         result: false,
         code: CODE_FAIL_SERVER,
-        message: MESSAGE_FAIL_SERVER
+        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
       }
     }
   }
@@ -115,8 +115,8 @@ export class ContentService implements IContentService {
       const content: IContent = {
         id: prismaContent.id,
         groupId: prismaContent.groupId,
-        title: prismaContent.title,
-        content: prismaContent.content ?? null,
+        title: prismaContent.title.trim(),
+        content: prismaContent.content?.trim() ?? null,
         writerId: prismaContent.writerId ?? null,
         writerName: prismaContent.writerName ?? null,
         writerEmail: prismaContent.writerEmail ?? null,
@@ -389,7 +389,7 @@ export class ContentService implements IContentService {
       return {
         result: false,
         code: CODE_FAIL_SERVER,
-        message: MESSAGE_FAIL_SERVER
+        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
       }
 
     }
