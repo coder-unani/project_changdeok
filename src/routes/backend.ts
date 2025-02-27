@@ -50,13 +50,13 @@ router.get(backendRoutes.dashboard.url, function (req, res) {
  */
 
 // 화면관리: 배너 관리
-router.get(backendRoutes.screensBanner.url, function (req, res) {
-  backendController.screensBanner(req, res);
+router.get(backendRoutes.bannersScreen.url, function (req, res) {
+  backendController.bannersScreen(req, res);
 });
 
 // 화면관리: 팝업 관리
-router.get(backendRoutes.screensPopup.url, function (req, res) {
-  backendController.screensPopup(req, res);
+router.get(backendRoutes.bannersPopup.url, function (req, res) {
+  backendController.bannersPopup(req, res);
 });
 
 

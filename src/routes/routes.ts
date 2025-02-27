@@ -113,20 +113,54 @@ export const backendRoutes = {
     layout: backendRoutesLayout,
     permissions: [1, 6]
   },
-  // 화면관리
-  screensBanner: {
+  // 배너 관리
+  banners: {
     method: 'GET',
     title: '배너 관리',
-    url: `${backendRoutesPrefix}/screens/banners`,
-    view: 'backend/screens/banner',
+    url: `${backendRoutesPrefix}/banners`,
+    view: 'backend/banners/list',
     layout: backendRoutesLayout,
     permissions: [1, 5]
   },
-  screensPopup: {
+  bannersWrite: {
+    method: 'GET',
+    title: '배너 작성',
+    url: `${backendRoutesPrefix}/banners/write`,
+    view: 'backend/banners/write',
+    layout: backendRoutesLayout,
+    permissions: [1, 5]
+  },
+  bannersDetail: {
+    method: 'GET',
+    title: '배너 상세',
+    url: `${backendRoutesPrefix}/banners/:bannerId`,
+    view: 'backend/banners/detail',
+    layout: backendRoutesLayout,
+    permissions: [1, 5]
+  },
+  bannersUpdate: {
+    method: 'GET',
+    title: '배너 수정',
+    url: `${backendRoutesPrefix}/banners/:bannerId/update`,
+    view: 'backend/banners/update',
+    layout: backendRoutesLayout,
+    permissions: [1, 5]
+  },
+  // 배너 관리: 화면 관리
+  bannersScreen: {
+    method: 'GET',
+    title: '배너 관리',
+    url: `${backendRoutesPrefix}/banners/screens`,
+    view: 'backend/banners/screen',
+    layout: backendRoutesLayout,
+    permissions: [1, 5]
+  },
+  // 배너 관리: 팝업 관리
+  bannersPopup: {
     method: 'GET',
     title: '팝업 관리',
-    url: `${backendRoutesPrefix}/screens/popups`,
-    view: 'backend/screens/popup',
+    url: `${backendRoutesPrefix}/banners/popups`,
+    view: 'backend/banners/popup',
     layout: backendRoutesLayout,
     permissions: [1, 5]
   },
