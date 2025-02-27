@@ -1,5 +1,33 @@
 export type typeListSort = 'ID_DESC' | 'ID_ASC' | 'TITLE_DESC' | 'TITLE_ASC';
 
+export interface IRequestBannerCreate {
+  kind: string;
+  code: string;
+  title: string;
+  description?: string;
+  imagePath?: string;
+  linkType?: string;
+  linkUrl?: string;
+  sort?: number;
+  isPublished?: boolean;
+  publishedAt?: string;
+  unpublishedAt?: string;
+  createdBy: number;
+}
+
+export interface IRequestBannerUpdate {
+  title?: string;
+  description?: string;
+  imagePath?: string;
+  linkType?: string;
+  linkUrl?: string;
+  sort?: number;
+  isPublished?: boolean;
+  publishedAt?: string;
+  unpublishedAt?: string;
+  updatedBy: number;
+}
+
 export interface IRequestContentWrite {
   title: string;
   content: string;
