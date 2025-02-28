@@ -3,20 +3,20 @@
     <span class="font-bold text-xl"><%=title%></span>
   </h1>
 </div>
-<form id="formEmployeePermissions" class="space-y-4 text-sm">
-  <div class="space-y-4 text-sm bg-white p-2 mb-4 lg:p-4 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
-    <ul>
+<form id="formEmployeePermissions">
+  <div class="space-y-4 text-sm bg-white p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
+    <ul class="space-y-1.5">
       <% data.permissions.forEach((permission, index) => { %>
-        <li>
+        <li class="flex items-center gap-1">
           <input 
             type="checkbox" 
             id="permission<%=index%>" 
             name="permission" 
-            class="w-4 h-4 text-blue-500 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" 
+            class="w-3 h-3 text-blue-500 border border-gray-300 rounded focus:outline-none cursor-pointer" 
             value="<%=permission.id%>" 
             <%= data.employee.permissions.includes(permission.id) ? 'checked' : '' %>
           >
-          <label for="permission<%=index%>" class="text-gray-700"><%=permission.title%></label>
+          <label for="permission<%=index%>" class="text-gray-700 cursor-pointer"><%=permission.title%></label>
         </li>
       <% }); %>
       </ul>

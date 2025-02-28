@@ -4,17 +4,17 @@
     <!-- 로고 -->
     <a href="<%=routes.index.url%>">
       <div class="flex gap-1.5 items-center justify-center pt-2">
-        <span class="text-slate-700">
+        <span class="text-gray-700">
           <img src="<%=company.logo%>" alt="<%=company.name%>" class="w-6 h-6">
         </span>
-        <span class="text-2xl font-bold text-slate-700"><%=company.nameEn.toUpperCase()%></span>
+        <span class="text-2xl font-bold text-gray-700"><%=company.nameEn.toUpperCase()%></span>
       </div>
     </a>
     <!-- 메뉴 -->
     <nav class="mt-6">
       <div class="mb-2 border-t border-slate-100">
-        <p class="text-xs font-normal text-slate-400 py-2 mt-2"><%=company.name%></p>
-        <ul class="flex flex-col gap-2 text-slate-500 dark:text-slate-100">
+        <p class="text-xs font-normal text-gray-400 p-2 mt-2"><%=company.name%></p>
+        <ul class="flex flex-col gap-2 text-gray-500 dark:text-gray-100">
           <li class="font-thin rounded-lg transition-all dark:hover:text-white dark:hover:bg-gray-600 <%if (routes.dashboard.title === title) {%>orb-hightlight<%} else {%>hover:bg-gray-100<%}%>">
             <a class="flex items-center justify-start p-2" href="<%=routes.dashboard.url%>">
               <span class="text-left">
@@ -29,8 +29,8 @@
       </div>
       <!-- 화면 관리 -->
       <div class="mb-2 border-t border-slate-100">
-        <p class="text-xs font-normal text-slate-400 py-2 mt-2">화면 관리</p>
-        <ul class="flex flex-col gap-2 text-slate-500 dark:text-slate-100">
+        <p class="text-xs font-normal text-gray-400 p-2 mt-2">화면 관리</p>
+        <ul class="flex flex-col gap-2 text-gray-500 dark:text-gray-100">
           <li class="font-thin rounded-lg transition-all dark:hover:text-white dark:hover:bg-gray-600 <%if (routes.screensBanner.title === title) {%>orb-hightlight<%} else {%>hover:bg-gray-100<%}%>">
             <a class="flex items-center justify-start p-2" href="<%=routes.screensBanner.url%>">
               <span class="text-left">
@@ -55,8 +55,8 @@
       </div>
       <!-- 게시판 관리 -->
       <div class="mb-2 border-t border-slate-100">
-        <p class="text-xs font-normal text-slate-400 py-2 mt-2">게시판 관리</p>
-        <ul class="flex flex-col gap-2 text-slate-500 dark:text-slate-100">
+        <p class="text-xs font-normal text-gray-400 p-2 mt-2">게시판 관리</p>
+        <ul class="flex flex-col gap-2 text-gray-500 dark:text-gray-100">
           <li class="font-thin rounded-lg transition-all dark:hover:text-white dark:hover:bg-gray-600 <%if (title === '공지사항') {%>orb-hightlight<%} else {%>hover:bg-gray-100<%}%>">
             <a class="flex items-center justify-start p-2" href="/admin/contents/1">
               <span class="text-left">
@@ -80,8 +80,8 @@
       </div>
       <!-- 사이트 관리 -->
       <div class="mb-2 border-t border-slate-100">
-        <p class="text-xs font-normal text-slate-400 py-2 mt-2">사이트 관리</p>
-        <ul class="flex flex-col gap-2 text-slate-500 dark:text-slate-100">
+        <p class="text-xs font-normal text-gray-400 p-2 mt-2">사이트 관리</p>
+        <ul class="flex flex-col gap-2 text-gray-500 dark:text-gray-100">
           <li class="font-thin rounded-lg transition-all dark:hover:text-white dark:hover:bg-gray-600 <%if (routes.employees.title === title) {%>orb-hightlight<%} else {%>hover:bg-gray-100<%}%>">
             <a class="flex items-center justify-start p-2" href="<%=routes.employees.url%>">
               <span class="text-left">
@@ -98,7 +98,7 @@
   </div>
   <!-- 로그아웃 -->
   <div class="border-t border-slate-100">
-    <ul class="flex flex-col gap-2 text-slate-500 dark:text-red-500">
+    <ul class="flex flex-col gap-2 text-gray-500 dark:text-red-500">
       <li class="flex mt-2 font-thin rounded-lg transition-all dark:hover:text-white hover:bg-gray-100 dark:hover:bg-red-600">
         <button id="logout" class="flex flex-1 items-center justify-start p-2 cursor-pointer">
           <span class="text-left">
@@ -116,7 +116,7 @@
 <!-- 사이드바 MOBILE -->
 <div
   id="sidebar-mobile"
-  class="fixed flex flex-col justify-between w-64 inset-y-0 right-0 p-4 z-50 bg-white shadow-md transform translate-x-full transition-transform duration-300 ease-in-out lg:hidden"
+  class="fixed flex flex-col justify-between w-64 inset-y-0 right-0 p-4 z-50 bg-white shadow-[0_2px_30px_rgba(0,0,0,.06)] transform translate-x-full transition-transform duration-300 ease-in-out lg:hidden"
 >
   <!-- 메뉴 -->
   <nav>
@@ -127,7 +127,7 @@
       </button>
     </div>
     <div class="mb-4">
-      <ul class="flex flex-col mt-2 gap-2 text-slate-500 dark:text-slate-100">
+      <ul class="flex flex-col mt-2 gap-2 text-gray-500 dark:text-gray-100">
         <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600 <%if (routes.dashboard.title === title) {%>orb-hightlight<%}%>">
           <a class="flex items-center justify-start p-2" href="<%=routes.dashboard.url%>">
             <span class="text-left">
@@ -143,8 +143,8 @@
     </div>
     <!-- 화면 관리 -->
     <div class="mb-4">
-      <p class="font-normal text-slate-300 py-2 border-b border-slate-100">화면 관리</p>
-      <ul class="flex flex-col mt-2 gap-2 text-slate-500 dark:text-slate-100">
+      <p class="font-normal text-gray-300 py-2 border-b border-slate-100">화면 관리</p>
+      <ul class="flex flex-col mt-2 gap-2 text-gray-500 dark:text-gray-100">
         <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600">
           <a class="flex items-center justify-start p-2" href="<%=routes.screensBanner.url%>">
             <span class="text-left">
@@ -171,8 +171,8 @@
     </div>
     <!-- 게시판 관리 -->
     <div class="mb-4">
-      <p class="font-normal text-slate-300 py-2 border-b border-slate-100">게시판 관리</p>
-      <ul class="flex flex-col mt-2 gap-2 text-slate-500 dark:text-slate-100">
+      <p class="font-normal text-gray-300 py-2 border-b border-slate-100">게시판 관리</p>
+      <ul class="flex flex-col mt-2 gap-2 text-gray-500 dark:text-gray-100">
         <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600">
           <a class="flex items-center justify-start p-2" href="/admin/contents/1">
             <span class="text-left">
@@ -198,8 +198,8 @@
     </div>
     <!-- 사이트 관리 -->
     <div class="mb-4">
-      <p class="font-normal text-slate-300 py-2 border-b border-slate-100">사이트 관리</p>
-      <ul class="flex flex-col mt-2 gap-2 text-slate-500 dark:text-slate-100">
+      <p class="font-normal text-gray-300 py-2 border-b border-slate-100">사이트 관리</p>
+      <ul class="flex flex-col mt-2 gap-2 text-gray-500 dark:text-gray-100">
         <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600 <%if (routes.employees.title === title) {%>orb-hightlight<%}%>">
           <a class="flex items-center justify-start p-2" href="<%=routes.employees.url%>">
             <span class="text-left">

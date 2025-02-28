@@ -41,23 +41,23 @@
   }
 
   .orb-btn-close {
-    @apply rounded-full bg-gradient-to-tr from-slate-800 to-slate-700 py-2 px-4 border border-transparent text-center text-sm text-white transition-all focus:bg-slate-700 active:bg-slate-700 hover:bg-slate-700 disabled:pointer-events-none disabled:opacity-50 cursor-pointer;
+    @apply rounded-full bg-slate-700 from-slate-800 to-slate-700 py-2 px-4 text-center text-sm text-white transition-all focus:bg-slate-700 active:bg-slate-700 hover:bg-slate-700 disabled:pointer-events-none disabled:opacity-50 cursor-pointer;
   }
 
   .orb-btn-primary {
-    @apply w-full lg:w-auto rounded-lg bg-gradient-to-tr from-blue-600 to-blue-500 py-2 px-4 border border-transparent text-center text-sm text-white transition-all focus:bg-blue-500 active:bg-blue-500 hover:bg-blue-500 disabled:pointer-events-none disabled:opacity-50 cursor-pointer;
+    @apply w-full lg:w-auto rounded-lg bg-gradient-to-tr from-blue-600 to-blue-500 py-2 px-4 text-center text-sm text-white transition-all focus:bg-blue-500 active:bg-blue-500 hover:bg-blue-500 disabled:pointer-events-none disabled:opacity-50 cursor-pointer;
   }
 
   .orb-btn-secondary {
-    @apply w-full lg:w-auto rounded-lg bg-gradient-to-tr from-gray-600 to-gray-500 py-2 px-4 border border-transparent text-center text-sm text-white transition-all focus:bg-gray-500 active:bg-gray-500 hover:bg-gray-500 disabled:pointer-events-none disabled:opacity-50 cursor-pointer;
+    @apply w-full lg:w-auto rounded-lg bg-gradient-to-tr from-gray-600 to-gray-500 py-2 px-4 text-center text-sm text-white transition-all focus:bg-gray-500 active:bg-gray-500 hover:bg-gray-500 disabled:pointer-events-none disabled:opacity-50 cursor-pointer;
   }
 
   .orb-btn-third {
-    @apply w-full lg:w-auto rounded-lg bg-gradient-to-tr from-green-600 to-green-500 py-2 px-4 border border-transparent text-center text-sm text-white transition-all focus:bg-green-500 active:bg-green-500 hover:bg-green-500 disabled:pointer-events-none disabled:opacity-50 cursor-pointer;
+    @apply w-full lg:w-auto rounded-lg bg-gradient-to-tr from-green-600 to-green-500 py-2 px-4 text-center text-sm text-white transition-all focus:bg-green-500 active:bg-green-500 hover:bg-green-500 disabled:pointer-events-none disabled:opacity-50 cursor-pointer;
   }
 
   .orb-btn-delete {
-    @apply w-full lg:w-auto rounded-lg bg-gradient-to-tr from-red-600 to-red-500 py-2 px-4 border border-transparent text-center text-sm text-white transition-all focus:bg-red-500 active:bg-red-500 hover:bg-red-500 disabled:pointer-events-none disabled:opacity-50 cursor-pointer;
+    @apply w-full lg:w-auto rounded-lg bg-gradient-to-tr from-red-600 to-red-500 py-2 px-4 text-center text-sm text-white transition-all focus:bg-red-500 active:bg-red-500 hover:bg-red-500 disabled:pointer-events-none disabled:opacity-50 cursor-pointer;
   }
 
   .orb-list {
@@ -69,23 +69,23 @@
   }
 
   .orb-list table th {
-    @apply p-4 border-b border-gray-200;
+    @apply px-4 py-3 bg-gray-100 border-t border-b border-gray-200;
   }
 
   .orb-list table th p {
-    @apply font-semibold leading-none text-gray-800 text-xs lg:text-sm;
+    @apply text-xs lg:text-[13px] font-semibold leading-none text-gray-500;
   }
 
-  .orb-list table tbody tr:not(:last-child) {
-    @apply border-b border-gray-100;
+  .orb-list table tbody tr {
+    @apply border-b border-gray-200;
   }
 
   .orb-list table tbody td {
-    @apply p-4;
+    @apply px-4 py-3;
   }
 
   .orb-list table tbody td p {
-    @apply text-gray-500 text-xs lg:text-sm;
+    @apply text-gray-800 text-xs lg:text-sm;
   }
 
   .orb-list button {

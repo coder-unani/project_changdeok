@@ -29,7 +29,7 @@
   </div>
 </div>
 <div class="orb-list">
-  <div class="bg-white p-2 mb-4 lg:p-4 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
+  <div class="bg-white p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
     <!-- 게시물 개수 노출 -->
     <!-- <div class="flex justify-end pb-2">
       <p class="text-xs text-slate-500 lg:block">검색 결과: <b><%=metadata.total%></b>개</p>
@@ -49,8 +49,8 @@
         <% data.forEach(employee => { %>
           <tr>
             <td><p><%=employee.id%></p></td>
-            <td><a href="/admin/employees/<%=employee.id%>" class="hover:underline decoration-gray-500"><p><%=employee.name%></p></a></td>
-            <td><a href="/admin/employees/<%=employee.id%>" class="hover:underline decoration-gray-500"><p><%=employee.email%></p></a></td>
+            <td><a href="/admin/employees/<%=employee.id%>" class="hover:underline decoration-gray-800"><p><%=employee.name%></p></a></td>
+            <td><a href="/admin/employees/<%=employee.id%>" class="hover:underline decoration-gray-800"><p><%=employee.email%></p></a></td>
             <td class="hidden lg:table-cell"><p><%=employee.position%></p></td>
             <td class="hidden lg:table-cell"><p>2024-08-15</p></td>
           </tr>
