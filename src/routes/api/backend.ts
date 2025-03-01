@@ -3,7 +3,7 @@ import { NextFunction, Request, Response, Router } from 'express';
 import { CORS_BACKEND_OPTIONS } from '../../config/config';
 import { IMiddleware } from '../../types/middleware';
 import { CorsMiddleware } from '../../middlewares/api/cors';
-import { MediaUploadMiddleware } from '../../middlewares/api/uploader';
+import { MediaUploadMiddleware } from '../../middlewares/api/file';
 import { ApiBackendController } from '../../controllers/api/backendController';
 import { apiBackendRoutes } from '../routes';
 
