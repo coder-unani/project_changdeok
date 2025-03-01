@@ -3,6 +3,35 @@ import { permission } from "process";
 export const apiBackendBaseUrl = 'http://localhost:3000';
 export const apiBackendRoutesPrefix = '/api/backend';
 export const apiBackendRoutes = {
+  banners: {
+    method: 'GET',
+    title: '배너 목록',
+    url: `${apiBackendRoutesPrefix}/banners`,
+  },
+  bannersWrite: {
+    method: 'POST',
+    title: '배너 등록',
+    url: `${apiBackendRoutesPrefix}/banners/write`,
+    permissions: [1, 5]
+  },
+  bannersDetail: {
+    method: 'GET',
+    title: '배너 상세 정보',
+    url: `${apiBackendRoutesPrefix}/banners/:bannerId`,
+    permissions: [1, 5]
+  },
+  bannerUpdate: {
+    method: 'PUT',
+    title: '배너 수정',
+    url: `${apiBackendRoutesPrefix}/banners/:bannerId`,
+    permissions: [1, 5]
+  },
+  bannerDelete: {
+    method: 'DELETE',
+    title: '배너 삭제',
+    url: `${apiBackendRoutesPrefix}/banners/:bannerId`,
+    permissions: [1, 5]
+  },
   contents: {
     method: 'GET',
     title: '게시판 관리',
@@ -124,7 +153,7 @@ export const backendRoutes = {
   },
   bannersWrite: {
     method: 'GET',
-    title: '배너 작성',
+    title: '배너 등록',
     url: `${backendRoutesPrefix}/banners/write`,
     view: 'backend/banners/write',
     layout: backendRoutesLayout,
