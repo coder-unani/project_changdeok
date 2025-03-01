@@ -23,5 +23,6 @@ logs
 # MacOS
 .DS_Store
 
+# Media Uploads
 public/uploads
 
