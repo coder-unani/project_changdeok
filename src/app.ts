@@ -11,7 +11,7 @@ import { companyInfo } from './config/base';
 import { IMiddleware } from './types/middleware';
 import { LoggerMiddleware } from './middlewares/logger';
 import { SanitizeMiddleware } from './middlewares/sanitizer';
-import { ExpressLogger } from './utils/logger';
+import { ExpressLogger } from './common/logger';
 import apiFrontendRouter from './routes/api/frontend';
 import apiBackendRouter from './routes/api/backend';
 import frontendRouter from './routes/frontend';

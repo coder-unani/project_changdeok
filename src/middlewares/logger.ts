@@ -11,7 +11,7 @@ export class LoggerMiddleware implements IMiddleware {
 
   public handle(req: Request, res: Response, next: NextFunction): void {
     // /css, /js, /img, /fonts, /favicon.ico 경로는 로그 기록하지 않음
-    if (req.path.match(/\/css|\/js|\/img|\/fonts|\/favicon.ico/)) {
+    if (req.path.match(/\/css|\/js|\/images|\/fonts|\/favicon.ico/)) {
       next();
       return;
     }
