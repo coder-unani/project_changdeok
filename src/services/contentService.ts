@@ -4,8 +4,8 @@ import { IContentGroup, IContent } from "../types/object";
 import { IContentService } from '../types/service';
 import { IRequestContents, IRequestContentWrite, IRequestContentUpdate } from "../types/request";
 import { IServiceResponse } from "../types/response";
-import { validateStringLength } from "../utils/validator";
-import { formatDateToString } from "../utils/formattor";
+import { validateStringLength } from "../common/validator";
+import { formatDateToString } from "../common/formattor";
 
 export class ContentService implements IContentService {
   private prisma: ExtendedPrismaClient;

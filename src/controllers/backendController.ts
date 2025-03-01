@@ -6,9 +6,9 @@ import { IRequestContents, typeListSort } from '../types/request';
 import { IEmployeeToken } from '../types/object';
 import { backendRoutes, apiBackendRoutes } from '../routes/routes';
 import { EmployeeService } from '../services/employeeService';
-import { getApiContents, getApicontentsDetail, getApiEmployeeDetail, getApiPermissionList } from '../utils/api';
-import { verifyJWT } from '../utils/jwt';
-import { getCookie } from '../utils/cookies';
+import { getApiContents, getApicontentsDetail, getApiEmployeeDetail, getApiPermissionList } from '../common/api';
+import { verifyJWT } from '../common/jwt';
+import { getCookie } from '../common/cookies';
 
 // TODO: 권한을 체크해서 다른 계정도 수정하게 할 것인지 확인 필요
 export class BackendController {
@@ -37,6 +37,78 @@ export class BackendController {
     }
   }
 
+  // 화면 관리: 배너 등록
+  public bannersWrite(req: Request, res: Response): void {
+    // 라우팅 정보
+    const { title, view, layout, permissions } = backendRoutes.bannersWrite;
+
+    try {
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+
+      // 배너 등록 페이지 렌더링
+      res.render(view, { layout, title });
+
+    } catch (error) {
+      this.renderError(res, error);
+
+    }
+  }
+
+  // 화면 관리: 배너 상세
+  public bannersDetail(req: Request, res: Response): void {
+    // 라우팅 정보
+    const { title, view, layout, permissions } = backendRoutes.bannersDetail;
+
+    try {
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+
+      // 배너 상세 페이지 렌더링
+      res.render(view, { layout, title });
+
+    } catch (error) {
+      this.renderError(res, error);
+
+    }
+  }
+
+  // 화면 관리: 배너 수정
+  public bannersUpdate(req: Request, res: Response): void {
+    // 라우팅 정보
+    const { title, view, layout, permissions } = backendRoutes.bannersUpdate;
+
+    try {
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+
+      // 배너 수정 페이지 렌더링
+      res.render(view, { layout, title });
+
+    } catch (error) {
+      this.renderError(res, error);
+      
+    }
+  }
+
+  // 화면 관리: 배너 목록
+  public banners(req: Request, res: Response): void {
+    // 라우팅 정보
+    const { title, view, layout, permissions } = backendRoutes.banners;
+
+    try {
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+
+      // 배너 목록 페이지 렌더링
+      res.render(view, { layout, title });
+
+    } catch (error) {
+      this.renderError(res, error);
+
+    }
+  }
+
   // 화면 관리: 배너
   public bannersScreen(req: Request, res: Response): void {
     // 라우팅 정보
@@ -48,8 +120,10 @@ export class BackendController {
 
       // 배너 관리 페이지 렌더링
       res.render(view, { layout, title });
+
     } catch (error) {
       this.renderError(res, error);
+
     }
   }
 
@@ -64,8 +138,10 @@ export class BackendController {
 
       // 팝업 관리 페이지 렌더링
       res.render(view, { layout, title });
+
     } catch (error) {
       this.renderError(res, error);
+
     }
   }
 

@@ -3,7 +3,7 @@ import { ExtendedPrismaClient } from '../config/database';
 import { IRequestBannerCreate, IRequestBannerUpdate } from "../types/request";
 import { IServiceResponse } from "../types/response";
 import { IBanner } from "../types/object";
-import { validateStringLength } from "../utils/validator";
+import { validateStringLength } from "../common/validator";
 
 export class BannerService {
   private prisma: ExtendedPrismaClient;

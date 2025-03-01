@@ -7,7 +7,7 @@ import { AuthMiddleware } from '../middlewares/backend/auth';
 import { PermissionMiddleware } from '../middlewares/backend/permission';
 import { ErrorMiddleware } from '../middlewares/backend/error';
 import { BackendController } from '../controllers/backendController';
-import { ExpressLogger } from '../utils/logger';
+import { ExpressLogger } from '../common/logger';
 
 const router: Router = Router();
 
@@ -48,6 +48,27 @@ router.get(backendRoutes.dashboard.url, function (req, res) {
 /**
  * 화면 관리
  */
+
+// 화면관리: 배너 등록
+router.get(backendRoutes.bannersWrite.url, function (req, res) {
+  backendController.bannersWrite(req, res);
+});
+
+// 화면관리: 배너 상세
+router.get(backendRoutes.bannersDetail.url, function (req, res) {
+  backendController.bannersDetail(req, res);
+});
+
+// 화면관리: 배너 수정
+router.get(backendRoutes.bannersUpdate.url, function (req, res) {
+  backendController.bannersUpdate(req, res);
+});
+
+// 화면관리: 배너 목록
+router.get(backendRoutes.banners.url, function (req, res) {
+  backendController.banners(req, res);
+});
+
 
 // 화면관리: 배너 관리
 router.get(backendRoutes.bannersScreen.url, function (req, res) {

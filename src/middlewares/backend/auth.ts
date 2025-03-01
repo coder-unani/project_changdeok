@@ -3,8 +3,8 @@ import { Request, Response, NextFunction } from 'express';
 import { IMiddleware } from '../../types/middleware';
 import { IEmployeeToken } from '../../types/object';
 import { backendRoutes } from '../../routes/routes';
-import { verifyJWT } from '../../utils/jwt';
-import { removeCookie } from '../../utils/cookies';
+import { verifyJWT } from '../../common/jwt';
+import { removeCookie } from '../../common/cookies';
 
 export class AuthMiddleware implements IMiddleware {
   private loginPath: string;

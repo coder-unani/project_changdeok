@@ -1,8 +1,9 @@
-import { Request, Response, Router } from 'express';
+import { NextFunction, Request, Response, Router } from 'express';
 
 import { CORS_BACKEND_OPTIONS } from '../../config/config';
 import { IMiddleware } from '../../types/middleware';
 import { CorsMiddleware } from '../../middlewares/api/cors';
+import { MediaUploadMiddleware } from '../../middlewares/api/uploader';
 import { ApiBackendController } from '../../controllers/api/backendController';
 import { apiBackendRoutes } from '../routes';
 
@@ -12,8 +13,44 @@ const router: Router = Router();
 const corsMiddleware: IMiddleware = new CorsMiddleware(CORS_BACKEND_OPTIONS);
 router.use((req, res, next) => corsMiddleware.handle(req, res, next));
 
+// 이미지 업로드 미들웨어
+const imageUploadMiddleware = new MediaUploadMiddleware({
+  uploadPath: 'public/uploads/images/',
+  filter: 'image',
+  fieldName: 'image',
+});
+
 // 컨트롤러
 const apiBackendController = new ApiBackendController();
+
+// 배너 목록
+router.get(apiBackendRoutes.banners.url, (req: Request, res: Response) => {
+  apiBackendController.banners(req, res);
+});
+
+// 배너 등록
+router.post(
+  apiBackendRoutes.bannersWrite.url, 
+  (req: Request, res: Response, next: NextFunction) => imageUploadMiddleware.handle(req, res, next), 
+  (req: Request, res: Response) => {
+    apiBackendController.bannersWrite(req, res);
+  }
+);
+
+// 배너 상세 정보
+router.get(apiBackendRoutes.bannersDetail.url, (req: Request, res: Response) => {
+  apiBackendController.bannersDetail(req, res);
+});
+
+// 배너 수정
+router.put(apiBackendRoutes.bannerUpdate.url, (req: Request, res: Response) => {
+  apiBackendController.bannersUpdate(req, res);
+});
+
+// 배너 삭제
+router.delete(apiBackendRoutes.bannerDelete.url, (req: Request, res: Response) => {
+  apiBackendController.bannersDelete(req, res);
+});
 
 // 컨텐츠 목록
 router.get(apiBackendRoutes.contents.url, (req: Request, res: Response) => {

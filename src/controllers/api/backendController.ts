@@ -22,12 +22,48 @@ import { apiBackendRoutes } from '../../routes/routes';
 import { EmployeeService } from '../../services/employeeService';
 import { PermissionService } from '../../services/permissionService';
 import { ContentService } from '../../services/contentService';
-import { formatApiResponse } from '../../utils/formattor';
-import { createJWT, verifyJWT } from '../../utils/jwt';
-import { getCookie, setCookie, removeCookie } from '../../utils/cookies';
+import { formatApiResponse } from '../../common/formattor';
+import { createJWT, verifyJWT } from '../../common/jwt';
+import { getCookie, setCookie, removeCookie } from '../../common/cookies';
 
 
 export class ApiBackendController {
+  // 배너 목록
+  public async banners(req: Request, res: Response): Promise<void> {
+    try {
+    } catch (error) {
+    }
+  }
+
+  // 배너 등록
+  public async bannersWrite(req: Request, res: Response): Promise<void> {
+    try {
+      console.log(req.files);
+    } catch (error) {
+    }
+  }
+
+  // 배너 상세 정보
+  public async bannersDetail(req: Request, res: Response): Promise<void> {
+    try {
+    } catch (error) {
+    }
+  }
+
+  // 배너 수정
+  public async bannersUpdate(req: Request, res: Response): Promise<void> {
+    try {
+    } catch (error) {
+    }
+  }
+
+  // 배너 삭제
+  public async bannersDelete(req: Request, res: Response): Promise<void> {
+    try {
+    } catch (error) {
+    }
+  }
+
   // 컨텐츠 목록
   public async contents(req: Request, res: Response): Promise<void> {
     try {
