@@ -50,6 +50,12 @@ export const formatDate = (date: string | Date | undefined | null): typeFormatte
   }
 }
 
+/**
+ * 
+ * @param date 날짜 형식의 문자열 또는 Date 객체
+ * @param isIncludeTime 시간 포함 여부
+ * @returns typeFormattedResult 변환 결과
+ */
 export const formatDateToString = (date: string | Date | undefined | null, isIncludeTime: boolean = true): typeFormattedResult =>{
   try {
     // Date가 없으면 현재 날짜로 설정

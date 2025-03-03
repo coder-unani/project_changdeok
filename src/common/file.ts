@@ -113,9 +113,9 @@ export class ImagePreProcessor {
  * @param prefix 접두어가 필요한 경우 사용
  * @param suffix 접미어가 필요한 경우 사용
  * @param ext 확장자 변환을 원하는 경우 사용
- * @returns 생성된 파일명
+ * @returns string 생성된 파일명
  */
-export function makeFileName (originalName: string, useOriginalName: boolean = false, prefix: string = "", suffix: string = "", ext: string = "") {
+export function makeFileName (originalName: string, useOriginalName: boolean = false, prefix: string = "", suffix: string = "", ext: string = ""): string {
   // 파일명 생성 변수
   let filename = null;
 
@@ -154,7 +154,7 @@ export function makeFileName (originalName: string, useOriginalName: boolean = f
  * @param dir 생성할 디렉토리 경로
  * @returns boolean 생성 성공 여부
  */
-export function makeDir (dir: string) {
+export function makeDir(dir: string): boolean {
   try {
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });

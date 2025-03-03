@@ -2,6 +2,12 @@ import { Request, Response } from 'express';
 
 import { JWT_EXPIRE_SECOND } from '../config/config';
 
+/**
+ * 
+ * @param req Request 객체
+ * @param name 쿠키 이름
+ * @returns string 쿠키 값
+ */
 export const getCookie = (req: Request, name: string): string | null => {
   try {
     const cookies = req.cookies;
@@ -13,6 +19,13 @@ export const getCookie = (req: Request, name: string): string | null => {
   }
 }
 
+/**
+ * 쿠키 설정
+ * @param res Response 객체
+ * @param name 쿠키 이름
+ * @param value 쿠키 값
+ * @param options 추가 옵션
+ */
 export const setCookie = (res: Response, name: string, value: string, options: any = {}): void => {
   try {
     let cookieOptions = {
@@ -29,6 +42,11 @@ export const setCookie = (res: Response, name: string, value: string, options: a
   }
 }
 
+/**
+ * 쿠키 삭제
+ * @param res Response 객체
+ * @param name 쿠키 이름
+ */
 export const removeCookie = (res: Response, name: string): void => {
   try {
     res.clearCookie(name);
