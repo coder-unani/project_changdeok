@@ -64,7 +64,15 @@ export class MediaUploadMiddleware implements IMiddleware {
       }
     };
 
-    // 파일 업로드 설정
+    // 파일 업로드 설정 (MultiFile)
+    /**
+      싱글 파일 업로드 예제
+      const upload = multer({
+        storage,
+        fileFilter,
+        limits: { fileSize: this.maxFileSize },
+      }).single(this.fieldName);    
+     */
     const upload = multer({
       storage,
       fileFilter,
