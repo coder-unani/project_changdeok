@@ -1,6 +1,17 @@
 type typeOptionalNumber = number | null | undefined;
 type typeOptionalString = string | null | undefined;
 
+export interface IBannerGroup {
+  id: number;
+  kind: string;
+  title: string;
+  description?: typeOptionalString;
+  imageWidth?: number;
+  imageHeight?: number;
+  createdAt: string;
+  updatedAt?: typeOptionalString;
+}
+
 export interface IBanner {
   id: number;
   title: string;

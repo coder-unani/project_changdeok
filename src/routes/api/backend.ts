@@ -3,6 +3,7 @@ import { NextFunction, Request, Response, Router } from 'express';
 import { CORS_BACKEND_OPTIONS } from '../../config/config';
 import { IMiddleware } from '../../types/middleware';
 import { CorsMiddleware } from '../../middlewares/api/cors';
+import { AuthMiddleware } from '../../middlewares/api/backend/auth';
 import { MediaUploadMiddleware } from '../../middlewares/api/file';
 import { ApiBackendController } from '../../controllers/api/backendController';
 import { apiBackendRoutes } from '../routes';
@@ -13,6 +14,10 @@ const router: Router = Router();
 const corsMiddleware: IMiddleware = new CorsMiddleware(CORS_BACKEND_OPTIONS);
 router.use((req, res, next) => corsMiddleware.handle(req, res, next));
 
+// AUTH 미들웨어
+const authMiddleware: IMiddleware = new AuthMiddleware();
+router.use((req, res, next) => authMiddleware.handle(req, res, next));
+
 // 이미지 업로드 미들웨어
 const imageUploadMiddleware = new MediaUploadMiddleware({
   uploadPath: 'public/uploads/images/',
@@ -22,11 +27,6 @@ const imageUploadMiddleware = new MediaUploadMiddleware({
 
 // 컨트롤러
 const apiBackendController = new ApiBackendController();
-
-// 배너 목록
-router.get(apiBackendRoutes.banners.url, (req: Request, res: Response) => {
-  apiBackendController.banners(req, res);
-});
 
 // 배너 등록
 router.post(
@@ -52,10 +52,22 @@ router.delete(apiBackendRoutes.bannerDelete.url, (req: Request, res: Response) =
   apiBackendController.bannersDelete(req, res);
 });
 
-// 컨텐츠 목록
-router.get(apiBackendRoutes.contents.url, (req: Request, res: Response) => {
-  apiBackendController.contents(req, res);
+// 배너 목록
+router.get(apiBackendRoutes.banners.url, (req: Request, res: Response) => {
+  apiBackendController.banners(req, res);
 });
+
+// 배너 그룹 정보
+router.get(apiBackendRoutes.bannerGroup.url, (req: Request, res: Response) => {
+  apiBackendController.bannersGroup(req, res);
+});
+
+// 컨텐츠 목록
+router.get(apiBackendRoutes.contents.url,
+  (req: Request, res: Response) => {
+    apiBackendController.contents(req, res);
+  }
+);
 
 // 컨텐츠 등록
 router.post(apiBackendRoutes.contentsWrite.url, (req: Request, res: Response) => {

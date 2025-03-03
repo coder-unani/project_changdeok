@@ -7,6 +7,7 @@ export const apiBackendRoutes = {
     method: 'GET',
     title: '배너 목록',
     url: `${apiBackendRoutesPrefix}/banners`,
+    permissions: [1, 5]
   },
   bannersWrite: {
     method: 'POST',
@@ -30,6 +31,12 @@ export const apiBackendRoutes = {
     method: 'DELETE',
     title: '배너 삭제',
     url: `${apiBackendRoutesPrefix}/banners/:bannerId`,
+    permissions: [1, 5]
+  },
+  bannerGroup: {
+    method: 'GET',
+    title: '배너 그룹 정보',
+    url: `${apiBackendRoutesPrefix}/banners/groups/:groupId`,
     permissions: [1, 5]
   },
   contents: {
@@ -145,7 +152,7 @@ export const backendRoutes = {
   // 배너 관리
   banners: {
     method: 'GET',
-    title: '배너 관리',
+    title: '배너 목록',
     url: `${backendRoutesPrefix}/banners`,
     view: 'backend/banners/list',
     layout: backendRoutesLayout,
