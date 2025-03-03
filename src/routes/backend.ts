@@ -49,6 +49,16 @@ router.get(backendRoutes.dashboard.url, function (req, res) {
  * 화면 관리
  */
 
+// 화면관리: 배너 관리
+router.get(backendRoutes.bannersScreen.url, function (req, res) {
+  backendController.bannersScreen(req, res);
+});
+
+// 화면관리: 팝업 관리
+router.get(backendRoutes.bannersPopup.url, function (req, res) {
+  backendController.bannersPopup(req, res);
+});
+
 // 화면관리: 배너 등록
 router.get(backendRoutes.bannersWrite.url, function (req, res) {
   backendController.bannersWrite(req, res);
@@ -68,18 +78,6 @@ router.get(backendRoutes.bannersUpdate.url, function (req, res) {
 router.get(backendRoutes.banners.url, function (req, res) {
   backendController.banners(req, res);
 });
-
-
-// 화면관리: 배너 관리
-router.get(backendRoutes.bannersScreen.url, function (req, res) {
-  backendController.bannersScreen(req, res);
-});
-
-// 화면관리: 팝업 관리
-router.get(backendRoutes.bannersPopup.url, function (req, res) {
-  backendController.bannersPopup(req, res);
-});
-
 
 /**
  * 게시판 관리
