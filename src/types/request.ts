@@ -1,11 +1,10 @@
 export type typeListSort = 'ID_DESC' | 'ID_ASC' | 'TITLE_DESC' | 'TITLE_ASC';
 
-export interface IRequestBannerCreate {
-  kind: string;
-  code: string;
+export interface IRequestBannerWrite {
+  groupId: string;
   title: string;
   description?: string;
-  imagePath?: string;
+  imagePath?: string | undefined | null;
   linkType?: string;
   linkUrl?: string;
   sort?: number;
@@ -85,6 +84,10 @@ export interface IRequestDefaultList {
   page: number;
   pageSize: number;
   query?: string | undefined;
+}
+
+export interface IRequestBanners extends IRequestDefaultList {
+  groupId: number;
 }
 
 export interface IRequestContents extends IRequestDefaultList {

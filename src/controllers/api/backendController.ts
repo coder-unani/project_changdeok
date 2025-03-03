@@ -3,7 +3,9 @@ import { Request, Response } from 'express';
 import { CODE_FAIL_SERVER, CODE_BAD_REQUEST, CODE_UNAUTHORIZED, CODE_FORBIDDEN, MESSAGE_FAIL_SERVER } from '../../config/constants';
 import { prisma } from '../../config/database';
 import { 
-  typeListSort, 
+  typeListSort,
+  IRequestBannerWrite,
+  IRequestBanners,
   IRequestContentWrite,
   IRequestContentUpdate,
   IRequestEmployeeRegister, 
@@ -14,32 +16,79 @@ import {
   IRequestEmployeeLogin, 
   IRequestEmployees, 
   IRequestDefaultList,
-  IRequestContents
+  IRequestContents,
 } from '../../types/request';
 import { IEmployeeToken } from '../../types/object';
-import { IContentService, IEmployeeService, IPermissionService } from '../../types/service';
+import { IBannerService, IContentService, IEmployeeService, IPermissionService } from '../../types/service';
 import { apiBackendRoutes } from '../../routes/routes';
 import { EmployeeService } from '../../services/employeeService';
 import { PermissionService } from '../../services/permissionService';
+import { BannerService } from '../../services/bannerService';
 import { ContentService } from '../../services/contentService';
 import { formatApiResponse } from '../../common/formattor';
 import { createJWT, verifyJWT } from '../../common/jwt';
 import { getCookie, setCookie, removeCookie } from '../../common/cookies';
+import { getAccessedEmployee } from '../../common/verifier';
 
 
 export class ApiBackendController {
-  // 배너 목록
-  public async banners(req: Request, res: Response): Promise<void> {
-    try {
-    } catch (error) {
-    }
-  }
-
   // 배너 등록
   public async bannersWrite(req: Request, res: Response): Promise<void> {
+    const { permissions } = apiBackendRoutes.bannersWrite;
+
     try {
-      console.log(req.files);
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+
+      // 로그인 직원 정보
+      const accessedEmployee = getAccessedEmployee(req);
+      if (!accessedEmployee) {
+        res.status(CODE_BAD_REQUEST).json({ message: '로그인 정보가 없습니다.' });
+        return;
+      }
+      
+      // 이미지 경로
+      let imagePath = null;
+      if (req.files && req.files instanceof Array && req.files.length > 0) {
+        imagePath = req.files[0].path;
+        // public 경로 제거
+        if (imagePath.startsWith('public')) {
+          imagePath = imagePath.replace('public', '');
+        }
+      }
+      
+      // 요청 데이터
+      const requestData: IRequestBannerWrite = {
+        groupId: req.body.groupId,
+        title: req.body.title,
+        description: req.body.description || null,
+        imagePath: imagePath,
+        linkType: req.body.linkType || null,
+        linkUrl: req.body.linkUrl || null,
+        sort: req.body.sort || 0,
+        isPublished: (req.body.isPublished && req.body.isPublished === 'Y') ? true : false,
+        publishedAt: req.body.publishedAt ? req.body.publishedAt : new Date().toISOString(),
+        unpublishedAt: req.body.unpublishedAt ? req.body.unpublishedAt : null,
+        createdBy: accessedEmployee.id
+      }
+
+      // 배너 등록
+      const bannerService: IBannerService = new BannerService(prisma);
+      const result = await bannerService.create(requestData);
+
+      // 등록 실패
+      if (!result.result) {
+        console.log(result);
+        res.status(result.code || CODE_FAIL_SERVER).json({ message: result.message || MESSAGE_FAIL_SERVER });
+        return;
+      }
+
+      // 등록 성공
+      res.status(201).send(null);
+
     } catch (error) {
+      res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
+
     }
   }
 
@@ -64,9 +113,91 @@ export class ApiBackendController {
     }
   }
 
+  // 배너 목록
+  public async banners(req: Request, res: Response): Promise<void> {
+    const { permissions } = apiBackendRoutes.banners;
+
+    try {
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+
+      // 배너 코드
+      const groupId = parseInt(req.query.groupId as string);
+      if (!groupId || isNaN(groupId)) {
+        res.status(CODE_BAD_REQUEST).json({ message: '잘못된 요청입니다.' });
+        return;
+      }
+
+      // 요청 데이터
+      const params: IRequestBanners = {
+        page: parseInt(req.query.page as string) || 1,
+        pageSize: parseInt(req.query.pageSize as string) || 10,
+        query: req.query.query as string || '',
+        groupId,
+      }
+
+      // 배너 목록 조회
+      const bannerService: IBannerService = new BannerService(prisma);
+      const result = await bannerService.list(params);
+
+      // 조회 실패 처리
+      if (!result.result) {
+        res.status(result.code || CODE_FAIL_SERVER).json({ message: result.message || MESSAGE_FAIL_SERVER });
+        return;
+      }
+
+      // 조회 성공시 200 응답
+      const response = formatApiResponse(true, null, null, result.metadata, result.data);
+      res.status(200).json(response);
+
+    } catch (error) {
+      res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
+
+    }
+  }
+
+  // 배너 그룹
+  public async bannersGroup(req: Request, res: Response): Promise<void> {
+    const { permissions } = apiBackendRoutes.bannerGroup;
+    try {
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+
+      // 배너 그룹 ID
+      const groupId = parseInt(req.params.groupId);
+      if (isNaN(groupId)) {
+        res.status(CODE_BAD_REQUEST).json({ message: '잘못된 요청입니다.' });
+        return;
+      }
+
+      // 배너 그룹 정보 조회
+      const bannerService: IBannerService = new BannerService(prisma);
+      const result = await bannerService.groupInfo(groupId);
+
+      // 조회 실패
+      if (!result.result) {
+        res.status(result.code || CODE_FAIL_SERVER).json({ message: result.message || MESSAGE_FAIL_SERVER });
+        return;
+      }
+
+      // 응답 성공
+      const response = formatApiResponse(true, null, null, result.metadata, result.data);
+      res.status(200).json(response);
+
+    } catch (error) {
+      res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
+
+    }
+  }
+
   // 컨텐츠 목록
   public async contents(req: Request, res: Response): Promise<void> {
+    const { permissions } = apiBackendRoutes.contents;
+
     try {
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+
       // 컨텐츠 그룹 ID 추출
       const groupId = parseInt(req.params.groupId);
 
@@ -656,5 +787,9 @@ export class ApiBackendController {
       res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
 
     }
+  }
+
+  public verifyPermission(req: Request, permissions: number[] = []): void {
+
   }
 }

@@ -2,13 +2,14 @@ import { Request, Response } from 'express';
 
 import { prisma } from '../config/database';
 import { API_BASE_URL } from '../config/config';
-import { IRequestContents, typeListSort } from '../types/request';
-import { IEmployeeToken } from '../types/object';
+import { IRequestBanners, IRequestContents, typeListSort } from '../types/request';
+import { IBannerGroup, IEmployeeToken } from '../types/object';
 import { backendRoutes, apiBackendRoutes } from '../routes/routes';
 import { EmployeeService } from '../services/employeeService';
-import { getApiContents, getApicontentsDetail, getApiEmployeeDetail, getApiPermissionList } from '../common/api';
+import { getApiBanners, getApiBannerGroup, getApiContents, getApicontentsDetail, getApiEmployeeDetail, getApiPermissionList } from '../common/api';
 import { verifyJWT } from '../common/jwt';
 import { getCookie } from '../common/cookies';
+import { getAccessToken } from "../common/verifier";
 
 // TODO: 권한을 체크해서 다른 계정도 수정하게 할 것인지 확인 필요
 export class BackendController {
@@ -38,16 +39,41 @@ export class BackendController {
   }
 
   // 화면 관리: 배너 등록
-  public bannersWrite(req: Request, res: Response): void {
+  public async bannersWrite(req: Request, res: Response): Promise<void> {
     // 라우팅 정보
     const { title, view, layout, permissions } = backendRoutes.bannersWrite;
 
     try {
       // 접근 권한 체크
       this.verifyPermission(req, permissions);
+      
+      // 접속 토큰
+      const accessToken = getAccessToken(req);
+      if (!accessToken) {
+        throw new Error("로그인이 필요합니다.");
+      }
 
+      // 배너 그룹 ID
+      const groupId = parseInt(req.query.g as string);
+      if (!groupId || isNaN(groupId)) {
+        throw new Error("배너 그룹 ID가 올바르지 않습니다.");
+      }
+
+      // 배너 그룹 정보 조회
+      const apiGroupInfo = await getApiBannerGroup(accessToken, groupId);
+
+      // 배너 그룹 정보 조회 실패
+      if (!apiGroupInfo.result || !apiGroupInfo.data) {
+        throw new Error(apiGroupInfo.message as string);
+      }
+
+      // 메타데이터 생성
+      const metadata = {
+        groupInfo: apiGroupInfo.data
+      }
+      
       // 배너 등록 페이지 렌더링
-      res.render(view, { layout, title });
+      res.render(view, { layout, title: `${metadata.groupInfo.title} ${title}`, metadata, data: {} });
 
     } catch (error) {
       this.renderError(res, error);
@@ -92,7 +118,7 @@ export class BackendController {
   }
 
   // 화면 관리: 배너 목록
-  public banners(req: Request, res: Response): void {
+  public async banners(req: Request, res: Response): Promise<void> {
     // 라우팅 정보
     const { title, view, layout, permissions } = backendRoutes.banners;
 
@@ -100,8 +126,36 @@ export class BackendController {
       // 접근 권한 체크
       this.verifyPermission(req, permissions);
 
+      // 접속 토큰
+      const accessToken = getAccessToken(req);
+      if (!accessToken) {
+        throw new Error("로그인이 필요합니다.");
+      }
+
+      // 배너 그룹 ID
+      const groupId = parseInt(req.query.g as string);
+      if (!groupId || isNaN(groupId)) {
+        throw new Error("배너 그룹 ID가 올바르지 않습니다.");
+      }
+
+      // API Params
+      const data: IRequestBanners = {
+        page: req.query.page ? parseInt(req.query.page as string) : 1,
+        pageSize: req.query.pageSize ? parseInt(req.query.pageSize as string) : 10,
+        query: req.query.query ? (req.query.query as string) : "",
+        groupId
+      };
+
+      // API 호출
+      const { result, message, metadata, data: banners } = await getApiBanners(accessToken, data);
+
+      // 호출 실패
+      if (!result) {
+        throw new Error(message as string);
+      }
+
       // 배너 목록 페이지 렌더링
-      res.render(view, { layout, title });
+      res.render(view, { layout, title: `${metadata.groupInfo.title} ${title}`, metadata, data: banners });
 
     } catch (error) {
       this.renderError(res, error);
@@ -136,6 +190,9 @@ export class BackendController {
       // 접근 권한 체크
       this.verifyPermission(req, permissions);
 
+      console.log("bannersPopup");
+      console.log(title, view, layout, permissions);
+
       // 팝업 관리 페이지 렌더링
       res.render(view, { layout, title });
 
@@ -151,6 +208,9 @@ export class BackendController {
     const { title, view, layout, permissions } = backendRoutes.contents;
 
     try {
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+
       // 게시판 ID 추출
       const groupId = parseInt(req.params.groupId);
 
@@ -164,9 +224,6 @@ export class BackendController {
         throw new Error("게시판 아이디가 형식에 맞지 않습니다.");
       }
 
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-
       // params 생성
       const data: IRequestContents = {
         page: req.query.page ? parseInt(req.query.page as string) : 1,
@@ -176,7 +233,12 @@ export class BackendController {
       };
 
       // API 호출
-      const { metadata, data: contents } = await getApiContents(groupId, data);
+      const accessToken = getAccessToken(req);
+      if (!accessToken) {
+        throw new Error("로그인이 필요합니다.");
+      }
+      const { metadata, data: contents } = await getApiContents(accessToken, groupId, data);
+
 
       // 게시판 관리 페이지 렌더링
       res.render(view, { 
@@ -198,6 +260,9 @@ export class BackendController {
     const { title, view, layout, permissions } = backendRoutes.contentsWrite;
 
     try {
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+
       // 게시판 ID 추출
       const groupId = parseInt(req.params.groupId);
 
@@ -210,9 +275,6 @@ export class BackendController {
       if (isNaN(groupId)) {
         throw new Error("게시판 아이디가 형식에 맞지 않습니다.");
       }
-
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
 
       // 게시글 작성 페이지 렌더링
       res.render(view, { layout, title, data: { groupId } });
@@ -460,6 +522,9 @@ export class BackendController {
     const { title, view, layout, permissions } = backendRoutes.employeesPermissions;
 
     try {
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+
       // 직원 ID 추출
       const employeeId = parseInt(req.params.employeeId);
 
@@ -472,9 +537,6 @@ export class BackendController {
       if (isNaN(employeeId)) {
         throw new Error("직원 아이디가 형식에 맞지 않습니다.");
       }
-
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
 
       // 직원 정보 조회
       const accessToken = req.cookies.accessToken;
@@ -599,7 +661,6 @@ export class BackendController {
     }
   }
 
-  // 접근 권한 확인
   public verifyPermission(
     req: Request,
     accessPermissions: number[] = [],
@@ -608,26 +669,27 @@ export class BackendController {
     try {
       // Cookie에서 직원 정보 추출
       const cookieEmployee = getCookie(req, "employee");
+      console.log(cookieEmployee);
       if (!cookieEmployee) {
         throw new Error("로그인이 필요합니다.");
       }
-
+  
       // Cookie 직원 정보 파싱
       const loggedInEmployee: IEmployeeToken = JSON.parse(cookieEmployee);
-
+  
       // 권한 확인용 변수
       let hasPermission = false;
-
+  
       // 권한이 필요없는 페이지이면 접근 가능
       if (accessPermissions.length === 0 && !accessEmployeeId) {
         hasPermission = true;
       }
-
+  
       // 특정 직원 ID가 허용되어 있으면 해당 직원은 접근 가능
       if (accessEmployeeId && loggedInEmployee.id === accessEmployeeId) {
         hasPermission = true;
       }
-
+  
       // 특정 권한이 허용되어 있으면 해당 직원은 접근 가능
       if (
         accessPermissions &&
@@ -636,15 +698,15 @@ export class BackendController {
       ) {
         hasPermission = true;
       }
-
+  
       // 권한이 없으면 에러 페이지로 이동
       if (!hasPermission) {
         throw new Error("권한이 없습니다.");
       }
-
+  
     } catch (error) {
       throw error;
-
+  
     }
   }
 

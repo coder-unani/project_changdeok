@@ -7,48 +7,55 @@
 <form id="formBannerWrite" enctype="multipart/form-data">
   <!-- 이미지 형식만 가능한 input file -->
   <input type="file" id="image" name="image" class="hidden" accept="image/*">
+  <input type="hidden" name="groupId" value="<%=metadata.groupInfo.id%>">
   <div class="space-y-4 text-sm bg-white p-2 mb-4 lg:p-4 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
     <div>
       <label for="image" class="block mb-1 font-medium text-gray-700">이미지</label>
       <img id="imagePreview" class="w-[200px] h-[200px] object-cover rounded-md cursor-pointer" src="/images/no-image-200x200.jpg" alt="이미지">
+      <p>이미지 사이즈 (W x H): <%=metadata.groupInfo.imageWidth%> x <%=metadata.groupInfo.imageHeight%></p>
     </div>
-
     <div>
       <label for="title" class="block mb-1 font-medium text-gray-700">제목</label>
       <input type="text" id="title" name="title" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="제목" required>
     </div>
     
     <div>
-      <label for="name" class="block mb-1 font-medium text-gray-700">설명</label>
-      <input type="text" id="name" name="name" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="설명">
+      <label for="description" class="block mb-1 font-medium text-gray-700">설명</label>
+      <input type="text" id="description" name="description" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="설명">
     </div>
 
-    <div>
-      <label for="name" class="block mb-1 font-medium text-gray-700">링크 타입</label>
-      <select id="linkType" name="linkType" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-        <option value="1">내부 링크</option>
-        <option value="2">외부 링크</option>
-      </select>
-      <label for="link" class="block mb-1 font-medium text-gray-700">링크</label>
-      <input type="text" id="link" name="link" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="링크">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-2">
+      <div>
+        <label for="linkType" class="block mb-1 font-medium text-gray-700">링크 타입</label>
+        <select id="linkType" name="linkType" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="">선택</option>
+          <option value="self">내부 링크</option>
+          <option value="outer">외부 링크</option>
+        </select>
+      </div>
+      <div class="md:col-span-3">
+        <label for="linkUrl" class="block mb-1 font-medium text-gray-700">링크</label>
+        <input type="text" id="linkUrl" name="linkUrl" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="링크 주소">
+      </div>
     </div>
 
     <div>
       <label for="isPublished" class="block mb-1 font-medium text-gray-700">발행 여부</label>
       <select id="isPublished" name="isPublished" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-        <option value="1">발행</option>
-        <option value="0">미발행</option>
+        <option value="Y">발행</option>
+        <option value="N">미발행</option>
       </select>
     </div>
 
-    <div>
-      <label for="publishedAt" class="block mb-1 font-medium text-gray-700">발행 일시</label>
-      <input type="datetime-local" id="publishedAt" name="publishedAt" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-    </div>
-
-    <div>
-      <label for="unpublishedAt" class="block mb-1 font-medium text-gray-700">발행 마감 일시</label>
-      <input type="datetime-local" id="unpublishedAt" name="unpublishedAt" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+      <div>
+        <label for="publishedAt" class="block mb-1 font-medium text-gray-700">발행 일시</label>
+        <input type="datetime-local" id="publishedAt" name="publishedAt" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+      </div>
+      <div>
+        <label for="unpublishedAt" class="block mb-1 font-medium text-gray-700">발행 마감 일시</label>
+        <input type="datetime-local" id="unpublishedAt" name="unpublishedAt" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+      </div>
     </div>
   </div>
       
@@ -79,10 +86,52 @@
   document.getElementById('formBannerWrite').addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    alert('등록');
     try {
       // 폼 데이터 수집
       const formData = new FormData(e.target);
+
+      // groupId 필수
+      if (!formData.get('groupId')) {
+        throw new Error('그룹 정보가 없습니다.');
+      }
+
+      // title이 없으면 등록 불가 
+      if (!formData.get('title')) {
+        throw new Error('제목을 입력해주세요.');
+      }
+
+      // kind가 image일때 image file 필수
+      const kind = `<%=metadata.groupInfo.kind%>`;
+      if (kind === 'image' && formData.get('image').size === 0) {
+        throw new Error('이미지를 선택해주세요.');
+      }
+
+      // linkType이 있으면 link가 필수
+      if (formData.get('linkType') && !formData.get('linkUrl')) {
+        throw new Error('링크 주소를 입력해주세요.');
+      }
+      
+      // link가 있으면 linkType이 필수
+      if (formData.get('linkUrl') && !formData.get('linkType')) {
+        throw new Error('링크 타입을 선택해주세요.');
+      }
+
+      // linkType이 outer이면 link는 반드시 http:// 또는 https://로 시작
+      if (formData.get('linkType') === 'outer' && !formData.get('linkUrl').match(/^https?:\/\//)) {
+        throw new Error('외부 링크는 http:// 또는 https://로 시작해야 합니다.');
+      }
+
+      // 발행 마감일이 발행일보다 빠르면 등록 불가
+      const publishedAt = new Date(formData.get('publishedAt'));
+      const unpublishedAt = new Date(formData.get('unpublishedAt'));
+      if (publishedAt > unpublishedAt) {
+        throw new Error('발행 마감일은 발행일보다 빠를 수 없습니다.');
+      }
+
+      // 발행 마감일이 현재 시간보다 이전이면 등록 불가
+      if (unpublishedAt && unpublishedAt < new Date()) {
+        throw new Error('발행 마감일은 현재 시간보다 이전일 수 없습니다.');
+      }
 
       // 배너 등록 API 호출
       const apiUrl = '<%=apiBackendRoutes.bannersWrite.url%>';
@@ -92,7 +141,7 @@
         body: formData
       });
 
-      // 응답 오류
+      // 응답 오류 / 등록 실패
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || response.statusText);
