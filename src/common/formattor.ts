@@ -56,14 +56,11 @@ export const formatDate = (date: string | Date | undefined | null): typeFormatte
  * @param isIncludeTime 시간 포함 여부
  * @returns typeFormattedResult 변환 결과
  */
-export const formatDateToString = (date: string | Date | undefined | null, isIncludeTime: boolean = true): typeFormattedResult =>{
+export const formatDateToString = (date: string | Date | undefined | null, isIncludeTime: boolean = true, onlyData = false): typeFormattedResult | string | null => {
   try {
     // Date가 없으면 현재 날짜로 설정
     if (date === null || date === undefined) {
-      return {
-        result: false,
-        message: '날짜가 없습니다.'
-      }
+      throw new Error('날짜가 없습니다.');
     }
 
     let dateObject: Date;
@@ -76,28 +73,42 @@ export const formatDateToString = (date: string | Date | undefined | null, isInc
       date = date.trim();
 
       if (!REG_DATE_PATTERN.test(date)) {
-        return {
-          result: false,
-          message: '날짜 형식이 올바르지 않습니다.'
-        }
+        throw new Error('날짜 형식이 올바르지 않습니다.');
       }
 
       dateObject = new Date(date);
     }
 
+    // UTC 시간을 KST로 변환
+    /*
+    const kstDateString = dateObject.toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
+    const kstDateObject = new Date(kstDateString);
+    */
+    const kstDateObject = new Date(dateObject.getTime() + 9 * 60 * 60 * 1000);
+
     // 날짜 부분 포맷팅
-    let formattedDate = dateObject.getFullYear() + '-' +
-      String(dateObject.getMonth() + 1).padStart(2, '0') + '-' +
-      String(dateObject.getDate()).padStart(2, '0');
+    let formattedDate = 
+      kstDateObject.getFullYear() + 
+      '-' +
+      String(kstDateObject.getMonth() + 1).padStart(2, '0') + 
+      '-' +
+      String(kstDateObject.getDate()).padStart(2, '0');
 
     // 시간 포함 여부에 따라 포맷팅
     if (isIncludeTime) {
-      formattedDate += ' ' +
-        String(dateObject.getHours()).padStart(2, '0') + ':' +
-        String(dateObject.getMinutes()).padStart(2, '0') + ':' +
-        String(dateObject.getSeconds()).padStart(2, '0');
+      formattedDate += 
+        ' ' +
+        String(kstDateObject.getHours()).padStart(2, '0') + 
+        ':' +
+        String(kstDateObject.getMinutes()).padStart(2, '0') + 
+        ':' +
+        String(kstDateObject.getSeconds()).padStart(2, '0');
     }
     
+    if (onlyData) {
+      return formattedDate;
+    }
+
     // 날짜 형식 변환
     return {
       result: true,
@@ -106,10 +117,14 @@ export const formatDateToString = (date: string | Date | undefined | null, isInc
     }
 
   } catch (error) {
+    if (onlyData) {
+      return null;
+    }
     return {
       result: false,
-      message: '날짜 형식이 올바르지 않습니다.'
+      message: (error instanceof Error) ? error.message : '변환에 실패하였습니다.'
     }
+
   }
 }
 
