@@ -38,6 +38,7 @@
         <th><p>번호</p></th>
         <th><p>이미지</p></th>
         <th><p>상세정보</p></th>
+        <th><p>발행</p></th>
       </tr>
       </thead>
       <tbody>
@@ -50,9 +51,20 @@
                 <p>
                   제목: <a href="<%=routes.bannersUpdate.url.replace(':bannerId', banner.id)%>" class="hover:underline decoration-gray-800"><%=banner.title%></a></p>
                 <p>설명: <%=banner.description%></p>
-                <p>발행 시작: <%=banner.publishedAt%></p>
-                <p>발행 마감: <%=banner.unpublishedAt%></p>
+                <p class="hidden lg:block">발행 기간: <%=banner.publishedAt%> ~ <%=banner.unpublishedAt%></p>
+                <p class="block lg:hidden">발행 기간: <%= banner.publishedAt ? banner.publishedAt.slice(0, -3) : '' %> ~ <%= banner.unpublishedAt ? banner.unpublishedAt.slice(0, -3) : '' %></p>
               </div>
+            </td>
+            <td>
+              <% if (!banner.isPublished) { %> 
+                <p class="text-gray-500">미발행</p>
+              <% } else if (banner.publishedAt <= new Date().toISOString() && (!banner.unpublishedAt || banner.unpublishedAt >= new Date().toISOString())) { %>
+                <p class="text-green">발행중</p>
+              <% } else if (banner.publishedAt > new Date().toISOString()) { %>
+                <p class="text-gray-500">예약</p>
+              <% } else { %>
+                <p class="text-red">종료</p>
+              <% } %>
             </td>
           </tr>
         <% }); %>
