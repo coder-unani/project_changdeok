@@ -14,12 +14,12 @@ export interface IBannerGroup {
 
 export interface IBanner {
   id: number;
+  seq: number;
   title: string;
   description?: typeOptionalString;
   imagePath: typeOptionalString;
   linkType: typeOptionalString;
   linkUrl: typeOptionalString;
-  sort: number;
   isPublished: boolean;
   publishedAt?: typeOptionalString;
   unpublishedAt?: typeOptionalString;
