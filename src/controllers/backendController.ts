@@ -6,7 +6,7 @@ import { IRequestBanners, IRequestContents, typeListSort } from '../types/reques
 import { IBannerGroup, IEmployeeToken } from '../types/object';
 import { backendRoutes, apiBackendRoutes } from '../routes/routes';
 import { EmployeeService } from '../services/employeeService';
-import { getApiBanners, getApiBannerGroup, getApiContents, getApicontentsDetail, getApiEmployeeDetail, getApiPermissionList } from '../common/api';
+import { getApiBanners, getApiBannerGroup, getApiContents, getApiContentDetail, getApiEmployeeDetail, getApiPermissionList, getApiBannerDetail } from '../common/api';
 import { verifyJWT } from '../common/jwt';
 import { getCookie } from '../common/cookies';
 import { getAccessToken } from "../common/verifier";
@@ -54,9 +54,15 @@ export class BackendController {
       }
 
       // 배너 그룹 ID
-      const groupId = parseInt(req.query.g as string);
+      const groupId = parseInt(req.query.gp as string);
       if (!groupId || isNaN(groupId)) {
         throw new Error("배너 그룹 ID가 올바르지 않습니다.");
+      }
+
+      // 배너 시퀀스
+      const seq = parseInt(req.query.sq as string) || 0;
+      if (seq <= 0) {
+        throw new Error("배너 시퀀스가 올바르지 않습니다.");
       }
 
       // 배너 그룹 정보 조회
@@ -69,7 +75,8 @@ export class BackendController {
 
       // 메타데이터 생성
       const metadata = {
-        groupInfo: apiGroupInfo.data
+        groupInfo: apiGroupInfo.data,
+        seq
       }
       
       // 배너 등록 페이지 렌더링
@@ -82,7 +89,7 @@ export class BackendController {
   }
 
   // 화면 관리: 배너 상세
-  public bannersDetail(req: Request, res: Response): void {
+  public async bannersDetail(req: Request, res: Response): Promise<void> {
     // 라우팅 정보
     const { title, view, layout, permissions } = backendRoutes.bannersDetail;
 
@@ -90,8 +97,35 @@ export class BackendController {
       // 접근 권한 체크
       this.verifyPermission(req, permissions);
 
+      // 접속 토큰
+      const accessToken = getAccessToken(req);
+      if (!accessToken) {
+        throw new Error("로그인이 필요합니다.");
+      }
+
+      // 배너 ID
+      const bannerId = parseInt(req.params.bannerId);
+      if (!bannerId || isNaN(bannerId)) {
+        throw new Error("배너 ID가 올바르지 않습니다.");
+      }
+
+      const apiBannerDetail = await getApiBannerDetail(accessToken, bannerId);
+
+      // 배너 상세 정보 조회 실패
+      if (!apiBannerDetail.result) {
+        throw new Error(apiBannerDetail.message as string);
+      }
+
       // 배너 상세 페이지 렌더링
-      res.render(view, { layout, title });
+      res.render(
+        view, 
+        { 
+          layout, 
+          title, 
+          metadata: apiBannerDetail.metadata, 
+          data: apiBannerDetail.data 
+        }
+      );
 
     } catch (error) {
       this.renderError(res, error);
@@ -100,7 +134,7 @@ export class BackendController {
   }
 
   // 화면 관리: 배너 수정
-  public bannersUpdate(req: Request, res: Response): void {
+  public async bannersUpdate(req: Request, res: Response): Promise<void> {
     // 라우팅 정보
     const { title, view, layout, permissions } = backendRoutes.bannersUpdate;
 
@@ -108,8 +142,37 @@ export class BackendController {
       // 접근 권한 체크
       this.verifyPermission(req, permissions);
 
-      // 배너 수정 페이지 렌더링
-      res.render(view, { layout, title });
+      // 접속 토큰
+      const accessToken = getAccessToken(req);
+      if (!accessToken) {
+        throw new Error("로그인이 필요합니다.");
+      }
+
+      // 배너 ID
+      const bannerId = parseInt(req.params.bannerId);
+      if (!bannerId || isNaN(bannerId)) {
+        throw new Error("배너 ID가 올바르지 않습니다.");
+      }
+
+      const apiBannerDetail = await getApiBannerDetail(accessToken, bannerId);
+
+      // 배너 상세 정보 조회 실패
+      if (!apiBannerDetail.result) {
+        throw new Error(apiBannerDetail.message as string);
+      }
+
+      console.log(apiBannerDetail);
+
+      // 배너 상세 페이지 렌더링
+      res.render(
+        view, 
+        { 
+          layout, 
+          title, 
+          metadata: apiBannerDetail.metadata, 
+          data: apiBannerDetail.data 
+        }
+      );
 
     } catch (error) {
       this.renderError(res, error);
@@ -133,9 +196,15 @@ export class BackendController {
       }
 
       // 배너 그룹 ID
-      const groupId = parseInt(req.query.g as string);
+      const groupId = parseInt(req.query.gp as string);
       if (!groupId || isNaN(groupId)) {
         throw new Error("배너 그룹 ID가 올바르지 않습니다.");
+      }
+
+      // 배너 시퀀스
+      const seq = parseInt(req.query.sq as string) || 0;
+      if (seq <= 0) {
+        throw new Error("배너 시퀀스 조건이 올바르지 않습니다.");
       }
 
       // API Params
@@ -143,7 +212,8 @@ export class BackendController {
         page: req.query.page ? parseInt(req.query.page as string) : 1,
         pageSize: req.query.pageSize ? parseInt(req.query.pageSize as string) : 10,
         query: req.query.query ? (req.query.query as string) : "",
-        groupId
+        groupId,
+        seq
       };
 
       // API 호출
@@ -307,7 +377,7 @@ export class BackendController {
       }
 
       // API 호출
-      const { metadata, data: content } = await getApicontentsDetail(parseInt(req.params.groupId), parseInt(req.params.contentId));
+      const { metadata, data: content } = await getApiContentDetail(parseInt(req.params.groupId), parseInt(req.params.contentId));
 
       // 게시글 상세 정보 페이지 렌더링
       res.render(view, { layout, title, metadata, data: content });
@@ -341,7 +411,7 @@ export class BackendController {
       }
 
       // API 호출
-      const { metadata, data: content } = await getApicontentsDetail(parseInt(req.params.groupId), parseInt(req.params.contentId));
+      const { metadata, data: content } = await getApiContentDetail(parseInt(req.params.groupId), parseInt(req.params.contentId));
 
       // 게시글 상세 정보 페이지 렌더링
       res.render(view, { layout, title, metadata, data: content });
