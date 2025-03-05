@@ -21,19 +21,19 @@ export const apiBackendRoutes = {
     url: `${apiBackendRoutesPrefix}/banners/:bannerId`,
     permissions: [1, 5]
   },
-  bannerUpdate: {
+  bannersUpdate: {
     method: 'PUT',
     title: '배너 수정',
     url: `${apiBackendRoutesPrefix}/banners/:bannerId`,
     permissions: [1, 5]
   },
-  bannerDelete: {
+  bannersDelete: {
     method: 'DELETE',
     title: '배너 삭제',
     url: `${apiBackendRoutesPrefix}/banners/:bannerId`,
     permissions: [1, 5]
   },
-  bannerGroup: {
+  bannersGroup: {
     method: 'GET',
     title: '배너 그룹 정보',
     url: `${apiBackendRoutesPrefix}/banners/groups/:groupId`,
