@@ -8,7 +8,7 @@ export const getApiBannerGroup = async (accessToken: string, groupId: number): P
   try {
     // API 호출
     const apiResponse = await fetch(
-      `${API_BASE_URL}${apiBackendRoutes.bannerGroup.url}`.replace(':groupId', groupId.toString()), {
+      `${API_BASE_URL}${apiBackendRoutes.bannersGroup.url}`.replace(':groupId', groupId.toString()), {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -84,6 +84,44 @@ export const getApiBanners = async (accessToken: string, data: IRequestBanners):
 
   }
 }
+
+export const getApiBannerDetail = async (accessToken: string, bannerId: number): Promise<IApiResponse<IContent>> => {
+  try {
+    // API 호출
+    const apiResponse = await fetch(`${API_BASE_URL}${apiBackendRoutes.bannersDetail.url}`.replace(':bannerId', bannerId.toString()), {
+      method: `${apiBackendRoutes.bannersDetail.method}`,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+
+    // JSON 파싱
+    const responseToJson = await apiResponse.json();
+
+    // 응답 오류
+    if (!apiResponse.ok) {
+      throw new Error(responseToJson.message || apiResponse.statusText);
+    }
+
+    // API 조회 실패
+    if (!responseToJson.result) {
+      throw new Error(responseToJson.message);
+    }
+
+    // 응답 성공
+    return {
+      result: responseToJson.result,
+      metadata: responseToJson.metadata,
+      data: responseToJson.data
+    };
+    
+  } catch (error) {
+    throw error;
+
+  }
+}
+
 export const getApiContents = async (accessToken: string, groupId: number, data: IRequestContents): Promise<IApiResponse<IContent[]>> => {
   try {
     // Params 생성
@@ -130,7 +168,7 @@ export const getApiContents = async (accessToken: string, groupId: number, data:
   }
 };
 
-export const getApicontentsDetail = async (groupId: number, contentId: number): Promise<IApiResponse<IContent>> => {
+export const getApiContentDetail = async (groupId: number, contentId: number): Promise<IApiResponse<IContent>> => {
   try {
     // API 호출
     const apiResponse = await fetch(
