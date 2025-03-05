@@ -1,6 +1,7 @@
-<div class="block pt-2">
-  <h1 class='flex justify-start items-center gap-1.5 py-2 text-center text-slate-700 transition-all'>
+<div class="block pt-2 mb-2">
+  <h1 class='flex justify-between items-baseline gap-1.5 py-2 text-center text-slate-700 transition-all'>
     <span class="font-bold text-xl"><%=title%></span>
+    <p class="text-right font-medium text-[13px] text-gray-400"><span class="pr-0.5 text-red-500">*</span>필수입력사항</p>
   </h1>
 </div>
 
@@ -9,45 +10,44 @@
   <input type="file" id="image" name="image" class="hidden" accept="image/*">
   <input type="hidden" name="groupId" value="<%=metadata.groupInfo.id%>">
   <input type="hidden" name="seq" value="<%=metadata.seq%>">
-  <div class="space-y-4 text-sm bg-white p-2 mb-4 lg:p-4 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
+  <div class="space-y-4 text-sm bg-white p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
     <div>
-      <label for="image" class="block mb-1 font-medium text-gray-700">
-        <% if (metadata.groupInfo.kind === 'image') { %>
-          *
-        <% } %>
-        이미지
-      </label>
+      <div class="flex justify-between items-baseline">
+        <label for="image" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">
+          이미지<% if (metadata.groupInfo.kind === 'image') { %><span class="pl-0.5 text-red-500">*</span><% } %>
+        </label>
+        <p class="font-medium text-[13px] text-gray-400">권장 크기: <%=metadata.groupInfo.imageWidth%> x <%=metadata.groupInfo.imageHeight%></p>
+      </div>
       <img id="imagePreview" class="w-[200px] h-[200px] object-cover rounded-md cursor-pointer" src="/images/no-image-200x200.jpg" alt="이미지">
-      <p>이미지 사이즈 (W x H): <%=metadata.groupInfo.imageWidth%> x <%=metadata.groupInfo.imageHeight%></p>
     </div>
     <div>
-      <label for="title" class="block mb-1 font-medium text-gray-700">* 제목</label>
-      <input type="text" id="title" name="title" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="제목" required>
+      <label for="title" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">제목<span class="pl-0.5 text-red-500">*</span></label>
+      <input type="text" id="title" name="title" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="제목을 입력해주세요." required>
     </div>
     
     <div>
-      <label for="description" class="block mb-1 font-medium text-gray-700">설명</label>
-      <input type="text" id="description" name="description" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="설명">
+      <label for="description" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">설명</label>
+      <input type="text" id="description" name="description" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="설명을 입력해주세요.">
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-2">
-      <div>
-        <label for="linkType" class="block mb-1 font-medium text-gray-700">링크 타입</label>
-        <select id="linkType" name="linkType" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+    <div class="flex flex-col lg:flex-row gap-4">
+      <div class="flex-1">
+        <label for="linkType" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">링크 타입</label>
+        <select id="linkType" name="linkType" class="w-full p-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-r-12 border-gray-100">
           <option value="">선택</option>
           <option value="self">내부 링크</option>
           <option value="outer">외부 링크</option>
         </select>
       </div>
-      <div class="md:col-span-3">
-        <label for="linkUrl" class="block mb-1 font-medium text-gray-700">링크</label>
-        <input type="text" id="linkUrl" name="linkUrl" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="링크 주소">
+      <div class="flex-3">
+        <label for="linkUrl" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">링크</label>
+        <input type="text" id="linkUrl" name="linkUrl" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="링크 주소를 입력해주세요.">
       </div>
     </div>
 
     <div>
-      <label for="isPublished" class="block mb-1 font-medium text-gray-700">발행 여부</label>
-      <select id="isPublished" name="isPublished" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <label for="isPublished" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">발행 여부</label>
+      <select id="isPublished" name="isPublished" class="w-full p-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-r-12 border-gray-100">
         <option value="N">미발행</option>
         <option value="Y">발행</option>
       </select>
@@ -55,12 +55,12 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
       <div>
-        <label for="publishedAt" class="block mb-1 font-medium text-gray-700">* 발행 일시</label>
-        <input type="datetime-local" id="publishedAt" name="publishedAt" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+        <label for="publishedAt" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">발행 일시<span class="pl-0.5 text-red-500">*</span></label>
+        <input type="datetime-local" id="publishedAt" name="publishedAt" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
       </div>
       <div>
-        <label for="unpublishedAt" class="block mb-1 font-medium text-gray-700">* 발행 마감 일시</label>
-        <input type="datetime-local" id="unpublishedAt" name="unpublishedAt" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+        <label for="unpublishedAt" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">발행 마감 일시<span class="pl-0.5 text-red-500">*</span></label>
+        <input type="datetime-local" id="unpublishedAt" name="unpublishedAt" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
       </div>
     </div>
   </div>

@@ -46,6 +46,11 @@
       </tr>
       </thead>
       <tbody>
+        <% if (data.length === 0) { %>
+          <tr>
+            <td colspan="5" class="py-6 text-center"><p class="text-gray-400">등록된 관리자가 없습니다.</p></td>
+          </tr>
+        <% } else { %>
         <% data.forEach(employee => { %>
           <tr>
             <td><p><%=employee.id%></p></td>
@@ -54,7 +59,7 @@
             <td class="hidden lg:table-cell"><p><%=employee.position%></p></td>
             <td class="hidden lg:table-cell"><p>2024-08-15</p></td>
           </tr>
-        <% }); %>
+        <% }); } %>
       </tbody>
     </table>
   </div>

@@ -41,7 +41,7 @@
               <span class="mx-3 font-normal"><%=routes.bannersScreen.title%></span>
             </a>
           </li>
-          <li class="font-thin rounded-lg transition-all dark:hover:text-white dark:hover:bg-gray-600 <%if ('팝업 관리' === title) {%>orb-hightlight<%} else {%>hover:bg-gray-100<%}%>">
+          <li class="font-thin rounded-lg transition-all dark:hover:text-white dark:hover:bg-gray-600 <%if (title === '팝업 관리') {%>orb-hightlight<%} else {%>hover:bg-gray-100<%}%>">
             <a class="flex items-center justify-start p-2" href="<%=routes.bannersPopup.url%>">
               <span class="text-left">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" class="h-[14px] w-[14px]">

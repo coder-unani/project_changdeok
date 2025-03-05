@@ -30,7 +30,7 @@
 </div>  
   
 <div class="orb-list">
-  <div class="bg-white p-2 mb-4 lg:p-4 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
+  <div class="bg-white p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
     <table>
       <thead>
       <tr>
@@ -41,6 +41,11 @@
       </tr>
       </thead>
       <tbody>
+        <% if (data.length === 0) { %>
+          <tr>
+            <td colspan="5" class="py-6 text-center"><p class="text-gray-400">등록된 게시글이 없습니다.</p></td>
+          </tr>
+        <% } else { %>
         <% data.forEach(content => { %>
           <tr>
             <td><p><%=content.id%></p></td>
@@ -48,7 +53,7 @@
             <td><p><%=content.writer%></p></td>
             <td class="hidden lg:table-cell"><p><%=content.createdAt%></p></td>
           </tr>
-        <% }); %>
+        <% }); } %>
       </tbody>
     </table>
   </div>
