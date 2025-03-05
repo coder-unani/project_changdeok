@@ -1,26 +1,25 @@
 export type typeListSort = 'ID_DESC' | 'ID_ASC' | 'TITLE_DESC' | 'TITLE_ASC';
 
 export interface IRequestBannerWrite {
-  groupId: string;
+  groupId: number;
+  seq: number;
   title: string;
   description?: string;
   imagePath?: string | undefined | null;
   linkType?: string;
   linkUrl?: string;
-  sort?: number;
   isPublished?: boolean;
-  publishedAt?: string;
-  unpublishedAt?: string;
+  publishedAt: string;
+  unpublishedAt: string;
   createdBy: number;
 }
 
 export interface IRequestBannerUpdate {
   title?: string;
   description?: string;
-  imagePath?: string;
+  imagePath?: string | undefined | null;
   linkType?: string;
   linkUrl?: string;
-  sort?: number;
   isPublished?: boolean;
   publishedAt?: string;
   unpublishedAt?: string;
@@ -88,6 +87,7 @@ export interface IRequestDefaultList {
 
 export interface IRequestBanners extends IRequestDefaultList {
   groupId: number;
+  seq: number;
 }
 
 export interface IRequestContents extends IRequestDefaultList {

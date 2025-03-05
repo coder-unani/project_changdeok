@@ -43,12 +43,15 @@ router.get(apiBackendRoutes.bannersDetail.url, (req: Request, res: Response) => 
 });
 
 // 배너 수정
-router.put(apiBackendRoutes.bannerUpdate.url, (req: Request, res: Response) => {
-  apiBackendController.bannersUpdate(req, res);
-});
+router.put(apiBackendRoutes.bannersUpdate.url,
+  (req: Request, res: Response, next: NextFunction) => imageUploadMiddleware.handle(req, res, next), 
+  (req: Request, res: Response) => {
+    apiBackendController.bannersUpdate(req, res);
+  }
+);
 
 // 배너 삭제
-router.delete(apiBackendRoutes.bannerDelete.url, (req: Request, res: Response) => {
+router.delete(apiBackendRoutes.bannersDelete.url, (req: Request, res: Response) => {
   apiBackendController.bannersDelete(req, res);
 });
 
@@ -58,7 +61,7 @@ router.get(apiBackendRoutes.banners.url, (req: Request, res: Response) => {
 });
 
 // 배너 그룹 정보
-router.get(apiBackendRoutes.bannerGroup.url, (req: Request, res: Response) => {
+router.get(apiBackendRoutes.bannersGroup.url, (req: Request, res: Response) => {
   apiBackendController.bannersGroup(req, res);
 });
 

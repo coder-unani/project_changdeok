@@ -182,9 +182,9 @@ export class EmployeeService implements IEmployeeService {
       }
 
       // 반환할 직원 정보
-      const formattedBirthDate = formatDateToString(result.birthDate?.toISOString(), false);
-      const formattedHireDate = formatDateToString(result.hireDate?.toISOString(), false);
-      const formattedFireDate = formatDateToString(result.fireDate?.toISOString(), false);
+      const formattedBirthDate = formatDateToString(result.birthDate?.toISOString(), false, true, true);
+      const formattedHireDate = formatDateToString(result.hireDate?.toISOString(), false, true, true);
+      const formattedFireDate = formatDateToString(result.fireDate?.toISOString(), false, true, true);
       
       const employee: IEmployee = {
         id: result.id,
@@ -195,9 +195,9 @@ export class EmployeeService implements IEmployeeService {
         phone: result.phone,
         mobile: result.mobile,
         address: result.address,
-        hireDate: formattedHireDate.data || null,
-        fireDate: formattedFireDate.data || null,
-        birthDate: formattedBirthDate.data || null,
+        hireDate: formattedHireDate as string || null,
+        fireDate: formattedFireDate as string || null,
+        birthDate: formattedBirthDate as string || null,
         isActivated: result.isActivated,
         permissions: result.permissions.map(permission => permission.permissionId)
       };
