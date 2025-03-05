@@ -106,31 +106,29 @@ export class ContentService implements IContentService {
       }
 
       // 날짜 형식 변환
-      const convertCreatedAtToString = formatDateToString(prismaContent.createdAt.toISOString());
-      const convertUpdatedAtToString = prismaContent.updatedAt ? formatDateToString(prismaContent.updatedAt.toISOString()) : null;
-      const createdAtToString = (convertCreatedAtToString.result) ? convertCreatedAtToString.data : null;
-      const updatedAtToString = (convertUpdatedAtToString?.result) ? convertUpdatedAtToString.data : null;
+      const createdAtToString = formatDateToString(prismaContent.createdAt.toISOString(), true, true, true);
+      const updatedAtToString = formatDateToString(prismaContent.updatedAt?.toISOString(), true, true, true);
 
       // 컨텐츠 정보 생성
       const content: IContent = {
         id: prismaContent.id,
         groupId: prismaContent.groupId,
         title: prismaContent.title.trim(),
-        content: prismaContent.content?.trim() ?? null,
-        writerId: prismaContent.writerId ?? null,
-        writerName: prismaContent.writerName ?? null,
-        writerEmail: prismaContent.writerEmail ?? null,
-        writerPhone: prismaContent.writerPhone ?? null,
-        viewCount: prismaContent.viewCount ?? 0,
-        likeCount: prismaContent.likeCount ?? 0,
-        commentCount: prismaContent.commentCount ?? 0,
+        content: prismaContent.content?.trim() || null,
+        writerId: prismaContent.writerId || null,
+        writerName: prismaContent.writerName || null,
+        writerEmail: prismaContent.writerEmail || null,
+        writerPhone: prismaContent.writerPhone || null,
+        viewCount: prismaContent.viewCount || 0,
+        likeCount: prismaContent.likeCount || 0,
+        commentCount: prismaContent.commentCount || 0,
         isAnonymous: prismaContent.isAnonymous,
-        isNotice: prismaContent.isNotice ?? false,
+        isNotice: prismaContent.isNotice || false,
         isActivated: prismaContent.isActivated,
-        ip: prismaContent.ip ?? null,
-        userAgent: prismaContent.userAgent ?? null,
-        createdAt: createdAtToString,
-        updatedAt: updatedAtToString,
+        ip: prismaContent.ip || null,
+        userAgent: prismaContent.userAgent || null,
+        createdAt: createdAtToString as string,
+        updatedAt: updatedAtToString as string || null,
       }
 
       // 성공
@@ -338,10 +336,8 @@ export class ContentService implements IContentService {
       // 컨텐츠 목록 생성
       const contents: IContent[] = prismaContents.map((content) => {
         // 날짜 형식 변환
-        const convertCreatedAtToString = formatDateToString(content.createdAt.toISOString());
-        const convertUpdatedAtToString = content.updatedAt ? formatDateToString(content.updatedAt.toISOString()) : null;
-        const createdAtToString = (convertCreatedAtToString.result) ? convertCreatedAtToString.data : null;
-        const updatedAtToString = (convertUpdatedAtToString?.result) ? convertUpdatedAtToString.data : null;
+        const createdAtToString = formatDateToString(content.createdAt.toISOString(), true, true, true);
+        const updatedAtToString = formatDateToString(content.updatedAt?.toISOString(), true, true, true);
         
         // 컨텐츠 정보 생성
         return {
@@ -361,8 +357,8 @@ export class ContentService implements IContentService {
           isActivated: content.isActivated,
           ip: content.ip ?? null,
           userAgent: content.userAgent ?? null,
-          createdAt: createdAtToString,
-          updatedAt: updatedAtToString,
+          createdAt: createdAtToString as string,
+          updatedAt: updatedAtToString as string || null,
         }
       });
 
