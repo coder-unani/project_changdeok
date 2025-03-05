@@ -167,24 +167,21 @@ export function makeDir(dir: string): boolean {
 
   }
 }
-/**
-// 이미지 업로드 라우트
-const imageUpload = new FileUploader("image").getInstance();
-app.post("/upload/image", imageUpload.single("image"), (req, res) => {
-  try {
-    res.json({ message: "이미지 업로드 성공", file: req.file });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
 
-// 비디오 업로드 라우트
-const videoUpload = new FileUploader("video").getInstance();
-app.post("/upload/video", videoUpload.single("file"), (req, res) => {
-  try {
-    res.json({ message: "비디오 업로드 성공", file: req.file });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
+/**
+ * 파일 삭제 함수
+ * @param filePath 삭제할 파일 경로
+ * @returns boolean 삭제 성공 여부
  */
+export function deleteFile(filePath: string): boolean {
+  try {
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+    return true;
+
+  } catch (error) {
+    return false;
+
+  } 
+}
