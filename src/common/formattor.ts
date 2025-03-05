@@ -56,14 +56,14 @@ export const formatDate = (date: string | Date | undefined | null): typeFormatte
  * @param isIncludeTime 시간 포함 여부
  * @returns typeFormattedResult 변환 결과
  */
-export const formatDateToString = (date: string | Date | undefined | null, isIncludeTime: boolean = true, onlyData = false): typeFormattedResult | string | null => {
+export const formatDateToString = (date: string | Date | undefined | null, isIncludeTime: boolean = true, onlyData = false, isUTC = false): typeFormattedResult | string | null => {
   try {
+    let dateObject: Date;
+    
     // Date가 없으면 현재 날짜로 설정
     if (date === null || date === undefined) {
       throw new Error('날짜가 없습니다.');
     }
-
-    let dateObject: Date;
 
     // Date가 이미 Date 타입이면 그대로 사용
     if (date instanceof Date) {
@@ -79,30 +79,32 @@ export const formatDateToString = (date: string | Date | undefined | null, isInc
       dateObject = new Date(date);
     }
 
-    // UTC 시간을 KST로 변환
     /*
+    // UTC 시간을 KST로 변환
     const kstDateString = dateObject.toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
     const kstDateObject = new Date(kstDateString);
     */
-    const kstDateObject = new Date(dateObject.getTime() + 9 * 60 * 60 * 1000);
+    if (isUTC) {
+      dateObject = new Date(dateObject.getTime() + 9 * 60 * 60 * 1000);
+    }
 
     // 날짜 부분 포맷팅
     let formattedDate = 
-      kstDateObject.getFullYear() + 
+    dateObject.getFullYear() + 
       '-' +
-      String(kstDateObject.getMonth() + 1).padStart(2, '0') + 
+      String(dateObject.getMonth() + 1).padStart(2, '0') + 
       '-' +
-      String(kstDateObject.getDate()).padStart(2, '0');
+      String(dateObject.getDate()).padStart(2, '0');
 
     // 시간 포함 여부에 따라 포맷팅
     if (isIncludeTime) {
       formattedDate += 
         ' ' +
-        String(kstDateObject.getHours()).padStart(2, '0') + 
+        String(dateObject.getHours()).padStart(2, '0') + 
         ':' +
-        String(kstDateObject.getMinutes()).padStart(2, '0') + 
+        String(dateObject.getMinutes()).padStart(2, '0') + 
         ':' +
-        String(kstDateObject.getSeconds()).padStart(2, '0');
+        String(dateObject.getSeconds()).padStart(2, '0');
     }
     
     if (onlyData) {
