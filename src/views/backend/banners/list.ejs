@@ -7,7 +7,7 @@
 <div class="py-2 mb-2 rounded-xl">
   <div class="flex justify-between items-center">
     <div>
-      <a href="<%=routes.bannersWrite.url%>?g=<%=metadata.groupInfo.id%>" class="orb-btn-primary">신규 등록</a>
+      <a href="<%=routes.bannersWrite.url%>?gp=<%=metadata.groupInfo.id%>&sq=<%=metadata.seq%>" class="orb-btn-primary">신규 등록</a>
     </div>
     <div class="ml-3">
       <div class="w-full max-w-sm min-w-[200px] relative">
@@ -45,11 +45,11 @@
         <% data.forEach(banner => { %>
           <tr>
             <td><p><%=banner.id%></p></td>
-            <td><img src="<%=banner.imagePath%>" class="w-[100px] h-[100px] object-cover rounded-md cursor-pointer" alt="이미지"></td>
+            <td><img src="<%=banner.imagePath || '/images/no-image-200x200.jpg'%>" class="w-[100px] h-[100px] object-cover rounded-md cursor-pointer" alt="이미지"></td>
             <td>
               <div>
                 <p>
-                  제목: <a href="<%=routes.bannersUpdate.url.replace(':bannerId', banner.id)%>" class="hover:underline decoration-gray-800"><%=banner.title%></a></p>
+                  제목: <a href="<%=routes.bannersDetail.url.replace(':bannerId', banner.id)%>" class="hover:underline decoration-gray-800"><%=banner.title%></a></p>
                 <p>설명: <%=banner.description%></p>
                 <p class="hidden lg:block">발행 기간: <%=banner.publishedAt%> ~ <%=banner.unpublishedAt%></p>
                 <p class="block lg:hidden">발행 기간: <%= banner.publishedAt ? banner.publishedAt.slice(0, -3) : '' %> ~ <%= banner.unpublishedAt ? banner.unpublishedAt.slice(0, -3) : '' %></p>
