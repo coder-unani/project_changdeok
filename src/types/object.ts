@@ -1,6 +1,11 @@
 type typeOptionalNumber = number | null | undefined;
 type typeOptionalString = string | null | undefined;
 
+export interface IError {
+  statusCode: number;
+  message: string;
+}
+
 export interface IBannerGroup {
   id: number;
   kind: string;
