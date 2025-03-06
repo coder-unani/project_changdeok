@@ -1,7 +1,13 @@
-export const CODE_FAIL_SERVER = 500;
-export const CODE_BAD_REQUEST = 400;
-export const CODE_UNAUTHORIZED = 401;
-export const CODE_FORBIDDEN = 403;
+export const HTTP_STATUS = {
+  OK: 200,
+  CREATED: 201,
+  NO_CONTENT: 204,
+  BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  INTERNAL_SERVER_ERROR: 500,
+}
 
 export const MESSAGE_FAIL_SERVER = '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
 
