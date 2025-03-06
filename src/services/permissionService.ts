@@ -1,10 +1,11 @@
 import { PrismaClient } from '@prisma/client';
 
-import { CODE_FAIL_SERVER, MESSAGE_FAIL_SERVER } from '../config/constants';
+import { HTTP_STATUS } from "../config/constants";
 import { IRequestDefaultList } from '../types/request';
 import { IServiceResponse } from 'types/response';
 import { IEmployee, IPermission } from '../types/object';
 import { IPermissionService } from '../types/service';
+import { AppError, ValidationError, NotFoundError } from "../common/error";
 
 export class PermissionService implements IPermissionService {
 
@@ -66,12 +67,15 @@ export class PermissionService implements IPermissionService {
       return { result: true, metadata, data: permissions };
 
     } catch (error) {
-      return {
-        result: false,
-        code: CODE_FAIL_SERVER,
-        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
+      if (error instanceof AppError) {
+        return { result: false, code: error.statusCode, message: error.message }
+      } else {
+        return {
+          result: false,
+          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          message: '서버 오류가 발생했습니다.'
+        }
       }
-
     }
   }
 
@@ -114,12 +118,15 @@ export class PermissionService implements IPermissionService {
       return { result: true, data: employee };
 
     } catch (error) {
-      return {
-        result: false,
-        code: CODE_FAIL_SERVER,
-        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
+      if (error instanceof AppError) {
+        return { result: false, code: error.statusCode, message: error.message }
+      } else {
+        return {
+          result: false,
+          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          message: '서버 오류가 발생했습니다.'
+        }
       }
-
     }
   }
 }

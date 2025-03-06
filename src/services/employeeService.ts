@@ -1,4 +1,4 @@
-import { CODE_BAD_REQUEST, CODE_FAIL_SERVER, CODE_UNAUTHORIZED, CODE_FORBIDDEN, MESSAGE_FAIL_SERVER } from '../config/constants';
+import { HTTP_STATUS } from "../config/constants";
 import { ExtendedPrismaClient } from "../config/database";
 import { 
   IRequestEmployeeRegister, 
@@ -15,6 +15,7 @@ import { IEmployeeService } from "../types/service";
 import { validateEmail, validatePassword, validatePhone, validateDate } from "../common/validator";
 import { formatDate, formatDateToString, formatEmailMasking } from "../common/formattor";
 import { hashPassword, verifyPassword } from "../common/encryptor";
+import { AppError, ValidationError, NotFoundError, AuthError } from "../common/error";
 
 export class EmployeeService implements IEmployeeService {
   private prisma: ExtendedPrismaClient;
@@ -25,100 +26,72 @@ export class EmployeeService implements IEmployeeService {
 
   // 직원 등록
   public async create(data: IRequestEmployeeRegister): Promise<IServiceResponse> {
-    // 이메일 유효성 검사
-    const validatedEmail = validateEmail(data.email);
-    if (!validatedEmail.result) {
-      return {
-        result: false,
-        code: CODE_BAD_REQUEST,
-        message: validatedEmail.message
-      }
-    }
-
-    // name 필수 체크
-    if (!data.name) {
-      return {
-        result: false,
-        code: CODE_BAD_REQUEST,
-        message: '이름을 입력해주세요.'
-      }
-    }
-
-    // 패스워드 유효성 검사
-    const validatedPassword = validatePassword(data.password, data.passwordConfirm);
-    if (!validatedPassword.result) {
-      return {
-        result: false,
-        code: CODE_BAD_REQUEST,
-        message: validatedPassword.message
-      }
-    }
-
-    // 전화번호가 있다면 유효성 검사
-    if (data.phone) {
-      const validatedPhone = validatePhone(data.phone);
-      if (!validatedPhone.result) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: validatedPhone.message
-        }
-      }
-
-      // 전화번호 숫자만 남기고 제거
-      data.phone = data.phone.replace(/[^0-9]/g, '');
-    }
-
-    // 휴대폰 번호가 있다면 유효성 검사
-    if (data.mobile) {
-      const validatedMobile = validatePhone(data.mobile);
-      if (!validatedMobile.result) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: validatedMobile.message
-        }
-      }
-
-      // 휴대폰번호 숫자만 남기고 제거
-      data.mobile = data.mobile.replace(/[^0-9]/g, '');
-    }
-
-    // 고용일이 있다면 날짜 형식 체크
-    let hireDate: Date | null = null;
-    if (data.hireDate) {
-      const formattedHireDate = formatDate(data.hireDate);
-      if (!formattedHireDate.result) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: formattedHireDate.message
-        }
-      }
-      hireDate = formattedHireDate.data;
-    }
-
-    // 생년월일이 있다면 날짜 형식 체크
-    let birthDate: Date | null = null;
-    if (data.birthDate) {
-      const formattedBirthDate = formatDate(data.birthDate);
-      if (!formattedBirthDate.result) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: formattedBirthDate.message
-        }
-      }
-      birthDate = formattedBirthDate.data;
-    }
-    
-    // 이메일 중복 체크
-    const isUniqueEmail = await this.isUniqueEmail(data.email);
-    if (!isUniqueEmail.result) {
-      return isUniqueEmail;
-    }
-
     try {
+      // 이메일 유효성 검사
+      const validatedEmail = validateEmail(data.email);
+      if (!validatedEmail.result) {
+        throw new ValidationError(validatedEmail.message);
+      }
+
+      // name 필수 체크
+      if (!data.name) {
+        throw new ValidationError('이름을 입력해주세요.');
+      }
+
+      // 패스워드 유효성 검사
+      const validatedPassword = validatePassword(data.password, data.passwordConfirm);
+      if (!validatedPassword.result) {
+        throw new ValidationError(validatedPassword.message);
+      }
+
+      // 전화번호가 있다면 유효성 검사
+      if (data.phone) {
+        const validatedPhone = validatePhone(data.phone);
+        if (!validatedPhone.result) {
+          throw new ValidationError(validatedPhone.message);
+        }
+
+        // 전화번호 숫자만 남기고 제거
+        data.phone = data.phone.replace(/[^0-9]/g, '');
+      }
+
+      // 휴대폰 번호가 있다면 유효성 검사
+      if (data.mobile) {
+        const validatedMobile = validatePhone(data.mobile);
+        if (!validatedMobile.result) {
+          throw new ValidationError(validatedMobile.message);
+        }
+
+        // 휴대폰번호 숫자만 남기고 제거
+        data.mobile = data.mobile.replace(/[^0-9]/g, '');
+      }
+
+      // 고용일이 있다면 날짜 형식 체크
+      let hireDate: Date | null = null;
+      if (data.hireDate) {
+        const formattedHireDate = formatDate(data.hireDate);
+        if (!formattedHireDate.result) {
+          throw new ValidationError(formattedHireDate.message);
+        }
+        hireDate = formattedHireDate.data;
+      }
+
+      // 생년월일이 있다면 날짜 형식 체크
+      let birthDate: Date | null = null;
+      if (data.birthDate) {
+        const formattedBirthDate = formatDate(data.birthDate);
+        if (!formattedBirthDate.result) {
+          throw new ValidationError(formattedBirthDate.message);
+        }
+        birthDate = formattedBirthDate.data;
+      }
+      
+      // 이메일 중복 체크
+      const isUniqueEmail = await this.isUniqueEmail(data.email);
+      if (!isUniqueEmail.result) {
+        return isUniqueEmail;
+      }
+
       // 패스워드 암호화
       const hashedPassword = await hashPassword(data.password);
 
@@ -142,12 +115,15 @@ export class EmployeeService implements IEmployeeService {
       return { result: true };
 
     } catch (error) {
-      return {
-        result: false,
-        code: CODE_FAIL_SERVER,
-        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
+      if (error instanceof AppError) {
+        return { result: false, code: error.statusCode, message: error.message }
+      } else {
+        return {
+          result: false,
+          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          message: '서버 오류가 발생했습니다.'
+        }
       }
-
     }
   }
 
@@ -165,20 +141,12 @@ export class EmployeeService implements IEmployeeService {
 
       // 조회 실패
       if (!result) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '직원을 찾을 수 없습니다.'
-        }
+        throw new NotFoundError('직원을 찾을 수 없습니다.');
       }
 
       const employeeEmail = formatEmailMasking(result.email);
       if (!employeeEmail.result) {
-        return {
-          result: false,
-          code: CODE_FAIL_SERVER,
-          message: employeeEmail.message
-        }
+        throw new ValidationError(employeeEmail.message);
       }
 
       // 반환할 직원 정보
@@ -209,98 +177,73 @@ export class EmployeeService implements IEmployeeService {
       };
 
     } catch (error) {
-      return {
-        result: false,
-        code: CODE_FAIL_SERVER,
-        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
+      if (error instanceof AppError) {
+        return { result: false, code: error.statusCode, message: error.message }
+      } else {
+        return {
+          result: false,
+          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          message: '서버 오류가 발생했습니다.'
+        }
       }
-      
     }
   }
 
   public async update(id: number, data: IRequestEmployeeUpdate): Promise<IServiceResponse<IEmployee>> {
-    // 직원 정보 조회
-    const employee = await this.read(id);
-
-    // 직원 정보가 없는 경우 에러
-    if (!employee.result) {
-      return {
-        result: false,
-        code: CODE_BAD_REQUEST,
-        message: '직원을 찾을 수 없습니다.'
-      };
-    }
-
-    // 수정할 데이터가 없는 경우 에러
-    if (!data) {
-      return {
-        result: false,
-        code: CODE_BAD_REQUEST,
-        message: '수정할 데이터가 없습니다.'
-      };
-    }
-
-    // 전화번호가 있다면 유효성 검사
-    if (data.phone) {
-      const validatedPhone = validatePhone(data.phone);
-      if (!validatedPhone.result) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: validatedPhone.message
-        }
-      }
-    }
-
-    // 휴대폰 번호가 있다면 유효성 검사
-    if (data.mobile) {
-      const validatedMobile = validatePhone(data.mobile);
-      if (!validatedMobile.result) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: validatedMobile.message
-        }
-      }
-    }
-
-    // 고용일이 있다면 날짜 형식 체크
-    if (data.hireDate) {
-      const validatedHireDate = validateDate(data.hireDate);
-      if (!validatedHireDate.result) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: validatedHireDate.message
-        }
-      }
-    }
-
-    // 생년월일이 있다면 날짜 형식 체크
-    if (data.birthDate) {
-      const validatedBirthDate = validateDate(data.birthDate);
-      if (!validatedBirthDate.result) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: validatedBirthDate.message
-        }
-      }
-    }
-
-    // 해고 날짜가 있다면 날짜 형식 체크
-    if (data.fireDate) {
-      const validatedFireDate = validateDate(data.fireDate);
-      if (!validatedFireDate.result) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: validatedFireDate.message
-        }
-      }
-    }
-
     try {
+      // 직원 정보 조회
+      const employeeInfo = await this.read(id);
+
+      // 직원 정보가 없는 경우 에러
+      if (!employeeInfo.result) {
+        throw new NotFoundError('직원을 찾을 수 없습니다.');
+      }
+
+      // 수정할 데이터가 없는 경우 에러
+      if (!data) {
+        throw new ValidationError('수정할 데이터가 없습니다.');
+      }
+
+      // 전화번호가 있다면 유효성 검사
+      if (data.phone) {
+        const validatedPhone = validatePhone(data.phone);
+        if (!validatedPhone.result) {
+          throw new ValidationError(validatedPhone.message);
+        }
+      }
+
+      // 휴대폰 번호가 있다면 유효성 검사
+      if (data.mobile) {
+        const validatedMobile = validatePhone(data.mobile);
+        if (!validatedMobile.result) {
+          throw new ValidationError(validatedMobile.message);
+        }
+      }
+
+      // 고용일이 있다면 날짜 형식 체크
+      if (data.hireDate) {
+        const validatedHireDate = validateDate(data.hireDate);
+        if (!validatedHireDate.result) {
+          throw new ValidationError(validatedHireDate.message);
+        }
+      }
+
+      // 생년월일이 있다면 날짜 형식 체크
+      if (data.birthDate) {
+        const validatedBirthDate = validateDate(data.birthDate);
+        if (!validatedBirthDate.result) {
+          throw new ValidationError(validatedBirthDate.message);
+        }
+      }
+
+      // 해고 날짜가 있다면 날짜 형식 체크
+      if (data.fireDate) {
+        const validatedFireDate = validateDate(data.fireDate);
+        if (!validatedFireDate.result) {
+          throw new ValidationError(validatedFireDate.message);
+        }
+      }
+
       // 직원 정보 수정. 변경된 데이터 리턴
       const prismaUpdatedEmployee = await this.prisma.employee.update({
         where: {
@@ -337,12 +280,15 @@ export class EmployeeService implements IEmployeeService {
       return { result: true, data: employee };
 
     } catch (error) {
-      return {
-        result: false,
-        code: CODE_FAIL_SERVER,
-        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
+      if (error instanceof AppError) {
+        return { result: false, code: error.statusCode, message: error.message }
+      } else {
+        return {
+          result: false,
+          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          message: '서버 오류가 발생했습니다.'
+        }
       }
-
     }
   }
 
@@ -351,11 +297,7 @@ export class EmployeeService implements IEmployeeService {
     try {
       // 수정할 데이터가 없는 경우 에러
       if (!data) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '수정할 데이터가 없습니다.'
-        };
+        throw new ValidationError('수정할 데이터가 없습니다.');
       }
 
       // 직원 정보 조회
@@ -368,30 +310,18 @@ export class EmployeeService implements IEmployeeService {
 
       // 직원 정보가 없는 경우 에러
       if (!employee) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '일치하는 직원 정보가 없습니다.'
-        };
+        throw new NotFoundError('직원을 찾을 수 없습니다.');
       }
 
       // 비활성화 직원
       if (!employee.isActivated) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '비활성화된 직원은 비밀번호를 변경할 수 없습니다.'
-        };
+        throw new ValidationError('비활성화된 직원은 비밀번호를 변경할 수 없습니다.');
       }
 
       // 패스워드 유효성 검사
       const validatedPassword = validatePassword(data.passwordNew, data.passwordNewConfirm);
       if (!validatedPassword.result) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: validatedPassword.message
-        }
+        throw new ValidationError(validatedPassword.message);
       }
 
       // 패스워드 비교
@@ -399,11 +329,7 @@ export class EmployeeService implements IEmployeeService {
 
       // 패스워드 불일치
       if (!isPasswordMatch) {
-        return {
-          result: false,
-          code: CODE_UNAUTHORIZED,
-          message: '아이디 또는 비밀번호가 일치하지 않습니다.'
-        }
+        throw new ValidationError('아이디 또는 비밀번호가 일치하지 않습니다.');
       }
 
       // 새로운 패스워드 암호화
@@ -424,12 +350,15 @@ export class EmployeeService implements IEmployeeService {
       return { result: true };
 
     } catch (error) {
-      return {
-        result: false,
-        code: CODE_FAIL_SERVER,
-        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
+      if (error instanceof AppError) {
+        return { result: false, code: error.statusCode, message: error.message }
+      } else {
+        return {
+          result: false,
+          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          message: '서버 오류가 발생했습니다.'
+        }
       }
-
     }
   }
   
@@ -438,11 +367,7 @@ export class EmployeeService implements IEmployeeService {
     try {
       // 수정할 데이터가 없는 경우 에러
       if (!data) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '수정할 데이터가 없습니다.'
-        };
+        throw new ValidationError('수정할 데이터가 없습니다.');
       }
 
       // 직원 정보 조회
@@ -455,30 +380,18 @@ export class EmployeeService implements IEmployeeService {
 
       // 직원 정보가 없는 경우 에러
       if (!prismaEmployee) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '일치하는 직원 정보가 없습니다.'
-        };
+        throw new NotFoundError('직원을 찾을 수 없습니다.');
       }
 
       // 비활성화 직원
       if (!prismaEmployee.isActivated) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '비활성화된 직원은 비밀번호를 변경할 수 없습니다.'
-        };
+        throw new ValidationError('비활성화된 직원은 비밀번호를 변경할 수 없습니다.');
       }
 
       // 패스워드 유효성 검사
       const validatedPassword = validatePassword(data.passwordNew, data.passwordNewConfirm);
       if (!validatedPassword.result) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: validatedPassword.message
-        }
+        throw new ValidationError(validatedPassword.message);
       }
 
       // 새로운 패스워드 암호화
@@ -499,26 +412,25 @@ export class EmployeeService implements IEmployeeService {
       return { result: true };
 
     } catch (error) {
-      return {
-        result: false,
-        code: CODE_FAIL_SERVER,
-        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
+      if (error instanceof AppError) {
+        return { result: false, code: error.statusCode, message: error.message }
+      } else {
+        return {
+          result: false,
+          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          message: '서버 오류가 발생했습니다.'
+        }
       }
-
     }
   }
 
   public async delete(id: number, data: IRequestEmployeeDelete): Promise<IServiceResponse> {
     // 직원 정보 조회
-    const employee = await this.read(id);
+    const employeeInfo = await this.read(id);
 
     // 직원 정보가 없는 경우 에러
-    if (!employee.result) {
-      return {
-        result: false,
-        code: CODE_BAD_REQUEST,
-        message: '직원을 찾을 수 없습니다.'
-      };
+    if (!employeeInfo.result) {
+      throw new NotFoundError('직원을 찾을 수 없습니다.');
     }
 
     try {
@@ -527,11 +439,7 @@ export class EmployeeService implements IEmployeeService {
       if (data.fireDate) {
         const formattedHireDate = formatDate(data.fireDate);
         if (!formattedHireDate.result) {
-          return {
-            result: false,
-            code: CODE_BAD_REQUEST,
-            message: formattedHireDate.message
-          }
+          throw new ValidationError(formattedHireDate.message);
         }
         fireDate = formattedHireDate.data;
       }
@@ -552,12 +460,15 @@ export class EmployeeService implements IEmployeeService {
       return { result: true };
 
     } catch (error) {
-      return {
-        result: false,
-        code: CODE_FAIL_SERVER,
-        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
+      if (error instanceof AppError) {
+        return { result: false, code: error.statusCode, message: error.message }
+      } else {
+        return {
+          result: false,
+          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          message: '서버 오류가 발생했습니다.'
+        }
       }
-
     }
   }
 
@@ -648,36 +559,30 @@ export class EmployeeService implements IEmployeeService {
       return { result: true, metadata, data: employees };
 
     } catch (error) {
-      return {
-        result: false,
-        code: CODE_FAIL_SERVER,
-        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
+      if (error instanceof AppError) {
+        return { result: false, code: error.statusCode, message: error.message }
+      } else {
+        return {
+          result: false,
+          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          message: '서버 오류가 발생했습니다.'
+        }
       }
-
     }
   }
 
   public async login(data: IRequestEmployeeLogin): Promise<IServiceResponse<IEmployee>> {
-    // 이메일 필수 체크
-    if (!data.email) {
-      return {
-        result: false,
-        code: CODE_BAD_REQUEST,
-        message: '이메일을 입력해주세요.'
-      }
-    }
-
-    // 패스워드 필수 체크
-    if (!data.password) {
-      return {
-        result: false,
-        code: CODE_BAD_REQUEST,
-        message: '패스워드를 입력해주세요.'
-      }
-    }
-
-    // 직원 로그인
     try {
+      // 이메일 필수 체크
+      if (!data.email) {
+        throw new ValidationError('이메일을 입력해주세요.');
+      }
+
+      // 패스워드 필수 체크
+      if (!data.password) {
+        throw new ValidationError('패스워드를 입력해주세요.');
+      }
+
       // 직원 조회
       const prismaEmployee = await this.prisma.employee.findFirst({
         where: {
@@ -692,11 +597,7 @@ export class EmployeeService implements IEmployeeService {
       
       // 직원이 없는 경우
       if (!prismaEmployee) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '이메일 또는 패스워드가 일치하지 않습니다.'
-        }
+        throw new AuthError('이메일 또는 패스워드가 일치하지 않습니다.');
       }
 
       // 패스워드 비교
@@ -704,11 +605,7 @@ export class EmployeeService implements IEmployeeService {
 
       // 패스워드 불일치
       if (!isPasswordMatch) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '이메일 또는 패스워드가 일치하지 않습니다.'
-        }
+        throw new AuthError('이메일 또는 패스워드가 일치하지 않습니다.');
       }
 
       // 권한의 permissionId를 배열로 변환
@@ -734,12 +631,15 @@ export class EmployeeService implements IEmployeeService {
       };
 
     } catch (error) {
-      return {
-        result: false,
-        code: CODE_FAIL_SERVER,
-        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
+      if (error instanceof AppError) {
+        return { result: false, code: error.statusCode, message: error.message }
+      } else {
+        return {
+          result: false,
+          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          message: '서버 오류가 발생했습니다.'
+        }
       }
-
     }
   }
 
@@ -756,25 +656,23 @@ export class EmployeeService implements IEmployeeService {
 
       // 중복된 이메일이 있다면
       if (isUnique) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '이미 사용중인 이메일입니다.'
-        }
+        throw new ValidationError('이미 사용중인 이메일입니다.');
       }
 
       // 성공
       return { result: true };
 
     } catch (error) {
-      return {
-        result: false,
-        code: CODE_FAIL_SERVER,
-        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
-      };
-
+      if (error instanceof AppError) {
+        return { result: false, code: error.statusCode, message: error.message }
+      } else {
+        return {
+          result: false,
+          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          message: '서버 오류가 발생했습니다.'
+        }
+      }
     }
-    
   }
 
   public async close() {

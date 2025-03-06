@@ -1,4 +1,4 @@
-import { CODE_BAD_REQUEST, CODE_FAIL_SERVER, MESSAGE_FAIL_SERVER } from "../config/constants";
+import { HTTP_STATUS } from "../config/constants";
 import { ExtendedPrismaClient } from "../config/database";
 import { IContentGroup, IContent } from "../types/object";
 import { IContentService } from '../types/service';
@@ -6,6 +6,7 @@ import { IRequestContents, IRequestContentWrite, IRequestContentUpdate } from ".
 import { IServiceResponse } from "../types/response";
 import { validateStringLength } from "../common/validator";
 import { formatDateToString } from "../common/formattor";
+import { AppError, ValidationError, NotFoundError } from "../common/error";
 
 export class ContentService implements IContentService {
   private prisma: ExtendedPrismaClient;
@@ -19,21 +20,13 @@ export class ContentService implements IContentService {
       // 제목 길이 검증
       const validateTitle = validateStringLength(data.title, 1, 50);
       if (!validateTitle.result) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: validateTitle.message
-        }
+        throw new ValidationError(validateTitle.message);
       }
 
       // 내용 길이 검증
       const validateContent = validateStringLength(data.content, 1, 1000);
       if (!validateContent.result) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: validateContent.message
-        }
+        throw new ValidationError(validateContent.message);
       }
 
       // 컨텐츠 생성
@@ -51,10 +44,14 @@ export class ContentService implements IContentService {
       return { result: true };
 
     } catch (error) {
-      return {
-        result: false,
-        code: CODE_FAIL_SERVER,
-        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
+      if (error instanceof AppError) {
+        return { result: false, code: error.statusCode, message: error.message }
+      } else {
+        return {
+          result: false,
+          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          message: '서버 오류가 발생했습니다.'
+        }
       }
     }
   }
@@ -71,20 +68,12 @@ export class ContentService implements IContentService {
 
       // 컨텐츠가 없는 경우
       if (!prismaContent) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '컨텐츠가 존재하지 않습니다.'
-        }
+        throw new NotFoundError('컨텐츠가 존재하지 않습니다.');
       }
 
       // 컨텐츠 활성화 여부 확인
       if (!prismaContent.isActivated) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '비활성화된 컨텐츠입니다.'
-        }
+        throw new NotFoundError('비활성화된 컨텐츠입니다.');
       }
 
       // 컨텐츠 그룹 정보 조회
@@ -98,11 +87,7 @@ export class ContentService implements IContentService {
 
       // 컨텐츠 그룹이 없는 경우
       if (!groupInfo) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '컨텐츠 그룹이 존재하지 않습니다.'
-        }
+        throw new NotFoundError('컨텐츠 그룹이 존재하지 않습니다.');
       }
 
       // 날짜 형식 변환
@@ -145,12 +130,15 @@ export class ContentService implements IContentService {
       }
 
     } catch (error) {
-      return {
-        result: false,
-        code: CODE_FAIL_SERVER,
-        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
+      if (error instanceof AppError) {
+        return { result: false, code: error.statusCode, message: error.message }
+      } else {
+        return {
+          result: false,
+          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          message: '서버 오류가 발생했습니다.'
+        }
       }
-
     }
   }
 
@@ -168,11 +156,7 @@ export class ContentService implements IContentService {
       if (updateData.title) {
         const validateTitle = validateStringLength(updateData.title, 1, 50);
         if (!validateTitle.result) {
-          return {
-            result: false,
-            code: CODE_BAD_REQUEST,
-            message: validateTitle.message
-          }
+          throw new ValidationError(validateTitle.message);
         }
       }
 
@@ -180,11 +164,7 @@ export class ContentService implements IContentService {
       if (updateData.content) {
         const validateContent = validateStringLength(updateData.content, 1, 1000);
         if (!validateContent.result) {
-          return {
-            result: false,
-            code: CODE_BAD_REQUEST,
-            message: validateContent.message
-          }
+          throw new ValidationError(validateContent.message);
         }
       }
 
@@ -203,12 +183,15 @@ export class ContentService implements IContentService {
       return { result: true };
 
     } catch (error) {
-      return {
-        result: false,
-        code: CODE_FAIL_SERVER,
-        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
+      if (error instanceof AppError) {
+        return { result: false, code: error.statusCode, message: error.message }
+      } else {
+        return {
+          result: false,
+          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          message: '서버 오류가 발생했습니다.'
+        }
       }
-
     }
   }
 
@@ -224,11 +207,7 @@ export class ContentService implements IContentService {
 
       // 컨텐츠가 없는 경우
       if (!prismaContent) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '컨텐츠가 존재하지 않습니다.'
-        }
+        throw new NotFoundError('컨텐츠가 존재하지 않습니다.');
       }
 
       // 컨텐츠 삭제
@@ -246,12 +225,15 @@ export class ContentService implements IContentService {
       return { result: true };
 
     } catch (error) {
-      return {
-        result: false,
-        code: CODE_FAIL_SERVER,
-        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
+      if (error instanceof AppError) {
+        return { result: false, code: error.statusCode, message: error.message }
+      } else {
+        return {
+          result: false,
+          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          message: '서버 오류가 발생했습니다.'
+        }
       }
-
     }
   }
 
@@ -303,11 +285,7 @@ export class ContentService implements IContentService {
 
       // 컨텐츠 그룹이 없는 경우
       if (!groupInfo) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '컨텐츠 그룹이 존재하지 않습니다.'
-        }
+        throw new NotFoundError('컨텐츠 그룹이 존재하지 않습니다.');
       }
 
       // 전체 컨텐츠 수 조회
@@ -382,12 +360,15 @@ export class ContentService implements IContentService {
       return { result: true, metadata, data: contents };
 
     } catch (error) {
-      return {
-        result: false,
-        code: CODE_FAIL_SERVER,
-        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
+      if (error instanceof AppError) {
+        return { result: false, code: error.statusCode, message: error.message }
+      } else {
+        return {
+          result: false,
+          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          message: '서버 오류가 발생했습니다.'
+        }
       }
-
     }
   }
 

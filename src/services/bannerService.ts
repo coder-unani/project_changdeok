@@ -1,4 +1,4 @@
-import { CODE_BAD_REQUEST, CODE_FAIL_SERVER, MESSAGE_FAIL_SERVER } from "../config/constants";
+import { HTTP_STATUS } from "../config/constants";
 import { ExtendedPrismaClient } from '../config/database';
 import { IRequestBanners, IRequestBannerWrite, IRequestBannerUpdate } from "../types/request";
 import { IServiceResponse } from "../types/response";
@@ -6,6 +6,7 @@ import { IBannerGroup, IBanner } from "../types/object";
 import { validateStringLength } from "../common/validator";
 import { formatDateToString } from "../common/formattor";
 import { deleteFile } from '../common/file';
+import { AppError, ValidationError, NotFoundError } from "../common/error";
 
 export class BannerService {
   private prisma: ExtendedPrismaClient;
@@ -18,47 +19,27 @@ export class BannerService {
     try {
       // 배너 그룹 ID
       if (!data.groupId) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '배너 그룹 ID가 없습니다.'
-        }
+        throw new ValidationError('배너 그룹 ID가 필요합니다.');
       }
 
       // 배너 스퀀스
       if (!data.seq) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '배너 시퀀스가 없습니다.'
-        }
+        throw new ValidationError('배너 시퀀스가 필요합니다.');
       }
 
       // linkType이 있으면 link가 필수
       if (data.linkType && !data.linkUrl) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '링크 주소를 입력해주세요.'
-        }
+        throw new ValidationError('링크 주소를 입력해주세요.');
       }
       
       // link가 있으면 linkType이 필수
       if (data.linkUrl && !data.linkType) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '링크 타입을 선택해주세요.'
-        }
+        throw new ValidationError('링크 타입을 선택해주세요.');
       }
 
       // linkType이 outer이면 link는 반드시 http:// 또는 https://로 시작
       if (data.linkType === 'outer' && data.linkUrl && !data.linkUrl.match(/^https?:\/\//)) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '외부 링크는 http:// 또는 https://로 시작해야 합니다.'
-        }
+        throw new ValidationError('외부 링크는 http:// 또는 https://로 시작해야 합니다.');
       }
 
       // 발행 마감일이 발행일보다 빠르면 등록 불가
@@ -66,41 +47,25 @@ export class BannerService {
       const unpublishedAt = new Date(data.unpublishedAt);
 
       if (unpublishedAt && publishedAt > unpublishedAt) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '발행 마감일은 발행일보다 빠를 수 없습니다.'
-        }
+        throw new ValidationError('발행 마감일은 발행일보다 빠를 수 없습니다.');
       }
 
       // 발행 마감일이 현재 시간보다 이전이면 등록 불가
       if (unpublishedAt && unpublishedAt < new Date()) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '발행 마감일은 현재 시간보다 이전일 수 없습니다.'
-        }
+        throw new ValidationError('발행 마감일은 현재 시간보다 이전일 수 없습니다.');
       }
 
       // title 길이 체크
       const validateTitle = validateStringLength(data.title, 1, 50);
       if (!validateTitle.result) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: validateTitle.message
-        }
+        throw new ValidationError(validateTitle.message);
       }
 
       // description 길이 체크
       if (data.description) {
         const validateDescription = validateStringLength(data.description, 0, 1000);
         if (!validateDescription.result) {
-          return {
-            result: false,
-            code: CODE_BAD_REQUEST,
-            message: validateDescription.message
-          }
+          throw new ValidationError(validateDescription.message);
         }
       }
       
@@ -189,12 +154,15 @@ export class BannerService {
       return { result: true };
 
     } catch (error) {
-      return {
-        result: false,
-        code: CODE_FAIL_SERVER,
-        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
+      if (error instanceof AppError) {
+        return { result: false, code: error.statusCode, message: error.message }
+      } else {
+        return {
+          result: false,
+          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          message: '서버 오류가 발생했습니다.'
+        }
       }
-
     }
   }
 
@@ -202,11 +170,7 @@ export class BannerService {
     try {
       // ID가 없거나 숫자가 아니면 에러 반환
       if (!id && isNaN(id)) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '배너 ID가 필요합니다.'
-        }
+        throw new ValidationError('배너 ID가 필요합니다.');
       }
 
       // 배너 조회
@@ -219,11 +183,7 @@ export class BannerService {
 
       // 조회 결과가 없으면 에러 반환
       if (!prismaBanner) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '배너 정보를 찾을 수 없습니다.'
-        }
+        throw new NotFoundError('배너 정보를 찾을 수 없습니다.');
       }
 
       // 조회 결과를 IBanner 타입으로 변환
@@ -247,11 +207,7 @@ export class BannerService {
       // 배너 그룹정보 조회
       const groupInfo = await this.groupInfo(prismaBanner.groupId);
       if (!groupInfo.result || !groupInfo.data) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '배너 그룹 정보를 찾을 수 없습니다.'
-        }
+        throw new NotFoundError('배너 그룹 정보를 찾을 수 없습니다.');
       }
 
       // 메타데이터 생성
@@ -268,12 +224,15 @@ export class BannerService {
       };
 
     } catch (error) {
-      return {
-        result: false,
-        code: CODE_FAIL_SERVER,
-        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
+      if (error instanceof AppError) {
+        return { result: false, code: error.statusCode, message: error.message }
+      } else {
+        return {
+          result: false,
+          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          message: '서버 오류가 발생했습니다.'
+        }
       }
-
     }
   }
 
@@ -283,11 +242,7 @@ export class BannerService {
 
       // ID가 없거나 숫자가 아니면 에러 반환
       if (!bannerId && isNaN(bannerId)) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '배너 ID가 필요합니다.'
-        }
+        throw new ValidationError('배너 ID가 필요합니다.');
       }
 
       // 배너 조회
@@ -295,11 +250,7 @@ export class BannerService {
 
       // 배너 조회 실패
       if (!bannerInfo.result || !bannerInfo.data) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '배너 정보를 찾을 수 없습니다.'
-        }
+        throw new NotFoundError('배너 정보를 찾을 수 없습니다.');
       }
 
       // 업데이트 데이터 생성
@@ -329,11 +280,7 @@ export class BannerService {
       if (updateData.title) {
         const validateTitle = validateStringLength(updateData.title, 1, 50);
         if (!validateTitle.result) {
-          return {
-            result: false,
-            code: CODE_BAD_REQUEST,
-            message: validateTitle.message
-          }
+          throw new ValidationError(validateTitle.message);
         }
       }
 
@@ -341,11 +288,7 @@ export class BannerService {
       if (updateData.description) {
         const validateDescription = validateStringLength(updateData.description, 0, 1000);
         if (!validateDescription.result) {
-          return {
-            result: false,
-            code: CODE_BAD_REQUEST,
-            message: validateDescription.message
-          }
+          throw new ValidationError(validateDescription.message);
         }
       }
 
@@ -364,12 +307,15 @@ export class BannerService {
       return { result: true };
 
     } catch (error) {
-      return {
-        result: false,
-        code: CODE_FAIL_SERVER,
-        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
+      if (error instanceof AppError) {
+        return { result: false, code: error.statusCode, message: error.message }
+      } else {
+        return {
+          result: false,
+          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          message: '서버 오류가 발생했습니다.'
+        }
       }
-
     }
   }
 
@@ -377,20 +323,12 @@ export class BannerService {
     try {
       // ID가 없거나 숫자가 아니면 에러 반환
       if (!id && isNaN(id)) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '배너 ID가 필요합니다.'
-        }
+        throw new ValidationError('배너 ID가 필요합니다.');
       }
 
       const bannerInfo = await this.read(id);
       if (!bannerInfo.result || !bannerInfo.data) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '배너 정보를 찾을 수 없습니다.'
-        }
+        throw new NotFoundError('배너 정보를 찾을 수 없습니다.');
       }
 
       /*
@@ -418,12 +356,15 @@ export class BannerService {
       return { result: true };
 
     } catch (error) {
-      return {
-        result: false,
-        code: CODE_FAIL_SERVER,
-        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
+      if (error instanceof AppError) {
+        return { result: false, code: error.statusCode, message: error.message }
+      } else {
+        return {
+          result: false,
+          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          message: '서버 오류가 발생했습니다.'
+        }
       }
-
     }
   } 
 
@@ -442,30 +383,18 @@ export class BannerService {
 
       // 배너 그룹 ID가 없으면 에러 반환
       if (!data.groupId) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '배너 코드가 필요합니다.'
-        }
+        throw new ValidationError('배너 그룹 ID가 필요합니다.');
       }
 
       // 배너 시퀀스가 없으면 에러 반환
       if (!data.seq) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '배너 시퀀스가 필요합니다.'
-        }
+        throw new ValidationError('배너 시퀀스가 필요합니다.');
       }
 
       // 배너 그룹 정보 조회
       const groupInfo = await this.groupInfo(data.groupId);
       if (!groupInfo.result || !groupInfo.data) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '배너 그룹 정보를 찾을 수 없습니다.'
-        }
+        throw new NotFoundError('배너 그룹 정보를 찾을 수 없습니다.');
       }
 
       // 전체 배너 수 조회
@@ -532,12 +461,15 @@ export class BannerService {
       };
 
     } catch (error) {
-      return {
-        result: false,
-        code: CODE_FAIL_SERVER,
-        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
+      if (error instanceof AppError) {
+        return { result: false, code: error.statusCode, message: error.message }
+      } else {
+        return {
+          result: false,
+          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          message: '서버 오류가 발생했습니다.'
+        }
       }
-
     }
   }
 
@@ -545,11 +477,7 @@ export class BannerService {
     try {
       // ID가 없거나 숫자가 아니면 에러 반환
       if (!groupId && isNaN(groupId)) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '배너 그룹 ID가 필요합니다.'
-        }
+        throw new ValidationError('배너 그룹 ID가 필요합니다.');
       }
 
       // 배너 그룹 조회
@@ -562,11 +490,7 @@ export class BannerService {
 
       // 조회 결과가 없으면 에러 반환
       if (!prismaGroup) {
-        return {
-          result: false,
-          code: CODE_BAD_REQUEST,
-          message: '배너 그룹 정보를 찾을 수 없습니다.'
-        }
+        throw new NotFoundError('배너 그룹 정보를 찾을 수 없습니다.');
       }
 
       // 조회 결과를 IBannerGroup 타입으로 변환
@@ -594,12 +518,15 @@ export class BannerService {
       };
 
     } catch (error) {
-      return {
-        result: false,
-        code: CODE_FAIL_SERVER,
-        message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER
+      if (error instanceof AppError) {
+        return { result: false, code: error.statusCode, message: error.message }
+      } else {
+        return {
+          result: false,
+          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          message: '서버 오류가 발생했습니다.'
+        }
       }
-
     }
   }
 }
