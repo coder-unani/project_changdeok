@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import { CODE_FAIL_SERVER, CODE_BAD_REQUEST, CODE_UNAUTHORIZED, CODE_FORBIDDEN, MESSAGE_FAIL_SERVER } from '../../config/constants';
+import { HTTP_STATUS } from '../../config/constants';
 import { prisma } from '../../config/database';
 import { 
   typeListSort,
@@ -30,6 +30,7 @@ import { formatApiResponse } from '../../common/formattor';
 import { createJWT, verifyJWT } from '../../common/jwt';
 import { getCookie, setCookie, removeCookie } from '../../common/cookies';
 import { getAccessedEmployee } from '../../common/verifier';
+import { AppError, ValidationError, AuthError, PermissionError, NotFoundError, ServerError } from '../../common/error';
 
 
 export class ApiBackendController {
@@ -44,22 +45,19 @@ export class ApiBackendController {
       // 로그인 직원 정보
       const accessedEmployee = getAccessedEmployee(req);
       if (!accessedEmployee) {
-        res.status(CODE_BAD_REQUEST).json({ message: '로그인 정보가 없습니다.' });
-        return;
+        throw new AuthError('로그인 정보가 없습니다.');
       }
       
       // 배너 그룹 ID
       const groupId = parseInt(req.body.groupId);
       if (isNaN(groupId)) {
-        res.status(CODE_BAD_REQUEST).json({ message: '배너 그룹 ID가 잘못되었습니다.' });
-        return;
+        throw new ValidationError('배너 그룹 ID가 잘못되었습니다.');
       }
 
       // 배너 시퀀스
       const seq = parseInt(req.body.seq);
       if (isNaN(seq)) {
-        res.status(CODE_BAD_REQUEST).json({ message: '배너 시퀀스 값이 잘못되었습니다.' });
-        return;
+        throw new ValidationError('배너 시퀀스 값이 잘못되었습니다.');
       }
 
       // 이미지 경로
@@ -93,16 +91,18 @@ export class ApiBackendController {
 
       // 등록 실패
       if (!result.result) {
-        res.status(result.code || CODE_FAIL_SERVER).json({ message: result.message || MESSAGE_FAIL_SERVER });
-        return;
+        throw new AppError(result.code, result.message);
       }
-
+      
       // 등록 성공
-      res.status(201).send(null);
+      res.status(HTTP_STATUS.CREATED).send(null);
 
     } catch (error) {
-      res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
-
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
     }
   }
 
@@ -117,8 +117,7 @@ export class ApiBackendController {
       // 배너 ID
       const bannerId = parseInt(req.params.bannerId);
       if (isNaN(bannerId)) {
-        res.status(CODE_BAD_REQUEST).json({ message: '잘못된 요청입니다.' });
-        return;
+        throw new ValidationError('배너 ID가 잘못되었습니다.');
       }
 
       // 배너 상세 조회
@@ -127,17 +126,19 @@ export class ApiBackendController {
 
       // 조회 실패 처리
       if (!result.result) {
-        res.status(result.code || CODE_FAIL_SERVER).json({ message: result.message || MESSAGE_FAIL_SERVER });
-        return;
+        throw new AppError(result.code, result.message);
       }
-
+       
       // 조회 성공시 200 응답
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
-      res.status(200).json(response);
+      res.status(HTTP_STATUS.OK).json(response);
 
     } catch (error) {
-      res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
-
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
     }
   }
 
@@ -152,15 +153,13 @@ export class ApiBackendController {
       // 로그인 직원 정보
       const accessedEmployee = getAccessedEmployee(req);
       if (!accessedEmployee) {
-        res.status(CODE_BAD_REQUEST).json({ message: '로그인 정보가 없습니다.' });
-        return;
+        throw new AuthError('로그인 정보가 없습니다.');
       }
 
       // 배너 ID
       const bannerId = parseInt(req.params.bannerId);
       if (isNaN(bannerId)) {
-        res.status(CODE_BAD_REQUEST).json({ message: '잘못된 요청입니다.' });
-        return;
+        throw new ValidationError('배너 ID가 잘못되었습니다.');
       }
 
       // 이미지 경로
@@ -191,16 +190,18 @@ export class ApiBackendController {
 
       // 수정 실패 처리
       if (!result.result) {
-        res.status(result.code || CODE_FAIL_SERVER).json({ message: result.message || MESSAGE_FAIL_SERVER });
-        return;
+        throw new AppError(result.code, result.message);
       }
 
-      // 수정 성공시 201 응답
-      res.status(201).send(null);
+      // 수정 성공
+      res.status(HTTP_STATUS.NO_CONTENT).send(null);
 
     } catch (error) {
-      res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
-
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
     }
   }
 
@@ -215,8 +216,7 @@ export class ApiBackendController {
       // 배너 ID
       const bannerId = parseInt(req.params.bannerId);
       if (isNaN(bannerId)) {
-        res.status(CODE_BAD_REQUEST).json({ message: '잘못된 요청입니다.' });
-        return;
+        throw new ValidationError('배너 ID가 잘못되었습니다.');
       }
 
       // 배너 삭제
@@ -225,16 +225,18 @@ export class ApiBackendController {
 
       // 삭제 실패 처리
       if (!result.result) {
-        res.status(result.code || CODE_FAIL_SERVER).json({ message: result.message || MESSAGE_FAIL_SERVER });
-        return;
+        throw new AppError(result.code, result.message);
       }
 
-      // 삭제 성공시 201 응답
-      res.status(201).send(null);
+      // 삭제 성공
+      res.status(HTTP_STATUS.NO_CONTENT).send(null);
     
     } catch (error) {
-      res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
-
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
     }
   }
 
@@ -249,15 +251,13 @@ export class ApiBackendController {
       // 배너 그룹 ID
       const groupId = parseInt(req.query.groupId as string);
       if (!groupId || isNaN(groupId)) {
-        res.status(CODE_BAD_REQUEST).json({ message: '잘못된 요청입니다.' });
-        return;
+        throw new ValidationError('배너 그룹 ID가 잘못되었습니다.');
       }
 
       // 배너 시퀀스
       const seq = parseInt(req.query.seq as string);
       if (!seq || isNaN(seq)) {
-        res.status(CODE_BAD_REQUEST).json({ message: '잘못된 요청입니다.' });
-        return;
+        throw new ValidationError('배너 시퀀스 값이 잘못되었습니다.');
       }
 
       // 요청 데이터
@@ -275,17 +275,19 @@ export class ApiBackendController {
 
       // 조회 실패 처리
       if (!result.result) {
-        res.status(result.code || CODE_FAIL_SERVER).json({ message: result.message || MESSAGE_FAIL_SERVER });
-        return;
+        throw new AppError(result.code, result.message);
       }
 
-      // 조회 성공시 200 응답
+      // 조회 성공
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
-      res.status(200).json(response);
+      res.status(HTTP_STATUS.OK).json(response);
 
     } catch (error) {
-      res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
-
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
     }
   }
 
@@ -299,8 +301,7 @@ export class ApiBackendController {
       // 배너 그룹 ID
       const groupId = parseInt(req.params.groupId);
       if (isNaN(groupId)) {
-        res.status(CODE_BAD_REQUEST).json({ message: '잘못된 요청입니다.' });
-        return;
+        throw new ValidationError('배너 그룹 ID가 잘못되었습니다.');
       }
 
       // 배너 그룹 정보 조회
@@ -309,17 +310,19 @@ export class ApiBackendController {
 
       // 조회 실패
       if (!result.result) {
-        res.status(result.code || CODE_FAIL_SERVER).json({ message: result.message || MESSAGE_FAIL_SERVER });
-        return;
+        throw new AppError(result.code, result.message);
       }
 
       // 응답 성공
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
-      res.status(200).json(response);
+      res.status(HTTP_STATUS.OK).json(response);
 
     } catch (error) {
-      res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
-
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
     }
   }
 
@@ -336,8 +339,7 @@ export class ApiBackendController {
 
       // ID가 숫자가 아닌 경우 에러 처리
       if (isNaN(groupId)) {
-        res.status(CODE_BAD_REQUEST).json({ message: '잘못된 요청입니다.' });
-        return;
+        throw new ValidationError('컨텐츠 그룹 ID가 잘못되었습니다.');
       }
 
       // 요청 데이터
@@ -354,17 +356,19 @@ export class ApiBackendController {
 
       // 조회 실패 처리
       if (!result.result) {
-        res.status(result.code || CODE_FAIL_SERVER).json({ message: result.message || MESSAGE_FAIL_SERVER });
-        return;
+        throw new AppError(result.code, result.message);
       }
 
-      // 조회 성공시 200 응답
+      // 조회 성공
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
-      res.status(200).json(response);
+      res.status(HTTP_STATUS.OK).json(response);
 
     } catch (error) {
-      res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
-
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
     }
   }
 
@@ -381,8 +385,7 @@ export class ApiBackendController {
 
       // ID가 숫자가 아닌 경우 에러 처리
       if (isNaN(groupId)) {
-        res.status(CODE_BAD_REQUEST).json({ message: '잘못된 요청입니다.' });
-        return;
+        throw new ValidationError('컨텐츠 그룹 ID가 잘못되었습니다.');
       }
 
       // 요청 데이터
@@ -403,16 +406,18 @@ export class ApiBackendController {
 
       // 등록 실패 처리
       if (!result.result) {
-        res.status(result.code || CODE_FAIL_SERVER).json({ message: result.message || MESSAGE_FAIL_SERVER });
-        return;
+        throw new AppError(result.code, result.message);
       }
 
-      // 등록 성공시 201 응답
-      res.status(201).send(null);
+      // 등록 성공
+      res.status(HTTP_STATUS.CREATED).send(null);
 
     } catch (error) {
-      res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
-
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
     }
   }
 
@@ -432,8 +437,7 @@ export class ApiBackendController {
 
       // ID가 숫자가 아닌 경우 에러 처리
       if (isNaN(groupId) || isNaN(contentId)) {
-        res.status(CODE_BAD_REQUEST).json({ message: '잘못된 요청입니다.' });
-        return;
+        throw new ValidationError('컨텐츠 그룹 ID 또는 컨텐츠 ID가 잘못되었습니다.');
       }
 
       // 컨텐츠 상세 조회
@@ -442,16 +446,19 @@ export class ApiBackendController {
 
       // 조회 실패 처리
       if (!result.result) {
-        res.status(result.code || CODE_FAIL_SERVER).json({ message: result.message || MESSAGE_FAIL_SERVER });
-        return;
+        throw new AppError(result.code, result.message);
       }
 
-      // 조회 성공시 200 응답
+      // 조회 성공
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
-      res.status(200).json(response);
+      res.status(HTTP_STATUS.OK).json(response);
 
     } catch (error) {
-      res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
     }
   }
 
@@ -471,8 +478,7 @@ export class ApiBackendController {
 
       // ID가 숫자가 아닌 경우 에러 처리
       if (isNaN(groupId) || isNaN(contentId)) {
-        res.status(CODE_BAD_REQUEST).json({ message: '잘못된 요청입니다.' });
-        return;
+        throw new ValidationError('컨텐츠 그룹 ID 또는 컨텐츠 ID가 잘못되었습니다.');
       }
 
       // 요청 데이터
@@ -480,19 +486,22 @@ export class ApiBackendController {
 
       // 컨텐츠 수정 처리
       const contentService: IContentService = new ContentService(prisma);
-      const updatedContent = await contentService.update(contentId, requestData);
+      const result = await contentService.update(contentId, requestData);
 
       // 수정 실패 처리
-      if (!updatedContent.result) {
-        res.status(updatedContent.code || CODE_FAIL_SERVER).json({ message: updatedContent.message || MESSAGE_FAIL_SERVER });
-        return;
+      if (!result.result) {
+        throw new AppError(result.code, result.message);
       }
 
-      // 수정 성공시 201 응답
-      res.status(201).send(null);
+      // 수정 성공
+      res.status(HTTP_STATUS.NO_CONTENT).send(null);
 
     } catch (error) {
-      res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
     }
   }
 
@@ -512,8 +521,7 @@ export class ApiBackendController {
 
       // ID가 숫자가 아닌 경우 에러 처리
       if (isNaN(groupId) || isNaN(contentId)) {
-        res.status(CODE_BAD_REQUEST).json({ message: '잘못된 요청입니다.' });
-        return;
+        throw new ValidationError('컨텐츠 그룹 ID 또는 컨텐츠 ID가 잘못되었습니다.');
       }
 
       // 컨텐츠 삭제 처리
@@ -522,16 +530,18 @@ export class ApiBackendController {
 
       // 삭제 실패 처리
       if (!result.result) {
-        res.status(result.code || CODE_FAIL_SERVER).json({ message: result.message || MESSAGE_FAIL_SERVER });
-        return;
+        throw new AppError(result.code, result.message);
       }
 
-      // 삭제 성공시 201 응답
-      res.status(201).send(null);
+      // 삭제 성공
+      res.status(HTTP_STATUS.NO_CONTENT).send(null);
 
     } catch (error) {
-      res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
-
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
     }
   }
 
@@ -550,19 +560,20 @@ export class ApiBackendController {
       const employeeService: IEmployeeService = new EmployeeService(prisma);
       const result = await employeeService.create(requestData);
 
-      // 등록 실패 처리
-      const response = formatApiResponse(false, result.code, result.message);
+      // 등록 실패
       if (!result.result) {
-        res.status(result.code || CODE_FAIL_SERVER).json(response.message || MESSAGE_FAIL_SERVER);
-        return;
+        throw new AppError(result.code, result.message);
       }
       
-      // 등록 성공시 201 응답
-      res.status(201).send(null);
+      // 등록 성공
+      res.status(HTTP_STATUS.CREATED).send(null);
 
     } catch (error) {
-      res.status(CODE_FAIL_SERVER).json({message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER});
-
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
     }
   };
 
@@ -579,8 +590,7 @@ export class ApiBackendController {
 
       // ID가 숫자가 아닌 경우 에러 처리
       if (isNaN(employeeId)) {
-        res.status(CODE_BAD_REQUEST).json({ message: '잘못된 요청입니다.' });
-        return;
+        throw new ValidationError('직원 ID가 잘못되었습니다.');
       }
 
       // 직원 상세 조회
@@ -589,17 +599,19 @@ export class ApiBackendController {
 
       // 조회 실패 처리
       if (!result.result) {
-        res.status(result.code || CODE_FAIL_SERVER).json({message: result.message || MESSAGE_FAIL_SERVER});
-        return;
+        throw new AppError(result.code, result.message);
       }
 
-      // 조회 성공시 200 응답
+      // 조회 성공
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
-      res.status(200).json(response);
+      res.status(HTTP_STATUS.OK).json(response);
 
     } catch (error) {
-      res.status(CODE_FAIL_SERVER).json({message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER});
-
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
     }
   }
 
@@ -616,8 +628,7 @@ export class ApiBackendController {
 
       // ID가 숫자가 아닌 경우 에러 처리
       if (isNaN(employeeId)) {
-        res.status(CODE_BAD_REQUEST).json({ message: '잘못된 요청입니다.' });
-        return;
+        throw new ValidationError('직원 ID가 잘못되었습니다.');
       }
 
       // 요청 데이터
@@ -625,33 +636,35 @@ export class ApiBackendController {
 
       // 직원 정보 수정 처리
       const employeeService: IEmployeeService = new EmployeeService(prisma);
-      const updatedEmployee = await employeeService.update(employeeId, requestData);
+      const result = await employeeService.update(employeeId, requestData);
 
       // 수정 실패 처리
-      if (!updatedEmployee.result) {
-        res.status(updatedEmployee.code || CODE_FAIL_SERVER).json({message: updatedEmployee.message || MESSAGE_FAIL_SERVER});
-        return;
+      if (!result.result) {
+        throw new AppError(result.code, result.message);
       }
 
       // 쿠키 업데이트
-      if (updatedEmployee.data) {
+      if (result.data) {
         setCookie(
           res, 
           'employee', 
           JSON.stringify({
-            id: updatedEmployee.data.id,
-            name: updatedEmployee.data.name,
-            permissions: updatedEmployee.data.permissions,
+            id: result.data.id,
+            name: result.data.name,
+            permissions: result.data.permissions,
           })
         );
       }
       
-      // 수정 성공시 200 응답
-      res.status(201).send(null);
+      // 수정 성공
+      res.status(HTTP_STATUS.NO_CONTENT).send(null);
 
     } catch (error) {
-      res.status(CODE_FAIL_SERVER).json({message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER});
-      
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
     }
   }
 
@@ -668,16 +681,14 @@ export class ApiBackendController {
 
       // ID가 숫자가 아닌 경우 에러 처리
       if (isNaN(employeeId)) {
-        res.status(CODE_BAD_REQUEST).json({ message: '잘못된 요청입니다.' });
-        return;
+        throw new ValidationError('직원 ID가 잘못되었습니다.');
       }
 
       // 로그인 확인
       const accessToken = getCookie(req, 'accessToken');
       const tokenEmployee = (accessToken) ? verifyJWT(accessToken) : null;
       if (!tokenEmployee) {
-        res.status(CODE_BAD_REQUEST).json({ message: '로그인 정보가 없습니다.' });
-        return;
+        throw new AuthError('로그인 정보가 없습니다.');
       }
       
       const loggedInEmployee: IEmployeeToken = tokenEmployee;
@@ -710,8 +721,7 @@ export class ApiBackendController {
 
       // 권한 없음 처리
       if (!hasPermission) {
-        res.status(CODE_UNAUTHORIZED).json({ message: '권한이 없습니다.' });
-        return;
+        throw new PermissionError('권한이 없습니다.');
       }
 
       // 직원 비밀번호 변경 처리
@@ -732,16 +742,18 @@ export class ApiBackendController {
 
       // 변경 실패 처리
       if (!result.result) {
-        res.status(result.code || CODE_FAIL_SERVER).json({ message: result.message || MESSAGE_FAIL_SERVER });
-        return;
+        throw new AppError(result.code, result.message);
       }
       
-      // 변경 성공시 201 응답
-      res.status(201).send(null);
+      // 변경 성공
+      res.status(HTTP_STATUS.NO_CONTENT).send(null);
 
     } catch (error) {
-      res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
-
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
     }
   }
 
@@ -758,7 +770,7 @@ export class ApiBackendController {
 
       // ID가 숫자가 아닌 경우 에러 처리
       if (isNaN(employeeId)) {
-        throw new Error('직원 ID가 올바르지 않습니다.');
+        throw new ValidationError('직원 ID가 잘못되었습니다.');
       }
 
       // 요청 데이터
@@ -770,22 +782,23 @@ export class ApiBackendController {
 
       // 삭제 처리 실패
       if (!result.result) {
-        res.status(result.code || CODE_FAIL_SERVER).json({ message: result.message || MESSAGE_FAIL_SERVER });
-        return;
+        throw new AppError(result.code, result.message);
       }
       
-
       // 쿠키 삭제
       // 다른 계정을 삭제할 수 있으므로 쿠키 삭제하지 않음
       // removeCookie(res, 'accessToken');
       // removeCookie(res, 'employee');
 
-      // 탈퇴 성공시 200 응답
-      res.status(201).send(null);
+      // 탈퇴 성공
+      res.status(HTTP_STATUS.NO_CONTENT).send(null);
 
     } catch (error) {
-      res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
-
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
     }
   }
 
@@ -802,8 +815,7 @@ export class ApiBackendController {
 
       // ID가 숫자가 아닌 경우 에러 처리
       if (isNaN(employeeId)) {
-        res.status(CODE_BAD_REQUEST).json({ message: '잘못된 요청입니다.' });
-        return;
+        throw new ValidationError('직원 ID가 잘못되었습니다.');
       }
 
       // 요청 데이터
@@ -816,39 +828,40 @@ export class ApiBackendController {
 
       // 로그인 확인
       if (!grantedById) {
-        res.status(CODE_FORBIDDEN).json({ message: '로그인이 필요합니다.' });
-        return;
+        throw new AuthError('로그인 정보가 없습니다.');
       }
 
       // 직원 권한 수정 처리
       const permissionService: IPermissionService = new PermissionService();
-      const updatedEmployee = await permissionService.updateEmployeesPermissions(employeeId, requestPermissions, grantedById);
+      const result = await permissionService.updateEmployeesPermissions(employeeId, requestPermissions, grantedById);
+
+      // 수정 실패 처리
+      if (!result.result) {
+        throw new AppError(result.code, result.message);
+      }
 
       // 쿠키 업데이트
-      if (updatedEmployee.data) {
+      if (result.data) {
         setCookie(
           res,
           'employee',
           JSON.stringify({
-            id: updatedEmployee.data.id,
-            name: updatedEmployee.data.name,
-            permissions: updatedEmployee.data.permissions,
+            id: result.data.id,
+            name: result.data.name,
+            permissions: result.data.permissions,
           })
         );
       }
       
-      // 수정 실패 처리
-      if (!updatedEmployee.result) {
-        res.status(updatedEmployee.code || CODE_FAIL_SERVER).json({ message: updatedEmployee.message || MESSAGE_FAIL_SERVER });
-        return;
-      }
-
-      // 수정 성공시 201 응답
-      res.status(201).send(null);
+      // 수정 성공
+      res.status(HTTP_STATUS.NO_CONTENT).send(null);
 
     } catch (error) {
-      res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
-
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
     }
   }
 
@@ -874,17 +887,19 @@ export class ApiBackendController {
 
       // 조회 실패 처리
       if (!result.result) {
-        res.status(result.code || CODE_FAIL_SERVER).json({ message: result.message || MESSAGE_FAIL_SERVER });
-        return;
+        throw new AppError(result.code, result.message);
       }
       
-      // 조회 성공시 200 응답
+      // 조회 성공
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
-      res.status(200).json(response);
+      res.status(HTTP_STATUS.OK).json(response);
 
     } catch (error) {
-      res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
-
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
     }
   }
 
@@ -900,8 +915,7 @@ export class ApiBackendController {
 
       // 로그인 실패 처리
       if (!result.result) {
-        res.status(result.code || CODE_FAIL_SERVER).json({ message: result.message || MESSAGE_FAIL_SERVER });
-        return;
+        throw new AppError(result.code, result.message);
       }
       
       // 로그인 성공시 쿠키에 토큰 저장
@@ -922,12 +936,15 @@ export class ApiBackendController {
       // 응답 데이터 생성
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
 
-      // 로그인 성공시 200 응답
-      res.status(200).json(response);
+      // 로그인 성공
+      res.status(HTTP_STATUS.OK).json(response);
 
     } catch (error) {
-      res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
-
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
     }
   };
 
@@ -938,12 +955,15 @@ export class ApiBackendController {
       removeCookie(res, 'employee');
       removeCookie(res, 'accessToken');
 
-      // 로그아웃 성공시 200 응답
-      res.status(201).send(null);
+      // 로그아웃 성공
+      res.status(HTTP_STATUS.NO_CONTENT).send(null);
 
     } catch (error) {
-      res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
-
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
     }
   }
 
@@ -968,17 +988,19 @@ export class ApiBackendController {
 
       // 조회 실패 처리
       if (!result.result) {
-        res.status(result.code || CODE_FAIL_SERVER).json({ message: result.message || MESSAGE_FAIL_SERVER });
-        return;
+        throw new AppError(result.code, result.message);
       }
 
-      // 조회 성공시 200 응답
+      // 조회 성공
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
-      res.status(200).json(response);
+      res.status(HTTP_STATUS.OK).json(response);
 
     } catch (error) {
-      res.status(CODE_FAIL_SERVER).json({ message: (error instanceof Error) ? error.message : MESSAGE_FAIL_SERVER });
-
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
     }
   }
 
