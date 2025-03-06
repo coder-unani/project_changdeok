@@ -6,7 +6,7 @@
 <div class="py-2 mb-2 rounded-xl">
   <div class="flex justify-between items-center">
     <div>
-      <a href="<%=routes.contentsWrite.url.replace(':groupId', metadata.groupId)%>" class="orb-btn-primary">게시글 등록</a>
+      <a href="<%=routes.contentWrite.url.replace(':groupId', metadata.groupId)%>" class="orb-btn-primary">게시글 등록</a>
     </div>
     <div class="ml-3">
       <div class="w-full max-w-sm min-w-[200px] relative">
@@ -49,7 +49,7 @@
         <% data.forEach(content => { %>
           <tr>
             <td><p><%=content.id%></p></td>
-            <td><a href="<%=routes.contentsDetail.url.replace(':groupId', metadata.groupId).replace(':contentId', content.id)%>" class="hover:underline decoration-gray-800"><p><%=content.title%></p></a></td>
+            <td><a href="<%=routes.contentDetail.url.replace(':groupId', metadata.groupId).replace(':contentId', content.id)%>" class="hover:underline decoration-gray-800"><p><%=content.title%></p></a></td>
             <td><p><%=content.writer%></p></td>
             <td class="hidden lg:table-cell"><p><%=content.createdAt%></p></td>
           </tr>

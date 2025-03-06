@@ -22,8 +22,8 @@ router.use((req, res, next) => {
  * 미들웨어 설정
  */
 const exceptPath: string[] = [
-  backendRoutes.employeesLogin.url,
-  backendRoutes.employeesForgotPassword.url,
+  backendRoutes.employeeLogin.url,
+  backendRoutes.employeeForgotPassword.url,
 ];
 const authMiddleware: IMiddleware = new AuthMiddleware(exceptPath);
 router.use((req, res, next) => authMiddleware.handle(req, res, next));
@@ -50,28 +50,28 @@ router.get(backendRoutes.dashboard.url, function (req, res) {
  */
 
 // 화면관리: 배너 관리
-router.get(backendRoutes.bannersScreen.url, function (req, res) {
-  backendController.bannersScreen(req, res);
+router.get(backendRoutes.screenBanners.url, function (req, res) {
+  backendController.screenBanners(req, res);
 });
 
 // 화면관리: 팝업 관리
-router.get(backendRoutes.bannersPopup.url, function (req, res) {
-  backendController.bannersPopup(req, res);
+router.get(backendRoutes.popupBanners.url, function (req, res) {
+  backendController.popupBanners(req, res);
 });
 
 // 화면관리: 배너 등록
-router.get(backendRoutes.bannersWrite.url, function (req, res) {
-  backendController.bannersWrite(req, res);
+router.get(backendRoutes.bannerWrite.url, function (req, res) {
+  backendController.bannerWrite(req, res);
 });
 
 // 화면관리: 배너 상세
-router.get(backendRoutes.bannersDetail.url, function (req, res) {
-  backendController.bannersDetail(req, res);
+router.get(backendRoutes.bannerDetail.url, function (req, res) {
+  backendController.bannerDetail(req, res);
 });
 
 // 화면관리: 배너 수정
-router.get(backendRoutes.bannersUpdate.url, function (req, res) {
-  backendController.bannersUpdate(req, res);
+router.get(backendRoutes.bannerUpdate.url, function (req, res) {
+  backendController.bannerUpdate(req, res);
 });
 
 // 화면관리: 배너 목록
@@ -89,18 +89,18 @@ router.get(backendRoutes.contents.url, function (req, res) {
 });
 
 // 게시판: 게시물 작성
-router.get(backendRoutes.contentsWrite.url, function (req, res) {
-  backendController.contentsWrite(req, res);
+router.get(backendRoutes.contentWrite.url, function (req, res) {
+  backendController.contentWrite(req, res);
 });
 
 // 게시판: 게시물 상세
-router.get(backendRoutes.contentsDetail.url, function (req, res) {
-  backendController.contentsDetail(req, res);
+router.get(backendRoutes.contentDetail.url, function (req, res) {
+  backendController.contentDetail(req, res);
 });
 
 // 게시판: 게시물 수정
-router.get(backendRoutes.contentsUpdate.url, function (req, res) {
-  backendController.contentsUpdate(req, res);
+router.get(backendRoutes.contentUpdate.url, function (req, res) {
+  backendController.contentUpdate(req, res);
 });
 
 /**
@@ -108,33 +108,33 @@ router.get(backendRoutes.contentsUpdate.url, function (req, res) {
  */
 
 // 직원: 로그인
-router.get(backendRoutes.employeesLogin.url, function (req, res) {
-  backendController.employeesLogin(req, res);
+router.get(backendRoutes.employeeLogin.url, function (req, res) {
+  backendController.employeeLogin(req, res);
 });
 
 // 직원: 등록
-router.get(backendRoutes.employeesRegist.url, function (req, res) {
-  backendController.employeesRegist(req, res);
+router.get(backendRoutes.employeeRegist.url, function (req, res) {
+  backendController.employeeRegist(req, res);
 });
 
 // 직원: 정보수정
-router.get(backendRoutes.employeesUpdate.url, function (req, res) {
-  backendController.employeesUpdate(req, res);
+router.get(backendRoutes.employeeUpdate.url, function (req, res) {
+  backendController.employeeUpdate(req, res);
 });
 
 // 직원: 비밀번호 수정
-router.get(backendRoutes.employeesUpdatePassword.url, function (req, res) {
-  backendController.employeesUpdatePassword(req, res);
+router.get(backendRoutes.employeeUpdatePassword.url, function (req, res) {
+  backendController.employeeUpdatePassword(req, res);
 });
 
 // 직원: 탈퇴
-router.get(backendRoutes.employeesDelete.url, function (req, res) {
-  backendController.employeesDelete(req, res);
+router.get(backendRoutes.employeeDelete.url, function (req, res) {
+  backendController.employeeDelete(req, res);
 });
 
 // 직원: 권한변경
-router.get(backendRoutes.employeesPermissions.url, function (req, res) {
-  backendController.employeesPermissions(req, res);
+router.get(backendRoutes.employeePermissions.url, function (req, res) {
+  backendController.employeePermissions(req, res);
 });
 
 // 직원: 목록
@@ -143,13 +143,13 @@ router.get(backendRoutes.employees.url, function (req, res) {
 });
 
 // 직원: 비밀번호 찾기
-router.get(backendRoutes.employeesForgotPassword.url, function (req, res) {
-  backendController.employeesForgotPassword(req, res);
+router.get(backendRoutes.employeeForgotPassword.url, function (req, res) {
+  backendController.employeeForgotPassword(req, res);
 });
 
 // 직원: 상세정보
-router.get(backendRoutes.employeesDetail.url, function (req, res) {
-  backendController.employeesDetail(req, res);
+router.get(backendRoutes.employeeDetail.url, function (req, res) {
+  backendController.employeeDetail(req, res);
 });
 
 /**

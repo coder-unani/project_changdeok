@@ -25,7 +25,7 @@
           </button>
       </form>
       <div class="mt-4 text-center">
-          <a href="<%=routes.employeesForgotPassword.url%>" class="text-sm text-blue-500 hover:underline">비밀번호를 잊으셨나요?</a>
+          <a href="<%=routes.employeeForgotPassword.url%>" class="text-sm text-blue-500 hover:underline">비밀번호를 잊으셨나요?</a>
       </div>
   </div>
 </div>
@@ -45,7 +45,7 @@
     
     try {
       // 로그인 API 호출
-      const response = await fetch('<%=apiBackendRoutes.employeesLogin.url%>', {
+      const response = await fetch('<%=apiBackendRoutes.employeeLogin.url%>', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

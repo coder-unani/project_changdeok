@@ -45,7 +45,7 @@
 
 <div class="flex flex-col lg:flex-row flex-wrap items-center justify-between gap-1">
   <div class="flex w-full lg:w-auto">
-    <a href="<%=routes.contentsUpdate.url.replace(':groupId', metadata.groupId).replace(':contentId', data.id)%>" class="orb-btn-secondary">
+    <a href="<%=routes.contentUpdate.url.replace(':groupId', metadata.groupId).replace(':contentId', data.id)%>" class="orb-btn-secondary">
       수정하기
     </a>
   </div>
@@ -66,9 +66,9 @@ document.getElementById('btn-delete').addEventListener('click', async (e) => {
 
   try {
     // 컨텐츠 삭제 API 호출
-    const apiUrl = '<%=apiBackendRoutes.contentsDelete.url%>'.replace(':groupId', '<%=metadata.groupId%>').replace(':contentId', '<%=data.id%>');
+    const apiUrl = '<%=apiBackendRoutes.contentDelete.url%>'.replace(':groupId', '<%=metadata.groupId%>').replace(':contentId', '<%=data.id%>');
     const response = await fetch(apiUrl, {
-      method: '<%=apiBackendRoutes.contentsDelete.method%>',
+      method: '<%=apiBackendRoutes.contentDelete.method%>',
       headers: {
         'Content-Type': 'application/json'
       }
@@ -81,7 +81,7 @@ document.getElementById('btn-delete').addEventListener('click', async (e) => {
     }
 
     // 응답 성공
-    alert('<%=apiBackendRoutes.contentsDelete.title%> 성공');
+    alert('<%=apiBackendRoutes.contentDelete.title%> 성공');
     window.location.href = "<%=routes.contents.url%>".replace(':groupId', '<%=metadata.groupId%>');
 
   } catch (error) {

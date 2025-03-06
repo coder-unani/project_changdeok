@@ -81,9 +81,9 @@
 
       try {
         // 직원 수정 API 호출
-        const apiUrl = '<%=apiBackendRoutes.employeesUpdate.url%>'.replace(':employeeId', '<%=data.employee.id%>');
+        const apiUrl = '<%=apiBackendRoutes.employeeUpdate.url%>'.replace(':employeeId', '<%=data.employee.id%>');
         const response = await fetch(apiUrl, {
-          method: '<%=apiBackendRoutes.employeesUpdate.method%>',
+          method: '<%=apiBackendRoutes.employeeUpdate.method%>',
           headers: {
               'Content-Type': 'application/json'
           },
@@ -97,7 +97,7 @@
         }
         
         // 응답 성공
-        alert('<%=apiBackendRoutes.employeesUpdate.title%> 성공');
+        alert('<%=apiBackendRoutes.employeeUpdate.title%> 성공');
           
       } catch (err) {
         alert(error.message || '서버 오류가 발생했습니다.');

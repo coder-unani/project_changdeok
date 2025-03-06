@@ -12,7 +12,7 @@ export class AuthMiddleware implements IMiddleware {
   
   // 생성자
   constructor(exceptPath: string[] = []) {
-    this.loginPath = backendRoutes.employeesLogin.url;
+    this.loginPath = backendRoutes.employeeLogin.url;
     this.exceptAuth = exceptPath;
     this.exceptAuth.push(this.loginPath);
   }

@@ -71,18 +71,18 @@
 <!-- Action Buttons -->
 <div class="flex flex-col lg:flex-row flex-wrap items-center justify-between gap-1">
   <div class="flex flex-col lg:flex-row items-center gap-1 w-full lg:w-auto">
-    <a href="<%=routes.employeesUpdate.url.replace(':employeeId', data.id)%>" class="block orb-btn-secondary">
+    <a href="<%=routes.employeeUpdate.url.replace(':employeeId', data.id)%>" class="block orb-btn-secondary">
       정보 수정
     </a>
-    <a href="<%=routes.employeesUpdatePassword.url.replace(':employeeId', data.id)%>" class="orb-btn-secondary">
+    <a href="<%=routes.employeeUpdatePassword.url.replace(':employeeId', data.id)%>" class="orb-btn-secondary">
       비밀번호 변경
     </a>
-    <a href="<%=routes.employeesPermissions.url.replace(':employeeId', data.id)%>" class="orb-btn-secondary">
+    <a href="<%=routes.employeePermissions.url.replace(':employeeId', data.id)%>" class="orb-btn-secondary">
       권한 수정
     </a>
   </div>
   <div class="flex w-full lg:w-auto">
-    <a href="<%=routes.employeesDelete.url.replace(':employeeId', data.id)%>" class="orb-btn-delete">
+    <a href="<%=routes.employeeDelete.url.replace(':employeeId', data.id)%>" class="orb-btn-delete">
       삭제하기
     </a>
   </div>

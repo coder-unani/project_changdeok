@@ -30,29 +30,29 @@ const apiBackendController = new ApiBackendController();
 
 // 배너 등록
 router.post(
-  apiBackendRoutes.bannersWrite.url, 
+  apiBackendRoutes.bannerWrite.url, 
   (req: Request, res: Response, next: NextFunction) => imageUploadMiddleware.handle(req, res, next), 
   (req: Request, res: Response) => {
-    apiBackendController.bannersWrite(req, res);
+    apiBackendController.bannerWrite(req, res);
   }
 );
 
 // 배너 상세 정보
-router.get(apiBackendRoutes.bannersDetail.url, (req: Request, res: Response) => {
-  apiBackendController.bannersDetail(req, res);
+router.get(apiBackendRoutes.bannerDetail.url, (req: Request, res: Response) => {
+  apiBackendController.bannerDetail(req, res);
 });
 
 // 배너 수정
-router.put(apiBackendRoutes.bannersUpdate.url,
+router.put(apiBackendRoutes.bannerUpdate.url,
   (req: Request, res: Response, next: NextFunction) => imageUploadMiddleware.handle(req, res, next), 
   (req: Request, res: Response) => {
-    apiBackendController.bannersUpdate(req, res);
+    apiBackendController.bannerUpdate(req, res);
   }
 );
 
 // 배너 삭제
-router.delete(apiBackendRoutes.bannersDelete.url, (req: Request, res: Response) => {
-  apiBackendController.bannersDelete(req, res);
+router.delete(apiBackendRoutes.bannerDelete.url, (req: Request, res: Response) => {
+  apiBackendController.bannerDelete(req, res);
 });
 
 // 배너 목록
@@ -61,8 +61,8 @@ router.get(apiBackendRoutes.banners.url, (req: Request, res: Response) => {
 });
 
 // 배너 그룹 정보
-router.get(apiBackendRoutes.bannersGroup.url, (req: Request, res: Response) => {
-  apiBackendController.bannersGroup(req, res);
+router.get(apiBackendRoutes.bannerGroup.url, (req: Request, res: Response) => {
+  apiBackendController.bannerGroup(req, res);
 });
 
 // 컨텐츠 목록
@@ -73,47 +73,47 @@ router.get(apiBackendRoutes.contents.url,
 );
 
 // 컨텐츠 등록
-router.post(apiBackendRoutes.contentsWrite.url, (req: Request, res: Response) => {
-  apiBackendController.contentsWrite(req, res);
+router.post(apiBackendRoutes.contentWrite.url, (req: Request, res: Response) => {
+  apiBackendController.contentWrite(req, res);
 });
 
 // 컨텐츠 상세 정보
-router.get(apiBackendRoutes.contentsDetail.url, (req: Request, res: Response) => {
-  apiBackendController.contentsDetail(req, res);
+router.get(apiBackendRoutes.contentDetail.url, (req: Request, res: Response) => {
+  apiBackendController.contentDetail(req, res);
 });
 
 // 컨텐츠 수정
-router.put(apiBackendRoutes.contentsUpdate.url, (req: Request, res: Response) => {
-  apiBackendController.contentsUpdate(req, res);
+router.put(apiBackendRoutes.contentUpdate.url, (req: Request, res: Response) => {
+  apiBackendController.contentUpdate(req, res);
 });
 
 // 컨텐츠 삭제
-router.delete(apiBackendRoutes.contentsDelete.url, (req: Request, res: Response) => {
-  apiBackendController.contentsDelete(req, res);
+router.delete(apiBackendRoutes.contentDelete.url, (req: Request, res: Response) => {
+  apiBackendController.contentDelete(req, res);
 });
 
 // 직원 등록
-router.post(apiBackendRoutes.employeesRegist.url, (req: Request, res: Response) => {
-  apiBackendController.employeesRegist(req, res);
+router.post(apiBackendRoutes.employeeRegist.url, (req: Request, res: Response) => {
+  apiBackendController.employeeRegist(req, res);
 });
 
 // 직원 정보 수정
-router.put(apiBackendRoutes.employeesUpdate.url, (req: Request, res: Response) => {
-  apiBackendController.employeesUpdate(req, res);
+router.put(apiBackendRoutes.employeeUpdate.url, (req: Request, res: Response) => {
+  apiBackendController.employeeUpdate(req, res);
 });
 
 // 직원 비밀번호 수정
-router.patch(apiBackendRoutes.employeesUpdatePassword.url, (req: Request, res: Response) => {
-  apiBackendController.employeesUpdatePassword(req, res);
+router.patch(apiBackendRoutes.employeeUpdatePassword.url, (req: Request, res: Response) => {
+  apiBackendController.employeeUpdatePassword(req, res);
 });
 
 // 직원 탈퇴
-router.delete(apiBackendRoutes.employeesDelete.url, (req: Request, res: Response) => {
-  apiBackendController.employeesDelete(req, res);
+router.delete(apiBackendRoutes.employeeDelete.url, (req: Request, res: Response) => {
+  apiBackendController.employeeDelete(req, res);
 });
 
-router.patch(apiBackendRoutes.employeesPermissions.url, (req: Request, res: Response) => {
-  apiBackendController.employeesPermissions(req, res);
+router.patch(apiBackendRoutes.employeePermissions.url, (req: Request, res: Response) => {
+  apiBackendController.employeePermissions(req, res);
 });
 
 // 직원 목록
@@ -122,18 +122,18 @@ router.get(apiBackendRoutes.employees.url, (req: Request, res: Response) => {
 });
 
 // 직원 로그인
-router.post(apiBackendRoutes.employeesLogin.url, (req: Request, res: Response) => {
-  apiBackendController.employeesLogin(req, res);
+router.post(apiBackendRoutes.employeeLogin.url, (req: Request, res: Response) => {
+  apiBackendController.employeeLogin(req, res);
 });
 
 // 직원 로그아웃
-router.post(apiBackendRoutes.employeesLogout.url, (req: Request, res: Response) => {
-  apiBackendController.employeesLogout(req, res);
+router.post(apiBackendRoutes.employeeLogout.url, (req: Request, res: Response) => {
+  apiBackendController.employeeLogout(req, res);
 });
 
 // 직원 상세 정보
-router.get(apiBackendRoutes.employeesDetail.url, (req: Request, res: Response) => {
-  apiBackendController.employeesDetail(req, res);
+router.get(apiBackendRoutes.employeeDetail.url, (req: Request, res: Response) => {
+  apiBackendController.employeeDetail(req, res);
 });
 
 // 권한 목록

@@ -4,7 +4,7 @@
     <p class="text-right font-medium text-[13px] text-gray-400"><span class="pr-0.5 text-red-500">*</span>필수입력사항</p>
   </h1>
 </div>
-<form id="formAdminRegister">
+<form id="formEmployeeRegister">
   <div class="space-y-4 text-sm text-gray-800 bg-white p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
     <div>
       <label for="email" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">이메일<span class="pl-0.5 text-red-500">*</span></label>
@@ -71,7 +71,7 @@
 </form>
 
 <script>
-document.getElementById('formAdminRegister').addEventListener('submit', async (e) => {
+document.getElementById('formEmployeeRegister').addEventListener('submit', async (e) => {
     e.preventDefault();
 
     // 폼 데이터 수집
@@ -85,8 +85,8 @@ document.getElementById('formAdminRegister').addEventListener('submit', async (e
 
     try {
       // 직원 등록 API 호출
-      const response = await fetch('<%=apiBackendRoutes.employeesRegist.url%>', {
-        method: '<%=apiBackendRoutes.employeesRegist.method%>',
+      const response = await fetch('<%=apiBackendRoutes.employeeRegist.url%>', {
+        method: '<%=apiBackendRoutes.employeeRegist.method%>',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -100,7 +100,7 @@ document.getElementById('formAdminRegister').addEventListener('submit', async (e
       }
 
       // 응답 성공
-      alert('<%=apiBackendRoutes.employeesRegist.title%> 성공');
+      alert('<%=apiBackendRoutes.employeeRegist.title%> 성공');
         
     } catch (err) {
       alert(error.message || '서버 오류가 발생했습니다.');

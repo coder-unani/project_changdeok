@@ -8,7 +8,7 @@ export const getApiBannerGroup = async (accessToken: string, groupId: number): P
   try {
     // API 호출
     const apiResponse = await fetch(
-      `${API_BASE_URL}${apiBackendRoutes.bannersGroup.url}`.replace(':groupId', groupId.toString()), {
+      `${API_BASE_URL}${apiBackendRoutes.bannerGroup.url}`.replace(':groupId', groupId.toString()), {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -88,8 +88,8 @@ export const getApiBanners = async (accessToken: string, data: IRequestBanners):
 export const getApiBannerDetail = async (accessToken: string, bannerId: number): Promise<IApiResponse<IContent>> => {
   try {
     // API 호출
-    const apiResponse = await fetch(`${API_BASE_URL}${apiBackendRoutes.bannersDetail.url}`.replace(':bannerId', bannerId.toString()), {
-      method: `${apiBackendRoutes.bannersDetail.method}`,
+    const apiResponse = await fetch(`${API_BASE_URL}${apiBackendRoutes.bannerDetail.url}`.replace(':bannerId', bannerId.toString()), {
+      method: `${apiBackendRoutes.bannerDetail.method}`,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${accessToken}`,
@@ -172,7 +172,7 @@ export const getApiContentDetail = async (groupId: number, contentId: number): P
   try {
     // API 호출
     const apiResponse = await fetch(
-      `${API_BASE_URL}${apiBackendRoutes.contentsDetail.url}`.replace(':groupId', groupId.toString()).replace(':contentId', contentId.toString()
+      `${API_BASE_URL}${apiBackendRoutes.contentDetail.url}`.replace(':groupId', groupId.toString()).replace(':contentId', contentId.toString()
       ), {
       method: 'GET',
       headers: {
@@ -210,7 +210,7 @@ export const getApiEmployeeDetail = async (employeeId: number): Promise<IApiResp
   try {
     // API 호출
     const apiResponse = await fetch(
-      `${API_BASE_URL}${apiBackendRoutes.employeesDetail.url}`.replace(':employeeId', employeeId.toString()
+      `${API_BASE_URL}${apiBackendRoutes.employeeDetail.url}`.replace(':employeeId', employeeId.toString()
       ), {
       method: 'GET',
       headers: {

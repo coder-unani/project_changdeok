@@ -37,9 +37,9 @@ document.getElementById('formContentUpdate').addEventListener('submit', async (e
     });
 
     // 컨텐츠 등록 API 호출
-    const apiUrl = '<%=apiBackendRoutes.contentsUpdate.url%>'.replace(':groupId', '<%=metadata.groupId%>').replace(':contentId', '<%=data.id%>');
+    const apiUrl = '<%=apiBackendRoutes.contentUpdate.url%>'.replace(':groupId', '<%=metadata.groupId%>').replace(':contentId', '<%=data.id%>');
     const response = await fetch(apiUrl, {
-      method: '<%=apiBackendRoutes.contentsUpdate.method%>',
+      method: '<%=apiBackendRoutes.contentUpdate.method%>',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -53,8 +53,8 @@ document.getElementById('formContentUpdate').addEventListener('submit', async (e
     }
 
     // 응답 성공
-    alert('<%=apiBackendRoutes.contentsUpdate.title%> 성공');
-    window.location.href = "<%=routes.contentsDetail.url%>".replace(':groupId', '<%=metadata.groupId%>').replace(':contentId', '<%=data.id%>');
+    alert('<%=apiBackendRoutes.contentUpdate.title%> 성공');
+    window.location.href = "<%=routes.contentDetail.url%>".replace(':groupId', '<%=metadata.groupId%>').replace(':contentId', '<%=data.id%>');
 
   } catch (error) {
     alert(error.message || '서버 오류가 발생했습니다.');

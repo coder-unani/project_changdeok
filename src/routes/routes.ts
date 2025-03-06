@@ -9,31 +9,31 @@ export const apiBackendRoutes = {
     url: `${apiBackendRoutesPrefix}/banners`,
     permissions: [1, 5]
   },
-  bannersWrite: {
+  bannerWrite: {
     method: 'POST',
     title: '배너 등록',
     url: `${apiBackendRoutesPrefix}/banners/write`,
     permissions: [1, 5]
   },
-  bannersDetail: {
+  bannerDetail: {
     method: 'GET',
     title: '배너 상세 정보',
     url: `${apiBackendRoutesPrefix}/banners/:bannerId`,
     permissions: [1, 5]
   },
-  bannersUpdate: {
+  bannerUpdate: {
     method: 'PUT',
     title: '배너 수정',
     url: `${apiBackendRoutesPrefix}/banners/:bannerId`,
     permissions: [1, 5]
   },
-  bannersDelete: {
+  bannerDelete: {
     method: 'DELETE',
     title: '배너 삭제',
     url: `${apiBackendRoutesPrefix}/banners/:bannerId`,
     permissions: [1, 5]
   },
-  bannersGroup: {
+  bannerGroup: {
     method: 'GET',
     title: '배너 그룹 정보',
     url: `${apiBackendRoutesPrefix}/banners/groups/:groupId`,
@@ -45,80 +45,119 @@ export const apiBackendRoutes = {
     url: `${apiBackendRoutesPrefix}/contents/:groupId`,
     permissions: [1, 4]
   },
-  contentsWrite: {
+  contentWrite: {
     method: 'POST',
     title: '게시글 작성',
     url: `${apiBackendRoutesPrefix}/contents/:groupId/write`,
     permissions: [1, 4]
   },
-  contentsDetail: {
+  contentDetail: {
     method: 'GET',
     title: '게시글 상세',
     url: `${apiBackendRoutesPrefix}/contents/:groupId/:contentId`,
     permissions: [1, 4]
   },
-  contentsUpdate: {
+  contentUpdate: {
     method: 'PUT',
     title: '게시글 수정',
     url: `${apiBackendRoutesPrefix}/contents/:groupId/:contentId`,
     permissions: [1, 4]
   },
-  contentsDelete: {
+  contentDelete: {
     method: 'DELETE',
     title: '게시글 삭제',
     url: `${apiBackendRoutesPrefix}/contents/:groupId/:contentId`,
     permissions: [1, 4]
   },
-  employeesRegist: {
+  employeeRegist: {
     method: 'POST',
     title: '관리자 등록',
     url: `${apiBackendRoutesPrefix}/employees/regist`,
+    permissions: [1, 2]
   },
-  employeesDetail: {
+  employeeDetail: {
     method: 'GET',
     title: '관리자 상세 정보',
     url: `${apiBackendRoutesPrefix}/employees/:employeeId`,
+    permissions: [1, 2]
   },
-  employeesUpdate: {
+  employeeUpdate: {
     method: 'PUT',
     title: '관리자 정보 수정',
     url: `${apiBackendRoutesPrefix}/employees/:employeeId`,
+    permissions: [1, 2]
   },
-  employeesUpdatePassword: {
+  employeeUpdatePassword: {
     method: 'PATCH',
     title: '관리자 비밀번호 수정',
     url: `${apiBackendRoutesPrefix}/employees/:employeeId/password`,
     permissions: [1, 2]
   },
-  employeesDelete: {
+  employeeDelete: {
     method: 'DELETE',
     title: '관리자 삭제',
     url: `${apiBackendRoutesPrefix}/employees/:employeeId`,
+    permissions: [1, 2]
   },
-  employeesPermissions: {
+  employeePermissions: {
     method: 'PATCH',
     title: '관리자 권한 등록/수정',
     url: `${apiBackendRoutesPrefix}/employees/:employeeId/permissions`,
+    permissions: [1, 3]
   },
   employees: {
     method: 'GET',
     title: '관리자 목록',
     url: `${apiBackendRoutesPrefix}/employees`,
+    permissions: [1, 2]
   },
-  employeesLogin: {
+  employeeLogin: {
     method: 'POST',
     title: '관리자 로그인',
     url: `${apiBackendRoutesPrefix}/employees/login`,
+    permissions: []
   },
-  employeesLogout: {
+  employeeLogout: {
     method: 'POST',
     title: '관리자 로그아웃',
     url: `${apiBackendRoutesPrefix}/employees/logout`,
+    permissions: []
   },
   permissions: {
     method: 'GET',
     title: '권한 목록',
     url: `${apiBackendRoutesPrefix}/permissions`,
+    permissions: [1, 3]
+  }
+}
+
+export const apiBaseUrl = 'http://localhost:3000';
+export const apiRoutesPrefix = '/api';
+export const apiRoutes = {
+  info: {
+    method: 'GET',
+    title: '사이트 정보',
+    url: `${apiRoutesPrefix}/info`,
+  },
+  banners: {
+    method: 'GET',
+    title: '배너 목록',
+    url: `${apiRoutesPrefix}/banners/:groupId`,
+  },
+  contents: {
+    method: 'GET',
+    title: '게시판 목록',
+    url: `${apiRoutesPrefix}/contents/:groupId`,
+  },
+  contentDetail: {
+    method: 'GET',
+    title: '게시글 상세',
+    url: `${apiRoutesPrefix}/contents/:groupId/:contentId`,
+  },
+  contentLike: {
+    method: 'POST',
+    title: '게시글 좋아요',
+    url: `${apiRoutesPrefix}/contents/:groupId/:contentId/like`,
   }
 }
 
@@ -158,7 +197,7 @@ export const backendRoutes = {
     layout: backendRoutesLayout,
     permissions: [1, 5]
   },
-  bannersWrite: {
+  bannerWrite: {
     method: 'GET',
     title: '배너 등록',
     url: `${backendRoutesPrefix}/banners/write`,
@@ -166,7 +205,7 @@ export const backendRoutes = {
     layout: backendRoutesLayout,
     permissions: [1, 5]
   },
-  bannersDetail: {
+  bannerDetail: {
     method: 'GET',
     title: '배너 상세',
     url: `${backendRoutesPrefix}/banners/:bannerId`,
@@ -174,7 +213,7 @@ export const backendRoutes = {
     layout: backendRoutesLayout,
     permissions: [1, 5]
   },
-  bannersUpdate: {
+  bannerUpdate: {
     method: 'GET',
     title: '배너 수정',
     url: `${backendRoutesPrefix}/banners/:bannerId/update`,
@@ -183,7 +222,7 @@ export const backendRoutes = {
     permissions: [1, 5]
   },
   // 배너 관리: 화면 관리
-  bannersScreen: {
+  screenBanners: {
     method: 'GET',
     title: '배너 관리',
     url: `${backendRoutesPrefix}/banners/screens`,
@@ -192,7 +231,7 @@ export const backendRoutes = {
     permissions: [1, 5]
   },
   // 배너 관리: 팝업 관리
-  bannersPopup: {
+  popupBanners: {
     method: 'GET',
     title: '팝업 관리',
     url: `${backendRoutesPrefix}/banners/popups`,
@@ -209,7 +248,7 @@ export const backendRoutes = {
     layout: backendRoutesLayout,
     permissions: [1, 4]
   },
-  contentsWrite: {
+  contentWrite: {
     method: 'GET',
     title: '게시글 작성',
     url: `${backendRoutesPrefix}/contents/:groupId/write`,
@@ -217,7 +256,7 @@ export const backendRoutes = {
     layout: backendRoutesLayout,
     permissions: [1, 4]
   },
-  contentsDetail: {
+  contentDetail: {
     method: 'GET',
     title: '게시글 상세',
     url: `${backendRoutesPrefix}/contents/:groupId/:contentId`,
@@ -225,7 +264,7 @@ export const backendRoutes = {
     layout: backendRoutesLayout,
     permissions: [1, 4]
   },
-  contentsUpdate: {
+  contentUpdate: {
     method: 'GET',
     title: '게시글 수정',
     url: `${backendRoutesPrefix}/contents/:groupId/:contentId/update`,
@@ -234,7 +273,7 @@ export const backendRoutes = {
     permissions: [1, 4]
   },
   // 사이트관리
-  employeesRegist: {
+  employeeRegist: {
     method: 'GET',
     title: '관리자 등록',
     url: `${backendRoutesPrefix}/employees/regist`,
@@ -242,7 +281,7 @@ export const backendRoutes = {
     layout: backendRoutesLayout,
     permissions: [1, 2]
   },
-  employeesDetail: {
+  employeeDetail: {
     method: 'GET',
     title: '관리자 상세 정보',
     url: `${backendRoutesPrefix}/employees/:employeeId`, 
@@ -250,7 +289,7 @@ export const backendRoutes = {
     layout: backendRoutesLayout,
     permissions: [1, 2]
   },
-  employeesUpdate: {
+  employeeUpdate: {
     method: 'GET',
     title: '관리자 정보 수정',
     url: `${backendRoutesPrefix}/employees/:employeeId/update`,
@@ -258,7 +297,7 @@ export const backendRoutes = {
     layout: backendRoutesLayout,
     permissions: [1, 2]
   },
-  employeesUpdatePassword: {
+  employeeUpdatePassword: {
     method: 'GET',
     title: '관리자 비밀번호 수정',
     url: `${backendRoutesPrefix}/employees/:employeeId/update-password`,
@@ -266,7 +305,7 @@ export const backendRoutes = {
     layout: backendRoutesLayout,
     permissions: [1, 2]
   },
-  employeesDelete: {
+  employeeDelete: {
     method: 'GET',
     title: '관리자 삭제',
     url: `${backendRoutesPrefix}/employees/:employeeId/delete`,
@@ -274,7 +313,7 @@ export const backendRoutes = {
     layout: backendRoutesLayout,
     permissions: [1, 2]
   },
-  employeesPermissions: {
+  employeePermissions: {
     method: 'GET',
     title: '관리자 권한 변경',
     url: `${backendRoutesPrefix}/employees/:employeeId/permissions`,
@@ -290,7 +329,7 @@ export const backendRoutes = {
     layout: backendRoutesLayout,
     permissions: [1, 2]
   },
-  employeesLogin: {
+  employeeLogin: {
     method: 'GET',
     title: '관리자 로그인',
     url: `${backendRoutesPrefix}/employees/login`,
@@ -298,7 +337,7 @@ export const backendRoutes = {
     layout: backendRoutesNonHeaderLayout,
     permissions: []
   },
-  employeesForgotPassword: {
+  employeeForgotPassword: {
     method: 'GET',
     title: '비밀번호 찾기',
     url: `${backendRoutesPrefix}/employees/forgot-password`,

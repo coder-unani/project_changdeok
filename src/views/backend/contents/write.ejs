@@ -37,9 +37,9 @@ document.getElementById('formContentWrite').addEventListener('submit', async (e)
     });
 
     // 컨텐츠 등록 API 호출
-    const apiUrl = '<%=apiBackendRoutes.contentsWrite.url%>'.replace(':groupId', '<%=data.groupId%>');
+    const apiUrl = '<%=apiBackendRoutes.contentWrite.url%>'.replace(':groupId', '<%=data.groupId%>');
     const response = await fetch(apiUrl, {
-      method: '<%=apiBackendRoutes.contentsWrite.method%>',
+      method: '<%=apiBackendRoutes.contentWrite.method%>',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -53,7 +53,7 @@ document.getElementById('formContentWrite').addEventListener('submit', async (e)
     }
 
     // 응답 성공
-    alert('<%=apiBackendRoutes.contentsWrite.title%> 성공');
+    alert('<%=apiBackendRoutes.contentWrite.title%> 성공');
     window.location.href = '<%=routes.contents.url%>'.replace(':groupId', '<%=data.groupId%>');
 
   } catch (error) {

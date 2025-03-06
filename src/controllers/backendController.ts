@@ -39,9 +39,9 @@ export class BackendController {
   }
 
   // 화면 관리: 배너 등록
-  public async bannersWrite(req: Request, res: Response): Promise<void> {
+  public async bannerWrite(req: Request, res: Response): Promise<void> {
     // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.bannersWrite;
+    const { title, view, layout, permissions } = backendRoutes.bannerWrite;
 
     try {
       // 접근 권한 체크
@@ -89,9 +89,9 @@ export class BackendController {
   }
 
   // 화면 관리: 배너 상세
-  public async bannersDetail(req: Request, res: Response): Promise<void> {
+  public async bannerDetail(req: Request, res: Response): Promise<void> {
     // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.bannersDetail;
+    const { title, view, layout, permissions } = backendRoutes.bannerDetail;
 
     try {
       // 접근 권한 체크
@@ -134,9 +134,9 @@ export class BackendController {
   }
 
   // 화면 관리: 배너 수정
-  public async bannersUpdate(req: Request, res: Response): Promise<void> {
+  public async bannerUpdate(req: Request, res: Response): Promise<void> {
     // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.bannersUpdate;
+    const { title, view, layout, permissions } = backendRoutes.bannerUpdate;
 
     try {
       // 접근 권한 체크
@@ -160,8 +160,6 @@ export class BackendController {
       if (!apiBannerDetail.result) {
         throw new Error(apiBannerDetail.message as string);
       }
-
-      console.log(apiBannerDetail);
 
       // 배너 상세 페이지 렌더링
       res.render(
@@ -234,9 +232,9 @@ export class BackendController {
   }
 
   // 화면 관리: 배너
-  public bannersScreen(req: Request, res: Response): void {
+  public screenBanners(req: Request, res: Response): void {
     // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.bannersScreen;
+    const { title, view, layout, permissions } = backendRoutes.screenBanners;
 
     try {
       // 접근 권한 체크
@@ -252,9 +250,9 @@ export class BackendController {
   }
 
   // 화면 관리: 팝업
-  public bannersPopup(req: Request, res: Response): void {
+  public popupBanners(req: Request, res: Response): void {
     // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.bannersPopup;
+    const { title, view, layout, permissions } = backendRoutes.popupBanners;
 
     try {
       // 접근 권한 체크
@@ -325,9 +323,9 @@ export class BackendController {
   }
 
   // 게시글 작성
-  public contentsWrite(req: Request, res: Response): void {
+  public contentWrite(req: Request, res: Response): void {
     // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.contentsWrite;
+    const { title, view, layout, permissions } = backendRoutes.contentWrite;
 
     try {
       // 접근 권한 체크
@@ -354,9 +352,9 @@ export class BackendController {
   }
 
   // 게시글 상세 정보
-  public async contentsDetail(req: Request, res: Response): Promise<void> {
+  public async contentDetail(req: Request, res: Response): Promise<void> {
     // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.contentsDetail;
+    const { title, view, layout, permissions } = backendRoutes.contentDetail;
 
     try {
       // 접근 권한 체크
@@ -388,9 +386,9 @@ export class BackendController {
   }
 
   // 게시글 업데이트
-  public async contentsUpdate(req: Request, res: Response): Promise<void> {
+  public async contentUpdate(req: Request, res: Response): Promise<void> {
     // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.contentsUpdate;
+    const { title, view, layout, permissions } = backendRoutes.contentUpdate;
 
     try {
       // 접근 권한 체크
@@ -422,9 +420,9 @@ export class BackendController {
   }
 
   // 직원 등록
-  public employeesRegist(req: Request, res: Response): void {
+  public employeeRegist(req: Request, res: Response): void {
     // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.employeesRegist;
+    const { title, view, layout, permissions } = backendRoutes.employeeRegist;
 
     try {
       // 접근 권한 체크
@@ -440,9 +438,9 @@ export class BackendController {
   }
 
   // 직원 상세 정보
-  public async employeesDetail(req: Request, res: Response): Promise<void> {
+  public async employeeDetail(req: Request, res: Response): Promise<void> {
     // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.employeesDetail;
+    const { title, view, layout, permissions } = backendRoutes.employeeDetail;
 
     try {
       // 직원 ID 추출
@@ -477,9 +475,9 @@ export class BackendController {
   }
 
   // 직원 정보 수정
-  public async employeesUpdate(req: Request, res: Response): Promise<void> {
+  public async employeeUpdate(req: Request, res: Response): Promise<void> {
     // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.employeesUpdate;
+    const { title, view, layout, permissions } = backendRoutes.employeeUpdate;
 
     try {
       // 직원 ID 추출
@@ -506,9 +504,9 @@ export class BackendController {
   }
 
   // 직원 비밀번호 수정
-  public async employeesUpdatePassword(req: Request, res: Response): Promise<void> {
+  public async employeeUpdatePassword(req: Request, res: Response): Promise<void> {
     // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.employeesUpdatePassword;
+    const { title, view, layout, permissions } = backendRoutes.employeeUpdatePassword;
 
     try {
       // 직원 ID 추출
@@ -547,9 +545,9 @@ export class BackendController {
   }
 
   // 직원 삭제
-  public async employeesDelete(req: Request, res: Response): Promise<void> {
+  public async employeeDelete(req: Request, res: Response): Promise<void> {
     // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.employeesDelete;
+    const { title, view, layout, permissions } = backendRoutes.employeeDelete;
 
     try {
       // 직원 ID 추출
@@ -587,9 +585,9 @@ export class BackendController {
   }
 
   // 직원 권한 변경
-  public async employeesPermissions(req: Request, res: Response): Promise<void> {
+  public async employeePermissions(req: Request, res: Response): Promise<void> {
     // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.employeesPermissions;
+    const { title, view, layout, permissions } = backendRoutes.employeePermissions;
 
     try {
       // 접근 권한 체크
@@ -702,9 +700,9 @@ export class BackendController {
   }
 
   // 직원 로그인
-  public employeesLogin(req: Request, res: Response): void {
+  public employeeLogin(req: Request, res: Response): void {
     // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.employeesLogin;
+    const { title, view, layout, permissions } = backendRoutes.employeeLogin;
 
     try {
       // 로그인 페이지 렌더링
@@ -717,9 +715,9 @@ export class BackendController {
   }
 
   // 직원 비밀번호 찾기
-  public employeesForgotPassword(req: Request, res: Response): void {
+  public employeeForgotPassword(req: Request, res: Response): void {
     // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.employeesForgotPassword;
+    const { title, view, layout, permissions } = backendRoutes.employeeForgotPassword;
 
     try {
       // 비밀번호 찾기 페이지 렌더링

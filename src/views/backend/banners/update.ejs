@@ -95,9 +95,9 @@
       const formData = new FormData(e.target);
 
       // 배너 등록 API 호출
-      const apiUrl = '<%=apiBackendRoutes.bannersUpdate.url%>'.replace(':bannerId', '<%=data.id%>');
+      const apiUrl = '<%=apiBackendRoutes.bannerUpdate.url%>'.replace(':bannerId', '<%=data.id%>');
       const response = await fetch(apiUrl, {
-        method: '<%=apiBackendRoutes.bannersUpdate.method%>',
+        method: '<%=apiBackendRoutes.bannerUpdate.method%>',
         headers: { },
         body: formData
       });
@@ -109,7 +109,7 @@
       }
 
       // 응답 성공
-      alert('<%=apiBackendRoutes.bannersUpdate.title%> 성공');
+      alert('<%=apiBackendRoutes.bannerUpdate.title%> 성공');
       window.location.href = "<%=routes.banners.url%>?gp=<%=metadata.groupInfo.id%>&sq=<%=data.seq%>";
 
     } catch (error) {

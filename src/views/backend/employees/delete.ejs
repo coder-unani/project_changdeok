@@ -23,9 +23,9 @@
 
     try {
       // 직원 삭제 API 호출
-      const apiUrl = '<%=apiBackendRoutes.employeesDelete.url%>'.replace(':employeeId', '<%=data.id%>');
+      const apiUrl = '<%=apiBackendRoutes.employeeDelete.url%>'.replace(':employeeId', '<%=data.id%>');
       const response = await fetch(apiUrl, {
-          method: 'DELETE',
+          method: '<%=apiBackendRoutes.employeeDelete.method%>',
           headers: {
               'Content-Type': 'application/json'
           },
@@ -38,7 +38,7 @@
       }
 
       // 응답 성공
-      alert('<%=apiBackendRoutes.employeesDelete.title%> 성공');
+      alert('<%=apiBackendRoutes.employeeDelete.title%> 성공');
       window.location.href = '<%=routes.employees.url%>';
       
     } catch (err) {

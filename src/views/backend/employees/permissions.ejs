@@ -38,9 +38,9 @@
 
     try {
       // 권한 부여 API 호출
-      const apiUrl = '<%=apiBackendRoutes.employeesPermissions.url%>'.replace(':employeeId', '<%=data.employee.id%>');
+      const apiUrl = '<%=apiBackendRoutes.employeePermissions.url%>'.replace(':employeeId', '<%=data.employee.id%>');
       const response = await fetch(apiUrl, {
-        method: '<%=apiBackendRoutes.employeesPermissions.method%>',
+        method: '<%=apiBackendRoutes.employeePermissions.method%>',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -54,7 +54,7 @@
       }
       
       // 응답 성공
-      alert('<%=apiBackendRoutes.employeesPermissions.title%> 성공');
+      alert('<%=apiBackendRoutes.employeePermissions.title%> 성공');
       
     } catch (err) {
       alert(error.message || '서버 오류가 발생했습니다.');
