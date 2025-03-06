@@ -31,24 +31,24 @@
       <div class="mb-2 border-t border-slate-100">
         <p class="text-xs font-normal text-slate-400 py-2 mt-2">화면 관리</p>
         <ul class="flex flex-col gap-2 text-slate-500 dark:text-slate-100">
-          <li class="font-thin rounded-lg transition-all dark:hover:text-white dark:hover:bg-gray-600 <%if (routes.bannersScreen.title === title) {%>orb-hightlight<%} else {%>hover:bg-gray-100<%}%>">
-            <a class="flex items-center justify-start p-2" href="<%=routes.bannersScreen.url%>">
+          <li class="font-thin rounded-lg transition-all dark:hover:text-white dark:hover:bg-gray-600 <%if (routes.screenBanners.title === title) {%>orb-hightlight<%} else {%>hover:bg-gray-100<%}%>">
+            <a class="flex items-center justify-start p-2" href="<%=routes.screenBanners.url%>">
               <span class="text-left">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" class="h-[14px] w-[14px]">
                   <path d="M0 128C0 92.7 28.7 64 64 64l384 0c35.3 0 64 28.7 64 64l0 256c0 35.3-28.7 64-64 64L64 448c-35.3 0-64-28.7-64-64L0 128zm64 32l0 64c0 17.7 14.3 32 32 32l320 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32L96 128c-17.7 0-32 14.3-32 32zM80 320c-13.3 0-24 10.7-24 24s10.7 24 24 24l56 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-56 0zm136 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l48 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-48 0z"/>
                 </svg>
               </span>
-              <span class="mx-3 font-normal"><%=routes.bannersScreen.title%></span>
+              <span class="mx-3 font-normal"><%=routes.screenBanners.title%></span>
             </a>
           </li>
           <li class="font-thin rounded-lg transition-all dark:hover:text-white dark:hover:bg-gray-600 <%if (title === '팝업 관리') {%>orb-hightlight<%} else {%>hover:bg-gray-100<%}%>">
-            <a class="flex items-center justify-start p-2" href="<%=routes.bannersPopup.url%>">
+            <a class="flex items-center justify-start p-2" href="<%=routes.popupBanners.url%>">
               <span class="text-left">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" class="h-[14px] w-[14px]">
                   <path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l82.7 0L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3l0 82.7c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160c0-17.7-14.3-32-32-32L320 0zM80 32C35.8 32 0 67.8 0 112L0 432c0 44.2 35.8 80 80 80l320 0c44.2 0 80-35.8 80-80l0-112c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 112c0 8.8-7.2 16-16 16L80 448c-8.8 0-16-7.2-16-16l0-320c0-8.8 7.2-16 16-16l112 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L80 32z"/>
                 </svg>
               </span>
-              <span class="mx-3 font-normal"><%=routes.bannersPopup.title%></span>
+              <span class="mx-3 font-normal"><%=routes.popupBanners.title%></span>
             </a>
           </li>
         </ul>
@@ -145,26 +145,26 @@
     <div class="mb-4">
       <p class="font-normal text-slate-300 py-2 border-b border-slate-100">화면 관리</p>
       <ul class="flex flex-col mt-2 gap-2 text-slate-500 dark:text-slate-100">
-        <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600 <%if (routes.bannersScreen.title === title) {%>orb-hightlight<%}%>">
-          <a class="flex items-center justify-start p-2" href="<%=routes.bannersScreen.url%>">
+        <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600 <%if (routes.screenBanners.title === title) {%>orb-hightlight<%}%>">
+          <a class="flex items-center justify-start p-2" href="<%=routes.screenBanners.url%>">
             <span class="text-left">
               <svg width="20" height="20" fill="currentColor" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
                   <path fill="currentColor" d="M1070 1178l306-564h-654l-306 564h654zm722-282q0 182-71 348t-191 286-286 191-348 71-348-71-286-191-191-286-71-348 71-348 191-286 286-191 348-71 348 71 286 191 191 286 71 348z">
                   </path>
               </svg>
             </span>
-            <span class="mx-4 font-normal"><%=routes.bannersScreen.title%></span>
+            <span class="mx-4 font-normal"><%=routes.screenBanners.title%></span>
           </a>
         </li>
         <li class="font-thin rounded-lg transition-all duration-300 hover:text-white dark:hover:text-white hover:bg-blue-500 dark:hover:bg-gray-600 <%if ('팝업 관리' === title) {%>orb-hightlight<%}%>">
-          <a class="flex items-center justify-start p-2" href="<%=routes.bannersPopup.url%>">
+          <a class="flex items-center justify-start p-2" href="<%=routes.popupBanners.url%>">
             <span class="text-left">
               <svg width="20" height="20" fill="currentColor" class="m-auto" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg">
                   <path fill="currentColor" d="M960 0l960 384v128h-128q0 26-20.5 45t-48.5 19h-1526q-28 0-48.5-19t-20.5-45h-128v-128zm-704 640h256v768h128v-768h256v768h128v-768h256v768h128v-768h256v768h59q28 0 48.5 19t20.5 45v64h-1664v-64q0-26 20.5-45t48.5-19h59v-768zm1595 960q28 0 48.5 19t20.5 45v128h-1920v-128q0-26 20.5-45t48.5-19h1782z">
                   </path>
               </svg>
             </span>
-            <span class="mx-4 font-normal"><%=routes.bannersPopup.title%></span>
+            <span class="mx-4 font-normal"><%=routes.popupBanners.title%></span>
           </a>
         </li>
       </ul>
@@ -261,7 +261,7 @@
 
   const logout = async () => {
     try {
-      const response = await fetch('<%=apiBackendRoutes.employeesLogout.url%>', {
+      const response = await fetch('<%=apiBackendRoutes.employeeLogout.url%>', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -273,7 +273,7 @@
         throw new Error('로그아웃에 실패했습니다.');
       }
 
-      window.location.href = '<%=routes.employeesLogin.url%>';
+      window.location.href = '<%=routes.employeeLogin.url%>';
 
     } catch (error) {
       console.error(error);
