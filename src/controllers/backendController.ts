@@ -3,13 +3,14 @@ import { Request, Response } from 'express';
 import { prisma } from '../config/database';
 import { API_BASE_URL } from '../config/config';
 import { IRequestBanners, IRequestContents, typeListSort } from '../types/request';
-import { IBannerGroup, IEmployeeToken } from '../types/object';
+import { IEmployeeToken } from '../types/object';
 import { backendRoutes, apiBackendRoutes } from '../routes/routes';
 import { EmployeeService } from '../services/employeeService';
 import { getApiBanners, getApiBannerGroup, getApiContents, getApiContentDetail, getApiEmployeeDetail, getApiPermissionList, getApiBannerDetail } from '../common/api';
 import { verifyJWT } from '../common/jwt';
 import { getCookie } from '../common/cookies';
 import { getAccessToken } from "../common/verifier";
+import { ValidationError, AuthError, PermissionError } from '../common/error';
 
 // TODO: 권한을 체크해서 다른 계정도 수정하게 할 것인지 확인 필요
 export class BackendController {
@@ -50,19 +51,19 @@ export class BackendController {
       // 접속 토큰
       const accessToken = getAccessToken(req);
       if (!accessToken) {
-        throw new Error("로그인이 필요합니다.");
+        throw new AuthError("로그인이 필요합니다.");
       }
 
       // 배너 그룹 ID
       const groupId = parseInt(req.query.gp as string);
       if (!groupId || isNaN(groupId)) {
-        throw new Error("배너 그룹 ID가 올바르지 않습니다.");
+        throw new ValidationError("배너 그룹 ID가 올바르지 않습니다.");
       }
 
       // 배너 시퀀스
       const seq = parseInt(req.query.sq as string) || 0;
       if (seq <= 0) {
-        throw new Error("배너 시퀀스가 올바르지 않습니다.");
+        throw new ValidationError("배너 시퀀스가 올바르지 않습니다.");
       }
 
       // 배너 그룹 정보 조회
