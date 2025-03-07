@@ -19,8 +19,9 @@
       </div>
       <div class="relative w-full lg:w-[250px] aspect-3/2">
         <button type="button" id="imageAdd" class="absolute top-0 left-0 w-full h-full bg-gray-100 border border-dashed border-gray-200 rounded-lg cursor-pointer">
-          <span class="absolute inset-0 flex items-center justify-center">
+          <span class="absolute inset-0 flex flex-col items-center justify-center">
             <img class="block w-[50px] opacity-50" src="/images/add-image-512x512.png" alt="이미지 추가">
+            <p class="mt-1 text-xs text-gray-400">(<%=metadata.groupInfo.imageWidth%>x<%=metadata.groupInfo.imageHeight%>)</p>
           </span>
         </button>
         <div id="imagePreviewContainer" class="relative hidden w-full h-full z-10 rounded-lg overflow-hidden">
@@ -31,12 +32,16 @@
               </svg>
             </span>
           </button>
-          <img id="imagePreview" class="relative w-full h-full object-contain z-10" src="" alt="이미지 미리보기">
-          <div class="absolute inset-0 w-full h-full bg-gray-100 border border-gray-200 rounded-lg"></div>
+          <div class="relative w-full h-full bg-gray-100 border border-gray-200 rounded-lg z-10">
+            <img id="imagePreview" class="w-full h-full object-contain" src="" alt="이미지 미리보기">
+          </div>
         </div>
       </div>
-      <div class="border border-blue-300 bg-blue-50 rounded-lg px-4 py-2 mt-3">
-        <p class="text-[13px] text-blue-500">이미지 크기: 가로 <%=metadata.groupInfo.imageWidth%>px * 세로 <%=metadata.groupInfo.imageHeight%>px</p>
+      <div class="flex gap-2 border border-blue-300 bg-blue-50 rounded-lg px-4 py-2 mt-3 text-[13px] text-blue-500">
+        <span class="font-medium">TIP</span>
+        <ul>
+          <li><span>·</span> 이미지 사이즈: <%=metadata.groupInfo.imageWidth%>x<%=metadata.groupInfo.imageHeight%>px</li>
+        </ul>
       </div>
     </div>
     <div>
