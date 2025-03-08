@@ -1,6 +1,15 @@
 type typeOptionalNumber = number | null | undefined;
 type typeOptionalString = string | null | undefined;
 
+export interface IRoute {
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
+  title: string,
+  url: string,
+  view: string,
+  layout: string,
+  permissions: number[]
+}
+
 export interface IError {
   statusCode: number;
   message: string;
