@@ -7,7 +7,7 @@ import cookieParser from 'cookie-parser';
 import path from 'path';
 
 import { SERVICE_PORT, STATIC_PATH, LOG_PATH, LOG_LEVEL, ALLOWED_TAGS } from './config/config';
-import { companyInfo } from './config/base';
+import { companyInfo } from './config/info';
 import { IMiddleware } from './types/middleware';
 import { LoggerMiddleware } from './middlewares/logger';
 import { SanitizeMiddleware } from './middlewares/sanitizer';

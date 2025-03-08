@@ -10,7 +10,7 @@ import { getApiBanners, getApiBannerGroup, getApiContents, getApiContentDetail, 
 import { verifyJWT } from '../common/jwt';
 import { getCookie } from '../common/cookies';
 import { getAccessToken } from "../common/verifier";
-import { ValidationError, AuthError, PermissionError } from '../common/error';
+import { AppError, ValidationError, AuthError } from '../common/error';
 
 // TODO: 권한을 체크해서 다른 계정도 수정하게 할 것인지 확인 필요
 export class BackendController {
@@ -71,7 +71,7 @@ export class BackendController {
 
       // 배너 그룹 정보 조회 실패
       if (!apiGroupInfo.result || !apiGroupInfo.data) {
-        throw new Error(apiGroupInfo.message as string);
+        throw new AppError(apiGroupInfo.code as number, apiGroupInfo.message as string);
       }
 
       // 메타데이터 생성
@@ -782,20 +782,19 @@ export class BackendController {
   // 에러 페이지
   public renderError(res: Response, error: unknown): void {
     const { title, view, layout } = backendRoutes.error;
-    if (error instanceof Error) {
-      res.status(500).render(view, {
-        layout,
-        title,
-        message: error.message || "일시적인 오류가 발생했습니다.",
-      });
 
+    if (error instanceof AppError) {
+      res.status(error.statusCode).render(view, {
+        layout,
+        title: `${title} ${error.statusCode}`,
+        message: error.message,
+      });
     } else {
       res.status(500).render(view, {
         layout,
         title,
         message: "알 수 없는 오류가 발생했습니다.",
       });
-
     }
   }
 }

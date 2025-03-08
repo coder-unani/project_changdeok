@@ -1,5 +1,3 @@
-import { permission } from "process";
-
 export const apiBackendBaseUrl = 'http://localhost:3000';
 export const apiBackendRoutesPrefix = '/api/backend';
 export const apiBackendRoutes = {
