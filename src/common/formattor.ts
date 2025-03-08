@@ -2,7 +2,7 @@ import { typeFormattedResult } from "../types/format";
 import { REG_DATE_PATTERN, REG_EMAIL_PATTERN } from "../config/constants";
 import { IApiResponse } from "../types/response";
 
-export const formatDate = (date: string | Date | undefined | null): typeFormattedResult =>{
+export const formatDate = (date: string | Date | undefined | null): typeFormattedResult => {
   try {
 
     // Date가 없으면 현재 날짜로 설정
