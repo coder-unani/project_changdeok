@@ -1,7 +1,7 @@
-import { CODE_BAD_REQUEST, CODE_UNAUTHORIZED, CODE_FORBIDDEN, CODE_FAIL_SERVER } from '../config/constants';
+import { HTTP_STATUS } from "../config/constants";
 
 // CODE_ERROR, CODE_FAIL_SERVER, CODE_FAIL_VALIDATION 상수를 사용하여 typeCode를 정의
-export type typeCode = typeof CODE_FAIL_SERVER | typeof CODE_BAD_REQUEST | typeof CODE_UNAUTHORIZED | typeof CODE_FORBIDDEN;
+export type typeCode = typeof HTTP_STATUS[keyof typeof HTTP_STATUS];
 export type typeMessage = string | undefined;
 
 export interface IServiceResponse<T = undefined> {

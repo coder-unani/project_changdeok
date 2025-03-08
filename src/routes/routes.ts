@@ -1,3 +1,5 @@
+import { IRoute } from '../types/object';
+
 export const apiBackendBaseUrl = 'http://localhost:3000';
 export const apiBackendRoutesPrefix = '/api/backend';
 export const apiBackendRoutes = {
@@ -162,20 +164,22 @@ export const apiRoutes = {
 export const backendRoutesPrefix = '/admin';
 export const backendRoutesLayout = 'layouts/backend/layout';
 export const backendRoutesNonHeaderLayout = 'layouts/backend/layoutNonHeader';
-export const backendRoutes = {
+export const backendRoutes: { [key: string]: IRoute } = {
   index: {
     method: 'GET',
     title: '관리 시스템 홈',
     url: `${backendRoutesPrefix}/`,
     view: 'backend/index',
-    layout: backendRoutesLayout
+    layout: backendRoutesLayout,
+    permissions: []
   },
   error: {
     method: 'GET',
     title: 'ERROR',
     url: `${backendRoutesPrefix}/error`,
     view: 'backend/error',
-    layout: backendRoutesNonHeaderLayout
+    layout: backendRoutesNonHeaderLayout,
+    permissions: []
   },
   // 대시보드
   dashboard: {

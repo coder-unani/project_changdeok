@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { prisma } from '../config/database';
 import { API_BASE_URL } from '../config/config';
 import { IRequestBanners, IRequestContents, typeListSort } from '../types/request';
-import { IEmployeeToken } from '../types/object';
+import { IRoute, IEmployeeToken } from '../types/object';
 import { backendRoutes, apiBackendRoutes } from '../routes/routes';
 import { EmployeeService } from '../services/employeeService';
 import { getApiBanners, getApiBannerGroup, getApiContents, getApiContentDetail, getApiEmployeeDetail, getApiPermissionList, getApiBannerDetail } from '../common/api';
@@ -17,36 +17,53 @@ export class BackendController {
   constructor() {}
 
   // 관리자 홈
-  public index(req: Request, res: Response): void {
-    // TODO: 로그인 확인되면 권한이 있는지 확인 후 권한이 없으면 권한이 없다는 페이지로 이동
-    const { title, view, layout } = backendRoutes.index;
-    res.render(view, { layout, title });
+  public index = async (route: IRoute, req: Request, res: Response): Promise<void> => {
+    try {
+      // 페이지 데이터 생성
+      const data = {
+        layout: route.layout,
+        title: route.title,
+        metadata: {},
+        data: {},
+      };
+
+      // 관리자 홈 페이지 렌더링
+      res.render(route.view, data);
+
+    } catch (error) {
+      this.renderError(res, error);
+
+    }
   }
 
   // 대시보드
-  public dashboard(req: Request, res: Response): void {
-    // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.dashboard;
-
+  public dashboard = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 접근 권한 체크
-      this.verifyPermission(req, permissions);
+      this.verifyPermission(req, route.permissions);
+
+      // 페이지 데이터 생성
+      const data = {
+        layout: route.layout,
+        title: route.title,
+        metadata: {},
+        data: {},
+      };
 
       // 대시보드 페이지 렌더링
-      res.render(view, { layout, title });
+      res.render(route.view, data);
+
     } catch (error) {
       this.renderError(res, error);
+
     }
   }
 
   // 화면 관리: 배너 등록
-  public async bannerWrite(req: Request, res: Response): Promise<void> {
-    // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.bannerWrite;
-
+  public bannerWrite = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 접근 권한 체크
-      this.verifyPermission(req, permissions);
+      this.verifyPermission(req, route.permissions);
       
       // 접속 토큰
       const accessToken = getAccessToken(req);
@@ -74,14 +91,19 @@ export class BackendController {
         throw new AppError(apiGroupInfo.code as number, apiGroupInfo.message as string);
       }
 
-      // 메타데이터 생성
-      const metadata = {
-        groupInfo: apiGroupInfo.data,
-        seq
+      // 페이지 데이터 생성
+      const data = {
+        layout: route.layout,
+        title: `${apiGroupInfo.data.title} ${route.title}`,
+        metadata: {
+          groupInfo: apiGroupInfo.data,
+          seq
+        },
+        data: {},
       }
       
       // 배너 등록 페이지 렌더링
-      res.render(view, { layout, title: `${metadata.groupInfo.title} ${title}`, metadata, data: {} });
+      res.render(route.view, data);
 
     } catch (error) {
       this.renderError(res, error);
@@ -90,13 +112,10 @@ export class BackendController {
   }
 
   // 화면 관리: 배너 상세
-  public async bannerDetail(req: Request, res: Response): Promise<void> {
-    // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.bannerDetail;
-
+  public bannerDetail = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 접근 권한 체크
-      this.verifyPermission(req, permissions);
+      this.verifyPermission(req, route.permissions);
 
       // 접속 토큰
       const accessToken = getAccessToken(req);
@@ -117,16 +136,16 @@ export class BackendController {
         throw new Error(apiBannerDetail.message as string);
       }
 
+      // 페이지 데이터 생성
+      const data = {
+        layout: route.layout,
+        title: route.title,
+        metadata: apiBannerDetail.metadata,
+        data: apiBannerDetail.data,
+      }
+
       // 배너 상세 페이지 렌더링
-      res.render(
-        view, 
-        { 
-          layout, 
-          title, 
-          metadata: apiBannerDetail.metadata, 
-          data: apiBannerDetail.data 
-        }
-      );
+      res.render(route.view, data);
 
     } catch (error) {
       this.renderError(res, error);
@@ -135,13 +154,10 @@ export class BackendController {
   }
 
   // 화면 관리: 배너 수정
-  public async bannerUpdate(req: Request, res: Response): Promise<void> {
-    // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.bannerUpdate;
-
+  public bannerUpdate = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 접근 권한 체크
-      this.verifyPermission(req, permissions);
+      this.verifyPermission(req, route.permissions);
 
       // 접속 토큰
       const accessToken = getAccessToken(req);
@@ -162,16 +178,16 @@ export class BackendController {
         throw new Error(apiBannerDetail.message as string);
       }
 
+      // 페이지 데이터 생성
+      const data = {
+        layout: route.layout,
+        title: route.title,
+        metadata: apiBannerDetail.metadata,
+        data: apiBannerDetail.data,
+      }
+
       // 배너 상세 페이지 렌더링
-      res.render(
-        view, 
-        { 
-          layout, 
-          title, 
-          metadata: apiBannerDetail.metadata, 
-          data: apiBannerDetail.data 
-        }
-      );
+      res.render(route.view, data);
 
     } catch (error) {
       this.renderError(res, error);
@@ -180,13 +196,10 @@ export class BackendController {
   }
 
   // 화면 관리: 배너 목록
-  public async banners(req: Request, res: Response): Promise<void> {
-    // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.banners;
-
+  public banners = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 접근 권한 체크
-      this.verifyPermission(req, permissions);
+      this.verifyPermission(req, route.permissions);
 
       // 접속 토큰
       const accessToken = getAccessToken(req);
@@ -207,7 +220,7 @@ export class BackendController {
       }
 
       // API Params
-      const data: IRequestBanners = {
+      const params: IRequestBanners = {
         page: req.query.page ? parseInt(req.query.page as string) : 1,
         pageSize: req.query.pageSize ? parseInt(req.query.pageSize as string) : 10,
         query: req.query.query ? (req.query.query as string) : "",
@@ -216,15 +229,23 @@ export class BackendController {
       };
 
       // API 호출
-      const { result, message, metadata, data: banners } = await getApiBanners(accessToken, data);
+      const { result, message, metadata, data: banners } = await getApiBanners(accessToken, params);
 
       // 호출 실패
       if (!result) {
         throw new Error(message as string);
       }
 
+      // 페이지 데이터 생성
+      const data = {
+        layout: route.layout,
+        title: `${metadata.groupInfo.title} ${route.title}`,
+        metadata,
+        data: banners,
+      }
+
       // 배너 목록 페이지 렌더링
-      res.render(view, { layout, title: `${metadata.groupInfo.title} ${title}`, metadata, data: banners });
+      res.render(route.view, data);
 
     } catch (error) {
       this.renderError(res, error);
@@ -233,16 +254,21 @@ export class BackendController {
   }
 
   // 화면 관리: 배너
-  public screenBanners(req: Request, res: Response): void {
-    // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.screenBanners;
-
+  public screenBanners = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 접근 권한 체크
-      this.verifyPermission(req, permissions);
+      this.verifyPermission(req, route.permissions);
+
+      // 페이지 데이터 생성
+      const data = {
+        layout: route.layout,
+        title: route.title,
+        metadata: {},
+        data: {},
+      };
 
       // 배너 관리 페이지 렌더링
-      res.render(view, { layout, title });
+      res.render(route.view, data);
 
     } catch (error) {
       this.renderError(res, error);
@@ -251,19 +277,21 @@ export class BackendController {
   }
 
   // 화면 관리: 팝업
-  public popupBanners(req: Request, res: Response): void {
-    // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.popupBanners;
-
+  public popupBanners = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 접근 권한 체크
-      this.verifyPermission(req, permissions);
+      this.verifyPermission(req, route.permissions);
 
-      console.log("bannersPopup");
-      console.log(title, view, layout, permissions);
+      // 페이지 데이터 생성
+      const data = {
+        layout: route.layout,
+        title: route.title,
+        metadata: {},
+        data: {},
+      };
 
       // 팝업 관리 페이지 렌더링
-      res.render(view, { layout, title });
+      res.render(route.view, data);
 
     } catch (error) {
       this.renderError(res, error);
@@ -272,13 +300,10 @@ export class BackendController {
   }
 
   // 게시판 관리
-  public async contents(req: Request, res: Response): Promise<void> {
-    // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.contents;
-
+  public contents = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 접근 권한 체크
-      this.verifyPermission(req, permissions);
+      this.verifyPermission(req, route.permissions);
 
       // 게시판 ID 추출
       const groupId = parseInt(req.params.groupId);
@@ -294,7 +319,7 @@ export class BackendController {
       }
 
       // params 생성
-      const data: IRequestContents = {
+      const params: IRequestContents = {
         page: req.query.page ? parseInt(req.query.page as string) : 1,
         pageSize: req.query.pageSize ? parseInt(req.query.pageSize as string) : 10,
         query: req.query.query ? (req.query.query as string) : "",
@@ -306,16 +331,18 @@ export class BackendController {
       if (!accessToken) {
         throw new Error("로그인이 필요합니다.");
       }
-      const { metadata, data: contents } = await getApiContents(accessToken, groupId, data);
+      const { metadata, data: contents } = await getApiContents(accessToken, groupId, params);
 
+      // 페이지 데이터 생성
+      const data = {
+        layout: route.layout,
+        title: metadata.title,
+        metadata,
+        data: contents,
+      }
 
       // 게시판 관리 페이지 렌더링
-      res.render(view, { 
-        layout, 
-        title: metadata.title, 
-        metadata, 
-        data: contents
-      });
+      res.render(route.view, data);
 
     } catch (error) {
       this.renderError(res, error);
@@ -324,13 +351,10 @@ export class BackendController {
   }
 
   // 게시글 작성
-  public contentWrite(req: Request, res: Response): void {
-    // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.contentWrite;
-
+  public contentWrite = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 접근 권한 체크
-      this.verifyPermission(req, permissions);
+      this.verifyPermission(req, route.permissions);
 
       // 게시판 ID 추출
       const groupId = parseInt(req.params.groupId);
@@ -345,21 +369,32 @@ export class BackendController {
         throw new Error("게시판 아이디가 형식에 맞지 않습니다.");
       }
 
+      // 페이지 데이터 생성
+      const data = {
+        layout: route.layout,
+        title: route.title,
+        metadata: {
+          groupInfo: {
+            id: groupId,
+          }
+        },
+        data: {},
+      };
+
       // 게시글 작성 페이지 렌더링
-      res.render(view, { layout, title, data: { groupId } });
+      res.render(route.view, data);
+
     } catch (error) {
       this.renderError(res, error);
+
     }
   }
 
   // 게시글 상세 정보
-  public async contentDetail(req: Request, res: Response): Promise<void> {
-    // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.contentDetail;
-
+  public contentDetail = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 접근 권한 체크
-      this.verifyPermission(req, permissions);
+      this.verifyPermission(req, route.permissions);
 
       // 게시판 ID와 게시글 ID 추출
       const groupId = parseInt(req.params.groupId);
@@ -378,22 +413,28 @@ export class BackendController {
       // API 호출
       const { metadata, data: content } = await getApiContentDetail(parseInt(req.params.groupId), parseInt(req.params.contentId));
 
+      // 페이지 데이터 생성
+      const data = {
+        layout: route.layout,
+        title: metadata.title,
+        metadata,
+        data: content,
+      };
+
       // 게시글 상세 정보 페이지 렌더링
-      res.render(view, { layout, title, metadata, data: content });
+      res.render(route.view, data);
 
     } catch (error) {
       this.renderError(res, error);
+
     }
   }
 
   // 게시글 업데이트
-  public async contentUpdate(req: Request, res: Response): Promise<void> {
-    // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.contentUpdate;
-
+  public contentUpdate = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 접근 권한 체크
-      this.verifyPermission(req, permissions);
+      this.verifyPermission(req, route.permissions);
 
       // 게시판 ID와 게시글 ID 추출
       const groupId = parseInt(req.params.groupId);
@@ -412,8 +453,16 @@ export class BackendController {
       // API 호출
       const { metadata, data: content } = await getApiContentDetail(parseInt(req.params.groupId), parseInt(req.params.contentId));
 
+      // 페이지 데이터 생성
+      const data = {
+        layout: route.layout,
+        title: metadata.title,
+        metadata,
+        data: content,
+      };
+
       // 게시글 상세 정보 페이지 렌더링
-      res.render(view, { layout, title, metadata, data: content });
+      res.render(route.view, data);
 
     } catch (error) {
       this.renderError(res, error);
@@ -421,16 +470,21 @@ export class BackendController {
   }
 
   // 직원 등록
-  public employeeRegist(req: Request, res: Response): void {
-    // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.employeeRegist;
-
+  public employeeRegist = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 접근 권한 체크
-      this.verifyPermission(req, permissions);
+      this.verifyPermission(req, route.permissions);
+
+      // 페이지 데이터 생성
+      const data = {
+        layout: route.layout,
+        title: route.title,
+        metadata: {},
+        data: {},
+      };
 
       // 직원 등록 페이지 렌더링
-      res.render(view, { layout, title });
+      res.render(route.view, data);
 
     } catch (error) {
       this.renderError(res, error);
@@ -439,10 +493,7 @@ export class BackendController {
   }
 
   // 직원 상세 정보
-  public async employeeDetail(req: Request, res: Response): Promise<void> {
-    // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.employeeDetail;
-
+  public employeeDetail = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 직원 ID 추출
       const employeeId = parseInt(req.params.employeeId);
@@ -453,7 +504,7 @@ export class BackendController {
       }
 
       // 접근 권한 체크
-      this.verifyPermission(req, permissions, employeeId);
+      this.verifyPermission(req, route.permissions, employeeId);
 
       // 관리자 상세 정보 조회
       const { metadata, data: employee } = await getApiEmployeeDetail(employeeId);
@@ -463,23 +514,25 @@ export class BackendController {
         throw new Error("직원 정보 조회에 실패했습니다.");
       }
 
-      // 상세 정보 페이지 렌더링
-      res.render(view, {
-        layout,
-        title,
+      // 페이지 데이터 생성
+      const data = {
+        layout: route.layout,
+        title: route.title,
         metadata,
         data: employee,
-      });
+      };
+
+      // 상세 정보 페이지 렌더링
+      res.render(route.view, data);
+
     } catch (error) {
       this.renderError(res, error);
+
     }
   }
 
   // 직원 정보 수정
-  public async employeeUpdate(req: Request, res: Response): Promise<void> {
-    // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.employeeUpdate;
-
+  public employeeUpdate = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 직원 ID 추출
       const employeeId = parseInt(req.params.employeeId);
@@ -490,13 +543,26 @@ export class BackendController {
       }
 
       // 접근 권한 체크
-      this.verifyPermission(req, permissions, employeeId);
+      this.verifyPermission(req, route.permissions, employeeId);
 
       // 관리자 정보 조회
       const { data: employee } = await getApiEmployeeDetail(employeeId);
 
+      // 결과가 없는 경우 에러 페이지 이동
+      if (!employee) {
+        throw new Error("직원 정보 조회에 실패했습니다.");
+      }
+
+      // 페이지 데이터 생성
+      const data = {
+        layout: route.layout,
+        title: route.title,
+        metadata: {},
+        data: employee,
+      };
+
       // 직원 정보 수정 페이지 렌더링
-      res.render(view, { layout, title, data: { employee } });
+      res.render(route.view, data);
 
     } catch (error) {
       this.renderError(res, error);
@@ -505,10 +571,7 @@ export class BackendController {
   }
 
   // 직원 비밀번호 수정
-  public async employeeUpdatePassword(req: Request, res: Response): Promise<void> {
-    // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.employeeUpdatePassword;
-
+  public employeeUpdatePassword = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 직원 ID 추출
       const employeeId = parseInt(req.params.employeeId);
@@ -524,7 +587,7 @@ export class BackendController {
       }
 
       // 접근 권한 체크
-      this.verifyPermission(req, permissions, employeeId);
+      this.verifyPermission(req, route.permissions, employeeId);
 
       // 로그인한 직원과 수정하려는 직원이 다른 경우
       let isForceUpdatePassword = false;
@@ -536,8 +599,16 @@ export class BackendController {
         }
       }
 
+      // 페이지 데이터 생성
+      const data = {
+        layout: route.layout,
+        title: route.title,
+        metadata: {},
+        data: { employeeId, isForceUpdatePassword },
+      }
+
       // 직원 비밀번호 수정 페이지 렌더링
-      res.render(view, { layout, title, data: { employeeId, isForceUpdatePassword } });
+      res.render(route.view, data);
 
     } catch (error) {
       this.renderError(res, error);
@@ -546,10 +617,7 @@ export class BackendController {
   }
 
   // 직원 삭제
-  public async employeeDelete(req: Request, res: Response): Promise<void> {
-    // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.employeeDelete;
-
+  public employeeDelete = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 직원 ID 추출
       const employeeId = parseInt(req.params.employeeId);
@@ -565,7 +633,7 @@ export class BackendController {
       }
 
       // 접근 권한 체크
-      this.verifyPermission(req, permissions, employeeId);
+      this.verifyPermission(req, route.permissions, employeeId);
 
       // 직원 정보 조회
       const employeeService = new EmployeeService(prisma);
@@ -576,8 +644,16 @@ export class BackendController {
         throw new Error("직원 정보 조회에 실패했습니다.");
       }
 
+      // 페이지 데이터 생성
+      const data = {
+        layout: route.layout,
+        title: route.title,
+        metadata: {},
+        data: employee.data,
+      }
+
       // 직원 삭제 페이지 렌더링
-      res.render(view, { layout, title, data: employee.data });
+      res.render(route.view, data);
 
     } catch (error) {
       this.renderError(res, error);
@@ -586,13 +662,10 @@ export class BackendController {
   }
 
   // 직원 권한 변경
-  public async employeePermissions(req: Request, res: Response): Promise<void> {
-    // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.employeePermissions;
-
+  public employeePermissions = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 접근 권한 체크
-      this.verifyPermission(req, permissions);
+      this.verifyPermission(req, route.permissions);
 
       // 직원 ID 추출
       const employeeId = parseInt(req.params.employeeId);
@@ -635,17 +708,21 @@ export class BackendController {
       // 전체 권한 목록
       const { data: permissionsAll } = await getApiPermissionList(1, 10);
 
-      // 직원 권한 수정 페이지 렌더링
-      res.render(view, {
-        layout,
-        title,
+      // 페이지 데이터 생성
+      const data = {
+        layout: route.layout,
+        title: route.title,
+        metadata: {},
         data: {
           employeeId,
           employee,
           grantedByEmployee,
           permissions: permissionsAll,
         },
-      });
+      }
+
+      // 직원 권한 수정 페이지 렌더링
+      res.render(route.view, data);
 
     } catch (error) {
       this.renderError(res, error);
@@ -654,13 +731,10 @@ export class BackendController {
   }
 
   // 직원 목록
-  public async employees(req: Request, res: Response): Promise<void> {
-    // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.employees;
-
+  public employees = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 접근 권한 체크
-      this.verifyPermission(req, permissions);
+      this.verifyPermission(req, route.permissions);
 
       // 쿼리 파라미터 생성
       const queryParams = new URLSearchParams(req.body).toString();
@@ -681,18 +755,21 @@ export class BackendController {
       // JSON 파싱
       const result = await apiResponse.json();
 
-      // 직원 목록 페이지 렌더링
-      res.render(view, {
-        layout,
-        title,
-        data: result.data,
+      // 페이지 데이터 생성
+      const data = {
+        layout: route.layout,
+        title: route.title,
         metadata: {
           result: result.result,
           code: result.code,
           message: result.message,
           ...result.metadata,
         },
-      });
+        data: result.data,
+      }
+
+      // 직원 목록 페이지 렌더링
+      res.render(route.view, data);
 
     } catch (error) {
       this.renderError(res, error);
@@ -701,13 +778,18 @@ export class BackendController {
   }
 
   // 직원 로그인
-  public employeeLogin(req: Request, res: Response): void {
-    // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.employeeLogin;
-
+  public employeeLogin = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
+      // 페이지 데이터 생성
+      const data = {
+        layout: route.layout,
+        title: route.title,
+        metadata: {},
+        data: {},
+      };
+
       // 로그인 페이지 렌더링
-      res.render(view, { layout, title });
+      res.render(route.view, data);
 
     } catch (error) {
       this.renderError(res, error);
@@ -716,13 +798,18 @@ export class BackendController {
   }
 
   // 직원 비밀번호 찾기
-  public employeeForgotPassword(req: Request, res: Response): void {
-    // 라우팅 정보
-    const { title, view, layout, permissions } = backendRoutes.employeeForgotPassword;
-
+  public employeeForgotPassword = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
+      // 페이지 데이터 생성
+      const data = {
+        layout: route.layout,
+        title: route.title,
+        metadata: {},
+        data: {},
+      };
+
       // 비밀번호 찾기 페이지 렌더링
-      res.render(view, { layout, title });
+      res.render(route.view, data);
 
     } catch (error) {
       this.renderError(res, error);
@@ -730,11 +817,11 @@ export class BackendController {
     }
   }
 
-  public verifyPermission(
+  public verifyPermission = (
     req: Request,
     accessPermissions: number[] = [],
     accessEmployeeId: number | undefined | null = null
-  ): void {
+  ): void => {
     try {
       // Cookie에서 직원 정보 추출
       const cookieEmployee = getCookie(req, "employee");
@@ -780,7 +867,7 @@ export class BackendController {
   }
 
   // 에러 페이지
-  public renderError(res: Response, error: unknown): void {
+  public renderError = (res: Response, error: unknown): void => {
     const { title, view, layout } = backendRoutes.error;
 
     if (error instanceof AppError) {
