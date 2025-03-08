@@ -1,8 +1,11 @@
-import { API_BASE_URL } from '../config/config';
+import { CONFIG } from '../config/config';
 import { IApiResponse } from '../types/response';
 import { IBannerGroup, IBanner, IContent, IEmployee, IPermission } from '../types/object';
 import { apiBackendRoutes } from '../routes/routes';
 import { IRequestBanners, IRequestContents } from '../types/request';
+
+let API_BASE_URL = CONFIG.SERVICE_URL;
+API_BASE_URL = (CONFIG.SERVICE_PORT) ? `${API_BASE_URL}:${CONFIG.SERVICE_PORT}` : API_BASE_URL;
 
 export const getApiBannerGroup = async (accessToken: string, groupId: number): Promise<IApiResponse<IBannerGroup>> => {
   try {

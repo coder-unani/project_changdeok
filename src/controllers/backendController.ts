@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import { prisma } from '../config/database';
-import { API_BASE_URL } from '../config/config';
+import { CONFIG } from '../config/config';
 import { IRequestBanners, IRequestContents, typeListSort } from '../types/request';
 import { IRoute, IEmployeeToken } from '../types/object';
 import { backendRoutes, apiBackendRoutes } from '../routes/routes';
@@ -331,7 +331,11 @@ export class BackendController {
       if (!accessToken) {
         throw new Error("로그인이 필요합니다.");
       }
+
       const { metadata, data: contents } = await getApiContents(accessToken, groupId, params);
+
+      console.log(metadata);
+      console.log(contents);
 
       // 페이지 데이터 생성
       const data = {
@@ -740,7 +744,10 @@ export class BackendController {
       const queryParams = new URLSearchParams(req.body).toString();
 
       // 관리자 목록 조회
-      const apiResponse = await fetch(`${API_BASE_URL}${apiBackendRoutes.employees.url}?${queryParams}`, {
+      let apiUrl = CONFIG.SERVICE_URL;
+      apiUrl = (CONFIG.SERVICE_PORT) ? `${apiUrl}:${CONFIG.SERVICE_PORT}` : apiUrl;
+      apiUrl = `${apiUrl}${apiBackendRoutes.employees.url}?${queryParams}`;
+      const apiResponse = await fetch(apiUrl, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

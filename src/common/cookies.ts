@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import { JWT_EXPIRE_SECOND } from '../config/config';
+import { CONFIG } from '../config/config';
 
 /**
  * 
@@ -31,7 +31,7 @@ export const setCookie = (res: Response, name: string, value: string, options: a
     let cookieOptions = {
       httpOnly: true,
       secure: true,
-      maxAge: JWT_EXPIRE_SECOND * 1000,
+      maxAge: CONFIG.JWT_EXPIRE_SECOND * 1000,
       ...options
     };
     res.cookie(name, value, cookieOptions);

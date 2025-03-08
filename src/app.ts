@@ -6,7 +6,7 @@ import expressLayouts from 'express-ejs-layouts';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 
-import { SERVICE_PORT, STATIC_PATH, LOG_PATH, LOG_LEVEL, ALLOWED_TAGS } from './config/config';
+import { CONFIG, ALLOWED_TAGS } from './config/config';
 import { companyInfo } from './config/info';
 import { IMiddleware } from './types/middleware';
 import { LoggerMiddleware } from './middlewares/logger';
@@ -21,7 +21,7 @@ import backendRouter from './routes/backend';
 /**
  * 필요한 환경 변수 설정
  */
-if (!SERVICE_PORT || !STATIC_PATH || !LOG_PATH || !LOG_LEVEL) {
+if (!CONFIG.SERVICE_PORT || !CONFIG.STATIC_PATH || !CONFIG.LOG_PATH || !CONFIG.LOG_LEVEL) {
   throw new Error('필수 환경변수가 설정되지 않았습니다.');
 }
 
@@ -47,7 +47,7 @@ app.use(express.urlencoded({ extended: true })); // URL-encoded 데이터 파싱
 app.use(express.json()); // JSON 데이터 파싱
 
 // Http Logger 설정
-const logger = new ExpressLogger(LOG_PATH, LOG_LEVEL);
+const logger = new ExpressLogger(CONFIG.LOG_PATH, CONFIG.LOG_LEVEL);
 const loggerMiddleware: IMiddleware = new LoggerMiddleware(logger);
 app.use((req, res, next) => loggerMiddleware.handle(req, res, next));
 
@@ -61,7 +61,7 @@ app.use((req, res, next) => sanitizeMiddleware.handle(req, res, next));
  */
 
 // 정적 파일 설정
-app.use(express.static(path.resolve(__dirname, STATIC_PATH))); 
+app.use(express.static(path.resolve(__dirname, CONFIG.STATIC_PATH))); 
 
 // 템플릿 엔진 (WEB 서비스가 없을 경우 삭제)
 app.set('views', path.resolve(__dirname, 'views'));
@@ -90,6 +90,6 @@ app.use(backendRouter); // Backend 라우터
 /**
  * 서버 실행
  */
-app.listen(SERVICE_PORT, () => {
-  console.log(`Server is running at http://localhost:${SERVICE_PORT}`);
+app.listen(CONFIG.SERVICE_PORT, () => {
+  console.log(`Server is running at http://localhost:${CONFIG.SERVICE_PORT}`);
 });

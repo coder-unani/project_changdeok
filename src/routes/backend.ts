@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 
-import { LOG_PATH, LOG_LEVEL, API_BASE_URL } from '../config/config';
+import { CONFIG } from '../config/config';
 import { IMiddleware, IErrorMiddleware } from '../types/middleware';
 import { backendRoutes, apiBackendRoutes } from './routes';
 import { AuthMiddleware } from '../middlewares/backend/auth';
@@ -12,7 +12,7 @@ import { ExpressLogger } from '../common/logger';
 const router: Router = Router();
 
 router.use((req, res, next) => {
-  res.locals.baseUrl = API_BASE_URL;
+  res.locals.serviceUrl = CONFIG.SERVICE_URL;
   res.locals.routes = backendRoutes;
   res.locals.apiBackendRoutes = apiBackendRoutes;
   next();

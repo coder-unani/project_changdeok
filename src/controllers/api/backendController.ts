@@ -927,6 +927,7 @@ export class ApiBackendController {
           permissions: result.data.permissions,
         }
         const token = createJWT(tokenData);
+
         if (token) {
           setCookie(res, 'accessToken', token);
           setCookie(res, 'employee', JSON.stringify(tokenData));
