@@ -36,7 +36,7 @@
       <thead>
       <tr>
         <th class="text-center w-24"><p>번호</p></th>
-        <th class="text-center w-48"><p>이미지</p></th>
+        <th class="text-center w-48 min-w-[132px]"><p>이미지</p></th>
         <th class="text-center w-auto min-w-[280px]"><p>상세정보</p></th>
         <th class="text-center w-[160px] min-w-[160px]"><p>발행 기간</p></th>
         <th class="text-center w-[100px] min-w-[100px]"><p>발행 여부</p></th>
@@ -50,8 +50,12 @@
         <% } else { %>
         <% data.forEach(banner => { %>
           <tr>
-            <td class="text-center"><p class="px-3"><%=banner.id%></p></td>
-            <td class="flex justify-center text-center"><img src="<%=banner.imagePath || '/images/no-image-200x200.jpg'%>" class="w-[100px] h-[100px] object-cover rounded-md cursor-pointer" alt="이미지"></td>
+            <td class="text-center">
+              <p class="px-3"><%=banner.id%></p>
+            </td>
+            <td class="flex justify-center flex-none text-center">
+              <img src="<%=banner.imagePath || '/images/no-image-200x200.jpg'%>" class="w-[100px] h-[100px] object-cover rounded-md cursor-pointer" alt="이미지" onerror="this.src='/images/no-image-200x200.jpg';">
+            </td>
             <td>
               <div>
                 <p class="text-sm font-semibold break-keep mb-1.5"><a href="<%=routes.bannerDetail.url.replace(':bannerId', banner.id)%>" class="hover:underline decoration-gray-800"><%=banner.title%></a></p>
