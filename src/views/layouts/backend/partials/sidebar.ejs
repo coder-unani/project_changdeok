@@ -31,7 +31,7 @@
       <div class="mb-2 border-t border-slate-100">
         <p class="text-xs font-normal text-slate-400 py-2 mt-2">화면 관리</p>
         <ul class="flex flex-col gap-2 text-slate-500 dark:text-slate-100">
-          <li class="font-thin rounded-lg transition-all dark:hover:text-white dark:hover:bg-gray-600 <%if (routes.screenBanners.title === title) {%>orb-hightlight<%} else {%>hover:bg-gray-100<%}%>">
+          <li class="font-thin rounded-lg transition-all dark:hover:text-white dark:hover:bg-gray-600 <%if (routes.screenBanners.title === title || title.startsWith('메인 배너')) {%>orb-hightlight<%} else {%>hover:bg-gray-100<%}%>">
             <a class="flex items-center justify-start p-2" href="<%=routes.screenBanners.url%>">
               <span class="text-left">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" class="h-[14px] w-[14px]">
@@ -41,7 +41,7 @@
               <span class="mx-3 font-normal"><%=routes.screenBanners.title%></span>
             </a>
           </li>
-          <li class="font-thin rounded-lg transition-all dark:hover:text-white dark:hover:bg-gray-600 <%if (routes.popupBanners.title === title) {%>orb-hightlight<%} else {%>hover:bg-gray-100<%}%>">
+          <li class="font-thin rounded-lg transition-all dark:hover:text-white dark:hover:bg-gray-600 <%if (routes.popupBanners.title === title || title.startsWith('팝업 배너')) {%>orb-hightlight<%} else {%>hover:bg-gray-100<%}%>">
             <a class="flex items-center justify-start p-2" href="<%=routes.popupBanners.url%>">
               <span class="text-left">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" class="h-[14px] w-[14px]">

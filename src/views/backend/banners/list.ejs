@@ -31,14 +31,15 @@
 </div>
 
 <div class="orb-list">
-  <div class="bg-white p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
-    <table>
+  <div class="bg-white p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)] overflow-x-scroll">
+    <table class="table-fixed">
       <thead>
       <tr>
-        <th><p>번호</p></th>
-        <th><p>이미지</p></th>
-        <th><p>상세정보</p></th>
-        <th><p>발행</p></th>
+        <th class="text-center w-24"><p>번호</p></th>
+        <th class="text-center w-48"><p>이미지</p></th>
+        <th class="text-center w-auto min-w-[280px]"><p>상세정보</p></th>
+        <th class="text-center w-[160px] min-w-[160px]"><p>발행 기간</p></th>
+        <th class="text-center w-[100px] min-w-[100px]"><p>발행 여부</p></th>
       </tr>
       </thead>
       <tbody>
@@ -49,26 +50,34 @@
         <% } else { %>
         <% data.forEach(banner => { %>
           <tr>
-            <td><p><%=banner.id%></p></td>
-            <td><img src="<%=banner.imagePath || '/images/no-image-200x200.jpg'%>" class="w-[100px] h-[100px] object-cover rounded-md cursor-pointer" alt="이미지"></td>
+            <td class="text-center"><p class="px-3"><%=banner.id%></p></td>
+            <td class="flex justify-center text-center"><img src="<%=banner.imagePath || '/images/no-image-200x200.jpg'%>" class="w-[100px] h-[100px] object-cover rounded-md cursor-pointer" alt="이미지"></td>
             <td>
               <div>
-                <p>
-                  제목: <a href="<%=routes.bannerDetail.url.replace(':bannerId', banner.id)%>" class="hover:underline decoration-gray-800"><%=banner.title%></a></p>
-                <p>설명: <%=banner.description%></p>
-                <p class="hidden lg:block">발행 기간: <%=banner.publishedAt%> ~ <%=banner.unpublishedAt%></p>
-                <p class="block lg:hidden">발행 기간: <%= banner.publishedAt ? banner.publishedAt.slice(0, -3) : '' %> ~ <%= banner.unpublishedAt ? banner.unpublishedAt.slice(0, -3) : '' %></p>
+                <p class="text-sm font-semibold break-keep mb-1.5"><a href="<%=routes.bannerDetail.url.replace(':bannerId', banner.id)%>" class="hover:underline decoration-gray-800"><%=banner.title%></a></p>
+                <p class="text-[13px] text-gray-400"><%=banner.description%></p>
               </div>
             </td>
-            <td>
+            <td class="text-center">
+              <!-- <p class="hidden lg:block"><%=banner.publishedAt%> ~ <%=banner.unpublishedAt%></p> -->
+              <p class="hidden lg:block text-xs">
+                <span class="block"><%= banner.publishedAt ? banner.publishedAt.slice(0, -3) : '' %></span>
+                <span class="block">~ <%= banner.unpublishedAt ? banner.unpublishedAt.slice(0, -3) : '' %></span>
+              </p>
+              <p class="block lg:hidden text-xs">
+                <span class="block"><%= banner.publishedAt ? banner.publishedAt.slice(0, -3) : '' %></span>
+                <span class="block">~ <%= banner.unpublishedAt ? banner.unpublishedAt.slice(0, -3) : '' %></span>
+              </p>
+            </td>
+            <td class="text-center">
               <% if (!banner.isPublished) { %> 
-                <p class="text-gray-500">미발행</p>
+                <span class="px-2 py-1 bg-amber-100 rounded-full text-sm font-medium text-amber-500">미발행</span>
               <% } else if (banner.publishedAt <= new Date().toISOString() && (!banner.unpublishedAt || banner.unpublishedAt >= new Date().toISOString())) { %>
-                <p class="text-green">발행중</p>
+                <span class="px-2 py-1 bg-emerald-100 rounded-full text-sm font-medium text-emerald-500">발행중</span>
               <% } else if (banner.publishedAt > new Date().toISOString()) { %>
-                <p class="text-gray-500">예약</p>
+                <span class="px-2 py-1 bg-blue-100 rounded-full text-sm font-medium text-blue-500">예약</span>
               <% } else { %>
-                <p class="text-red">종료</p>
+                <span class="px-2 py-1 bg-gray-100 rounded-full text-sm font-medium text-gray-500">종료</span>
               <% } %>
             </td>
           </tr>
