@@ -30,14 +30,14 @@
 </div>  
   
 <div class="orb-list">
-  <div class="bg-white p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
+  <div class="bg-white p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)] overflow-x-scroll">
     <table>
       <thead>
       <tr>
-        <th><p>글번호</p></th>
-        <th><p>제목</p></th>
-        <th><p>작성자</p></th>
-        <th class="hidden lg:table-cell"><p>작성일</p></th>
+        <th class="text-center w-24"><p>글번호</p></th>
+        <th class="text-center w-auto min-w-[280px]"><p>제목</p></th>
+        <th class="text-center w-32 min-w-32"><p>작성자</p></th>
+        <th class="hidden lg:table-cell text-center w-32 min-w-32"><p>작성일</p></th>
       </tr>
       </thead>
       <tbody>
@@ -48,10 +48,20 @@
         <% } else { %>
         <% data.forEach(content => { %>
           <tr>
-            <td><p><%=content.id%></p></td>
-            <td><a href="<%=routes.contentDetail.url.replace(':groupId', metadata.groupId).replace(':contentId', content.id)%>" class="hover:underline decoration-gray-800"><p><%=content.title%></p></a></td>
-            <td><p><%=content.writer%></p></td>
-            <td class="hidden lg:table-cell"><p><%=content.createdAt%></p></td>
+            <td class="text-center">
+              <p class="px-3"><%=content.id%></p>
+            </td>
+            <td>
+              <a href="<%=routes.contentDetail.url.replace(':groupId', metadata.groupId).replace(':contentId', content.id)%>" class="hover:underline decoration-gray-800">
+                <p class="font-medium"><%=content.title%></p>
+              </a>
+            </td>
+            <td>
+              <p class="text-center"><%=content.writer ?? '-'%></p>
+            </td>
+            <td class="hidden lg:table-cell text-center">
+              <p class="text-xs"><%=content.createdAt%></p>
+            </td>
           </tr>
         <% }); } %>
       </tbody>

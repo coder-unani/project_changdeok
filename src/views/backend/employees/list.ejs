@@ -29,7 +29,7 @@
   </div>
 </div>
 <div class="orb-list">
-  <div class="bg-white p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
+  <div class="bg-white p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)] overflow-x-scroll">
     <!-- 게시물 개수 노출 -->
     <!-- <div class="flex justify-end pb-2">
       <p class="text-xs text-slate-500 lg:block">검색 결과: <b><%=metadata.total%></b>개</p>
@@ -38,11 +38,11 @@
     <table>
       <thead>
       <tr>
-          <th><p>아이디</p></th>
-          <th><p>이름</p></th>
-          <th><p>이메일</p></th>
-          <th class="hidden lg:table-cell"><p>직급</p></th>
-          <th class="hidden lg:table-cell"><p>생성일</p></th>
+          <th class="text-center w-24"><p>아이디</p></th>
+          <th class="text-center w-32 min-w-32"><p>이름</p></th>
+          <th class="text-center w-auto"><p>이메일</p></th>
+          <th class="hidden lg:table-cell text-center w-32 min-w-32"><p>직급</p></th>
+          <th class="hidden lg:table-cell text-center w-32 min-w-32"><p>생성일</p></th>
       </tr>
       </thead>
       <tbody>
@@ -53,11 +53,21 @@
         <% } else { %>
         <% data.forEach(employee => { %>
           <tr>
-            <td><p><%=employee.id%></p></td>
-            <td><a href="/admin/employees/<%=employee.id%>" class="hover:underline decoration-gray-800"><p><%=employee.name%></p></a></td>
-            <td><a href="/admin/employees/<%=employee.id%>" class="hover:underline decoration-gray-800"><p><%=employee.email%></p></a></td>
-            <td class="hidden lg:table-cell"><p><%=employee.position%></p></td>
-            <td class="hidden lg:table-cell"><p>2024-08-15</p></td>
+            <td class="text-center">
+              <p class="px-3"><%=employee.id%></p>
+            </td>
+            <td>
+              <a href="/admin/employees/<%=employee.id%>" class="hover:underline decoration-gray-800"><p><%=employee.name%></p></a>
+            </td>
+            <td>
+              <a href="/admin/employees/<%=employee.id%>" class="hover:underline decoration-gray-800"><p><%=employee.email%></p></a>
+            </td>
+            <td class="hidden lg:table-cell text-center">
+              <p><%=employee.position ?? '-'%></p>
+            </td>
+            <td class="hidden lg:table-cell text-center">
+              <p>2024-08-15</p>
+            </td>
           </tr>
         <% }); } %>
       </tbody>
