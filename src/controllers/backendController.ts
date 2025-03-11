@@ -129,19 +129,19 @@ export class BackendController {
         throw new Error("배너 ID가 올바르지 않습니다.");
       }
 
-      const apiBannerDetail = await getApiBannerDetail(accessToken, bannerId);
+      const { result, message,  metadata, data:banner } = await getApiBannerDetail(accessToken, bannerId);
 
       // 배너 상세 정보 조회 실패
-      if (!apiBannerDetail.result) {
-        throw new Error(apiBannerDetail.message as string);
+      if (!result) {
+        throw new Error(message as string);
       }
 
       // 페이지 데이터 생성
       const data = {
         layout: route.layout,
-        title: route.title,
-        metadata: apiBannerDetail.metadata,
-        data: apiBannerDetail.data,
+        title: `${metadata.groupInfo.title} ${route.title}`,
+        metadata,
+        data: banner,
       }
 
       // 배너 상세 페이지 렌더링
@@ -171,19 +171,19 @@ export class BackendController {
         throw new Error("배너 ID가 올바르지 않습니다.");
       }
 
-      const apiBannerDetail = await getApiBannerDetail(accessToken, bannerId);
+      const { result, message, metadata, data:banner } = await getApiBannerDetail(accessToken, bannerId);
 
       // 배너 상세 정보 조회 실패
-      if (!apiBannerDetail.result) {
-        throw new Error(apiBannerDetail.message as string);
+      if (!result) {
+        throw new Error(message as string);
       }
 
       // 페이지 데이터 생성
       const data = {
         layout: route.layout,
-        title: route.title,
-        metadata: apiBannerDetail.metadata,
-        data: apiBannerDetail.data,
+        title: `${metadata.groupInfo.title} ${route.title}`,
+        metadata,
+        data: banner,
       }
 
       // 배너 상세 페이지 렌더링
@@ -258,7 +258,7 @@ export class BackendController {
     try {
       // 접근 권한 체크
       this.verifyPermission(req, route.permissions);
-
+      
       // 페이지 데이터 생성
       const data = {
         layout: route.layout,
@@ -340,7 +340,7 @@ export class BackendController {
       // 페이지 데이터 생성
       const data = {
         layout: route.layout,
-        title: metadata.title,
+        title: `${metadata.title} 목록`,
         metadata,
         data: contents,
       }
@@ -373,10 +373,13 @@ export class BackendController {
         throw new Error("게시판 아이디가 형식에 맞지 않습니다.");
       }
 
+      // 페이지 타이틀
+      const groupTitle = groupId === 1 ? "공지사항" : "문의";
+
       // 페이지 데이터 생성
       const data = {
         layout: route.layout,
-        title: route.title,
+        title: `${groupTitle} 작성`,
         metadata: {
           groupInfo: {
             id: groupId,
@@ -417,10 +420,13 @@ export class BackendController {
       // API 호출
       const { metadata, data: content } = await getApiContentDetail(parseInt(req.params.groupId), parseInt(req.params.contentId));
 
+      // 페이지 타이틀
+      const groupTitle = groupId === 1 ? "공지사항" : "문의";
+
       // 페이지 데이터 생성
       const data = {
         layout: route.layout,
-        title: metadata.title,
+        title: `${groupTitle} 상세`,
         metadata,
         data: content,
       };
@@ -457,10 +463,13 @@ export class BackendController {
       // API 호출
       const { metadata, data: content } = await getApiContentDetail(parseInt(req.params.groupId), parseInt(req.params.contentId));
 
+      // 페이지 타이틀
+      const groupTitle = groupId === 1 ? "공지사항" : "문의";
+
       // 페이지 데이터 생성
       const data = {
         layout: route.layout,
-        title: metadata.title,
+        title: `${groupTitle} 수정`,
         metadata,
         data: content,
       };
