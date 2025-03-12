@@ -1,21 +1,21 @@
-import { HTTP_STATUS } from "../config/constants";
-import { ExtendedPrismaClient } from "../config/database";
-import { IContentGroup, IContent } from "../types/object";
+import { AppError, NotFoundError, ValidationError } from '../common/error';
+import { formatDateToString } from '../common/formattor';
+import { validateStringLength } from '../common/validator';
+import { HTTP_STATUS } from '../config/constants';
+import { ExtendedPrismaClient } from '../config/database';
+import { IContent, IContentGroup } from '../types/object';
+import { IRequestContentUpdate, IRequestContentWrite, IRequestContents } from '../types/request';
+import { IServiceResponse } from '../types/response';
 import { IContentService } from '../types/service';
-import { IRequestContents, IRequestContentWrite, IRequestContentUpdate } from "../types/request";
-import { IServiceResponse } from "../types/response";
-import { validateStringLength } from "../common/validator";
-import { formatDateToString } from "../common/formattor";
-import { AppError, ValidationError, NotFoundError } from "../common/error";
 
 export class ContentService implements IContentService {
   private prisma: ExtendedPrismaClient;
 
-  constructor(prisma: ExtendedPrismaClient) { 
+  constructor(prisma: ExtendedPrismaClient) {
     this.prisma = prisma;
   }
 
-  async create(groupId: number, data: IRequestContentWrite): Promise<IServiceResponse> {
+  public async create(groupId: number, data: IRequestContentWrite): Promise<IServiceResponse> {
     try {
       // 제목 길이 검증
       const validateTitle = validateStringLength(data.title, 1, 50);
@@ -37,33 +37,32 @@ export class ContentService implements IContentService {
           content: data.content?.trim(),
           ip: data.ip || '',
           userAgent: data.userAgent || '',
-        }
+        },
       });
 
       // 성공
       return { result: true };
-
     } catch (error) {
       if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message }
+        return { result: false, code: error.statusCode, message: error.message };
       } else {
         return {
           result: false,
           code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.'
-        }
+          message: '서버 오류가 발생했습니다.',
+        };
       }
     }
   }
 
-  async read(contentId: number): Promise<IServiceResponse<IContent>> {
+  public async read(contentId: number): Promise<IServiceResponse<IContent>> {
     try {
       // 컨텐츠 정보 조회
       const prismaContent = await this.prisma.content.findUnique({
         where: {
           id: contentId,
-          isDeleted: false
-        }
+          isDeleted: false,
+        },
       });
 
       // 컨텐츠가 없는 경우
@@ -82,7 +81,7 @@ export class ContentService implements IContentService {
           id: prismaContent.groupId,
           isDeleted: false,
           isActivated: true,
-        }
+        },
       });
 
       // 컨텐츠 그룹이 없는 경우
@@ -113,8 +112,8 @@ export class ContentService implements IContentService {
         ip: prismaContent.ip || null,
         userAgent: prismaContent.userAgent || null,
         createdAt: createdAtToString as string,
-        updatedAt: updatedAtToString as string || null,
-      }
+        updatedAt: (updatedAtToString as string) || null,
+      };
 
       // 성공
       return {
@@ -126,23 +125,22 @@ export class ContentService implements IContentService {
           groupDescription: groupInfo.description ?? null,
           groupBannerTopUrl: groupInfo.bannerTopUrl ?? null,
         },
-        data: content
-      }
-
+        data: content,
+      };
     } catch (error) {
       if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message }
+        return { result: false, code: error.statusCode, message: error.message };
       } else {
         return {
           result: false,
           code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.'
-        }
+          message: '서버 오류가 발생했습니다.',
+        };
       }
     }
   }
 
-  async update(contentId: number, data: IRequestContentUpdate): Promise<IServiceResponse> {
+  public async update(contentId: number, data: IRequestContentUpdate): Promise<IServiceResponse> {
     try {
       // 업데이트 데이터 생성
       const updateData: Partial<IRequestContentUpdate> = {};
@@ -171,38 +169,37 @@ export class ContentService implements IContentService {
       // 컨텐츠 업데이트
       await this.prisma.content.update({
         where: {
-          id: contentId
+          id: contentId,
         },
         data: {
           ...updateData,
-          updatedAt: new Date()
-        }
+          updatedAt: new Date(),
+        },
       });
 
       // 성공
       return { result: true };
-
     } catch (error) {
       if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message }
+        return { result: false, code: error.statusCode, message: error.message };
       } else {
         return {
           result: false,
           code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.'
-        }
+          message: '서버 오류가 발생했습니다.',
+        };
       }
     }
   }
 
   // 컨텐츠 삭제
-  async delete(contentId: number): Promise<IServiceResponse> {
+  public async delete(contentId: number): Promise<IServiceResponse> {
     try {
       const prismaContent = await this.prisma.content.findUnique({
         where: {
           id: contentId,
-          isDeleted: false
-        }
+          isDeleted: false,
+        },
       });
 
       // 컨텐츠가 없는 경우
@@ -213,32 +210,31 @@ export class ContentService implements IContentService {
       // 컨텐츠 삭제
       await this.prisma.content.update({
         where: {
-          id: contentId
+          id: contentId,
         },
         data: {
           isDeleted: true,
-          updatedAt: new Date()
-        }
+          updatedAt: new Date(),
+        },
       });
 
       // 성공
       return { result: true };
-
     } catch (error) {
       if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message }
+        return { result: false, code: error.statusCode, message: error.message };
       } else {
         return {
           result: false,
           code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.'
-        }
+          message: '서버 오류가 발생했습니다.',
+        };
       }
     }
   }
 
   // 컨텐츠 목록 조회
-  async list(groupId: number, data: IRequestContents): Promise<IServiceResponse<IContent[] | []>> {
+  public async list(groupId: number, data: IRequestContents): Promise<IServiceResponse<IContent[] | []>> {
     try {
       // 페이지 번호가 없거나 1보다 작은 경우 1로 설정
       if (!data.page || data.page < 1) {
@@ -258,20 +254,20 @@ export class ContentService implements IContentService {
       let orderBy = {};
       if (data.sort === 'ID_DESC') {
         orderBy = {
-          id: 'desc'
-        }
+          id: 'desc',
+        };
       } else if (data.sort === 'ID_ASC') {
         orderBy = {
-          id: 'asc'
-        }
+          id: 'asc',
+        };
       } else if (data.sort === 'TITLE_DESC') {
         orderBy = {
-          title: 'desc'
-        }
+          title: 'desc',
+        };
       } else if (data.sort === 'TITLE_ASC') {
         orderBy = {
-          title: 'asc'
-        }
+          title: 'asc',
+        };
       }
 
       // 컨텐츠 그룹 정보 조회
@@ -280,7 +276,7 @@ export class ContentService implements IContentService {
           id: groupId,
           isDeleted: false,
           isActivated: true,
-        }
+        },
       });
 
       // 컨텐츠 그룹이 없는 경우
@@ -295,7 +291,7 @@ export class ContentService implements IContentService {
           title: data.query ? { contains: data.query } : {},
           isDeleted: false,
           isActivated: true,
-        }
+        },
       });
 
       // 컨텐츠 목록 조회
@@ -308,7 +304,7 @@ export class ContentService implements IContentService {
         },
         skip: (data.page - 1) * data.pageSize,
         take: data.pageSize,
-        orderBy: orderBy
+        orderBy: orderBy,
       });
 
       // 컨텐츠 목록 생성
@@ -316,7 +312,7 @@ export class ContentService implements IContentService {
         // 날짜 형식 변환
         const createdAtToString = formatDateToString(content.createdAt.toISOString(), true, true, true);
         const updatedAtToString = formatDateToString(content.updatedAt?.toISOString(), true, true, true);
-        
+
         // 컨텐츠 정보 생성
         return {
           id: content.id,
@@ -336,8 +332,8 @@ export class ContentService implements IContentService {
           ip: content.ip ?? null,
           userAgent: content.userAgent ?? null,
           createdAt: createdAtToString as string,
-          updatedAt: updatedAtToString as string || null,
-        }
+          updatedAt: (updatedAtToString as string) || null,
+        };
       });
 
       // 메타데이터 생성
@@ -353,30 +349,29 @@ export class ContentService implements IContentService {
         start: (data.page - 1) * data.pageSize + 1,
         end: (data.page - 1) * data.pageSize + contents.length,
         count: contents.length,
-        totalPage: Math.ceil(totalContents / data.pageSize)
+        totalPage: Math.ceil(totalContents / data.pageSize),
       };
 
       // 성공
       return { result: true, metadata, data: contents };
-
     } catch (error) {
       if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message }
+        return { result: false, code: error.statusCode, message: error.message };
       } else {
         return {
           result: false,
           code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.'
-        }
+          message: '서버 오류가 발생했습니다.',
+        };
       }
     }
   }
 
-  async groupInfo(groupId: number): Promise<IServiceResponse<IContentGroup>> {
+  public async groupInfo(groupId: number): Promise<IServiceResponse<IContentGroup>> {
     console.log('groupInfo content');
 
     return {
       result: true,
-    }
+    };
   }
 }

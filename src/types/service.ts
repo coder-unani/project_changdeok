@@ -1,19 +1,19 @@
-import { IBannerGroup, IBanner, IContentGroup, IContent, IEmployee, IPermission } from './object';
-import { 
-  IRequestDefaultList,
-  IRequestBannerWrite,
+import { IBanner, IBannerGroup, IContent, IContentGroup, IEmployee, IPermission } from './object';
+import {
   IRequestBannerUpdate,
+  IRequestBannerWrite,
   IRequestBanners,
-  IRequestContentWrite,
   IRequestContentUpdate,
+  IRequestContentWrite,
   IRequestContents,
-  IRequestEmployeeRegister, 
-  IRequestEmployeeUpdate, 
-  IRequestEmployeeUpdatePassword, 
-  IRequestEmployeeForceUpdatePassword, 
-  IRequestEmployeeDelete, 
-  IRequestEmployees, 
-  IRequestEmployeeLogin 
+  IRequestDefaultList,
+  IRequestEmployeeDelete,
+  IRequestEmployeeForceUpdatePassword,
+  IRequestEmployeeLogin,
+  IRequestEmployeeRegister,
+  IRequestEmployeeUpdate,
+  IRequestEmployeeUpdatePassword,
+  IRequestEmployees,
 } from './request';
 import { IServiceResponse } from './response';
 
@@ -48,5 +48,9 @@ export interface IEmployeeService {
 
 export interface IPermissionService {
   list(data: IRequestDefaultList): Promise<IServiceResponse<IPermission[]>>;
-  updateEmployeesPermissions(employeeId: number, permissionIds: number[], grantedById: number): Promise<IServiceResponse<IEmployee>>;
+  updateEmployeesPermissions(
+    employeeId: number,
+    permissionIds: number[],
+    grantedById: number
+  ): Promise<IServiceResponse<IEmployee>>;
 }

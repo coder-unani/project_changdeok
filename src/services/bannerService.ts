@@ -1,12 +1,12 @@
-import { HTTP_STATUS } from "../config/constants";
-import { ExtendedPrismaClient } from '../config/database';
-import { IRequestBanners, IRequestBannerWrite, IRequestBannerUpdate } from "../types/request";
-import { IServiceResponse } from "../types/response";
-import { IBannerGroup, IBanner } from "../types/object";
-import { validateStringLength } from "../common/validator";
-import { formatDateToString } from "../common/formattor";
+import { AppError, NotFoundError, ValidationError } from '../common/error';
 import { deleteFile } from '../common/file';
-import { AppError, ValidationError, NotFoundError } from "../common/error";
+import { formatDateToString } from '../common/formattor';
+import { validateStringLength } from '../common/validator';
+import { HTTP_STATUS } from '../config/constants';
+import { ExtendedPrismaClient } from '../config/database';
+import { IBanner, IBannerGroup } from '../types/object';
+import { IRequestBannerUpdate, IRequestBannerWrite, IRequestBanners } from '../types/request';
+import { IServiceResponse } from '../types/response';
 
 export class BannerService {
   private prisma: ExtendedPrismaClient;
@@ -31,7 +31,7 @@ export class BannerService {
       if (data.linkType && !data.linkUrl) {
         throw new ValidationError('링크 주소를 입력해주세요.');
       }
-      
+
       // link가 있으면 linkType이 필수
       if (data.linkUrl && !data.linkType) {
         throw new ValidationError('링크 타입을 선택해주세요.');
@@ -68,7 +68,7 @@ export class BannerService {
           throw new ValidationError(validateDescription.message);
         }
       }
-      
+
       // 발행 상태로 배너 등록시 기존 배너와 발행기간 중복 체크
       if (data.isPublished) {
         /**
@@ -109,7 +109,7 @@ export class BannerService {
           },
           data: {
             publishedAt: new Date(unpublishedAt.getTime() + 1000), // 새 배너 마감일 + 1초
-          }
+          },
         });
 
         /**
@@ -129,8 +129,8 @@ export class BannerService {
             ],
           },
           data: {
-            isPublished: false
-          }
+            isPublished: false,
+          },
         });
       }
 
@@ -147,21 +147,24 @@ export class BannerService {
           isPublished: data.isPublished || false,
           publishedAt: publishedAt,
           unpublishedAt: unpublishedAt,
-          createdBy: data.createdBy
-        }
+          createdBy: data.createdBy,
+        },
       });
 
       return { result: true };
-
     } catch (error) {
       if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message }
+        return {
+          result: false,
+          code: error.statusCode,
+          message: error.message,
+        };
       } else {
         return {
           result: false,
           code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.'
-        }
+          message: '서버 오류가 발생했습니다.',
+        };
       }
     }
   }
@@ -175,10 +178,10 @@ export class BannerService {
 
       // 배너 조회
       const prismaBanner = await this.prisma.banner.findUnique({
-        where: { 
+        where: {
           id,
-          isDeleted: false
-        }
+          isDeleted: false,
+        },
       });
 
       // 조회 결과가 없으면 에러 반환
@@ -196,13 +199,13 @@ export class BannerService {
         linkType: prismaBanner.linkType || null,
         linkUrl: prismaBanner.linkUrl || null,
         isPublished: prismaBanner.isPublished,
-        publishedAt: formatDateToString(prismaBanner.publishedAt?.toISOString(), true, true) as string || null,
-        unpublishedAt: formatDateToString(prismaBanner.unpublishedAt?.toISOString(), true, true) as string || null,
+        publishedAt: (formatDateToString(prismaBanner.publishedAt?.toISOString(), true, true) as string) || null,
+        unpublishedAt: (formatDateToString(prismaBanner.unpublishedAt?.toISOString(), true, true) as string) || null,
         createdBy: prismaBanner.createdBy,
         createdAt: formatDateToString(prismaBanner.createdAt.toISOString(), true, true) as string,
         updatedBy: prismaBanner.updatedBy || null,
-        updatedAt: formatDateToString(prismaBanner.updatedAt?.toISOString(), true, true) as string || null,
-      }
+        updatedAt: (formatDateToString(prismaBanner.updatedAt?.toISOString(), true, true) as string) || null,
+      };
 
       // 배너 그룹정보 조회
       const groupInfo = await this.groupInfo(prismaBanner.groupId);
@@ -213,25 +216,28 @@ export class BannerService {
       // 메타데이터 생성
       const metadata = {
         groupInfo: groupInfo.data,
-        id: banner.id
-      }
-
-      // 응답 성공
-      return { 
-        result: true, 
-        metadata, 
-        data: banner 
+        id: banner.id,
       };
 
+      // 응답 성공
+      return {
+        result: true,
+        metadata,
+        data: banner,
+      };
     } catch (error) {
       if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message }
+        return {
+          result: false,
+          code: error.statusCode,
+          message: error.message,
+        };
       } else {
         return {
           result: false,
           code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.'
-        }
+          message: '서버 오류가 발생했습니다.',
+        };
       }
     }
   }
@@ -265,12 +271,12 @@ export class BannerService {
       if (data.publishedAt) updateData.publishedAt = data.publishedAt;
       if (data.unpublishedAt) updateData.unpublishedAt = data.unpublishedAt;
       if (data.updatedBy) updateData.updatedBy = data.updatedBy;
-      
+
       // imagePath가 있으면 기존 이미지 삭제
       if (updateData.imagePath) {
         let originImagePath = bannerInfo.data.imagePath;
         if (originImagePath) {
-          originImagePath = (originImagePath.startsWith('public')) ? originImagePath : `public${originImagePath}`;
+          originImagePath = originImagePath.startsWith('public') ? originImagePath : `public${originImagePath}`;
           // 이미지 삭제
           deleteFile(originImagePath);
         }
@@ -299,22 +305,25 @@ export class BannerService {
           ...updateData,
           publishedAt: updateData.publishedAt ? new Date(updateData.publishedAt) : null,
           unpublishedAt: updateData.unpublishedAt ? new Date(updateData.unpublishedAt) : null,
-          updatedAt: new Date()
-        }
+          updatedAt: new Date(),
+        },
       });
 
       // 응답 성공
       return { result: true };
-
     } catch (error) {
       if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message }
+        return {
+          result: false,
+          code: error.statusCode,
+          message: error.message,
+        };
       } else {
         return {
           result: false,
           code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.'
-        }
+          message: '서버 오류가 발생했습니다.',
+        };
       }
     }
   }
@@ -349,24 +358,27 @@ export class BannerService {
       await this.prisma.banner.update({
         where: { id },
         data: {
-          isDeleted: true
-        }
+          isDeleted: true,
+        },
       });
 
       return { result: true };
-
     } catch (error) {
       if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message }
+        return {
+          result: false,
+          code: error.statusCode,
+          message: error.message,
+        };
       } else {
         return {
           result: false,
           code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.'
-        }
+          message: '서버 오류가 발생했습니다.',
+        };
       }
     }
-  } 
+  }
 
   // 배너 목록 조회
   public async list(data: IRequestBanners): Promise<IServiceResponse<IBanner[] | []>> {
@@ -402,22 +414,22 @@ export class BannerService {
         where: {
           groupId: data.groupId,
           seq: data.seq,
-          isDeleted: false
-        }
+          isDeleted: false,
+        },
       });
 
       // 배너 목록 조회
       const prismaBanners = await this.prisma.banner.findMany({
         where: {
           groupId: data.groupId,
-          seq: data.seq, 
-          isDeleted: false
+          seq: data.seq,
+          isDeleted: false,
         },
         skip: (data.page - 1) * data.pageSize,
         take: data.pageSize,
         orderBy: {
-          id: 'desc'
-        }
+          id: 'desc',
+        },
       });
 
       // 조회 결과를 IBanner 타입으로 변환
@@ -431,15 +443,15 @@ export class BannerService {
           linkType: banner.linkType || null,
           linkUrl: banner.linkUrl || null,
           isPublished: banner.isPublished,
-          publishedAt: formatDateToString(banner.publishedAt?.toISOString(), true, true) as string || null,
-          unpublishedAt: formatDateToString(banner.unpublishedAt?.toISOString(), true, true) as string || null,
+          publishedAt: (formatDateToString(banner.publishedAt?.toISOString(), true, true) as string) || null,
+          unpublishedAt: (formatDateToString(banner.unpublishedAt?.toISOString(), true, true) as string) || null,
           createdBy: banner.createdBy,
           createdAt: formatDateToString(banner.createdAt.toISOString(), true, true) as string,
           updatedBy: banner.updatedBy || null,
-          updatedAt: formatDateToString(banner.updatedAt?.toISOString(), true, true) as string || null
-        }
+          updatedAt: (formatDateToString(banner.updatedAt?.toISOString(), true, true) as string) || null,
+        };
       });
-      
+
       // 메타데이터 생성
       const metadata = {
         groupInfo: groupInfo.data,
@@ -450,25 +462,28 @@ export class BannerService {
         start: (data.page - 1) * data.pageSize + 1,
         end: (data.page - 1) * data.pageSize + banners.length,
         count: banners.length,
-        totalPage: Math.ceil(totalBanners / data.pageSize)
-      }
+        totalPage: Math.ceil(totalBanners / data.pageSize),
+      };
 
       // 응답 성공
       return {
         result: true,
         metadata,
-        data: banners
+        data: banners,
       };
-
     } catch (error) {
       if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message }
+        return {
+          result: false,
+          code: error.statusCode,
+          message: error.message,
+        };
       } else {
         return {
           result: false,
           code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.'
-        }
+          message: '서버 오류가 발생했습니다.',
+        };
       }
     }
   }
@@ -482,10 +497,10 @@ export class BannerService {
 
       // 배너 그룹 조회
       const prismaGroup = await this.prisma.bannerGroup.findUnique({
-        where: { 
+        where: {
           id: groupId,
-          isDeleted: false
-        }
+          isDeleted: false,
+        },
       });
 
       // 조회 결과가 없으면 에러 반환
@@ -502,30 +517,33 @@ export class BannerService {
         imageWidth: prismaGroup.imageWidth || 0,
         imageHeight: prismaGroup.imageHeight || 0,
         createdAt: prismaGroup.createdAt.toISOString(),
-        updatedAt: prismaGroup.updatedAt?.toISOString() || null
-      }
+        updatedAt: prismaGroup.updatedAt?.toISOString() || null,
+      };
 
       // 메타데이터 생성
       const metadata = {
-        id: group.id
-      }
-
-      // 응답 성공
-      return { 
-        result: true, 
-        metadata, 
-        data: group 
+        id: group.id,
       };
 
+      // 응답 성공
+      return {
+        result: true,
+        metadata,
+        data: group,
+      };
     } catch (error) {
       if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message }
+        return {
+          result: false,
+          code: error.statusCode,
+          message: error.message,
+        };
       } else {
         return {
           result: false,
           code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.'
-        }
+          message: '서버 오류가 발생했습니다.',
+        };
       }
     }
   }
