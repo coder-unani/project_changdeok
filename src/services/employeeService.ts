@@ -1,26 +1,26 @@
-import { HTTP_STATUS } from "../config/constants";
-import { ExtendedPrismaClient } from "../config/database";
-import { 
-  IRequestEmployeeRegister, 
-  IRequestEmployeeUpdate, 
-  IRequestEmployeeLogin, 
+import { hashPassword, verifyPassword } from '../common/encryptor';
+import { AppError, AuthError, NotFoundError, ValidationError } from '../common/error';
+import { formatDate, formatDateToString, formatEmailMasking } from '../common/formattor';
+import { validateDate, validateEmail, validatePassword, validatePhone } from '../common/validator';
+import { HTTP_STATUS } from '../config/constants';
+import { ExtendedPrismaClient } from '../config/database';
+import { IEmployee } from '../types/object';
+import {
   IRequestEmployeeDelete,
-  IRequestEmployees,
+  IRequestEmployeeForceUpdatePassword,
+  IRequestEmployeeLogin,
+  IRequestEmployeeRegister,
+  IRequestEmployeeUpdate,
   IRequestEmployeeUpdatePassword,
-  IRequestEmployeeForceUpdatePassword
-} from "../types/request";
-import { IServiceResponse } from "../types/response";
-import { IEmployee } from "../types/object";
-import { IEmployeeService } from "../types/service";
-import { validateEmail, validatePassword, validatePhone, validateDate } from "../common/validator";
-import { formatDate, formatDateToString, formatEmailMasking } from "../common/formattor";
-import { hashPassword, verifyPassword } from "../common/encryptor";
-import { AppError, ValidationError, NotFoundError, AuthError } from "../common/error";
+  IRequestEmployees,
+} from '../types/request';
+import { IServiceResponse } from '../types/response';
+import { IEmployeeService } from '../types/service';
 
 export class EmployeeService implements IEmployeeService {
   private prisma: ExtendedPrismaClient;
 
-  constructor(prisma: ExtendedPrismaClient) { 
+  constructor(prisma: ExtendedPrismaClient) {
     this.prisma = prisma;
   }
 
@@ -85,7 +85,7 @@ export class EmployeeService implements IEmployeeService {
         }
         birthDate = formattedBirthDate.data;
       }
-      
+
       // 이메일 중복 체크
       const isUniqueEmail = await this.isUniqueEmail(data.email);
       if (!isUniqueEmail.result) {
@@ -107,22 +107,21 @@ export class EmployeeService implements IEmployeeService {
           mobile: data.mobile?.trim(),
           address: data.address?.trim(),
           hireDate: hireDate,
-          birthDate: birthDate
-        }
+          birthDate: birthDate,
+        },
       });
 
       // 성공
       return { result: true };
-
     } catch (error) {
       if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message }
+        return { result: false, code: error.statusCode, message: error.message };
       } else {
         return {
           result: false,
           code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.'
-        }
+          message: '서버 오류가 발생했습니다.',
+        };
       }
     }
   }
@@ -132,11 +131,11 @@ export class EmployeeService implements IEmployeeService {
     try {
       const result = await this.prisma.employee.findUnique({
         where: {
-          id: id
+          id: id,
         },
         include: {
-          permissions: true
-        }
+          permissions: true,
+        },
       });
 
       // 조회 실패
@@ -153,7 +152,7 @@ export class EmployeeService implements IEmployeeService {
       const formattedBirthDate = formatDateToString(result.birthDate?.toISOString(), false, true, true);
       const formattedHireDate = formatDateToString(result.hireDate?.toISOString(), false, true, true);
       const formattedFireDate = formatDateToString(result.fireDate?.toISOString(), false, true, true);
-      
+
       const employee: IEmployee = {
         id: result.id,
         email: employeeEmail.data || result.email,
@@ -163,28 +162,27 @@ export class EmployeeService implements IEmployeeService {
         phone: result.phone,
         mobile: result.mobile,
         address: result.address,
-        hireDate: formattedHireDate as string || null,
-        fireDate: formattedFireDate as string || null,
-        birthDate: formattedBirthDate as string || null,
+        hireDate: (formattedHireDate as string) || null,
+        fireDate: (formattedFireDate as string) || null,
+        birthDate: (formattedBirthDate as string) || null,
         isActivated: result.isActivated,
-        permissions: result.permissions.map(permission => permission.permissionId)
+        permissions: result.permissions.map((permission) => permission.permissionId),
       };
 
       // 성공
-      return { 
+      return {
         result: true,
-        data: employee
+        data: employee,
       };
-
     } catch (error) {
       if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message }
+        return { result: false, code: error.statusCode, message: error.message };
       } else {
         return {
           result: false,
           code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.'
-        }
+          message: '서버 오류가 발생했습니다.',
+        };
       }
     }
   }
@@ -247,7 +245,7 @@ export class EmployeeService implements IEmployeeService {
       // 직원 정보 수정. 변경된 데이터 리턴
       const prismaUpdatedEmployee = await this.prisma.employee.update({
         where: {
-          id: id
+          id: id,
         },
         data: {
           name: data.name?.trim(),
@@ -258,10 +256,10 @@ export class EmployeeService implements IEmployeeService {
           address: data.address?.trim(),
           hireDate: data.hireDate ? new Date(data.hireDate) : null,
           birthDate: data.birthDate ? new Date(data.birthDate) : null,
-          fireDate: data.fireDate ? new Date(data.fireDate) : null
-        }
+          fireDate: data.fireDate ? new Date(data.fireDate) : null,
+        },
       });
-      
+
       const employee: IEmployee = {
         id: prismaUpdatedEmployee.id,
         email: prismaUpdatedEmployee.email,
@@ -273,21 +271,20 @@ export class EmployeeService implements IEmployeeService {
         address: prismaUpdatedEmployee.address,
         hireDate: prismaUpdatedEmployee.hireDate?.toISOString(),
         birthDate: prismaUpdatedEmployee.birthDate?.toISOString(),
-        fireDate: prismaUpdatedEmployee.fireDate?.toISOString()
+        fireDate: prismaUpdatedEmployee.fireDate?.toISOString(),
       };
 
       // 성공
       return { result: true, data: employee };
-
     } catch (error) {
       if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message }
+        return { result: false, code: error.statusCode, message: error.message };
       } else {
         return {
           result: false,
           code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.'
-        }
+          message: '서버 오류가 발생했습니다.',
+        };
       }
     }
   }
@@ -304,8 +301,8 @@ export class EmployeeService implements IEmployeeService {
       const employee = await this.prisma.employee.findUnique({
         where: {
           id: id,
-          isDeleted: false
-        }
+          isDeleted: false,
+        },
       });
 
       // 직원 정보가 없는 경우 에러
@@ -339,29 +336,28 @@ export class EmployeeService implements IEmployeeService {
       await this.prisma.employee.update({
         where: {
           id: id,
-          isDeleted: false
+          isDeleted: false,
         },
         data: {
-          password: hashedPasswordNew
-        }
+          password: hashedPasswordNew,
+        },
       });
 
       // 성공
       return { result: true };
-
     } catch (error) {
       if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message }
+        return { result: false, code: error.statusCode, message: error.message };
       } else {
         return {
           result: false,
           code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.'
-        }
+          message: '서버 오류가 발생했습니다.',
+        };
       }
     }
   }
-  
+
   // 직원 비밀번호 강제 변경
   public async updatePasswordForce(id: number, data: IRequestEmployeeForceUpdatePassword): Promise<IServiceResponse> {
     try {
@@ -374,8 +370,8 @@ export class EmployeeService implements IEmployeeService {
       const prismaEmployee = await this.prisma.employee.findUnique({
         where: {
           id: id,
-          isDeleted: false
-        }
+          isDeleted: false,
+        },
       });
 
       // 직원 정보가 없는 경우 에러
@@ -401,25 +397,24 @@ export class EmployeeService implements IEmployeeService {
       await this.prisma.employee.update({
         where: {
           id: id,
-          isDeleted: false
+          isDeleted: false,
         },
         data: {
-          password: hashedPasswordNew
-        }
+          password: hashedPasswordNew,
+        },
       });
 
       // 성공
       return { result: true };
-
     } catch (error) {
       if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message }
+        return { result: false, code: error.statusCode, message: error.message };
       } else {
         return {
           result: false,
           code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.'
-        }
+          message: '서버 오류가 발생했습니다.',
+        };
       }
     }
   }
@@ -443,31 +438,30 @@ export class EmployeeService implements IEmployeeService {
         }
         fireDate = formattedHireDate.data;
       }
-      
+
       // 직원 정보 삭제(탈퇴) 처리
       await this.prisma.employee.update({
         where: {
-          id: id
+          id: id,
         },
         data: {
           fireDate: fireDate || new Date(),
           isActivated: false,
           isDeleted: true,
-        }
+        },
       });
 
       // 성공
       return { result: true };
-
     } catch (error) {
       if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message }
+        return { result: false, code: error.statusCode, message: error.message };
       } else {
         return {
           result: false,
           code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.'
-        }
+          message: '서버 오류가 발생했습니다.',
+        };
       }
     }
   }
@@ -492,41 +486,41 @@ export class EmployeeService implements IEmployeeService {
       let orderBy = {};
       if (data.sort === 'ID_DESC') {
         orderBy = {
-          id: 'desc'
-        }
+          id: 'desc',
+        };
       } else if (data.sort === 'ID_ASC') {
         orderBy = {
-          id: 'asc'
-        }
+          id: 'asc',
+        };
       } else if (data.sort === 'TITLE_DESC') {
         orderBy = {
-          name: 'desc'
-        }
+          name: 'desc',
+        };
       } else if (data.sort === 'TITLE_ASC') {
         orderBy = {
-          name: 'asc'
-        }
+          name: 'asc',
+        };
       }
 
       // 전체 직원 수 조회
       const prismaTotal = await this.prisma.employee.count({
         where: {
-          isDeleted: false
-        }
+          isDeleted: false,
+        },
       });
 
       // 직원 리스트 조회
       const prismaEmployee = await this.prisma.employee.findMany({
         where: {
-          isDeleted: false
+          isDeleted: false,
         },
         skip: (data.page - 1) * data.pageSize,
         take: data.pageSize,
-        orderBy: orderBy
+        orderBy: orderBy,
       });
 
       // IEmployees 배열로 변환
-      const employees: IEmployee[] = prismaEmployee.map(employee => {
+      const employees: IEmployee[] = prismaEmployee.map((employee) => {
         // 이메일 마스킹 처리
         const employeeEmail = formatEmailMasking(employee.email);
 
@@ -541,7 +535,7 @@ export class EmployeeService implements IEmployeeService {
           address: employee.address,
           hireDate: employee.hireDate?.toISOString(),
           birthDate: employee.birthDate?.toISOString(),
-          fireDate: employee.fireDate?.toISOString()
+          fireDate: employee.fireDate?.toISOString(),
         };
       });
 
@@ -553,20 +547,19 @@ export class EmployeeService implements IEmployeeService {
         start: (data.page - 1) * data.pageSize + 1,
         end: (data.page - 1) * data.pageSize + employees.length,
         count: employees.length,
-        totalPage: Math.ceil(prismaTotal / data.pageSize)
+        totalPage: Math.ceil(prismaTotal / data.pageSize),
       };
 
       return { result: true, metadata, data: employees };
-
     } catch (error) {
       if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message }
+        return { result: false, code: error.statusCode, message: error.message };
       } else {
         return {
           result: false,
           code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.'
-        }
+          message: '서버 오류가 발생했습니다.',
+        };
       }
     }
   }
@@ -588,13 +581,13 @@ export class EmployeeService implements IEmployeeService {
         where: {
           email: data.email,
           isDeleted: false,
-          isActivated: true
+          isActivated: true,
         },
         include: {
-          permissions: true
-        }
+          permissions: true,
+        },
       });
-      
+
       // 직원이 없는 경우
       if (!prismaEmployee) {
         throw new AuthError('이메일 또는 패스워드가 일치하지 않습니다.');
@@ -609,8 +602,8 @@ export class EmployeeService implements IEmployeeService {
       }
 
       // 권한의 permissionId를 배열로 변환
-      const permissions = prismaEmployee.permissions.map(permission => permission.permissionId);
-      
+      const permissions = prismaEmployee.permissions.map((permission) => permission.permissionId);
+
       // 반환할 직원 정보
       const employee: IEmployee = {
         id: prismaEmployee.id,
@@ -621,24 +614,23 @@ export class EmployeeService implements IEmployeeService {
         phone: prismaEmployee.phone,
         mobile: prismaEmployee.mobile,
         address: prismaEmployee.address,
-        permissions: permissions
+        permissions: permissions,
       };
 
       // 성공
-      return { 
+      return {
         result: true,
-        data: employee
+        data: employee,
       };
-
     } catch (error) {
       if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message }
+        return { result: false, code: error.statusCode, message: error.message };
       } else {
         return {
           result: false,
           code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.'
-        }
+          message: '서버 오류가 발생했습니다.',
+        };
       }
     }
   }
@@ -650,8 +642,8 @@ export class EmployeeService implements IEmployeeService {
       const isUnique = await this.prisma.employee.findFirst({
         where: {
           email: email,
-          isDeleted: false
-        }
+          isDeleted: false,
+        },
       });
 
       // 중복된 이메일이 있다면
@@ -661,16 +653,15 @@ export class EmployeeService implements IEmployeeService {
 
       // 성공
       return { result: true };
-
     } catch (error) {
       if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message }
+        return { result: false, code: error.statusCode, message: error.message };
       } else {
         return {
           result: false,
           code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.'
-        }
+          message: '서버 오류가 발생했습니다.',
+        };
       }
     }
   }
