@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "main": "src/app.ts",
   "scripts": {
-    "dev": "concurrently \"nodemon\" \"npm run sass\" \"npm run tailwind:build\"",
+    "dev": "npm-run-all --parallel nodemon sass tailwind:build",
     "build": "tsc && npm run tailwind:build && npm run copy-files",
     "start": "node dist/app.js",
     "sass": "sass --watch src/styles:public/css",
     "tailwind:build": "npx @tailwindcss/cli -i src/styles/tailwind.css -o public/css/tailwind.css --watch",
-    "copy-files": "cp -R src/views dist/views && cp -R public dist/static"
+    "copy-files": "cp -R src/views dist/views && cp -R public dist/static",
+    "nodemon": "nodemon"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,7 @@
   "license": "SEE LICENSE IN LICENSE.txt",
   "description": "",
   "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.17",
     "@types/crypto-js": "^4.2.2",
@@ -28,9 +30,16 @@
     "@types/multer": "^1.4.12",
     "@types/node": "^22.10.7",
     "@types/sanitize-html": "^2.13.0",
-    "concurrently": "^9.1.2",
+    "@typescript-eslint/eslint-plugin": "^8.26.1",
+    "@typescript-eslint/parser": "^8.26.1",
     "css-loader": "^7.1.2",
+    "eslint": "^9.22.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-prettier": "^5.2.3",
     "nodemon": "^3.1.9",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.11",
     "prisma": "^6.4.1",
     "sass": "^1.83.4",
     "sass-loader": "^16.0.4",
@@ -60,5 +69,8 @@
     "tailwindcss": "^4.0.3",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0"
+  },
+  "engines": {
+    "node": "^20.18.3"
   }
 }
