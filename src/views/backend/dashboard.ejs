@@ -11,23 +11,25 @@
     class="space-y-4 text-sm bg-white p-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]"
   >
     <ul>
-      <li>진행중인 배너 1건</li>
-      <li>예약된 배너 2건</li>
-      <li>종료된 배너 3건</li>
+      <% data.banners.forEach((banner) => { %>
+      <li><%=banner.title%> 배너. (진행: <%=banner.published%>/예약: <%=banner.reserved%>/종료: <%=banner.expired%>)</li>
+      <% }) %>
     </ul>
   </div>
   <div
     class="space-y-4 text-sm bg-white p-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]"
   >
     <ul>
-      <li>등록된 게시물 수 100건</li>
+      <% data.contents.forEach((content) => { %>
+      <li><%=content.title%> 컨텐츠. 등록된 게시물: <%=content.count%></li>
+      <% }) %>
     </ul>
   </div>
   <div
     class="space-y-4 text-sm bg-white p-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]"
   >
     <ul>
-      <li>등록된 관리자 2명</li>
+      <li>등록된 관리자 <%=data.employees.count%>명</li>
     </ul>
   </div>
 </div>
