@@ -1,33 +1,25 @@
 <div class="block pt-2">
-  <h1
-    class="flex justify-start items-center gap-1.5 py-2 text-center text-slate-700 transition-all"
-  >
+  <h1 class="flex justify-start items-center gap-1.5 py-2 text-center text-slate-700 transition-all"> 
     <span class="font-bold text-xl"><%=title%></span>
   </h1>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-  <div
-    class="space-y-4 text-sm bg-white p-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]"
-  >
+  <div class="space-y-4 text-sm bg-white p-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
     <ul>
       <% data.banners.forEach((banner) => { %>
       <li><%=banner.title%> 배너. (진행: <%=banner.published%>/예약: <%=banner.reserved%>/종료: <%=banner.expired%>)</li>
       <% }) %>
     </ul>
   </div>
-  <div
-    class="space-y-4 text-sm bg-white p-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]"
-  >
+  <div class="space-y-4 text-sm bg-white p-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
     <ul>
       <% data.contents.forEach((content) => { %>
       <li><%=content.title%> 컨텐츠. 등록된 게시물: <%=content.count%></li>
       <% }) %>
     </ul>
   </div>
-  <div
-    class="space-y-4 text-sm bg-white p-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]"
-  >
+  <div class="space-y-4 text-sm bg-white p-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
     <ul>
       <li>등록된 관리자 <%=data.employees.count%>명</li>
     </ul>
