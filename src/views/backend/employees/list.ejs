@@ -36,7 +36,7 @@
     <table>
       <thead>
       <tr>
-          <th class="text-center w-auto min-w-24"><p>아이디</p></th>
+          <th class="text-center w-24 min-w-24"><p>아이디</p></th>
           <th class="text-center w-32 min-w-32"><p>이름</p></th>
           <th class="text-center w-auto"><p>이메일</p></th>
           <th class="hidden lg:table-cell text-center w-32 min-w-32"><p>직급</p></th>
@@ -52,7 +52,7 @@
         <% data.forEach(employee => { %>
           <tr>
             <td class="text-center">
-              <p class="px-3"><%=employee.id%></p>
+              <p><%=employee.id%></p>
             </td>
             <td>
               <a href="/admin/employees/<%=employee.id%>" class="hover:underline decoration-gray-800"><p><%=employee.name%></p></a>

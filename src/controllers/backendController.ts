@@ -63,11 +63,19 @@ export class BackendController {
       // 관리자 정보
       const employees = { count: 2 };
 
+      // 제목 정보
+      const metadata = {
+        banners: { title: '화면' },
+        contents: { title: '게시판' },
+        employees: { title: '관리자' },
+      };
+
       // 페이지 데이터 생성
       const data = {
         layout: route.layout,
         title: route.title,
-        metadata: {},
+        // metadata: {},
+        metadata,
         data: {
           banners,
           contents,
