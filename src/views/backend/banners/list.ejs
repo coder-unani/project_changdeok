@@ -73,13 +73,13 @@
             </td>
             <td class="text-center">
               <% if (!banner.isPublished) { %> 
-                <span class="px-2 py-1 bg-amber-100 rounded-full text-sm font-medium text-amber-500">미발행</span>
+                <span class="px-2.5 py-1 bg-amber-100 rounded-full text-sm font-medium text-amber-500">미발행</span>
               <% } else if (banner.publishedAt <= new Date().toISOString() && (!banner.unpublishedAt || banner.unpublishedAt >= new Date().toISOString())) { %>
-                <span class="px-2 py-1 bg-emerald-100 rounded-full text-sm font-medium text-emerald-500">발행중</span>
+                <span class="px-2.5 py-1 bg-emerald-100 rounded-full text-sm font-medium text-emerald-500">발행중</span>
               <% } else if (banner.publishedAt > new Date().toISOString()) { %>
-                <span class="px-2 py-1 bg-blue-100 rounded-full text-sm font-medium text-blue-500">예약</span>
+                <span class="px-2.5 py-1 bg-blue-100 rounded-full text-sm font-medium text-blue-500">예약</span>
               <% } else { %>
-                <span class="px-2 py-1 bg-gray-100 rounded-full text-sm font-medium text-gray-500">종료</span>
+                <span class="px-2.5 py-1 bg-gray-100 rounded-full text-sm font-medium text-gray-500">종료</span>
               <% } %>
             </td>
           </tr>

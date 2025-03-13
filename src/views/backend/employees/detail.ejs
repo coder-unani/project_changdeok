@@ -7,37 +7,39 @@
   <div class="space-y-3 text-sm bg-white p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_0_rgba(0,0,0,.06)]">
     <!-- Email -->
     <div class="flex">
-      <label class="block w-32 text-gray-500 font-semibold">이메일</label>
-      <p class="text-gray-800"><%=data.email%></p>
+      <label class="block w-28 text-gray-500 font-semibold">이메일</label>
+      <p class="text-gray-800 font-semibold"><%=data.email%></p>
     </div>
 
     <!-- Name -->
     <div class="flex">
-      <label class="block w-32 text-gray-500 font-semibold">이름</label>
-      <p class="text-gray-800"><%=data.name%></p>
+      <label class="block w-28 text-gray-500 font-semibold">이름</label>
+      <p class="text-gray-800 font-semibold"><%=data.name%></p>
     </div>
 
     <!-- Position -->
     <div class="flex">
-      <label class="block w-32 text-gray-500 font-semibold">직급</label>
+      <label class="block w-28 text-gray-500 font-semibold">직급</label>
       <p class="text-gray-800"><%=data.position || '없음'%></p>
     </div>
 
     <!-- Phone -->
     <div class="flex">
-      <label class="block w-32 text-gray-500 font-semibold">전화번호</label>
+      <label class="block w-28 text-gray-500 font-semibold">전화번호</label>
       <p class="text-gray-800"><%=data.phone%></p>
     </div>
 
     <!-- Address -->
     <div class="flex">
-      <label class="block w-32 text-gray-500 font-semibold">주소</label>
+      <label class="block w-28 text-gray-500 font-semibold">주소</label>
       <p class="text-gay-800"><%=data.address%></p>
     </div>
   </div>
-  <h1 class='flex justify-self-start items-center gap-1.5 py-2 text-center text-slate-700 transition-all'>
-    <span class="font-bold text-xl">관리자 권한 정보</span>
-  </h1>
+  <div class="mb-2">
+    <h1 class='flex justify-self-start items-center gap-1.5 py-2 text-center text-slate-700 transition-all'>
+      <span class="font-bold text-xl">관리자 권한 정보</span>
+    </h1>
+  </div>
   <div class="space-y-3 text-sm bg-white p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_0_rgba(0,0,0,.06)]">
     <!-- permissions -->
     <table class="table-auto min-w-full">
@@ -117,7 +119,7 @@
   </div>
   <div class="flex w-full lg:w-auto">
     <a href="<%=routes.employeeDelete.url.replace(':employeeId', data.id)%>" class="orb-btn-delete">
-      삭제하기
+      삭제
     </a>
   </div>
 </div>
