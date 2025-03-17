@@ -1,0 +1,13 @@
+<header class="h-14 w-full px-[40px] shadow-[0_2px_30px_rgba(0,0,0,.06)]">
+  <div class="m-auto flex h-full w-full max-w-[1280px] justify-between">
+    <!-- 로고 -->
+    <a href="<%=routes.index.url%>" class="flex items-center">
+      <h1 class="flex items-center gap-2 text-xl font-semibold">
+        <img src="<%=company.logo%>" alt="<%=company.name%>" class="h-6 w-6" />
+        <span class="flex-none"><%=company.name%></span>
+      </h1>
+    </a>
+    <!-- 메뉴 -->
+    <%- include('navigation') %>
+  </div>
+</header>
