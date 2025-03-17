@@ -1,15 +1,19 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title></title>
+    <title><%=title || '관리도구'%> | <%=company.name%> 관리 시스템</title>
     <link rel="preload" href="/fonts/Pretendard-Regular.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/tailwind.css?202502081" />
-    <link rel="stylesheet" href="/css/frontend/index.css" />
   </head>
-  <body>
-    <main>hello</main>
+  <body
+    class="mx-auto flex h-screen max-w-[1340px] flex-col bg-gray-50 p-4 lg:flex-row lg:px-8 lg:pt-6 lg:pb-10 dark:bg-gray-800"
+  >
+    <%- include('partials/header') %> <%- include('partials/sidebar') %>
+    <main class="flex flex-1 flex-col">
+      <div class="pb-6"><%- body %></div>
+    </main>
   </body>
 </html>
