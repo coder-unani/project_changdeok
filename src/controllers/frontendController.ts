@@ -13,7 +13,7 @@ export class FrontendController {
       // 페이지 데이터 생성
       const data = {
         layout: route.layout,
-        title: 'Frontend Page',
+        title: route.title,
         metadata: {},
         data: {},
       };

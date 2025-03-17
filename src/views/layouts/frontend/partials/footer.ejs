@@ -1,0 +1,25 @@
+<footer class="border-t border-zinc-200">
+  <div class="m-auto w-full max-w-[1280px] px-[40px] py-6">
+    <div class="flex justify-between">
+      <div class="flex flex-1 flex-col text-zinc-500">
+        <h5 class="my-2.5 text-xl font-semibold">Office Location</h5>
+        <p class="flex flex-col text-sm">
+          <span><%=company.address%></span>
+        </p>
+      </div>
+      <div class="flex flex-1 flex-col text-right text-zinc-500">
+        <h5 class="my-2.5 text-xl font-semibold">Contact Us</h5>
+        <p class="flex flex-col text-sm">
+          <span>대표전화: <b><%=company.tel%></b></span>
+          <span>팩스번호: <b><%=company.fax%></b></span>
+          <span>이메일: <b><%=company.email%></b></span>
+        </p>
+      </div>
+    </div>
+    <div>
+      <p class="py-4 text-center text-[13px] text-zinc-500">
+        <span>&copy; <%=company.name%> All rights reserved.</span>
+      </p>
+    </div>
+  </div>
+</footer>

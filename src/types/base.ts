@@ -5,6 +5,7 @@ export interface ICompanyInfo {
   ceo: string; // 대표자
   address: string; // 주소
   tel: string; // 전화번호
+  fax: string; // 팩스
   email: string; // 이메일
   logo: string; // 로고
 }

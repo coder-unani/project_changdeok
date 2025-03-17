@@ -3,13 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%=title%></title>
+    <title><%=company.name%></title>
     <link rel="preload" href="/fonts/Pretendard-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Cinzel-SemiBold.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/tailwind.css?202502081" />
   </head>
   <body>
+    <!-- 헤더, 네비게이션 -->
     <%- include('partials/header') %>
+    <!-- 본문 -->
     <main><%- body %></main>
+    <!-- 푸터 -->
+    <%- include('partials/footer') %>
   </body>
 </html>

@@ -5,8 +5,9 @@ export const companyInfo: ICompanyInfo = {
   nameEn: 'Orbitcode',
   businessNumber: '000-00-00000',
   ceo: '대표자',
-  address: '주소',
+  address: '서울특별시 강남구 논현로2길 51(개포동) 06315 한국',
   tel: '000-000-0000',
+  fax: '000-000-0000',
   email: 'groot@orbitcode.kr',
   logo: '/images/logo.svg',
 };
