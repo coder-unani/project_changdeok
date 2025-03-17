@@ -1,22 +1,21 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
+import cookieParser from 'cookie-parser';
 import express, { Application } from 'express';
 import expressLayouts from 'express-ejs-layouts';
-import cookieParser from 'cookie-parser';
 import path from 'path';
 
-import { CONFIG, ALLOWED_TAGS } from './config/config';
+import { ExpressLogger } from './common/logger';
+import { ALLOWED_TAGS, CONFIG } from './config/config';
 import { companyInfo } from './config/info';
-import { IMiddleware } from './types/middleware';
 import { LoggerMiddleware } from './middlewares/logger';
 import { SanitizeMiddleware } from './middlewares/sanitizer';
-import { ExpressLogger } from './common/logger';
-import apiFrontendRouter from './routes/api/frontend';
 import apiBackendRouter from './routes/api/backend';
-import frontendRouter from './routes/frontend';
+import apiFrontendRouter from './routes/api/frontend';
 import backendRouter from './routes/backend';
-
+import frontendRouter from './routes/frontend';
+import { IMiddleware } from './types/middleware';
 
 /**
  * 필요한 환경 변수 설정
@@ -25,12 +24,10 @@ if (!CONFIG.SERVICE_PORT || !CONFIG.STATIC_PATH || !CONFIG.LOG_PATH || !CONFIG.L
   throw new Error('필수 환경변수가 설정되지 않았습니다.');
 }
 
-
 /**
  * Express 앱 설정
  */
 const app: Application = express();
-
 
 /**
  * 공통 미들웨어 설정
@@ -55,19 +52,17 @@ app.use((req, res, next) => loggerMiddleware.handle(req, res, next));
 const sanitizeMiddleware: IMiddleware = new SanitizeMiddleware(ALLOWED_TAGS);
 app.use((req, res, next) => sanitizeMiddleware.handle(req, res, next));
 
-
 /**
  * WEB 설정
  */
 
 // 정적 파일 설정
-app.use(express.static(path.resolve(__dirname, CONFIG.STATIC_PATH))); 
+app.use(express.static(path.resolve(__dirname, CONFIG.STATIC_PATH)));
 
 // 템플릿 엔진 (WEB 서비스가 없을 경우 삭제)
 app.set('views', path.resolve(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(expressLayouts);
-
 
 /**
  * 전역 데이터 설정
@@ -77,15 +72,13 @@ app.use((req, res, next) => {
   next();
 });
 
-
 /**
  * 라우터 설정
  */
 // app.use(API_FRONTEND_PREFIX, apiFrontendRouter); // API Frontend 라우터
 app.use(apiBackendRouter); // API Backend 라우터
-// app.use(WEB_FRONTEND_PREFIX, frontendRouter); // Frontend 라우터
+app.use(frontendRouter); // Frontend 라우터
 app.use(backendRouter); // Backend 라우터
-
 
 /**
  * 서버 실행
