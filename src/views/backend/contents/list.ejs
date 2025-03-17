@@ -47,7 +47,7 @@
         <% data.forEach(content => { %>
           <tr>
             <td class="text-center">
-              <p class="px-3"><%=content.id%></p>
+              <p><%=content.id%></p>
             </td>
             <td>
               <a href="<%=routes.contentDetail.url.replace(':groupId', metadata.groupId).replace(':contentId', content.id)%>" class="hover:underline decoration-gray-800">

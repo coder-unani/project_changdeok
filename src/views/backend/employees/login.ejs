@@ -1,32 +1,46 @@
-<div class="flex-grow flex w-full h-full items-center justify-center">
-  <div class="bg-white p-4 rounded-lg shadow-md w-96">
-      <div class="flex gap-1.5 items-center justify-center py-4 mb-2">
-        <span class="text-slate-700">
-          <img src="<%=company.logo%>" alt="<%=company.name%>" class="w-6 h-6">
-        </span>
-        <span class="text-2xl font-bold text-slate-700"><%=company.nameEn.toUpperCase()%></span>
+<div class="flex h-full w-full flex-grow items-center justify-center">
+  <div class="w-96 rounded-lg bg-white p-4 shadow-md">
+    <div class="mb-2 flex items-center justify-center gap-1.5 py-4">
+      <span class="text-slate-700">
+        <img src="<%=company.logo%>" alt="<%=company.name%>" class="h-6 w-6" />
+      </span>
+      <span class="text-2xl font-bold text-slate-700"><%=company.nameEn.toUpperCase()%></span>
+    </div>
+    <form id="formAdminLogin">
+      <div class="mb-4">
+        <label for="email" class="mb-2 block text-sm font-bold text-gray-700">이메일</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          required
+          class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          placeholder="이메일 주소를 입력하세요"
+        />
       </div>
-      <form id="formAdminLogin">
-          <div class="mb-4">
-              <label for="email" class="block text-gray-700 text-sm font-bold mb-2">이메일</label>
-              <input type="email" id="email" name="email" required
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="이메일 주소를 입력하세요">
-          </div>
-          <div class="mb-6">
-              <label for="password" class="block text-gray-700 text-sm font-bold mb-2">비밀번호</label>
-              <input type="password" id="password" name="password" required
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="비밀번호를 입력하세요">
-          </div>
-          <button type="submit"
-                  class="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
-              로그인
-          </button>
-      </form>
-      <div class="mt-4 text-center">
-          <a href="<%=routes.employeeForgotPassword.url%>" class="text-sm text-blue-500 hover:underline">비밀번호를 잊으셨나요?</a>
+      <div class="mb-6">
+        <label for="password" class="mb-2 block text-sm font-bold text-gray-700">비밀번호</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          required
+          class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          placeholder="비밀번호를 입력하세요"
+        />
       </div>
+      <button
+        type="submit"
+        class="focus:ring-opacity-50 w-full cursor-pointer rounded-md bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+      >
+        로그인
+      </button>
+    </form>
+    <div class="mt-4 text-center">
+      <a href="<%=routes.employeeForgotPassword.url%>" class="text-sm text-blue-500 hover:underline"
+        >비밀번호를 잊으셨나요?</a
+      >
+    </div>
   </div>
 </div>
 
@@ -40,9 +54,9 @@
     // 폼 데이터 변환
     const data = {};
     formData.forEach((value, key) => {
-        data[key] = value;
+      data[key] = value;
     });
-    
+
     try {
       // 로그인 API 호출
       const response = await fetch('<%=apiBackendRoutes.employeeLogin.url%>', {
@@ -52,20 +66,18 @@
         },
         body: JSON.stringify(data),
       });
-      
+
       // 응답 오류
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || response.statusText);
       }
-      
+
       // 응답 성공
       alert('로그인 성공');
       window.location.href = '<%=routes.index.url%>';
-
     } catch (error) {
       alert(error.message || '서버 오류가 발생했습니다.');
-        
     }
   });
 </script>
