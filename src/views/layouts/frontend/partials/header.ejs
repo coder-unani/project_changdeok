@@ -1,9 +1,9 @@
 <header class="absolute inset-0 h-14 w-full shadow-[0_2px_30px_rgba(0,0,0,.06)]">
-  <div class="m-auto flex h-full w-full max-w-[1280px] justify-between px-[40px]">
+  <div class="m-auto flex h-full w-full max-w-[1280px] justify-between px-4 lg:px-[40px]">
     <!-- 로고 -->
     <a href="<%=routes.index.url%>" class="flex items-center">
-      <h1 class="flex items-center gap-2 text-xl font-semibold">
-        <img src="<%=company.logo%>" alt="<%=company.name%>" class="h-6 w-6" />
+      <h1 class="flex items-center gap-2 text-lg font-semibold lg:text-xl">
+        <img src="<%=company.logo%>" alt="<%=company.name%>" class="h-5 w-5 lg:h-6 lg:w-6" />
         <span class="flex-none"><%=company.name%></span>
       </h1>
     </a>

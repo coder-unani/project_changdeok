@@ -1,24 +1,24 @@
 <footer class="border-t border-zinc-200">
-  <div class="m-auto w-full max-w-[1280px] px-[40px] py-6">
-    <div class="flex justify-between">
-      <div class="flex flex-1 flex-col text-zinc-500">
-        <h5 class="my-2.5 text-xl font-semibold">Office Location</h5>
+  <div class="m-auto w-full max-w-[1280px] px-4 py-6 lg:px-[40px]">
+    <div class="flex justify-between gap-6">
+      <div class="flex flex-1 flex-col break-keep text-zinc-500">
+        <h5 class="my-2.5 font-['Oswald'] text-2xl font-medium">Office Location</h5>
         <p class="flex flex-col text-sm">
           <span><%=company.address%></span>
         </p>
       </div>
-      <div class="flex flex-1 flex-col text-right text-zinc-500">
-        <h5 class="my-2.5 text-xl font-semibold">Contact Us</h5>
+      <div class="flex flex-1 flex-col text-right break-keep text-zinc-500">
+        <h5 class="my-2.5 font-['Oswald'] text-2xl font-medium">Contact Us</h5>
         <p class="flex flex-col text-sm">
-          <span>대표전화: <b><%=company.tel%></b></span>
-          <span>팩스번호: <b><%=company.fax%></b></span>
-          <span>이메일: <b><%=company.email%></b></span>
+          <span>대표전화 | <em class="font-['Oswald'] font-medium not-italic"><%=company.tel%></em></span>
+          <span>팩스번호 | <em class="font-['Oswald'] font-medium not-italic"><%=company.fax%></em></span>
+          <span>이메일 | <em class="font-['Oswald'] font-medium not-italic"><%=company.email%></em></span>
         </p>
       </div>
     </div>
-    <div>
-      <p class="py-4 text-center text-[13px] text-zinc-500">
-        <span>&copy; <%=company.name%> All rights reserved.</span>
+    <div class="mt-6 lg:mt-0">
+      <p class="py-4 text-center font-['Oswald'] text-[13px] text-zinc-500">
+        &copy; <span class="font-['Pretendard']"><%=company.name%></span> All rights reserved.
       </p>
     </div>
   </div>
