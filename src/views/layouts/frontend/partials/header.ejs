@@ -1,5 +1,5 @@
-<header class="absolute inset-0 h-14 w-full shadow-[0_2px_30px_rgba(0,0,0,.06)]">
-  <div class="m-auto flex h-full w-full max-w-[1280px] justify-between px-4 lg:px-[40px]">
+<header class="transt fixed inset-0 z-50 h-14 w-full shadow-[0_2px_30px_rgba(0,0,0,.06)] duration-200 ease-in-out">
+  <div class="m-auto flex h-full w-full max-w-[1280px] justify-between px-4 lg:px-10">
     <!-- 로고 -->
     <a href="<%=routes.index.url%>" class="flex items-center">
       <h1 class="flex items-center gap-2 text-lg font-semibold lg:text-xl">
@@ -11,3 +11,15 @@
     <%- include('navigation') %>
   </div>
 </header>
+
+<script>
+  // header 스크롤 56px 이상 시 배경색 변경
+  document.addEventListener('scroll', () => {
+    const header = document.querySelector('header');
+    if (window.scrollY > 56) {
+      header.classList.add('bg-white');
+    } else {
+      header.classList.remove('bg-white');
+    }
+  });
+</script>
