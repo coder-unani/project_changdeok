@@ -24,6 +24,23 @@ export class FrontendController {
     }
   };
 
+  // 소개
+  public about = async (route: IRoute, req: Request, res: Response): Promise<void> => {
+    try {
+      // 페이지 데이터 생성
+      const data = {
+        layout: route.layout,
+        title: route.title,
+        metadata: {},
+        data: {},
+      };
+
+      res.render(route.view, data);
+    } catch (error) {
+      this.renderError(res, error);
+    }
+  };
+
   // 에러 페이지
   public renderError = (res: Response, error: unknown): void => {
     const { title, view, layout } = frontendRoutes.error;

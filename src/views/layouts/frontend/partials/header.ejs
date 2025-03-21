@@ -1,9 +1,11 @@
-<header class="transt fixed inset-0 z-50 h-14 w-full shadow-[0_2px_30px_rgba(0,0,0,.06)] duration-200 ease-in-out">
+<header
+  class="fixed inset-0 z-50 h-14 w-full bg-transparent text-white shadow-[0_2px_30px_rgba(0,0,0,.06)] duration-200 ease-in-out"
+>
   <div class="m-auto flex h-full w-full max-w-[1280px] justify-between px-4 lg:px-10">
     <!-- 로고 -->
     <a href="<%=routes.index.url%>" class="flex items-center">
       <h1 class="flex items-center gap-2 text-lg font-semibold lg:text-xl">
-        <img src="<%=company.logo%>" alt="<%=company.name%>" class="h-5 w-5 lg:h-6 lg:w-6" />
+        <img id="logo" src="<%=company.logo%>" alt="<%=company.name%>" class="h-5 w-5 invert lg:h-6 lg:w-6" />
         <span class="flex-none"><%=company.name%></span>
       </h1>
     </a>
@@ -13,13 +15,17 @@
 </header>
 
 <script>
-  // header 스크롤 56px 이상 시 배경색 변경
+  // header 스크롤 56px 이상 시 배경색 및 로고색상 변경
   document.addEventListener('scroll', () => {
     const header = document.querySelector('header');
     if (window.scrollY > 56) {
-      header.classList.add('bg-white');
+      header.classList.remove('bg-transparent', 'text-white');
+      header.classList.add('bg-white', 'text-black');
+      document.querySelector('#logo').classList.remove('invert');
     } else {
-      header.classList.remove('bg-white');
+      header.classList.remove('bg-white', 'text-black');
+      header.classList.add('bg-transparent', 'text-white');
+      document.querySelector('#logo').classList.add('invert');
     }
   });
 </script>

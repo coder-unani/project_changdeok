@@ -28,6 +28,11 @@ router.get('/', function (req: Request, res: Response) {
   frontendController.index(frontendRoutes.index, req, res);
 });
 
+// 소개
+router.get('/about', function (req: Request, res: Response) {
+  frontendController.about(frontendRoutes.about, req, res);
+});
+
 /**
  * 에러 핸들러 설정
  */

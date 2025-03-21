@@ -360,6 +360,14 @@ export const frontendRoutes: { [key: string]: IRoute } = {
     layout: frontendRoutesLayout,
     permissions: [],
   },
+  about: {
+    method: 'GET',
+    title: '법무법인 소개',
+    url: `${frontendRoutesPrefix}/about`,
+    view: 'frontend/about',
+    layout: frontendRoutesLayout,
+    permissions: [],
+  },
   error: {
     method: 'GET',
     title: 'ERROR',
