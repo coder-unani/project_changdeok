@@ -1,16 +1,15 @@
-import { typeFormattedResult } from "../types/format";
-import { REG_DATE_PATTERN, REG_EMAIL_PATTERN } from "../config/constants";
-import { IApiResponse } from "../types/response";
+import { typeFormattedResult } from '../types/format';
+import { REG_DATE_PATTERN, REG_EMAIL_PATTERN } from '../config/config';
+import { IApiResponse } from '../types/response';
 
 export const formatDate = (date: string | Date | undefined | null): typeFormattedResult => {
   try {
-
     // Date가 없으면 현재 날짜로 설정
     if (date === null || date === undefined) {
       return {
         result: false,
-        message: '날짜가 없습니다.'
-      }
+        message: '날짜가 없습니다.',
+      };
     }
 
     // Date가 이미 Date 타입이면 그대로 반환
@@ -18,8 +17,8 @@ export const formatDate = (date: string | Date | undefined | null): typeFormatte
       return {
         result: true,
         message: '',
-        data: date
-      }
+        data: date,
+      };
     }
 
     // 양 옆 공백 제거
@@ -30,36 +29,40 @@ export const formatDate = (date: string | Date | undefined | null): typeFormatte
     if (!REG_DATE_PATTERN.test(date)) {
       return {
         result: false,
-        message: '날짜 형식이 올바르지 않습니다.'
-      }
+        message: '날짜 형식이 올바르지 않습니다.',
+      };
     }
 
     // 날짜 형식 변환
     return {
       result: true,
       message: '',
-      data: new Date(date)
-    }
-
+      data: new Date(date),
+    };
   } catch (error) {
     console.error(error);
     return {
       result: false,
-      message: '날짜 형식이 올바르지 않습니다.'
-    }
+      message: '날짜 형식이 올바르지 않습니다.',
+    };
   }
-}
+};
 
 /**
- * 
+ *
  * @param date 날짜 형식의 문자열 또는 Date 객체
  * @param isIncludeTime 시간 포함 여부
  * @returns typeFormattedResult 변환 결과
  */
-export const formatDateToString = (date: string | Date | undefined | null, isIncludeTime: boolean = true, onlyData = false, isUTC = false): typeFormattedResult | string | null => {
+export const formatDateToString = (
+  date: string | Date | undefined | null,
+  isIncludeTime: boolean = true,
+  onlyData = false,
+  isUTC = false
+): typeFormattedResult | string | null => {
   try {
     let dateObject: Date;
-    
+
     // Date가 없으면 현재 날짜로 설정
     if (date === null || date === undefined) {
       throw new Error('날짜가 없습니다.');
@@ -89,24 +92,24 @@ export const formatDateToString = (date: string | Date | undefined | null, isInc
     }
 
     // 날짜 부분 포맷팅
-    let formattedDate = 
-    dateObject.getFullYear() + 
+    let formattedDate =
+      dateObject.getFullYear() +
       '-' +
-      String(dateObject.getMonth() + 1).padStart(2, '0') + 
+      String(dateObject.getMonth() + 1).padStart(2, '0') +
       '-' +
       String(dateObject.getDate()).padStart(2, '0');
 
     // 시간 포함 여부에 따라 포맷팅
     if (isIncludeTime) {
-      formattedDate += 
+      formattedDate +=
         ' ' +
-        String(dateObject.getHours()).padStart(2, '0') + 
+        String(dateObject.getHours()).padStart(2, '0') +
         ':' +
-        String(dateObject.getMinutes()).padStart(2, '0') + 
+        String(dateObject.getMinutes()).padStart(2, '0') +
         ':' +
         String(dateObject.getSeconds()).padStart(2, '0');
     }
-    
+
     if (onlyData) {
       return formattedDate;
     }
@@ -115,20 +118,18 @@ export const formatDateToString = (date: string | Date | undefined | null, isInc
     return {
       result: true,
       message: '',
-      data: formattedDate
-    }
-
+      data: formattedDate,
+    };
   } catch (error) {
     if (onlyData) {
       return null;
     }
     return {
       result: false,
-      message: (error instanceof Error) ? error.message : '변환에 실패하였습니다.'
-    }
-
+      message: error instanceof Error ? error.message : '변환에 실패하였습니다.',
+    };
   }
-}
+};
 
 // email 마스킹 처리
 export const formatEmailMasking = (email: string | undefined | null): typeFormattedResult => {
@@ -137,16 +138,16 @@ export const formatEmailMasking = (email: string | undefined | null): typeFormat
     if (email === null || email === undefined) {
       return {
         result: false,
-        message: '이메일이 없습니다.'
-      }
+        message: '이메일이 없습니다.',
+      };
     }
 
     // email이 email 형식이 아니면 에러
     if (!REG_EMAIL_PATTERN.test(email)) {
       return {
         result: false,
-        message: '이메일 형식이 올바르지 않습니다.'
-      }
+        message: '이메일 형식이 올바르지 않습니다.',
+      };
     }
 
     // email 마스킹 처리
@@ -159,22 +160,20 @@ export const formatEmailMasking = (email: string | undefined | null): typeFormat
     return {
       result: true,
       message: '',
-      data: emailIdMasking + '@' + emailDomain
-    }
-
+      data: emailIdMasking + '@' + emailDomain,
+    };
   } catch (error) {
     return {
       result: false,
-      message: '이메일 형식이 올바르지 않습니다.'
-    }
-    
+      message: '이메일 형식이 올바르지 않습니다.',
+    };
   }
-}
+};
 
 // API 응답을 JSON 형식으로 변환하는 함수
 export const formatApiResponse = (
-  result: boolean, 
-  code: number | undefined | null = null, 
+  result: boolean,
+  code: number | undefined | null = null,
   message: string | undefined | null = null,
   metadata: any | undefined | null = null,
   data: any = null
@@ -189,9 +188,8 @@ export const formatApiResponse = (
     code,
     message,
     metadata,
-    data
+    data,
   };
-  
-  return resultData;
 
-}
+  return resultData;
+};
