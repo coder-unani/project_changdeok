@@ -1,7 +1,6 @@
 {
   "name": "express_base",
   "version": "1.0.0",
-  "type": "module",
   "main": "src/app.ts",
   "scripts": {
     "dev": "npm-run-all --parallel nodemon sass tailwind:build",
