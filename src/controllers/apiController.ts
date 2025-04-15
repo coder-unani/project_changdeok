@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
-import { httpStatus } from '../../common/variables';
-import { prisma } from '../../common/database';
+import { httpStatus } from '../common/variables';
+import { prisma } from '../common/database';
 import {
   typeListSort,
   IRequestBannerWrite,
@@ -18,21 +18,21 @@ import {
   IRequestEmployees,
   IRequestDefaultList,
   IRequestContents,
-} from '../../types/request';
-import { IEmployeeToken } from '../../types/object';
-import { IBannerService, IContentService, IEmployeeService, IPermissionService } from '../../types/service';
-import { apiRoutes } from '../../config/routes';
-import { EmployeeService } from '../../services/employeeService';
-import { PermissionService } from '../../services/permissionService';
-import { BannerService } from '../../services/bannerService';
-import { ContentService } from '../../services/contentService';
-import { formatApiResponse } from '../../common/format';
-import { createJWT, verifyJWT } from '../../common/jwt';
-import { getCookie, setCookie, removeCookie } from '../../common/cookies';
-import { getAccessedEmployee } from '../../common/verify';
-import { AppError, ValidationError, AuthError, PermissionError, NotFoundError, ServerError } from '../../common/error';
+} from '../types/request';
+import { IEmployeeToken } from '../types/object';
+import { IBannerService, IContentService, IEmployeeService, IPermissionService } from '../types/service';
+import { apiRoutes } from '../config/routes';
+import { EmployeeService } from '../services/employeeService';
+import { PermissionService } from '../services/permissionService';
+import { BannerService } from '../services/bannerService';
+import { ContentService } from '../services/contentService';
+import { formatApiResponse } from '../common/format';
+import { createJWT, verifyJWT } from '../common/jwt';
+import { getCookie, setCookie, removeCookie } from '../common/cookies';
+import { getAccessedEmployee } from '../common/verify';
+import { AppError, ValidationError, AuthError, PermissionError, NotFoundError, ServerError } from '../common/error';
 
-export class ApiBackendController {
+export class ApiController {
   // 배너 등록
   public async bannerWrite(req: Request, res: Response): Promise<void> {
     const { permissions } = apiRoutes.banners.write;
