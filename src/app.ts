@@ -7,7 +7,7 @@ import express, { Application } from 'express';
 import expressLayouts from 'express-ejs-layouts';
 import path from 'path';
 
-import { ExpressLogger } from './common/logger';
+import { ExpressLogger } from './common/log';
 import { ALLOWED_TAGS, CONFIG } from './config/config';
 import { companyInfo } from './config/info';
 import { LoggerMiddleware } from './middlewares/logger';

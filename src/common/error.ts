@@ -1,10 +1,10 @@
-import { HTTP_STATUS } from "../config/constants";
-import { IError } from "../types/object";
+import { httpStatus } from '../common/variables';
+import { IError } from '../types/object';
 
 export class AppError extends Error implements IError {
   public statusCode: number;
-  
-  constructor(code: number = HTTP_STATUS.INTERNAL_SERVER_ERROR, message: string = 'Internal Server Error') {
+
+  constructor(code: number = httpStatus.INTERNAL_SERVER_ERROR, message: string = 'Internal Server Error') {
     super(message);
 
     this.statusCode = code;
@@ -18,31 +18,30 @@ export class AppError extends Error implements IError {
 
 export class ValidationError extends AppError {
   constructor(message: string) {
-    super(HTTP_STATUS.BAD_REQUEST, message);
+    super(httpStatus.BAD_REQUEST, message);
   }
 }
 
 export class AuthError extends AppError {
   constructor(message: string) {
-    super(HTTP_STATUS.UNAUTHORIZED, message);
+    super(httpStatus.UNAUTHORIZED, message);
   }
 }
 
 export class PermissionError extends AppError {
   constructor(message: string) {
-    super(HTTP_STATUS.FORBIDDEN, message);
+    super(httpStatus.FORBIDDEN, message);
   }
 }
 
 export class NotFoundError extends AppError {
   constructor(message: string) {
-    super(HTTP_STATUS.NOT_FOUND, message);
+    super(httpStatus.NOT_FOUND, message);
   }
 }
 
 export class ServerError extends AppError {
   constructor(message: string) {
-    super(HTTP_STATUS.INTERNAL_SERVER_ERROR, message);
+    super(httpStatus.INTERNAL_SERVER_ERROR, message);
   }
 }
-

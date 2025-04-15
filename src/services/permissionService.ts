@@ -1,14 +1,13 @@
 import { PrismaClient } from '@prisma/client';
 
-import { HTTP_STATUS } from "../config/constants";
+import { httpStatus } from '../common/variables';
 import { IRequestDefaultList } from '../types/request';
 import { IServiceResponse } from 'types/response';
 import { IEmployee, IPermission } from '../types/object';
 import { IPermissionService } from '../types/service';
-import { AppError, ValidationError, NotFoundError } from "../common/error";
+import { AppError, ValidationError, NotFoundError } from '../common/error';
 
 export class PermissionService implements IPermissionService {
-
   private prisma: PrismaClient;
 
   constructor() {
@@ -34,9 +33,11 @@ export class PermissionService implements IPermissionService {
       // query 변수가 있으면 해당 문자열을 포함하는 권한 목록을 조회. data.query가 없으면 전체 권한 목록 조회
       const prismaResult = await this.prisma.permission.findMany({
         where: {
-          title: data.query ? {
-            contains: data.query,
-          } : undefined,
+          title: data.query
+            ? {
+                contains: data.query,
+              }
+            : undefined,
         },
         skip: (data.page - 1) * data.pageSize,
         take: data.pageSize,
@@ -50,9 +51,9 @@ export class PermissionService implements IPermissionService {
           id: permission.id,
           title: permission.title,
           description: permission.description,
-        }
+        };
       });
-      
+
       // 메타데이터 생성
       const metadata = {
         total,
@@ -61,25 +62,28 @@ export class PermissionService implements IPermissionService {
         start: (data.page - 1) * data.pageSize + 1,
         end: (data.page - 1) * data.pageSize + permissions.length,
         count: permissions.length,
-        totalPage: Math.ceil(total / data.pageSize)
+        totalPage: Math.ceil(total / data.pageSize),
       };
 
       return { result: true, metadata, data: permissions };
-
     } catch (error) {
       if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message }
+        return { result: false, code: error.statusCode, message: error.message };
       } else {
         return {
           result: false,
-          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.'
-        }
+          code: httpStatus.INTERNAL_SERVER_ERROR,
+          message: '서버 오류가 발생했습니다.',
+        };
       }
     }
   }
 
-  public async updateEmployeesPermissions(employeeId: number, permissionIds: number[], grantedById: number): Promise<IServiceResponse<IEmployee>> {
+  public async updateEmployeesPermissions(
+    employeeId: number,
+    permissionIds: number[],
+    grantedById: number
+  ): Promise<IServiceResponse<IEmployee>> {
     try {
       // 직원 권한 수정
       const updatedEmployee = await this.prisma.employee.update({
@@ -87,16 +91,16 @@ export class PermissionService implements IPermissionService {
         data: {
           permissions: {
             deleteMany: {}, // 기존 권한 매핑 모두 삭제
-            create: permissionIds.map(permissionId => ({
+            create: permissionIds.map((permissionId) => ({
               permission: { connect: { id: permissionId } },
               grantedBy: { connect: { id: grantedById } },
-              grantedAt: new Date()
-            }))
-          }
+              grantedAt: new Date(),
+            })),
+          },
         },
         include: {
-          permissions: true
-        }
+          permissions: true,
+        },
       });
 
       const employee: IEmployee = {
@@ -112,20 +116,19 @@ export class PermissionService implements IPermissionService {
         birthDate: updatedEmployee.birthDate ? updatedEmployee.birthDate.toISOString() : undefined,
         fireDate: updatedEmployee.fireDate ? updatedEmployee.fireDate.toISOString() : undefined,
         isActivated: updatedEmployee.isActivated,
-        permissions: updatedEmployee.permissions.map(permission => permission.permissionId)
+        permissions: updatedEmployee.permissions.map((permission) => permission.permissionId),
       };
 
       return { result: true, data: employee };
-
     } catch (error) {
       if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message }
+        return { result: false, code: error.statusCode, message: error.message };
       } else {
         return {
           result: false,
-          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.'
-        }
+          code: httpStatus.INTERNAL_SERVER_ERROR,
+          message: '서버 오류가 발생했습니다.',
+        };
       }
     }
   }

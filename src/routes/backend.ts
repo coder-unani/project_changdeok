@@ -7,7 +7,7 @@ import { AuthMiddleware } from '../middlewares/backend/auth';
 import { PermissionMiddleware } from '../middlewares/backend/permission';
 import { ErrorMiddleware } from '../middlewares/backend/error';
 import { BackendController } from '../controllers/backendController';
-import { ExpressLogger } from '../common/logger';
+import { ExpressLogger } from '../common/log';
 
 const router: Router = Router();
 
@@ -21,10 +21,7 @@ router.use((req, res, next) => {
 /**
  * 미들웨어 설정
  */
-const exceptPath: string[] = [
-  backendRoutes.employeeLogin.url,
-  backendRoutes.employeeForgotPassword.url,
-];
+const exceptPath: string[] = [backendRoutes.employeeLogin.url, backendRoutes.employeeForgotPassword.url];
 const authMiddleware: IMiddleware = new AuthMiddleware(exceptPath);
 router.use((req, res, next) => authMiddleware.handle(req, res, next));
 
@@ -43,7 +40,6 @@ router.get(backendRoutes.index.url, function (req, res) {
 router.get(backendRoutes.dashboard.url, function (req, res) {
   backendController.dashboard(backendRoutes.dashboard, req, res);
 });
-
 
 /**
  * 화면 관리

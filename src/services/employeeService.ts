@@ -1,9 +1,9 @@
-import { hashPassword, verifyPassword } from '../common/encryptor';
+import { hashPassword, verifyPassword } from '../common/encrypt';
 import { AppError, AuthError, NotFoundError, ValidationError } from '../common/error';
-import { formatDate, formatDateToString, formatEmailMasking } from '../common/formattor';
-import { validateDate, validateEmail, validatePassword, validatePhone } from '../common/validator';
-import { HTTP_STATUS } from '../config/constants';
-import { ExtendedPrismaClient } from '../config/database';
+import { formatDate, formatDateToString, formatEmailMasking } from '../common/format';
+import { validateDate, validateEmail, validatePassword, validatePhone } from '../common/validate';
+import { httpStatus } from '../common/variables';
+import { ExtendedPrismaClient } from '../common/database';
 import { IEmployee } from '../types/object';
 import {
   IRequestEmployeeDelete,
@@ -119,7 +119,7 @@ export class EmployeeService implements IEmployeeService {
       } else {
         return {
           result: false,
-          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          code: httpStatus.INTERNAL_SERVER_ERROR,
           message: '서버 오류가 발생했습니다.',
         };
       }
@@ -180,7 +180,7 @@ export class EmployeeService implements IEmployeeService {
       } else {
         return {
           result: false,
-          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          code: httpStatus.INTERNAL_SERVER_ERROR,
           message: '서버 오류가 발생했습니다.',
         };
       }
@@ -282,7 +282,7 @@ export class EmployeeService implements IEmployeeService {
       } else {
         return {
           result: false,
-          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          code: httpStatus.INTERNAL_SERVER_ERROR,
           message: '서버 오류가 발생했습니다.',
         };
       }
@@ -351,7 +351,7 @@ export class EmployeeService implements IEmployeeService {
       } else {
         return {
           result: false,
-          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          code: httpStatus.INTERNAL_SERVER_ERROR,
           message: '서버 오류가 발생했습니다.',
         };
       }
@@ -412,7 +412,7 @@ export class EmployeeService implements IEmployeeService {
       } else {
         return {
           result: false,
-          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          code: httpStatus.INTERNAL_SERVER_ERROR,
           message: '서버 오류가 발생했습니다.',
         };
       }
@@ -459,7 +459,7 @@ export class EmployeeService implements IEmployeeService {
       } else {
         return {
           result: false,
-          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          code: httpStatus.INTERNAL_SERVER_ERROR,
           message: '서버 오류가 발생했습니다.',
         };
       }
@@ -557,7 +557,7 @@ export class EmployeeService implements IEmployeeService {
       } else {
         return {
           result: false,
-          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          code: httpStatus.INTERNAL_SERVER_ERROR,
           message: '서버 오류가 발생했습니다.',
         };
       }
@@ -628,7 +628,7 @@ export class EmployeeService implements IEmployeeService {
       } else {
         return {
           result: false,
-          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          code: httpStatus.INTERNAL_SERVER_ERROR,
           message: '서버 오류가 발생했습니다.',
         };
       }
@@ -659,7 +659,7 @@ export class EmployeeService implements IEmployeeService {
       } else {
         return {
           result: false,
-          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          code: httpStatus.INTERNAL_SERVER_ERROR,
           message: '서버 오류가 발생했습니다.',
         };
       }

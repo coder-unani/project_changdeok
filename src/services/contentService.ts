@@ -1,8 +1,8 @@
 import { AppError, NotFoundError, ValidationError } from '../common/error';
-import { formatDateToString } from '../common/formattor';
-import { validateStringLength } from '../common/validator';
-import { HTTP_STATUS } from '../config/constants';
-import { ExtendedPrismaClient } from '../config/database';
+import { formatDateToString } from '../common/format';
+import { validateStringLength } from '../common/validate';
+import { httpStatus } from '../common/variables';
+import { ExtendedPrismaClient } from '../common/database';
 import { IContent, IContentGroup } from '../types/object';
 import { IRequestContentUpdate, IRequestContentWrite, IRequestContents } from '../types/request';
 import { IServiceResponse } from '../types/response';
@@ -48,7 +48,7 @@ export class ContentService implements IContentService {
       } else {
         return {
           result: false,
-          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          code: httpStatus.INTERNAL_SERVER_ERROR,
           message: '서버 오류가 발생했습니다.',
         };
       }
@@ -133,7 +133,7 @@ export class ContentService implements IContentService {
       } else {
         return {
           result: false,
-          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          code: httpStatus.INTERNAL_SERVER_ERROR,
           message: '서버 오류가 발생했습니다.',
         };
       }
@@ -185,7 +185,7 @@ export class ContentService implements IContentService {
       } else {
         return {
           result: false,
-          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          code: httpStatus.INTERNAL_SERVER_ERROR,
           message: '서버 오류가 발생했습니다.',
         };
       }
@@ -226,7 +226,7 @@ export class ContentService implements IContentService {
       } else {
         return {
           result: false,
-          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          code: httpStatus.INTERNAL_SERVER_ERROR,
           message: '서버 오류가 발생했습니다.',
         };
       }
@@ -360,7 +360,7 @@ export class ContentService implements IContentService {
       } else {
         return {
           result: false,
-          code: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          code: httpStatus.INTERNAL_SERVER_ERROR,
           message: '서버 오류가 발생했습니다.',
         };
       }

@@ -12,9 +12,9 @@ import {
 import { getCookie } from '../common/cookies';
 import { AppError, AuthError, ValidationError } from '../common/error';
 import { verifyJWT } from '../common/jwt';
-import { getAccessToken } from '../common/verifier';
+import { getAccessToken } from '../common/verify';
 import { CONFIG } from '../config/config';
-import { prisma } from '../config/database';
+import { prisma } from '../common/database';
 import { apiBackendRoutes, backendRoutes } from '../routes/routes';
 import { EmployeeService } from '../services/employeeService';
 import { IEmployeeToken, IRoute } from '../types/object';

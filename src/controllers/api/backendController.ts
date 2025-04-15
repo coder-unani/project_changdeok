@@ -1,21 +1,21 @@
 import { Request, Response } from 'express';
 
-import { HTTP_STATUS } from '../../config/constants';
-import { prisma } from '../../config/database';
-import { 
+import { httpStatus } from '../../common/variables';
+import { prisma } from '../../common/database';
+import {
   typeListSort,
   IRequestBannerWrite,
   IRequestBannerUpdate,
   IRequestBanners,
   IRequestContentWrite,
   IRequestContentUpdate,
-  IRequestEmployeeRegister, 
+  IRequestEmployeeRegister,
   IRequestEmployeeUpdate,
   IRequestEmployeeUpdatePassword,
   IRequestEmployeeForceUpdatePassword,
   IRequestEmployeeDelete,
-  IRequestEmployeeLogin, 
-  IRequestEmployees, 
+  IRequestEmployeeLogin,
+  IRequestEmployees,
   IRequestDefaultList,
   IRequestContents,
 } from '../../types/request';
@@ -26,12 +26,11 @@ import { EmployeeService } from '../../services/employeeService';
 import { PermissionService } from '../../services/permissionService';
 import { BannerService } from '../../services/bannerService';
 import { ContentService } from '../../services/contentService';
-import { formatApiResponse } from '../../common/formattor';
+import { formatApiResponse } from '../../common/format';
 import { createJWT, verifyJWT } from '../../common/jwt';
 import { getCookie, setCookie, removeCookie } from '../../common/cookies';
-import { getAccessedEmployee } from '../../common/verifier';
+import { getAccessedEmployee } from '../../common/verify';
 import { AppError, ValidationError, AuthError, PermissionError, NotFoundError, ServerError } from '../../common/error';
-
 
 export class ApiBackendController {
   // 배너 등록
@@ -47,7 +46,7 @@ export class ApiBackendController {
       if (!accessedEmployee) {
         throw new AuthError('로그인 정보가 없습니다.');
       }
-      
+
       // 배너 그룹 ID
       const groupId = parseInt(req.body.groupId);
       if (isNaN(groupId)) {
@@ -69,7 +68,7 @@ export class ApiBackendController {
           imagePath = imagePath.replace('public', '');
         }
       }
-      
+
       // 요청 데이터
       const requestData: IRequestBannerWrite = {
         groupId: groupId,
@@ -79,11 +78,11 @@ export class ApiBackendController {
         imagePath: imagePath,
         linkType: req.body.linkType || null,
         linkUrl: req.body.linkUrl || null,
-        isPublished: (req.body.isPublished && req.body.isPublished === 'Y') ? true : false,
+        isPublished: req.body.isPublished && req.body.isPublished === 'Y' ? true : false,
         publishedAt: req.body.publishedAt ? req.body.publishedAt : new Date().toISOString(),
         unpublishedAt: req.body.unpublishedAt ? req.body.unpublishedAt : null,
-        createdBy: accessedEmployee.id
-      }
+        createdBy: accessedEmployee.id,
+      };
 
       // 배너 등록
       const bannerService: IBannerService = new BannerService(prisma);
@@ -93,15 +92,14 @@ export class ApiBackendController {
       if (!result.result) {
         throw new AppError(result.code, result.message);
       }
-      
-      // 등록 성공
-      res.status(HTTP_STATUS.CREATED).send(null);
 
+      // 등록 성공
+      res.status(httpStatus.CREATED).send(null);
     } catch (error) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
       } else {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
       }
     }
   }
@@ -113,7 +111,7 @@ export class ApiBackendController {
     try {
       // 접근 권한 체크
       this.verifyPermission(req, permissions);
-      
+
       // 배너 ID
       const bannerId = parseInt(req.params.bannerId);
       if (isNaN(bannerId)) {
@@ -128,16 +126,15 @@ export class ApiBackendController {
       if (!result.result) {
         throw new AppError(result.code, result.message);
       }
-       
+
       // 조회 성공시 200 응답
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
-      res.status(HTTP_STATUS.OK).json(response);
-
+      res.status(httpStatus.OK).json(response);
     } catch (error) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
       } else {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
       }
     }
   }
@@ -179,10 +176,10 @@ export class ApiBackendController {
         imagePath: imagePath,
         linkType: req.body.linkType || null,
         linkUrl: req.body.linkUrl || null,
-        isPublished: (req.body.isPublished && req.body.isPublished === 'Y') ? true : false,
+        isPublished: req.body.isPublished && req.body.isPublished === 'Y' ? true : false,
         publishedAt: req.body.publishedAt ? req.body.publishedAt : new Date().toISOString(),
         unpublishedAt: req.body.unpublishedAt ? req.body.unpublishedAt : null,
-        updatedBy: accessedEmployee.id
+        updatedBy: accessedEmployee.id,
       };
 
       const bannerService: IBannerService = new BannerService(prisma);
@@ -194,13 +191,12 @@ export class ApiBackendController {
       }
 
       // 수정 성공
-      res.status(HTTP_STATUS.NO_CONTENT).send(null);
-
+      res.status(httpStatus.NO_CONTENT).send(null);
     } catch (error) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
       } else {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
       }
     }
   }
@@ -229,13 +225,12 @@ export class ApiBackendController {
       }
 
       // 삭제 성공
-      res.status(HTTP_STATUS.NO_CONTENT).send(null);
-    
+      res.status(httpStatus.NO_CONTENT).send(null);
     } catch (error) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
       } else {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
       }
     }
   }
@@ -264,10 +259,10 @@ export class ApiBackendController {
       const params: IRequestBanners = {
         page: parseInt(req.query.page as string) || 1,
         pageSize: parseInt(req.query.pageSize as string) || 10,
-        query: req.query.query as string || '',
+        query: (req.query.query as string) || '',
         groupId,
         seq,
-      }
+      };
 
       // 배너 목록 조회
       const bannerService: IBannerService = new BannerService(prisma);
@@ -280,13 +275,12 @@ export class ApiBackendController {
 
       // 조회 성공
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
-      res.status(HTTP_STATUS.OK).json(response);
-
+      res.status(httpStatus.OK).json(response);
     } catch (error) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
       } else {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
       }
     }
   }
@@ -315,13 +309,12 @@ export class ApiBackendController {
 
       // 응답 성공
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
-      res.status(HTTP_STATUS.OK).json(response);
-
+      res.status(httpStatus.OK).json(response);
     } catch (error) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
       } else {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
       }
     }
   }
@@ -346,9 +339,9 @@ export class ApiBackendController {
       const requestData: IRequestContents = {
         page: parseInt(req.query.page as string) || 1,
         pageSize: parseInt(req.query.pageSize as string) || 10,
-        query: req.query.query as string || '',
-        sort: req.query.sort as typeListSort || 'ID_DESC',
-      }
+        query: (req.query.query as string) || '',
+        sort: (req.query.sort as typeListSort) || 'ID_DESC',
+      };
 
       // 컨텐츠 목록 조회
       const contentService: IContentService = new ContentService(prisma);
@@ -361,13 +354,12 @@ export class ApiBackendController {
 
       // 조회 성공
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
-      res.status(HTTP_STATUS.OK).json(response);
-
+      res.status(httpStatus.OK).json(response);
     } catch (error) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
       } else {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
       }
     }
   }
@@ -410,13 +402,12 @@ export class ApiBackendController {
       }
 
       // 등록 성공
-      res.status(HTTP_STATUS.CREATED).send(null);
-
+      res.status(httpStatus.CREATED).send(null);
     } catch (error) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
       } else {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
       }
     }
   }
@@ -451,13 +442,12 @@ export class ApiBackendController {
 
       // 조회 성공
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
-      res.status(HTTP_STATUS.OK).json(response);
-
+      res.status(httpStatus.OK).json(response);
     } catch (error) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
       } else {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
       }
     }
   }
@@ -494,13 +484,12 @@ export class ApiBackendController {
       }
 
       // 수정 성공
-      res.status(HTTP_STATUS.NO_CONTENT).send(null);
-
+      res.status(httpStatus.NO_CONTENT).send(null);
     } catch (error) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
       } else {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
       }
     }
   }
@@ -534,13 +523,12 @@ export class ApiBackendController {
       }
 
       // 삭제 성공
-      res.status(HTTP_STATUS.NO_CONTENT).send(null);
-
+      res.status(httpStatus.NO_CONTENT).send(null);
     } catch (error) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
       } else {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
       }
     }
   }
@@ -552,10 +540,10 @@ export class ApiBackendController {
     try {
       // 접근 권한 체크
       this.verifyPermission(req, permissions);
-  
+
       // 요청 데이터
       const requestData: IRequestEmployeeRegister = req.body;
-      
+
       // 직원 등록 처리
       const employeeService: IEmployeeService = new EmployeeService(prisma);
       const result = await employeeService.create(requestData);
@@ -564,18 +552,17 @@ export class ApiBackendController {
       if (!result.result) {
         throw new AppError(result.code, result.message);
       }
-      
-      // 등록 성공
-      res.status(HTTP_STATUS.CREATED).send(null);
 
+      // 등록 성공
+      res.status(httpStatus.CREATED).send(null);
     } catch (error) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
       } else {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
       }
     }
-  };
+  }
 
   // 직원 상세
   public async employeeDetail(req: Request, res: Response): Promise<void> {
@@ -604,13 +591,12 @@ export class ApiBackendController {
 
       // 조회 성공
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
-      res.status(HTTP_STATUS.OK).json(response);
-
+      res.status(httpStatus.OK).json(response);
     } catch (error) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
       } else {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
       }
     }
   }
@@ -646,8 +632,8 @@ export class ApiBackendController {
       // 쿠키 업데이트
       if (result.data) {
         setCookie(
-          res, 
-          'employee', 
+          res,
+          'employee',
           JSON.stringify({
             id: result.data.id,
             name: result.data.name,
@@ -655,15 +641,14 @@ export class ApiBackendController {
           })
         );
       }
-      
-      // 수정 성공
-      res.status(HTTP_STATUS.NO_CONTENT).send(null);
 
+      // 수정 성공
+      res.status(httpStatus.NO_CONTENT).send(null);
     } catch (error) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
       } else {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
       }
     }
   }
@@ -686,11 +671,11 @@ export class ApiBackendController {
 
       // 로그인 확인
       const accessToken = getCookie(req, 'accessToken');
-      const tokenEmployee = (accessToken) ? verifyJWT(accessToken) : null;
+      const tokenEmployee = accessToken ? verifyJWT(accessToken) : null;
       if (!tokenEmployee) {
         throw new AuthError('로그인 정보가 없습니다.');
       }
-      
+
       const loggedInEmployee: IEmployeeToken = tokenEmployee;
 
       // 접근 권한 확인
@@ -702,19 +687,19 @@ export class ApiBackendController {
       const accessPermissions = apiBackendRoutes.employeeUpdatePassword.permissions;
 
       // 접근 권한 확인
-      if (accessPermissions && (
-          loggedInEmployee.permissions
-          && loggedInEmployee.permissions.some(permission => accessPermissions.includes(permission))
-        )
+      if (
+        accessPermissions &&
+        loggedInEmployee.permissions &&
+        loggedInEmployee.permissions.some((permission) => accessPermissions.includes(permission))
       ) {
         hasPermission = true;
       }
-      
+
       // 접근 권한이 있고 본인인 경우
       if (tokenEmployee.id === employeeId) {
         hasPermission = true;
 
-      // 접근 권한이 있고 다른 계정인 경우
+        // 접근 권한이 있고 다른 계정인 경우
       } else {
         isForceUpdatePassword = true;
       }
@@ -733,8 +718,8 @@ export class ApiBackendController {
       if (isForceUpdatePassword) {
         const requestForceData: IRequestEmployeeForceUpdatePassword = req.body;
         result = await employeeService.updatePasswordForce(employeeId, requestForceData);
-      
-      // 일반 비밀번호 변경
+
+        // 일반 비밀번호 변경
       } else {
         const requestData: IRequestEmployeeUpdatePassword = req.body;
         result = await employeeService.updatePassword(employeeId, requestData);
@@ -744,15 +729,14 @@ export class ApiBackendController {
       if (!result.result) {
         throw new AppError(result.code, result.message);
       }
-      
-      // 변경 성공
-      res.status(HTTP_STATUS.NO_CONTENT).send(null);
 
+      // 변경 성공
+      res.status(httpStatus.NO_CONTENT).send(null);
     } catch (error) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
       } else {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
       }
     }
   }
@@ -784,20 +768,19 @@ export class ApiBackendController {
       if (!result.result) {
         throw new AppError(result.code, result.message);
       }
-      
+
       // 쿠키 삭제
       // 다른 계정을 삭제할 수 있으므로 쿠키 삭제하지 않음
       // removeCookie(res, 'accessToken');
       // removeCookie(res, 'employee');
 
       // 탈퇴 성공
-      res.status(HTTP_STATUS.NO_CONTENT).send(null);
-
+      res.status(httpStatus.NO_CONTENT).send(null);
     } catch (error) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
       } else {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
       }
     }
   }
@@ -852,15 +835,14 @@ export class ApiBackendController {
           })
         );
       }
-      
-      // 수정 성공
-      res.status(HTTP_STATUS.NO_CONTENT).send(null);
 
+      // 수정 성공
+      res.status(httpStatus.NO_CONTENT).send(null);
     } catch (error) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
       } else {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
       }
     }
   }
@@ -878,8 +860,8 @@ export class ApiBackendController {
         page: parseInt(req.query.page as string) || 1,
         pageSize: parseInt(req.query.pageSize as string) || 10,
         sort: req.params.sort as typeListSort,
-        query: req.query.query as string || '',
-      }
+        query: (req.query.query as string) || '',
+      };
 
       // 직원 목록 조회
       const employeeService: IEmployeeService = new EmployeeService(prisma);
@@ -889,16 +871,15 @@ export class ApiBackendController {
       if (!result.result) {
         throw new AppError(result.code, result.message);
       }
-      
+
       // 조회 성공
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
-      res.status(HTTP_STATUS.OK).json(response);
-
+      res.status(httpStatus.OK).json(response);
     } catch (error) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
       } else {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
       }
     }
   }
@@ -917,7 +898,7 @@ export class ApiBackendController {
       if (!result.result) {
         throw new AppError(result.code, result.message);
       }
-      
+
       // 로그인 성공시 쿠키에 토큰 저장
       if (result.data) {
         const tokenData: IEmployeeToken = {
@@ -925,7 +906,7 @@ export class ApiBackendController {
           email: result.data.email,
           name: result.data.name,
           permissions: result.data.permissions,
-        }
+        };
         const token = createJWT(tokenData);
 
         if (token) {
@@ -933,21 +914,20 @@ export class ApiBackendController {
           setCookie(res, 'employee', JSON.stringify(tokenData));
         }
       }
-      
+
       // 응답 데이터 생성
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
 
       // 로그인 성공
-      res.status(HTTP_STATUS.OK).json(response);
-
+      res.status(httpStatus.OK).json(response);
     } catch (error) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
       } else {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
       }
     }
-  };
+  }
 
   // 직원 로그아웃
   public async employeeLogout(req: Request, res: Response): Promise<void> {
@@ -957,13 +937,12 @@ export class ApiBackendController {
       removeCookie(res, 'accessToken');
 
       // 로그아웃 성공
-      res.status(HTTP_STATUS.NO_CONTENT).send(null);
-
+      res.status(httpStatus.NO_CONTENT).send(null);
     } catch (error) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
       } else {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
       }
     }
   }
@@ -975,13 +954,13 @@ export class ApiBackendController {
     try {
       // 접근 권한 체크
       this.verifyPermission(req, permissions);
-    
+
       // 요청 데이터
       const requestData: IRequestDefaultList = {
         page: parseInt(req.query.page as string) || 1,
         pageSize: parseInt(req.query.pageSize as string) || 10,
-        query: req.query.query as string || '',
-      }
+        query: (req.query.query as string) || '',
+      };
 
       // 권한 목록 조회
       const permissionService: IPermissionService = new PermissionService();
@@ -994,18 +973,15 @@ export class ApiBackendController {
 
       // 조회 성공
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
-      res.status(HTTP_STATUS.OK).json(response);
-
+      res.status(httpStatus.OK).json(response);
     } catch (error) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
       } else {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
       }
     }
   }
 
-  public verifyPermission(req: Request, permissions: number[] = []): void {
-
-  }
+  public verifyPermission(req: Request, permissions: number[] = []): void {}
 }
