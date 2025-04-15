@@ -19,7 +19,7 @@ const authMiddleware: IMiddleware = new AuthMiddleware();
 router.use((req, res, next) => authMiddleware.handle(req, res, next));
 
 // 이미지 업로드 미들웨어
-const imageUploadMiddleware = new MediaUploadMiddleware({
+const bannerUploadMiddleware = new MediaUploadMiddleware({
   uploadPath: 'public/uploads/images/',
   filter: 'image',
   fieldName: 'image',
@@ -30,8 +30,8 @@ const apiBackendController = new ApiBackendController();
 
 // 배너 등록
 router.post(
-  apiBackendRoutes.bannerWrite.url, 
-  (req: Request, res: Response, next: NextFunction) => imageUploadMiddleware.handle(req, res, next), 
+  apiBackendRoutes.bannerWrite.url,
+  (req: Request, res: Response, next: NextFunction) => bannerUploadMiddleware.handle(req, res, next),
   (req: Request, res: Response) => {
     apiBackendController.bannerWrite(req, res);
   }
@@ -43,8 +43,9 @@ router.get(apiBackendRoutes.bannerDetail.url, (req: Request, res: Response) => {
 });
 
 // 배너 수정
-router.put(apiBackendRoutes.bannerUpdate.url,
-  (req: Request, res: Response, next: NextFunction) => imageUploadMiddleware.handle(req, res, next), 
+router.put(
+  apiBackendRoutes.bannerUpdate.url,
+  (req: Request, res: Response, next: NextFunction) => bannerUploadMiddleware.handle(req, res, next),
   (req: Request, res: Response) => {
     apiBackendController.bannerUpdate(req, res);
   }
@@ -66,11 +67,9 @@ router.get(apiBackendRoutes.bannerGroup.url, (req: Request, res: Response) => {
 });
 
 // 컨텐츠 목록
-router.get(apiBackendRoutes.contents.url,
-  (req: Request, res: Response) => {
-    apiBackendController.contents(req, res);
-  }
-);
+router.get(apiBackendRoutes.contents.url, (req: Request, res: Response) => {
+  apiBackendController.contents(req, res);
+});
 
 // 컨텐츠 등록
 router.post(apiBackendRoutes.contentWrite.url, (req: Request, res: Response) => {
