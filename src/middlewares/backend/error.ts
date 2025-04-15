@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 
 import { IErrorMiddleware } from '../../types/middleware';
 import { IHttpLogger } from '../../types/logger';
-import { backendRoutes } from '../../routes/routes';
+import { backendRoutes } from '../../config/routes';
 
 // TODO: 에러 처리 미들웨어가 동작하지 않는 이유 찾아볼 것
 /**
@@ -17,27 +17,20 @@ export class ErrorMiddleware implements IErrorMiddleware {
   private logger: IHttpLogger;
 
   constructor(logger: IHttpLogger) {
-    console.log("ErrorMiddleware.constructor");
     this.logger = logger;
-
   }
 
   public handleError(err: any, req: Request, res: Response, next: NextFunction): void {
     // 에러 로그 기록
     this.logger.logException(req, err);
 
-    console.log("err = ", err);
-
     // 응답
     const { view, layout } = backendRoutes.error;
-    res.status(500).render(
-      view, 
-      { 
-        layout,
-        status: err.status || 500, 
-        message: err.message || '일시적인 오류가 발생했습니다.' 
-      }
-    );
+    res.status(500).render(view, {
+      layout,
+      status: err.status || 500,
+      message: err.message || '일시적인 오류가 발생했습니다.',
+    });
 
     // 다음 미들웨어로 이동하지 않고 종료
   }

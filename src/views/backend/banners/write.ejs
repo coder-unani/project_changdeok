@@ -177,9 +177,9 @@
       }
 
       // 배너 등록 API 호출
-      const apiUrl = '<%=apiBackendRoutes.bannerWrite.url%>';
+      const apiUrl = '<%=apiRoutes.banners.write.url%>';
       const response = await fetch(apiUrl, {
-        method: '<%=apiBackendRoutes.bannerWrite.method%>',
+        method: '<%=apiRoutes.banners.write.method%>',
         headers: { },
         body: formData
       });
@@ -191,8 +191,8 @@
       }
 
       // 응답 성공
-      alert('<%=apiBackendRoutes.bannerWrite.title%> 성공');
-      window.location.href = '<%=routes.banners.url%>?gp=<%=metadata.groupInfo.id%>&sq=<%=metadata.seq%>';
+      alert('<%=apiRoutes.banners.write.title%> 성공');
+      window.location.href = '<%=routes.banners.list.url%>?gp=<%=metadata.groupInfo.id%>&sq=<%=metadata.seq%>';
 
     } catch (error) {
       alert(error.message || '서버 오류가 발생했습니다.');

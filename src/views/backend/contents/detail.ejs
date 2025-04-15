@@ -47,7 +47,7 @@
 <div class="flex flex-col flex-wrap items-center justify-between gap-1 lg:flex-row">
   <div class="flex w-full lg:w-auto">
     <a
-      href="<%=routes.contentUpdate.url.replace(':groupId', metadata.groupId).replace(':contentId', data.id)%>"
+      href="<%=routes.contents.update.url.replace(':groupId', metadata.groupId).replace(':contentId', data.id)%>"
       class="orb-btn-secondary"
       >수정</a
     >
@@ -67,11 +67,11 @@
 
     try {
       // 컨텐츠 삭제 API 호출
-      const apiUrl = '<%=apiBackendRoutes.contentDelete.url%>'
+      const apiUrl = '<%=apiRoutes.contents.delete.url%>'
         .replace(':groupId', '<%=metadata.groupId%>')
         .replace(':contentId', '<%=data.id%>');
       const response = await fetch(apiUrl, {
-        method: '<%=apiBackendRoutes.contentDelete.method%>',
+        method: '<%=apiRoutes.contents.delete.method%>',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -84,8 +84,8 @@
       }
 
       // 응답 성공
-      alert('<%=apiBackendRoutes.contentDelete.title%> 성공');
-      window.location.href = '<%=routes.contents.url%>'.replace(':groupId', '<%=metadata.groupId%>');
+      alert('<%=apiRoutes.contents.delete.title%> 성공');
+      window.location.href = '<%=routes.contents.list.url%>'.replace(':groupId', '<%=metadata.groupId%>');
     } catch (error) {
       alert(error.message || '서버 오류가 발생했습니다.');
     }

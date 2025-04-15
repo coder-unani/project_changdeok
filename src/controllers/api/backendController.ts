@@ -21,7 +21,7 @@ import {
 } from '../../types/request';
 import { IEmployeeToken } from '../../types/object';
 import { IBannerService, IContentService, IEmployeeService, IPermissionService } from '../../types/service';
-import { apiBackendRoutes } from '../../routes/routes';
+import { apiRoutes } from '../../config/routes';
 import { EmployeeService } from '../../services/employeeService';
 import { PermissionService } from '../../services/permissionService';
 import { BannerService } from '../../services/bannerService';
@@ -35,7 +35,7 @@ import { AppError, ValidationError, AuthError, PermissionError, NotFoundError, S
 export class ApiBackendController {
   // 배너 등록
   public async bannerWrite(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiBackendRoutes.bannerWrite;
+    const { permissions } = apiRoutes.banners.write;
 
     try {
       // 접근 권한 체크
@@ -106,7 +106,7 @@ export class ApiBackendController {
 
   // 배너 상세 정보
   public async bannerDetail(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiBackendRoutes.bannerDetail;
+    const { permissions } = apiRoutes.banners.detail;
 
     try {
       // 접근 권한 체크
@@ -141,7 +141,7 @@ export class ApiBackendController {
 
   // 배너 수정
   public async bannerUpdate(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiBackendRoutes.bannerUpdate;
+    const { permissions } = apiRoutes.banners.update;
 
     try {
       // 접근 권한 체크
@@ -203,7 +203,7 @@ export class ApiBackendController {
 
   // 배너 삭제
   public async bannerDelete(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiBackendRoutes.bannerDelete;
+    const { permissions } = apiRoutes.banners.delete;
 
     try {
       // 접근 권한 체크
@@ -237,7 +237,7 @@ export class ApiBackendController {
 
   // 배너 목록
   public async banners(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiBackendRoutes.banners;
+    const { permissions } = apiRoutes.banners.list;
 
     try {
       // 접근 권한 체크
@@ -287,7 +287,7 @@ export class ApiBackendController {
 
   // 배너 그룹
   public async bannerGroup(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiBackendRoutes.bannerGroup;
+    const { permissions } = apiRoutes.banners.group;
     try {
       // 접근 권한 체크
       this.verifyPermission(req, permissions);
@@ -321,7 +321,7 @@ export class ApiBackendController {
 
   // 컨텐츠 목록
   public async contents(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiBackendRoutes.contents;
+    const { permissions } = apiRoutes.contents.list;
 
     try {
       // 접근 권한 체크
@@ -366,7 +366,7 @@ export class ApiBackendController {
 
   // 컨텐츠 등록
   public async contentWrite(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiBackendRoutes.contentWrite;
+    const { permissions } = apiRoutes.contents.write;
 
     try {
       // 접근 권한 체크
@@ -414,7 +414,7 @@ export class ApiBackendController {
 
   // 컨텐츠 상세 정보
   public async contentDetail(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiBackendRoutes.contentDetail;
+    const { permissions } = apiRoutes.contents.detail;
 
     try {
       // 접근 권한 체크
@@ -454,7 +454,7 @@ export class ApiBackendController {
 
   // 컨텐츠 수정
   public async contentUpdate(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiBackendRoutes.contentUpdate;
+    const { permissions } = apiRoutes.contents.update;
 
     try {
       // 접근 권한 체크
@@ -496,7 +496,7 @@ export class ApiBackendController {
 
   // 컨텐츠 삭제
   public async contentDelete(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiBackendRoutes.contentDelete;
+    const { permissions } = apiRoutes.contents.delete;
 
     try {
       // 접근 권한 체크
@@ -535,7 +535,7 @@ export class ApiBackendController {
 
   // 직원 등록
   public async employeeRegist(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiBackendRoutes.employeeRegist;
+    const { permissions } = apiRoutes.employees.regist;
 
     try {
       // 접근 권한 체크
@@ -566,7 +566,7 @@ export class ApiBackendController {
 
   // 직원 상세
   public async employeeDetail(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiBackendRoutes.employeeDetail;
+    const { permissions } = apiRoutes.employees.detail;
 
     try {
       // 접근 권한 체크
@@ -603,7 +603,7 @@ export class ApiBackendController {
 
   // 직원 정보 수정
   public async employeeUpdate(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiBackendRoutes.employeeUpdate;
+    const { permissions } = apiRoutes.employees.update;
 
     try {
       // 접근 권한 체크
@@ -655,7 +655,7 @@ export class ApiBackendController {
 
   // 직원 비밀번호 변경
   public async employeeUpdatePassword(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiBackendRoutes.employeeUpdatePassword;
+    const { permissions } = apiRoutes.employees.updatePassword;
 
     try {
       // 접근 권한 체크
@@ -684,7 +684,7 @@ export class ApiBackendController {
       let isForceUpdatePassword = false;
 
       // 접근 가능 권한
-      const accessPermissions = apiBackendRoutes.employeeUpdatePassword.permissions;
+      const accessPermissions = apiRoutes.employees.updatePassword.permissions;
 
       // 접근 권한 확인
       if (
@@ -743,7 +743,7 @@ export class ApiBackendController {
 
   // 직원 삭제
   public async employeeDelete(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiBackendRoutes.employeeDelete;
+    const { permissions } = apiRoutes.employees.delete;
 
     try {
       // 접근 권한 체크
@@ -787,7 +787,7 @@ export class ApiBackendController {
 
   // 직원 권한 수정/변경
   public async employeePermissions(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiBackendRoutes.employeePermissions;
+    const { permissions } = apiRoutes.employees.permissions;
 
     try {
       // 접근 권한 체크
@@ -849,7 +849,7 @@ export class ApiBackendController {
 
   // 직원 목록
   public async employees(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiBackendRoutes.employees;
+    const { permissions } = apiRoutes.employees.list;
 
     try {
       // 접근 권한 체크
@@ -949,7 +949,7 @@ export class ApiBackendController {
 
   // 권한 목록
   public async permissions(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiBackendRoutes.permissions;
+    const { permissions } = apiRoutes.permissions;
 
     try {
       // 접근 권한 체크

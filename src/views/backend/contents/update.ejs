@@ -1,64 +1,86 @@
-<div class="block pt-2 mb-2">
-  <h1 class='flex justify-between items-baseline gap-1.5 py-2 text-center text-slate-700 transition-all'>
-    <span class="font-bold text-xl"><%=title%></span>
-    <p class="text-right font-medium text-[13px] text-gray-400"><span class="pr-0.5 text-red-500">*</span>필수입력사항</p>
+<div class="mb-2 block pt-2">
+  <h1 class="flex items-baseline justify-between gap-1.5 py-2 text-center text-slate-700 transition-all">
+    <span class="text-xl font-bold"><%=title%></span>
+    <p class="text-right text-[13px] font-medium text-gray-400">
+      <span class="pr-0.5 text-red-500">*</span>필수입력사항
+    </p>
   </h1>
 </div>
 <form id="formContentUpdate" class="space-y-4 text-sm">
-  <div class="space-y-4 text-sm bg-white p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
+  <div class="mb-4 space-y-4 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_rgba(0,0,0,.06)] lg:p-6">
     <div>
-      <label for="title"  class="block flex-none mb-2 font-medium text-[13px] text-gray-400">제목<span class="pl-0.5 text-red-500">*</span></label>
-      <input type="text" id="title" name="title" class="w-full px-4 py-3 rounded-lg bg-gray-100 placeholder:text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" value="<%=data.title%>" placeholder="제목을 입력해주세요." required>
+      <label for="title" class="mb-2 block flex-none text-[13px] font-medium text-gray-400"
+        >제목<span class="pl-0.5 text-red-500">*</span></label
+      >
+      <input
+        type="text"
+        id="title"
+        name="title"
+        class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        value="<%=data.title%>"
+        placeholder="제목을 입력해주세요."
+        required
+      />
     </div>
     <div>
-      <label for="content"  class="block flex-none mb-2 font-medium text-[13px] text-gray-400">내용<span class="pl-0.5 text-red-500">*</span></label>
-      <textarea id="content" name="content" class="w-full min-h-[160px] px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="내용을 입력해주세요." required><%=data.content%></textarea>
+      <label for="content" class="mb-2 block flex-none text-[13px] font-medium text-gray-400"
+        >내용<span class="pl-0.5 text-red-500">*</span></label
+      >
+      <textarea
+        id="content"
+        name="content"
+        class="min-h-[160px] w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        placeholder="내용을 입력해주세요."
+        required
+      >
+<%=data.content%></textarea
+      >
     </div>
   </div>
   <div class="text-right">
-    <button type="submit" class="orb-btn-primary">
-      수정
-    </button>
+    <button type="submit" class="orb-btn-primary">수정</button>
   </div>
 </form>
 
 <script>
-document.getElementById('formContentUpdate').addEventListener('submit', async (e) => {
-  e.preventDefault();
+  document.getElementById('formContentUpdate').addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-  try {
-    // 폼 데이터 수집
-    const formData = new FormData(e.target);
+    try {
+      // 폼 데이터 수집
+      const formData = new FormData(e.target);
 
-    // 폼 데이터 변환
-    const data = {};
-    formData.forEach((value, key) => {
+      // 폼 데이터 변환
+      const data = {};
+      formData.forEach((value, key) => {
         data[key] = value;
-    });
+      });
 
-    // 컨텐츠 등록 API 호출
-    const apiUrl = '<%=apiBackendRoutes.contentUpdate.url%>'.replace(':groupId', '<%=metadata.groupId%>').replace(':contentId', '<%=data.id%>');
-    const response = await fetch(apiUrl, {
-      method: '<%=apiBackendRoutes.contentUpdate.method%>',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    });
+      // 컨텐츠 등록 API 호출
+      const apiUrl = '<%=apiRoutes.contents.update.url%>'
+        .replace(':groupId', '<%=metadata.groupId%>')
+        .replace(':contentId', '<%=data.id%>');
+      const response = await fetch(apiUrl, {
+        method: '<%=apiRoutes.contents.update.method%>',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
 
-    // 응답 오류
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || response.statusText);
+      // 응답 오류
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || response.statusText);
+      }
+
+      // 응답 성공
+      alert('<%=apiRoutes.contents.update.title%> 성공');
+      window.location.href = '<%=routes.contents.detail.url%>'
+        .replace(':groupId', '<%=metadata.groupId%>')
+        .replace(':contentId', '<%=data.id%>');
+    } catch (error) {
+      alert(error.message || '서버 오류가 발생했습니다.');
     }
-
-    // 응답 성공
-    alert('<%=apiBackendRoutes.contentUpdate.title%> 성공');
-    window.location.href = "<%=routes.contentDetail.url%>".replace(':groupId', '<%=metadata.groupId%>').replace(':contentId', '<%=data.id%>');
-
-  } catch (error) {
-    alert(error.message || '서버 오류가 발생했습니다.');
-
-  }
-});
+  });
 </script>

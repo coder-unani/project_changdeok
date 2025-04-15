@@ -12,10 +12,7 @@ import { ALLOWED_TAGS, CONFIG } from './config/config';
 import { companyInfo } from './config/info';
 import { LoggerMiddleware } from './middlewares/logger';
 import { SanitizeMiddleware } from './middlewares/sanitizer';
-import apiBackendRouter from './routes/api/backend';
-import apiFrontendRouter from './routes/api/frontend';
-import backendRouter from './routes/backend';
-import frontendRouter from './routes/frontend';
+import { apiRouter, frontendRouter, backendRouter } from './routes';
 import { IMiddleware } from './types/middleware';
 
 /**
@@ -76,8 +73,7 @@ app.use((req, res, next) => {
 /**
  * 라우터 설정
  */
-// app.use(API_FRONTEND_PREFIX, apiFrontendRouter); // API Frontend 라우터
-app.use(apiBackendRouter); // API Backend 라우터
+app.use(apiRouter); // API Backend 라우터
 app.use(frontendRouter); // Frontend 라우터
 app.use(backendRouter); // Backend 라우터
 

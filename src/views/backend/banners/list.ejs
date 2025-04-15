@@ -7,7 +7,7 @@
 <div class="py-2 mb-2 rounded-xl">
   <div class="flex justify-between items-center">
     <div>
-      <a href="<%=routes.bannerWrite.url%>?gp=<%=metadata.groupInfo.id%>&sq=<%=metadata.seq%>" class="orb-btn-primary">신규 등록</a>
+      <a href="<%=routes.banners.write.url%>?gp=<%=metadata.groupInfo.id%>&sq=<%=metadata.seq%>" class="orb-btn-primary">신규 등록</a>
     </div>
     <div class="flex-1 flex justify-end">
       <div class="relative w-full lg:max-w-[200px] ml-4">
@@ -56,7 +56,7 @@
             </td>
             <td>
               <div>
-                <p class="text-sm font-semibold break-keep mb-1.5"><a href="<%=routes.bannerDetail.url.replace(':bannerId', banner.id)%>" class="hover:underline decoration-gray-800"><%=banner.title%></a></p>
+                <p class="text-sm font-semibold break-keep mb-1.5"><a href="<%=routes.banners.detail.url.replace(':bannerId', banner.id)%>" class="hover:underline decoration-gray-800"><%=banner.title%></a></p>
                 <p class="text-[13px] text-gray-400"><%=banner.description%></p>
               </div>
             </td>

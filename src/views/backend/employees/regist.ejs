@@ -1,77 +1,155 @@
-<div class="block pt-2 mb-2">
-  <h1 class='flex justify-between items-baseline gap-1.5 py-2 text-center text-slate-700 transition-all'>
-    <span class="font-bold text-xl"><%=title%></span>
-    <p class="text-right font-medium text-[13px] text-gray-400"><span class="pr-0.5 text-red-500">*</span>필수입력사항</p>
+<div class="mb-2 block pt-2">
+  <h1 class="flex items-baseline justify-between gap-1.5 py-2 text-center text-slate-700 transition-all">
+    <span class="text-xl font-bold"><%=title%></span>
+    <p class="text-right text-[13px] font-medium text-gray-400">
+      <span class="pr-0.5 text-red-500">*</span>필수입력사항
+    </p>
   </h1>
 </div>
 <form id="formEmployeeRegister">
-  <div class="space-y-4 text-sm text-gray-800 bg-white p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
+  <div class="mb-4 space-y-4 rounded-xl bg-white p-4 text-sm text-gray-800 shadow-[0_2px_30px_rgba(0,0,0,.06)] lg:p-6">
     <div>
-      <label for="email" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">이메일<span class="pl-0.5 text-red-500">*</span></label>
-      <input type="email" id="email" name="email" class="w-full px-4 py-3 rounded-lg bg-gray-100 placeholder:text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="이메일을 입력해주세요." required>
+      <label for="email" class="mb-2 block flex-none text-[13px] font-medium text-gray-400"
+        >이메일<span class="pl-0.5 text-red-500">*</span></label
+      >
+      <input
+        type="email"
+        id="email"
+        name="email"
+        class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        placeholder="이메일을 입력해주세요."
+        required
+      />
     </div>
-    
+
     <div>
-      <label for="name" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">이름<span class="pl-0.5 text-red-500">*</span></label>
-      <input type="text" id="name" name="name" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="이름을 입력해주세요." required>
+      <label for="name" class="mb-2 block flex-none text-[13px] font-medium text-gray-400"
+        >이름<span class="pl-0.5 text-red-500">*</span></label
+      >
+      <input
+        type="text"
+        id="name"
+        name="name"
+        class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        placeholder="이름을 입력해주세요."
+        required
+      />
     </div>
-    
-      <div>
-        <label for="password" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">비밀번호<span class="pl-0.5 text-red-500">*</span></label>
-        <input type="password" id="password" name="password" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="비밀번호를 입력해주세요." required>
-        <p class="pt-2 px-3 text-[12px] text-gray-400 font-medium">비밀번호는 영문, 숫자, 특수문자를 포함하여 8자 이상으로 입력해주세요.</p>
-      </div>
-    
+
     <div>
-      <label for="passwordConfirm" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">비밀번호 확인<span class="pl-0.5 text-red-500">*</span></label>
-      <input type="password" id="passwordConfirm" name="passwordConfirm" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="비밀번호를 한번 더 입력해주세요." required>
+      <label for="password" class="mb-2 block flex-none text-[13px] font-medium text-gray-400"
+        >비밀번호<span class="pl-0.5 text-red-500">*</span></label
+      >
+      <input
+        type="password"
+        id="password"
+        name="password"
+        class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        placeholder="비밀번호를 입력해주세요."
+        required
+      />
+      <p class="px-3 pt-2 text-[12px] font-medium text-gray-400">
+        비밀번호는 영문, 숫자, 특수문자를 포함하여 8자 이상으로 입력해주세요.
+      </p>
     </div>
-    
+
     <div>
-      <label for="phone" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">전화번호</label>
-      <input type="text" id="phone" name="phone" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="전화번호를 입력해주세요.">
+      <label for="passwordConfirm" class="mb-2 block flex-none text-[13px] font-medium text-gray-400"
+        >비밀번호 확인<span class="pl-0.5 text-red-500">*</span></label
+      >
+      <input
+        type="password"
+        id="passwordConfirm"
+        name="passwordConfirm"
+        class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        placeholder="비밀번호를 한번 더 입력해주세요."
+        required
+      />
     </div>
-    
+
     <div>
-      <label for="mobile" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">휴대전화</label>
-      <input type="text" id="mobile" name="mobile" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="휴대전화 번호를 입력해주세요.">
+      <label for="phone" class="mb-2 block flex-none text-[13px] font-medium text-gray-400">전화번호</label>
+      <input
+        type="text"
+        id="phone"
+        name="phone"
+        class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        placeholder="전화번호를 입력해주세요."
+      />
     </div>
-    
+
     <div>
-      <label for="address" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">주소</label>
-      <input type="text" id="address" name="address" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="주소를 입력해주세요.">
+      <label for="mobile" class="mb-2 block flex-none text-[13px] font-medium text-gray-400">휴대전화</label>
+      <input
+        type="text"
+        id="mobile"
+        name="mobile"
+        class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        placeholder="휴대전화 번호를 입력해주세요."
+      />
     </div>
-    
+
     <div>
-      <label for="birthDate" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">생년월일</label>
-      <input type="date" id="birthDate" name="birthDate" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <label for="address" class="mb-2 block flex-none text-[13px] font-medium text-gray-400">주소</label>
+      <input
+        type="text"
+        id="address"
+        name="address"
+        class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        placeholder="주소를 입력해주세요."
+      />
     </div>
-    
+
     <div>
-      <label for="position" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">직급</label>
-      <input type="text" id="position" name="position" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="직급을 입력해주세요.">
+      <label for="birthDate" class="mb-2 block flex-none text-[13px] font-medium text-gray-400">생년월일</label>
+      <input
+        type="date"
+        id="birthDate"
+        name="birthDate"
+        class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+      />
     </div>
-    
+
     <div>
-      <label for="description" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">설명</label>
-      <input type="text" id="description" name="description" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="설명을 입력해주세요.">
+      <label for="position" class="mb-2 block flex-none text-[13px] font-medium text-gray-400">직급</label>
+      <input
+        type="text"
+        id="position"
+        name="position"
+        class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        placeholder="직급을 입력해주세요."
+      />
     </div>
-    
+
     <div>
-      <label for="hireDate" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">입사일</label>
-      <input type="date" id="hireDate" name="hireDate" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <label for="description" class="mb-2 block flex-none text-[13px] font-medium text-gray-400">설명</label>
+      <input
+        type="text"
+        id="description"
+        name="description"
+        class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        placeholder="설명을 입력해주세요."
+      />
+    </div>
+
+    <div>
+      <label for="hireDate" class="mb-2 block flex-none text-[13px] font-medium text-gray-400">입사일</label>
+      <input
+        type="date"
+        id="hireDate"
+        name="hireDate"
+        class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+      />
     </div>
   </div>
-      
+
   <div class="text-right">
-    <button type="submit" class="orb-btn-primary">
-      등록
-    </button>
+    <button type="submit" class="orb-btn-primary">등록</button>
   </div>
 </form>
 
 <script>
-document.getElementById('formEmployeeRegister').addEventListener('submit', async (e) => {
+  document.getElementById('formEmployeeRegister').addEventListener('submit', async (e) => {
     e.preventDefault();
 
     // 폼 데이터 수집
@@ -80,17 +158,17 @@ document.getElementById('formEmployeeRegister').addEventListener('submit', async
     // 폼 데이터 변환
     const data = {};
     formData.forEach((value, key) => {
-        data[key] = value;
+      data[key] = value;
     });
 
     try {
       // 직원 등록 API 호출
-      const response = await fetch('<%=apiBackendRoutes.employeeRegist.url%>', {
-        method: '<%=apiBackendRoutes.employeeRegist.method%>',
+      const response = await fetch('<%=apiRoutes.employees.regist.url%>', {
+        method: '<%=apiRoutes.employees.regist.method%>',
         headers: {
-            'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       });
 
       // 응답 오류
@@ -100,11 +178,9 @@ document.getElementById('formEmployeeRegister').addEventListener('submit', async
       }
 
       // 응답 성공
-      alert('<%=apiBackendRoutes.employeeRegist.title%> 성공');
-        
+      alert('<%=apiRoutes.employees.regist.title%> 성공');
     } catch (err) {
       alert(error.message || '서버 오류가 발생했습니다.');
-        
     }
-});
+  });
 </script>

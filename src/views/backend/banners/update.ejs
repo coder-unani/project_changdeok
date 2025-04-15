@@ -128,9 +128,9 @@
       const formData = new FormData(e.target);
 
       // 배너 등록 API 호출
-      const apiUrl = '<%=apiBackendRoutes.bannerUpdate.url%>'.replace(':bannerId', '<%=data.id%>');
+      const apiUrl = '<%=apiRoutes.banners.update.url%>'.replace(':bannerId', '<%=data.id%>');
       const response = await fetch(apiUrl, {
-        method: '<%=apiBackendRoutes.bannerUpdate.method%>',
+        method: '<%=apiRoutes.banners.update.method%>',
         headers: { },
         body: formData
       });
@@ -142,8 +142,8 @@
       }
 
       // 응답 성공
-      alert('<%=apiBackendRoutes.bannerUpdate.title%> 성공');
-      window.location.href = "<%=routes.banners.url%>?gp=<%=metadata.groupInfo.id%>&sq=<%=data.seq%>";
+      alert('<%=apiRoutes.banners.update.title%> 성공');
+      window.location.href = "<%=routes.banners.list.url%>?gp=<%=metadata.groupInfo.id%>&sq=<%=data.seq%>";
 
     } catch (error) {
       alert(error.message || '서버 오류가 발생했습니다.');

@@ -15,7 +15,7 @@ import { verifyJWT } from '../common/jwt';
 import { getAccessToken } from '../common/verify';
 import { CONFIG } from '../config/config';
 import { prisma } from '../common/database';
-import { apiBackendRoutes, backendRoutes } from '../routes/routes';
+import { apiRoutes, backendRoutes } from '../config/routes';
 import { EmployeeService } from '../services/employeeService';
 import { IEmployeeToken, IRoute } from '../types/object';
 import { IRequestBanners, IRequestContents, typeListSort } from '../types/request';
@@ -761,7 +761,7 @@ export class BackendController {
       // 관리자 목록 조회
       let apiUrl = CONFIG.SERVICE_URL;
       apiUrl = CONFIG.SERVICE_PORT ? `${apiUrl}:${CONFIG.SERVICE_PORT}` : apiUrl;
-      apiUrl = `${apiUrl}${apiBackendRoutes.employees.url}?${queryParams}`;
+      apiUrl = `${apiUrl}${apiRoutes.employees.list.url}?${queryParams}`;
       const apiResponse = await fetch(apiUrl, {
         method: 'GET',
         headers: {

@@ -1,17 +1,23 @@
-<div class="block pt-2 mb-2">
-  <h1 class='flex justify-self-start items-center gap-1.5 py-2 text-center text-slate-700 transition-all'>
-    <span class="font-bold text-xl"><%=title%></span>
+<div class="mb-2 block pt-2">
+  <h1 class="flex items-center gap-1.5 justify-self-start py-2 text-center text-slate-700 transition-all">
+    <span class="text-xl font-bold"><%=title%></span>
   </h1>
 </div>
-<div class="space-y-4 text-sm bg-white p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
-  <div class="flex flex-col justify-center items-center py-2 gap-4">
+<div class="mb-4 space-y-4 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_rgba(0,0,0,.06)] lg:p-6">
+  <div class="flex flex-col items-center justify-center gap-4 py-2">
     <p class="text-center">
-      관리자 계정 <span class="font-bold text-red-500"><%=data.email%></span>을(를)<br/>
+      관리자 계정 <span class="font-bold text-red-500"><%=data.email%></span>을(를)<br />
       정말 삭제하시겠습니까?
     </p>
-    <div class="flex justify-center items-center gap-4">
-      <button id="btn-delete" class="px-4 py-2 text-white bg-red-500 rounded-lg cursor-pointer">삭제</button>
-      <button id="btn-cancel" class="px-4 py-2 text-white bg-gray-500 rounded-lg cursor-pointer" onclick="window.history.back()">취소</button>
+    <div class="flex items-center justify-center gap-4">
+      <button id="btn-delete" class="cursor-pointer rounded-lg bg-red-500 px-4 py-2 text-white">삭제</button>
+      <button
+        id="btn-cancel"
+        class="cursor-pointer rounded-lg bg-gray-500 px-4 py-2 text-white"
+        onclick="window.history.back()"
+      >
+        취소
+      </button>
     </div>
   </div>
 </div>
@@ -23,12 +29,12 @@
 
     try {
       // 직원 삭제 API 호출
-      const apiUrl = '<%=apiBackendRoutes.employeeDelete.url%>'.replace(':employeeId', '<%=data.id%>');
+      const apiUrl = '<%=apiRoutes.employees.delete.url%>'.replace(':employeeId', '<%=data.id%>');
       const response = await fetch(apiUrl, {
-          method: '<%=apiBackendRoutes.employeeDelete.method%>',
-          headers: {
-              'Content-Type': 'application/json'
-          },
+        method: '<%=apiRoutes.employees.delete.method%>',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
 
       // 응답 오류
@@ -38,12 +44,10 @@
       }
 
       // 응답 성공
-      alert('<%=apiBackendRoutes.employeeDelete.title%> 성공');
+      alert('<%=apiRoutes.employees.delete.title%> 성공');
       window.location.href = '<%=routes.employees.url%>';
-      
     } catch (err) {
       alert(error.message || '서버 오류가 발생했습니다.');
-
     }
   });
 </script>

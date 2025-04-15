@@ -4,7 +4,7 @@ import { ExpressLogger } from '../common/log';
 import { CONFIG } from '../config/config';
 import { FrontendController } from '../controllers/frontendController';
 import { IErrorMiddleware, IMiddleware } from '../types/middleware';
-import { apiRoutes, frontendRoutes } from './routes';
+import { apiRoutes, frontendRoutes } from '../config/routes';
 
 const router: Router = Router();
 

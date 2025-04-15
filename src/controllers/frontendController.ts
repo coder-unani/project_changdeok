@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import { AppError } from '../common/error';
-import { frontendRoutes } from '../routes/routes';
+import { frontendRoutes } from '../config/routes';
 import { IRoute } from '../types/object';
 
 export class FrontendController {

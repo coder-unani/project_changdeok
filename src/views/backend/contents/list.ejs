@@ -6,7 +6,7 @@
 <div class="py-2 mb-2 rounded-xl">
   <div class="flex justify-between items-center">
     <div>
-      <a href="<%=routes.contentWrite.url.replace(':groupId', metadata.groupId)%>" class="orb-btn-primary">게시글 등록</a>
+      <a href="<%=routes.contents.write.url.replace(':groupId', metadata.groupId)%>" class="orb-btn-primary">게시글 등록</a>
     </div>
     <div class="flex-1 flex justify-end">
       <div class="relative w-full lg:max-w-[200px] ml-4">
@@ -50,7 +50,7 @@
               <p><%=content.id%></p>
             </td>
             <td>
-              <a href="<%=routes.contentDetail.url.replace(':groupId', metadata.groupId).replace(':contentId', content.id)%>" class="hover:underline decoration-gray-800">
+              <a href="<%=routes.contents.detail.url.replace(':groupId', metadata.groupId).replace(':contentId', content.id)%>" class="hover:underline decoration-gray-800">
                 <p class="font-medium"><%=content.title%></p>
               </a>
             </td>

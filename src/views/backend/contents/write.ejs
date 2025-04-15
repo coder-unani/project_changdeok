@@ -35,11 +35,46 @@
     </div>
   </div>
   <div class="text-right">
+    <button type="button" id="btnCancel" class="orb-btn-secondary mr-2">취소</button>
     <button type="submit" class="orb-btn-primary">등록</button>
   </div>
 </form>
 
+<!-- CKEditor 5 -->
+<script src="/js/ckeditor5/ckeditor.js"></script>
+
 <script>
+  let editor;
+
+  // CKEditor 초기화
+  ClassicEditor.create(document.querySelector('#content'), {
+    toolbar: [
+      'heading',
+      '|',
+      'bold',
+      'italic',
+      'link',
+      '|',
+      'bulletedList',
+      'numberedList',
+      '|',
+      'outdent',
+      'indent',
+      '|',
+      'blockQuote',
+      'insertTable',
+      'undo',
+      'redo',
+    ],
+    language: 'ko',
+  })
+    .then((newEditor) => {
+      editor = newEditor;
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+
   document.getElementById('formContentWrite').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -47,16 +82,22 @@
       // 폼 데이터 수집
       const formData = new FormData(e.target);
 
+      // CKEditor 내용 가져오기
+      const content = editor.getData();
+
       // 폼 데이터 변환
       const data = {};
       formData.forEach((value, key) => {
         data[key] = value;
       });
+      data.content = content;
 
-      // 컨텐츠 등록 API 호출
-      const apiUrl = '<%=apiBackendRoutes.contentWrite.url%>'.replace(':groupId', '<%=data.groupId%>');
-      const response = await fetch(apiUrl, {
-        method: '<%=apiBackendRoutes.contentWrite.method%>',
+      // 컨텐츠 저장 API 호출
+      const saveUrl = '<%=apiRoutes.contents.write.url%>'
+        .replace(':groupId', '<%=data.groupId%>')
+        .replace(/\/[^\/]*$/, '/save-content');
+      const response = await fetch(saveUrl, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -70,8 +111,8 @@
       }
 
       // 응답 성공
-      alert('<%=apiBackendRoutes.contentWrite.title%> 성공');
-      window.location.href = '<%=routes.contents.url%>'.replace(':groupId', '<%=data.groupId%>');
+      alert('<%=apiRoutes.contents.write.title%> 성공');
+      window.location.href = '<%=routes.contents.list.url%>'.replace(':groupId', '<%=data.groupId%>');
     } catch (error) {
       alert(error.message || '서버 오류가 발생했습니다.');
     }
