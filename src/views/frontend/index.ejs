@@ -20,6 +20,7 @@
         <span>마땅히 보호받아야 할 권리를 찾도록 최선을 다하겠습니다.</span>
       </p>
       <button
+        id="contactBtn"
         class="flex cursor-pointer items-center rounded-full bg-[#0c0c0c] px-6 py-3 text-sm font-semibold text-white lg:text-[15px]"
       >
         <span>무료 상담하기</span>
@@ -97,7 +98,9 @@
         <p>법률 서비스</p>
       </h3>
       <div class="flex-none">
-        <button class="cursor-pointer border border-black bg-white px-6 py-3 text-xs font-semibold">전체보기</button>
+        <button id="servicesBtn" class="cursor-pointer border border-black bg-white px-6 py-3 text-xs font-semibold">
+          전체보기
+        </button>
       </div>
     </div>
     <div class="lg:pl-50">
@@ -192,7 +195,9 @@
         <p>성공 사례</p>
       </h3>
       <div class="flex-none">
-        <button class="cursor-pointer border border-black bg-white px-6 py-3 text-xs font-semibold">전체보기</button>
+        <button id="resultsBtn" class="cursor-pointer border border-black bg-white px-6 py-3 text-xs font-semibold">
+          전체보기
+        </button>
       </div>
     </div>
     <div class="lg:pl-50">
@@ -362,9 +367,24 @@
 </div>
 
 <script>
-  // 버튼 클릭시 about 페이지로 이동
+  // 버튼 클릭시 상담 페이지로 이동
+  document.getElementById('contactBtn').addEventListener('click', () => {
+    location.href = '<%=routes.contact.url%>';
+  });
+
+  // 버튼 클릭시 소개 페이지로 이동
   document.getElementById('aboutBtn').addEventListener('click', () => {
     location.href = '<%=routes.about.url%>';
+  });
+
+  // 버튼 클릭시 업무분야 페이지로 이동
+  document.getElementById('servicesBtn').addEventListener('click', () => {
+    location.href = '<%=routes.services.url%>';
+  });
+
+  // 버튼 클릭시 성공사례 페이지로 이동
+  document.getElementById('resultsBtn').addEventListener('click', () => {
+    location.href = '<%=routes.results.url%>';
   });
 
   // 콘텐츠 2 스와이퍼 설정

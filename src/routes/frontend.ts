@@ -33,6 +33,26 @@ router.get('/about', function (req: Request, res: Response) {
   frontendController.about(frontendRoutes.about, req, res);
 });
 
+// 업무분야
+router.get('/services', function (req: Request, res: Response) {
+  frontendController.services(frontendRoutes.services, req, res);
+});
+
+// 성공사례
+router.get('/results', function (req: Request, res: Response) {
+  frontendController.results(frontendRoutes.results, req, res);
+});
+
+// Q&A
+router.get('/qna', function (req: Request, res: Response) {
+  frontendController.qna(frontendRoutes.qna, req, res);
+});
+
+// 상담 및 의뢰
+router.get('/contact', function (req: Request, res: Response) {
+  frontendController.contact(frontendRoutes.contact, req, res);
+});
+
 /**
  * 에러 핸들러 설정
  */
