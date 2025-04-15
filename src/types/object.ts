@@ -1,14 +1,28 @@
 type typeOptionalNumber = number | null | undefined;
 type typeOptionalString = string | null | undefined;
 
-export interface IRoute {
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
-  title: string,
-  url: string,
-  view: string,
-  layout: string,
-  permissions: number[]
+export interface IApiRoute {
+  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  title: string;
+  url: string;
+  permissions: number[];
 }
+
+export interface IRoute {
+  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  title: string;
+  url: string;
+  view: string;
+  layout: string;
+  permissions: number[];
+}
+
+export interface INestedRoutes<T> {
+  [key: string]: T | INestedRoutes<T>;
+}
+
+export type IApiRoutes = INestedRoutes<IApiRoute>;
+export type IRoutes = INestedRoutes<IRoute>;
 
 export interface IError {
   statusCode: number;
@@ -44,56 +58,56 @@ export interface IBanner {
 }
 
 export interface IContentGroup {
-  id: number,
-  kind: string,
-  title: string,
-  description?: typeOptionalString,
-  bannerTopUrl?: typeOptionalString,
-  sizePerPage: number,
-  isUserWrite: boolean,
-  isUserRead: boolean,
-  isUserDisplay: boolean,
-  isNonUserWrite: boolean,
-  isNonUserRead: boolean,
-  isNonUserDisplay: boolean,
-  isAnonymous: boolean,
-  isLike: boolean,
-  isShare: boolean,
-  isComment: boolean,
-  isActivated: boolean,
+  id: number;
+  kind: string;
+  title: string;
+  description?: typeOptionalString;
+  bannerTopUrl?: typeOptionalString;
+  sizePerPage: number;
+  isUserWrite: boolean;
+  isUserRead: boolean;
+  isUserDisplay: boolean;
+  isNonUserWrite: boolean;
+  isNonUserRead: boolean;
+  isNonUserDisplay: boolean;
+  isAnonymous: boolean;
+  isLike: boolean;
+  isShare: boolean;
+  isComment: boolean;
+  isActivated: boolean;
 }
 
 export interface IContent {
-  id: number,
-  groupId: number,
-  title: string,
-  content?: typeOptionalString,
-  writerId?: number | null,
-  writerName?: typeOptionalString,
-  writerEmail?: typeOptionalString,
-  writerPhone?: typeOptionalString,
-  viewCount: number,
-  likeCount: number,
-  commentCount: number,
-  isAnonymous?: boolean,
-  isNotice?: boolean,
-  isActivated?: boolean,
-  ip?: typeOptionalString,
-  userAgent?: typeOptionalString,
-  createdAt: string,
-  updatedAt?: typeOptionalString,
+  id: number;
+  groupId: number;
+  title: string;
+  content?: typeOptionalString;
+  writerId?: number | null;
+  writerName?: typeOptionalString;
+  writerEmail?: typeOptionalString;
+  writerPhone?: typeOptionalString;
+  viewCount: number;
+  likeCount: number;
+  commentCount: number;
+  isAnonymous?: boolean;
+  isNotice?: boolean;
+  isActivated?: boolean;
+  ip?: typeOptionalString;
+  userAgent?: typeOptionalString;
+  createdAt: string;
+  updatedAt?: typeOptionalString;
 }
 
 export interface IContentUpdate {
-  groupId: number,
-  title: string,
-  content?: typeOptionalString,
-  writerId?: typeOptionalNumber,
-  writerName?: typeOptionalString,
-  writerEmail?: typeOptionalString,
-  writerPhone?: typeOptionalString,
-  isActivated?: boolean,
-  isAnonymous?: boolean,
+  groupId: number;
+  title: string;
+  content?: typeOptionalString;
+  writerId?: typeOptionalNumber;
+  writerName?: typeOptionalString;
+  writerEmail?: typeOptionalString;
+  writerPhone?: typeOptionalString;
+  isActivated?: boolean;
+  isAnonymous?: boolean;
 }
 
 export interface IEmployee {
