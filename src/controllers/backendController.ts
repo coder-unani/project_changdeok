@@ -9,12 +9,12 @@ import {
   getApiEmployeeDetail,
   getApiPermissionList,
 } from '../common/api';
-import { getCookie } from '../common/cookies';
-import { AppError, AuthError, ValidationError } from '../common/error';
-import { verifyJWT } from '../common/jwt';
-import { getAccessToken } from '../common/verify';
+import { getCookie } from '../common/utils/cookie';
+import { AppError, AuthError, ValidationError } from '../common/utils/error';
+import { verifyJWT } from '../common/library/jwt';
+import { getAccessToken } from '../common/utils/verify';
 import { CONFIG } from '../config/config';
-import { prisma } from '../common/database';
+import { prisma } from '../common/library/database';
 import { apiRoutes, backendRoutes } from '../config/routes';
 import { EmployeeService } from '../services/employeeService';
 import { IEmployeeToken, IRoute } from '../types/object';

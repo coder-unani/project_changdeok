@@ -1,7 +1,7 @@
-import { Request } from "express";
+import { Request } from 'express';
 
-import { IEmployeeToken } from "../types/object";
-import { getCookie } from "./cookies";
+import { IEmployeeToken } from '../types/object';
+import { getCookie } from './cookie';
 
 /**
  * 접속한 직원 정보 추출
@@ -10,35 +10,31 @@ import { getCookie } from "./cookies";
  */
 export const getAccessedEmployee = (req: Request): IEmployeeToken | null => {
   try {
-    const cookieEmployee = getCookie(req, "employee");
+    const cookieEmployee = getCookie(req, 'employee');
     if (!cookieEmployee) {
       return null;
     }
 
     return JSON.parse(cookieEmployee);
-
   } catch (error) {
     return null;
-
   }
-}
+};
 
 /**
  * Access Token 추출
  * @param req Request 객체
- * @returns 
+ * @returns
  */
 export const getAccessToken = (req: Request): string | null => {
   try {
-    const accessToken = getCookie(req, "accessToken");
+    const accessToken = getCookie(req, 'accessToken');
     if (!accessToken) {
       return null;
     }
 
     return accessToken;
-
   } catch (error) {
     return null;
-
   }
-}
+};

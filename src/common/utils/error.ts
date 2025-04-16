@@ -1,5 +1,5 @@
-import { httpStatus } from '../common/variables';
-import { IError } from '../types/object';
+import { httpStatus } from '../variables';
+import { IError } from '../../types/object';
 
 export class AppError extends Error implements IError {
   public statusCode: number;

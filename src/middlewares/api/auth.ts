@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { IMiddleware } from '../../../types/middleware';
-import { IEmployeeToken } from '../../../types/object';
-import { backendRoutes } from '../../../config/routes';
-import { verifyJWT } from '../../../common/jwt';
-import { removeCookie } from '../../../common/cookies';
+import { IMiddleware } from '../../types/middleware';
+import { IEmployeeToken } from '../../types/object';
+import { backendRoutes } from '../../config/routes';
+import { verifyJWT } from '../../common/library/jwt';
+import { removeCookie } from '../../common/utils/cookie';
 
 export class AuthMiddleware implements IMiddleware {
   private loginPath: string;

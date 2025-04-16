@@ -3,7 +3,7 @@ import { createLogger, format, transports, Logger } from 'winston';
 import * as fs from 'fs';
 import * as path from 'path';
 import DailyRotateFile from 'winston-daily-rotate-file';
-import { IHttpLogger } from '../types/logger';
+import { IHttpLogger } from '../../types/logger';
 
 const { combine, timestamp, printf } = format;
 
@@ -27,12 +27,11 @@ export class ExpressLogger implements IHttpLogger {
         fs.mkdirSync(logPath, { recursive: true });
       }
 
-    // 로그 디렉토리 생성 실패
+      // 로그 디렉토리 생성 실패
     } catch (error) {
       console.error(`Failed to create log directory: ${logPath}`);
-
     }
-    
+
     // 로그 포맷 설정
     const logFormat = printf(({ level, message, timestamp }) => {
       return `${timestamp} - ${level.toUpperCase()} - ${message}`;
@@ -42,10 +41,7 @@ export class ExpressLogger implements IHttpLogger {
     if (!this.debug) {
       this.logger = createLogger({
         level: logLevel,
-        format: combine(
-          timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-          logFormat
-        ),
+        format: combine(timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), logFormat),
         transports: [
           new DailyRotateFile({
             filename: path.join(this.logPath, 'info-%DATE%.log'),
@@ -63,11 +59,10 @@ export class ExpressLogger implements IHttpLogger {
           }),
         ],
       });
-    
-    // Logger 생성 실패
+
+      // Logger 생성 실패
     } else {
       this.logger = undefined;
-
     }
   }
 
@@ -81,7 +76,6 @@ export class ExpressLogger implements IHttpLogger {
 
     // 로그 출력
     this.logger.info(message);
-
   }
 
   // error 로그 출력
@@ -90,21 +84,19 @@ export class ExpressLogger implements IHttpLogger {
     if (this.debug || !this.logger) {
       console.error(message);
       return;
-
     }
 
     // 로그 출력
     this.logger.error(message);
-
   }
 
   // 요청 로그 출력
   public logRequest(req: Request, userId?: string | null): void {
     // 요청 정보 추출
     const { ip: clientIp, headers, method, originalUrl } = req;
-    
+
     // 로그 메세지
-    const logMessage = 
+    const logMessage =
       `Request: ${method} ${originalUrl}, ` +
       `UserID: ${userId || 'N/A'}, ` +
       `ClientIP: ${clientIp}, ` +
@@ -115,7 +107,6 @@ export class ExpressLogger implements IHttpLogger {
 
     // 로그 출력
     this.info(logMessage);
-    
   }
 
   // 응답 로그 출력
@@ -124,7 +115,7 @@ export class ExpressLogger implements IHttpLogger {
     const { ip: clientIp, headers, method, originalUrl } = req;
 
     // 로그 메세지
-    const logMessage = 
+    const logMessage =
       `Response: ${res.statusCode} ${method} ${originalUrl}, ` +
       `ClientIP: ${clientIp}, ` +
       `Origin: ${headers.origin || 'N/A'}, ` +
@@ -134,7 +125,6 @@ export class ExpressLogger implements IHttpLogger {
 
     // 로그 출력
     this.info(logMessage);
-    
   }
 
   // 예외 로그 출력
@@ -153,6 +143,5 @@ export class ExpressLogger implements IHttpLogger {
 
     // 로그 출력
     this.error(logMessage);
-      
   }
 }

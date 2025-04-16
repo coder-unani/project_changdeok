@@ -1,9 +1,9 @@
 import { hashPassword, verifyPassword } from '../common/encrypt';
-import { AppError, AuthError, NotFoundError, ValidationError } from '../common/error';
+import { AppError, AuthError, NotFoundError, ValidationError } from '../common/utils/error';
 import { formatDate, formatDateToString, formatEmailMasking } from '../common/format';
 import { validateDate, validateEmail, validatePassword, validatePhone } from '../common/validate';
 import { httpStatus } from '../common/variables';
-import { ExtendedPrismaClient } from '../common/database';
+import { ExtendedPrismaClient } from '../common/library/database';
 import { IEmployee } from '../types/object';
 import {
   IRequestEmployeeDelete,

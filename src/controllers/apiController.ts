@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import { httpStatus } from '../common/variables';
-import { prisma } from '../common/database';
+import { prisma } from '../common/library/database';
 import {
   typeListSort,
   IRequestBannerWrite,
@@ -26,11 +26,18 @@ import { EmployeeService } from '../services/employeeService';
 import { PermissionService } from '../services/permissionService';
 import { BannerService } from '../services/bannerService';
 import { ContentService } from '../services/contentService';
-import { formatApiResponse } from '../common/format';
-import { createJWT, verifyJWT } from '../common/jwt';
-import { getCookie, setCookie, removeCookie } from '../common/cookies';
-import { getAccessedEmployee } from '../common/verify';
-import { AppError, ValidationError, AuthError, PermissionError, NotFoundError, ServerError } from '../common/error';
+import { formatApiResponse } from '../common/utils/format';
+import { createJWT, verifyJWT } from '../common/library/jwt';
+import { getCookie, setCookie, removeCookie } from '../common/utils/cookie';
+import { getAccessedEmployee } from '../common/utils/verify';
+import {
+  AppError,
+  ValidationError,
+  AuthError,
+  PermissionError,
+  NotFoundError,
+  ServerError,
+} from '../common/utils/error';
 
 export class ApiController {
   // 배너 등록

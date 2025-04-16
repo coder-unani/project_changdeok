@@ -7,7 +7,7 @@ import { AuthMiddleware } from '../middlewares/backend/auth';
 import { PermissionMiddleware } from '../middlewares/backend/permission';
 import { ErrorMiddleware } from '../middlewares/backend/error';
 import { BackendController } from '../controllers/backendController';
-import { ExpressLogger } from '../common/log';
+import { ExpressLogger } from '../common/utils/log';
 
 const router: Router = Router();
 

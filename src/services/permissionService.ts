@@ -5,7 +5,7 @@ import { IRequestDefaultList } from '../types/request';
 import { IServiceResponse } from 'types/response';
 import { IEmployee, IPermission } from '../types/object';
 import { IPermissionService } from '../types/service';
-import { AppError, ValidationError, NotFoundError } from '../common/error';
+import { AppError, ValidationError, NotFoundError } from '../common/utils/error';
 
 export class PermissionService implements IPermissionService {
   private prisma: PrismaClient;
