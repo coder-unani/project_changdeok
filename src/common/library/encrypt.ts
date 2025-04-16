@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import CryptoJS from 'crypto-js';
 
-import { CONFIG } from '../config/config';
+import { CONFIG } from '../../config/config';
 
 /**
  * 비밀번호를 해싱하는 함수
@@ -13,7 +13,7 @@ export const hashPassword = async (password: string): Promise<string> => {
   const salt = await bcrypt.genSalt(saltRound);
   const hashedPassword = await bcrypt.hash(password, salt);
   return hashedPassword;
-}
+};
 
 /**
  * 비밀번호를 검증하는 함수
@@ -21,10 +21,7 @@ export const hashPassword = async (password: string): Promise<string> => {
  * @param hashedPassword - 데이터베이스에 저장된 해싱된 비밀번호
  * @returns Promise<boolean> - 비밀번호가 일치하면 true, 그렇지 않으면 false
  */
-export const verifyPassword = async (
-  plainPassword: string,
-  hashedPassword: string
-): Promise<boolean> => {
+export const verifyPassword = async (plainPassword: string, hashedPassword: string): Promise<boolean> => {
   const isMatch = await bcrypt.compare(plainPassword, hashedPassword);
   return isMatch;
 };

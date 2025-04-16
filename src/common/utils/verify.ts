@@ -1,6 +1,6 @@
 import { Request } from 'express';
 
-import { IEmployeeToken } from '../types/object';
+import { IEmployeeToken } from '../../types/object';
 import { getCookie } from './cookie';
 
 /**

@@ -1,5 +1,5 @@
-import type { typeValidatedResult } from '../types/validate';
-import { REG_DATE_PATTERN, REG_EMAIL_PATTERN, REG_PASSWORD_PATTERN, REG_PHONE_PATTERN } from '../config/config';
+import type { typeValidatedResult } from '../../types/validate';
+import { REG_DATE_PATTERN, REG_EMAIL_PATTERN, REG_PASSWORD_PATTERN, REG_PHONE_PATTERN } from '../../config/config';
 
 // Email 형식 체크 함수
 export const validateEmail = (email: string): typeValidatedResult => {
