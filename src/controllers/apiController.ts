@@ -501,7 +501,11 @@ export class ApiController {
     }
   }
 
-  // 컨텐츠 삭제
+  /**
+   * 컨텐츠 삭제
+   * @param req Request
+   * @param res Response
+   */
   public async contentDelete(req: Request, res: Response): Promise<void> {
     const { permissions } = apiRoutes.contents.delete;
 
@@ -537,6 +541,42 @@ export class ApiController {
       } else {
         res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
       }
+    }
+  }
+
+  /**
+   * 컨텐츠 이미지 업로드
+   * @param req Request
+   * @param res Response
+   */
+  public contentImageUpload(req: Request, res: Response): void {
+    try {
+      // 파일이 없는 경우
+      if (!req.files || (Array.isArray(req.files) && req.files.length === 0)) {
+        res.status(400).json({ message: '업로드할 파일이 없습니다.' });
+        return;
+      }
+
+      // 파일 정보
+      const files = Array.isArray(req.files) ? req.files : [req.files];
+      const file = files[0];
+
+      if (!file || !file.path || typeof file.path !== 'string') {
+        res.status(400).json({ message: '업로드할 파일이 없습니다.' });
+        return;
+      }
+
+      // 파일 경로
+      const filePath = file.path.replace('public', '');
+
+      // 응답
+      res.status(200).json({
+        url: filePath,
+        message: '이미지 업로드 성공',
+      });
+    } catch (error) {
+      console.error('컨텐츠 이미지 업로드 오류:', error);
+      res.status(500).json({ message: '이미지 업로드 중 오류가 발생했습니다.' });
     }
   }
 

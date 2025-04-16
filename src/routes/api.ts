@@ -20,9 +20,17 @@ router.use((req, res, next) => authMiddleware.handle(req, res, next));
 
 // 이미지 업로드 미들웨어
 const bannerUploadMiddleware = new MediaUploadMiddleware({
-  uploadPath: 'public/uploads/images/',
+  uploadPath: 'public/uploads/banners/',
   filter: 'image',
   fieldName: 'image',
+});
+
+// 컨텐츠 이미지 업로드 미들웨어
+const contentImageUploadMiddleware = new MediaUploadMiddleware({
+  uploadPath: 'public/uploads/contents/',
+  filter: 'image',
+  fieldName: 'image',
+  useDateFolder: true,
 });
 
 // 컨트롤러
@@ -95,6 +103,15 @@ router.put(apiRoutes.contents.update.url, (req: Request, res: Response) => {
 router.delete(apiRoutes.contents.delete.url, (req: Request, res: Response) => {
   apiController.contentDelete(req, res);
 });
+
+// 컨텐츠 이미지 업로드
+router.post(
+  '/api/contents/:groupId/upload-image',
+  (req: Request, res: Response, next: NextFunction) => contentImageUploadMiddleware.handle(req, res, next),
+  (req: Request, res: Response) => {
+    apiController.contentImageUpload(req, res);
+  }
+);
 
 // 직원 등록
 router.post(apiRoutes.employees.regist.url, (req: Request, res: Response) => {

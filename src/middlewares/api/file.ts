@@ -13,6 +13,7 @@ interface IMediaUploadMiddlewareOptions {
   maxFileCount?: number;
   maxFileSize?: number;
   convertExtension?: string;
+  useDateFolder?: boolean;
 }
 
 export class MediaUploadMiddleware implements IMiddleware {
@@ -21,19 +22,40 @@ export class MediaUploadMiddleware implements IMiddleware {
   private fieldName: string;
   private maxFileCount: number;
   private maxFileSize: number;
+  private useDateFolder: boolean;
 
   constructor(options: IMediaUploadMiddlewareOptions) {
-    this.uploadPath = (options.uploadPath) ? options.uploadPath : 'public/uploads/';
-    this.filter = (options.filter) ? options.filter : 'image';
-    this.fieldName = (options.fieldName) ? options.fieldName : 'file';
-    this.maxFileCount = (options.maxFileCount) ? options.maxFileCount : 1;
-    this.maxFileSize = (options.maxFileSize) ? options.maxFileSize : 20 * 1024 * 1024; // 20MB
+    this.uploadPath = options.uploadPath ? options.uploadPath : 'public/uploads/';
+    this.filter = options.filter ? options.filter : 'image';
+    this.fieldName = options.fieldName ? options.fieldName : 'file';
+    this.maxFileCount = options.maxFileCount ? options.maxFileCount : 1;
+    this.maxFileSize = options.maxFileSize ? options.maxFileSize : 20 * 1024 * 1024; // 20MB
+    this.useDateFolder = options.useDateFolder !== undefined ? options.useDateFolder : false;
   }
 
   handle(req: Request, res: Response, next: NextFunction): void {
+    // 날짜 폴더 생성 함수
+    const createDateFolder = (basePath: string): string => {
+      const now = new Date();
+      const year = now.getFullYear().toString();
+      const month = (now.getMonth() + 1).toString().padStart(2, '0');
 
-    // 파일 업로드 경로 없을 경우 생성
-    if (!fs.existsSync(this.uploadPath)) {
+      // 전체 경로 생성
+      const fullPath = path.join(basePath, year, month);
+
+      // 폴더가 없으면 생성
+      if (!fs.existsSync(fullPath)) {
+        fs.mkdirSync(fullPath, { recursive: true });
+      }
+
+      return fullPath;
+    };
+
+    // 파일 업로드 경로 설정
+    let uploadPath = this.uploadPath;
+    if (this.useDateFolder) {
+      uploadPath = createDateFolder(this.uploadPath);
+    } else if (!fs.existsSync(this.uploadPath)) {
       fs.mkdirSync(this.uploadPath, { recursive: true });
     }
 
@@ -41,11 +63,11 @@ export class MediaUploadMiddleware implements IMiddleware {
     const storage: StorageEngine = multer.diskStorage({
       // 업로드 파일 디렉토리 설정
       destination: (req, file, cb) => {
-        cb(null, this.uploadPath);
+        cb(null, uploadPath);
       },
       // 업로드 파일명 설정
       filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
         cb(null, uniqueSuffix + path.extname(file.originalname));
       },
     });
@@ -55,10 +77,10 @@ export class MediaUploadMiddleware implements IMiddleware {
       // 이미지 파일 허용
       if (this.filter === 'image' && file.mimetype.startsWith('image/')) {
         cb(null, true);
-      // 비디오 파일 허용
+        // 비디오 파일 허용
       } else if (this.filter === 'video' && file.mimetype.startsWith('video/')) {
         cb(null, true);
-      // 그외 허용되지 않는 파일 형식
+        // 그외 허용되지 않는 파일 형식
       } else {
         cb(new Error(`${this.filter} 파일만 업로드 가능합니다.`) as unknown as null, false);
       }
