@@ -26,15 +26,12 @@
       <label for="content" class="mb-2 block flex-none text-[13px] font-medium text-gray-400"
         >내용<span class="pl-0.5 text-red-500">*</span></label
       >
-      <textarea
+      <div
         id="content"
-        name="content"
         class="min-h-[160px] w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        placeholder="내용을 입력해주세요."
-        required
       >
-<%=data.content%></textarea
-      >
+        <%-data.content%>
+      </div>
     </div>
   </div>
   <div class="text-right">
@@ -42,7 +39,46 @@
   </div>
 </form>
 
+<!-- CKEditor 5 -->
+<script src="/js/ckeditor5/ckeditor.js"></script>
+
 <script>
+  let editor;
+
+  // CKEditor 초기화
+  ClassicEditor.create(document.querySelector('#content'), {
+    toolbar: [
+      'heading',
+      '|',
+      'bold',
+      'italic',
+      'link',
+      '|',
+      'fontSize',
+      'fontFamily',
+      'fontColor',
+      'fontBackgroundColor',
+      '|',
+      'bulletedList',
+      'numberedList',
+      '|',
+      'outdent',
+      'indent',
+      '|',
+      'blockQuote',
+      'insertTable',
+      'undo',
+      'redo',
+    ],
+    language: 'ko',
+  })
+    .then((newEditor) => {
+      editor = newEditor;
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+
   document.getElementById('formContentUpdate').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -50,15 +86,19 @@
       // 폼 데이터 수집
       const formData = new FormData(e.target);
 
+      // CKEditor 내용 가져오기
+      const content = editor.getData();
+
       // 폼 데이터 변환
       const data = {};
       formData.forEach((value, key) => {
         data[key] = value;
       });
+      data.content = content;
 
       // 컨텐츠 등록 API 호출
       const apiUrl = '<%=apiRoutes.contents.update.url%>'
-        .replace(':groupId', '<%=metadata.groupId%>')
+        .replace(':groupId', '<%=metadata.group.id%>')
         .replace(':contentId', '<%=data.id%>');
       const response = await fetch(apiUrl, {
         method: '<%=apiRoutes.contents.update.method%>',
@@ -77,7 +117,7 @@
       // 응답 성공
       alert('<%=apiRoutes.contents.update.title%> 성공');
       window.location.href = '<%=routes.contents.detail.url%>'
-        .replace(':groupId', '<%=metadata.groupId%>')
+        .replace(':groupId', '<%=metadata.group.id%>')
         .replace(':contentId', '<%=data.id%>');
     } catch (error) {
       alert(error.message || '서버 오류가 발생했습니다.');
