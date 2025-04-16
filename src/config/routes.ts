@@ -48,6 +48,7 @@ export const apiRoutes = {
     detail: createApiRoute('GET', '게시글 상세', '/contents/:groupId/:contentId', [1, 4]),
     update: createApiRoute('PUT', '게시글 수정', '/contents/:groupId/:contentId', [1, 4]),
     delete: createApiRoute('DELETE', '게시글 삭제', '/contents/:groupId/:contentId', [1, 4]),
+    group: createApiRoute('GET', '게시판 그룹 정보', '/contents/groups/:groupId', [1, 4]),
   },
   employees: {
     list: createApiRoute('GET', '관리자 목록', '/employees', [1, 2]),

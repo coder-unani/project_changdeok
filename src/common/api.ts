@@ -1,6 +1,6 @@
 import { CONFIG } from '../config/config';
 import { IApiResponse } from '../types/response';
-import { IBannerGroup, IBanner, IContent, IEmployee, IPermission } from '../types/object';
+import { IBannerGroup, IBanner, IContent, IContentGroup, IEmployee, IPermission } from '../types/object';
 import { apiRoutes } from '../config/routes';
 import { IRequestBanners, IRequestContents } from '../types/request';
 
@@ -194,6 +194,43 @@ export const getApiContentDetail = async (groupId: number, contentId: number): P
         .replace(':contentId', contentId.toString()),
       {
         method: `${apiRoutes.contents.detail.method}`,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    // JSON 파싱
+    const responseToJson = await apiResponse.json();
+
+    // 응답 오류
+    if (!apiResponse.ok) {
+      throw new Error(responseToJson.message || apiResponse.statusText);
+    }
+
+    // API 조회 실패
+    if (!responseToJson.result) {
+      throw new Error(responseToJson.message);
+    }
+
+    // 응답 성공
+    return {
+      result: responseToJson.result,
+      metadata: responseToJson.metadata,
+      data: responseToJson.data,
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getApiContentGroup = async (groupId: number): Promise<IApiResponse<IContentGroup>> => {
+  try {
+    // API 호출
+    const apiResponse = await fetch(
+      `${API_BASE_URL}${apiRoutes.contents.group.url}`.replace(':groupId', groupId.toString()),
+      {
+        method: `${apiRoutes.contents.group.method}`,
         headers: {
           'Content-Type': 'application/json',
         },

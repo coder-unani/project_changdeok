@@ -119,11 +119,15 @@ export class ContentService implements IContentService {
       return {
         result: true,
         metadata: {
-          groupId: groupInfo.id,
-          groupKind: groupInfo.kind,
-          groupTitle: groupInfo.title,
-          groupDescription: groupInfo.description ?? null,
-          groupBannerTopUrl: groupInfo.bannerTopUrl ?? null,
+          group: {
+            id: groupInfo.id,
+            kind: groupInfo.kind,
+            title: groupInfo.title,
+            description: groupInfo.description ?? null,
+            banners: {
+              top: groupInfo.bannerTopUrl ?? null,
+            },
+          },
         },
         data: content,
       };
@@ -338,11 +342,15 @@ export class ContentService implements IContentService {
 
       // 메타데이터 생성
       const metadata = {
-        groupId: groupInfo.id,
-        kind: groupInfo.kind,
-        title: groupInfo.title,
-        description: groupInfo.description ?? null,
-        bannerTopUrl: groupInfo.bannerTopUrl ?? null,
+        group: {
+          id: groupInfo.id,
+          kind: groupInfo.kind,
+          title: groupInfo.title,
+          description: groupInfo.description ?? null,
+          banners: {
+            top: groupInfo.bannerTopUrl ?? null,
+          },
+        },
         total: totalContents,
         page: data.page,
         pageSize: data.pageSize,
@@ -368,10 +376,52 @@ export class ContentService implements IContentService {
   }
 
   public async groupInfo(groupId: number): Promise<IServiceResponse<IContentGroup>> {
-    console.log('groupInfo content');
+    try {
+      // 컨텐츠 그룹 정보 조회
+      const prismaResult = await this.prisma.contentGroup.findUnique({
+        where: {
+          id: groupId,
+          isDeleted: false,
+          isActivated: true,
+        },
+      });
 
-    return {
-      result: true,
-    };
+      // 컨텐츠 그룹이 없는 경우
+      if (!prismaResult) {
+        throw new NotFoundError('컨텐츠 그룹이 존재하지 않습니다.');
+      }
+
+      const groupInfo: IContentGroup = {
+        id: prismaResult.id,
+        kind: prismaResult.kind,
+        title: prismaResult.title,
+        description: prismaResult.description ?? null,
+        sizePerPage: prismaResult.sizePerPage,
+        isUserWrite: prismaResult.isUserWrite,
+        isUserRead: prismaResult.isUserRead,
+        isUserDisplay: prismaResult.isUserDisplay,
+        isNonUserWrite: prismaResult.isNonUserWrite,
+        isNonUserRead: prismaResult.isNonUserRead,
+        isNonUserDisplay: prismaResult.isNonUserDisplay,
+        isAnonymous: prismaResult.isAnonymous,
+        isLike: prismaResult.isLike,
+        isShare: prismaResult.isShare,
+        isComment: prismaResult.isComment,
+        isActivated: prismaResult.isActivated,
+      };
+
+      // 성공
+      return { result: true, metadata: { group: { id: groupId } }, data: groupInfo };
+    } catch (error) {
+      if (error instanceof AppError) {
+        return { result: false, code: error.statusCode, message: error.message };
+      } else {
+        return {
+          result: false,
+          code: httpStatus.INTERNAL_SERVER_ERROR,
+          message: '서버 오류가 발생했습니다.',
+        };
+      }
+    }
   }
 }

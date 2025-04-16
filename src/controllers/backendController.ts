@@ -5,6 +5,7 @@ import {
   getApiBannerGroup,
   getApiBanners,
   getApiContentDetail,
+  getApiContentGroup,
   getApiContents,
   getApiEmployeeDetail,
   getApiPermissionList,
@@ -353,13 +354,15 @@ export class BackendController {
 
       const { metadata, data: contents } = await getApiContents(accessToken, groupId, params);
 
-      console.log(metadata);
-      console.log(contents);
+      // 게시판 그룹 정보
+      const { data: group } = await getApiContentGroup(groupId);
+
+      const groupTitle = group?.title ?? '게시판';
 
       // 페이지 데이터 생성
       const data = {
         layout: route.layout,
-        title: `${metadata.title} 목록`,
+        title: `${groupTitle} 목록`,
         metadata,
         data: contents,
       };
@@ -390,15 +393,17 @@ export class BackendController {
         throw new Error('게시판 아이디가 형식에 맞지 않습니다.');
       }
 
-      // 페이지 타이틀
-      const groupTitle = groupId === 1 ? '공지사항' : '문의';
+      // 게시판 그룹 정보
+      const { data: group } = await getApiContentGroup(groupId);
+
+      const groupTitle = group?.title ?? '게시판';
 
       // 페이지 데이터 생성
       const data = {
         layout: route.layout,
         title: `${groupTitle} 작성`,
         metadata: {
-          groupInfo: {
+          group: {
             id: groupId,
           },
         },
@@ -433,13 +438,12 @@ export class BackendController {
       }
 
       // API 호출
-      const { metadata, data: content } = await getApiContentDetail(
-        parseInt(req.params.groupId),
-        parseInt(req.params.contentId)
-      );
+      const { metadata, data: content } = await getApiContentDetail(groupId, contentId);
 
-      // 페이지 타이틀
-      const groupTitle = groupId === 1 ? '공지사항' : '문의';
+      // 게시판 그룹 정보
+      const { data: group } = await getApiContentGroup(groupId);
+
+      const groupTitle = group?.title ?? '게시판';
 
       // 페이지 데이터 생성
       const data = {
@@ -477,13 +481,12 @@ export class BackendController {
       }
 
       // API 호출
-      const { metadata, data: content } = await getApiContentDetail(
-        parseInt(req.params.groupId),
-        parseInt(req.params.contentId)
-      );
+      const { metadata, data: content } = await getApiContentDetail(groupId, contentId);
 
-      // 페이지 타이틀
-      const groupTitle = groupId === 1 ? '공지사항' : '문의';
+      // 게시판 그룹 정보
+      const { data: group } = await getApiContentGroup(groupId);
+
+      const groupTitle = group?.title ?? '게시판';
 
       // 페이지 데이터 생성
       const data = {

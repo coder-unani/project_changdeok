@@ -71,6 +71,11 @@ router.get(apiRoutes.contents.list.url, (req: Request, res: Response) => {
   apiController.contents(req, res);
 });
 
+// 컨텐츠 그룹 정보
+router.get(apiRoutes.contents.group.url, (req: Request, res: Response) => {
+  apiController.contentGroupInfo(req, res);
+});
+
 // 컨텐츠 등록
 router.post(apiRoutes.contents.write.url, (req: Request, res: Response) => {
   apiController.contentWrite(req, res);
