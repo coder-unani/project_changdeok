@@ -8,7 +8,7 @@ export class PermissionMiddleware implements IMiddleware {
 
   public handle(req: Request, res: Response, next: NextFunction): void {
     // 권한 확인
-    console.log('path = ', req.path);
+    // console.log('path = ', req.path);
 
     // 다음 미들웨어로 이동
     next();
