@@ -1,5 +1,5 @@
-import { Prisma, PrismaClient } from '@prisma/client'
-import { withAccelerate } from '@prisma/extension-accelerate'
+import { Prisma, PrismaClient } from '@prisma/client';
+import { withAccelerate } from '@prisma/extension-accelerate';
 
 /**
  * prisma-accelerate는 Prisma Client의 확장 프로젝트로, Prisma Client의 성능을 최적화하는 기능을 제공한다.
@@ -8,7 +8,7 @@ import { withAccelerate } from '@prisma/extension-accelerate'
  */
 
 // Prisma Client의 확장된 타입을 정의
-type ExtendedPrismaClient = ReturnType<typeof PrismaClient['prototype']['$extends']> & PrismaClient;
+type ExtendedPrismaClient = ReturnType<(typeof PrismaClient)['prototype']['$extends']> & PrismaClient;
 
 // Prisma 인스턴스 생성하는 클래스
 class PrismaClientSingleton {
@@ -22,14 +22,12 @@ class PrismaClientSingleton {
 
     // 개발 환경 설정
     if (process.env.NODE_ENV !== 'production') {
-      prismaOptions = {
-        log: [
-          { emit: 'stdout', level: 'query' },
-          { emit: 'stdout', level: 'error' },
-          { emit: 'stdout', level: 'info' },
-          { emit: 'stdout', level: 'warn' },
-        ],
-      };
+      prismaOptions.log = [
+        { emit: 'stdout', level: 'query' },
+        { emit: 'stdout', level: 'error' },
+        { emit: 'stdout', level: 'info' },
+        { emit: 'stdout', level: 'warn' },
+      ];
     }
 
     // Prisma Client 인스턴스 생성
