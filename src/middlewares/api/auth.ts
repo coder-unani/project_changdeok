@@ -39,7 +39,6 @@ export class AuthMiddleware implements IMiddleware {
     }
 
     req.body.accessToken = token;
-    console.log('req.body.accessToken:', req.body.accessToken);
 
     // JWT 검증
     // const decodedToken: IEmployeeToken = verifyJWT(token);
