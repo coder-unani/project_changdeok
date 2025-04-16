@@ -6,7 +6,8 @@ import cookieParser from 'cookie-parser';
 import express, { Application } from 'express';
 import expressLayouts from 'express-ejs-layouts';
 import path from 'path';
-
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 import { ExpressLogger } from './common/utils/log';
 import { ALLOWED_TAGS, CONFIG } from './config/config';
 import { companyInfo } from './config/info';
@@ -33,6 +34,18 @@ const app: Application = express();
 
 // 프록시 설정 (Nginx 등에서 Reverse Proxy를 사용하는 경우)
 app.set('trust proxy', true);
+
+// 보안 설정
+app.use(helmet());
+
+// 요청 제한 설정 (15분에 100개의 요청)
+// 참고) https://www.npmjs.com/package/express-rate-limit
+app.use(
+  rateLimit({
+    windowMs: 15 * 60 * 1000, // 15분
+    limit: 100, // 15분에 100개의 요청
+  })
+);
 
 // 쿠키 파서 설정
 app.use(cookieParser());
