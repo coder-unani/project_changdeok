@@ -253,61 +253,40 @@ export const backendRoutes = {
 
 export const frontendRoutesPrefix = '';
 export const frontendRoutesLayout = 'layouts/frontend/layout';
-export const frontendRoutes: { [key: string]: IRoute } = {
-  index: {
-    method: 'GET',
-    title: '홈',
-    url: `${frontendRoutesPrefix}/`,
-    view: 'frontend/index',
-    layout: frontendRoutesLayout,
-    permissions: [],
-  },
-  about: {
-    method: 'GET',
-    title: '법무법인 소개',
-    url: `${frontendRoutesPrefix}/about`,
-    view: 'frontend/about',
-    layout: frontendRoutesLayout,
-    permissions: [],
-  },
-  services: {
-    method: 'GET',
-    title: '업무분야',
-    url: `${frontendRoutesPrefix}/services`,
-    view: 'frontend/services',
-    layout: frontendRoutesLayout,
-    permissions: [],
-  },
-  results: {
-    method: 'GET',
-    title: '성공사례',
-    url: `${frontendRoutesPrefix}/results`,
-    view: 'frontend/results',
-    layout: frontendRoutesLayout,
-    permissions: [],
-  },
-  qna: {
-    method: 'GET',
-    title: 'Q&A',
-    url: `${frontendRoutesPrefix}/qna`,
-    view: 'frontend/qna',
-    layout: frontendRoutesLayout,
-    permissions: [],
-  },
-  contact: {
-    method: 'GET',
-    title: '상담 및 의뢰',
-    url: `${frontendRoutesPrefix}/contact`,
-    view: 'frontend/contact',
-    layout: frontendRoutesLayout,
-    permissions: [],
-  },
-  error: {
-    method: 'GET',
-    title: 'ERROR',
-    url: `${frontendRoutesPrefix}/error`,
-    view: 'frontend/error',
-    layout: frontendRoutesLayout,
-    permissions: [],
-  },
+export const frontendRoutes = {
+  index: createRoute('GET', '홈', `${frontendRoutesPrefix}/`, 'frontend/index', frontendRoutesLayout, []),
+  about: createRoute(
+    'GET',
+    '법무법인 소개',
+    `${frontendRoutesPrefix}/about`,
+    'frontend/about',
+    frontendRoutesLayout,
+    []
+  ),
+  services: createRoute(
+    'GET',
+    '업무분야',
+    `${frontendRoutesPrefix}/services`,
+    'frontend/services',
+    frontendRoutesLayout,
+    []
+  ),
+  results: createRoute(
+    'GET',
+    '성공사례',
+    `${frontendRoutesPrefix}/results`,
+    'frontend/results',
+    frontendRoutesLayout,
+    []
+  ),
+  qna: createRoute('GET', 'Q&A', `${frontendRoutesPrefix}/qna`, 'frontend/qna', frontendRoutesLayout, []),
+  contact: createRoute(
+    'GET',
+    '상담 및 의뢰',
+    `${frontendRoutesPrefix}/contact`,
+    'frontend/contact',
+    frontendRoutesLayout,
+    []
+  ),
+  error: createRoute('GET', 'ERROR', `${frontendRoutesPrefix}/error`, 'frontend/error', frontendRoutesLayout, []),
 };
