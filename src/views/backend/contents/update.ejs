@@ -28,7 +28,7 @@
       >
       <div
         id="content"
-        class="min-h-[160px] w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        class="min-h-[160px] w-full bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
       >
         <%-data.content%>
       </div>
@@ -43,7 +43,7 @@
 <link href="/js/quill/quill.snow.css" rel="stylesheet" />
 <script src="/js/quill/quill.js"></script>
 
-<script>
+<script nonce="<%=nonce%>">
   // Quill 에디터 초기화
   const quill = new Quill('#content', {
     theme: 'snow',
