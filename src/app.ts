@@ -15,6 +15,7 @@ import { LoggerMiddleware } from './middlewares/logger';
 import { SanitizeMiddleware } from './middlewares/sanitizer';
 import { apiRouter, frontendRouter, backendRouter } from './routes';
 import { IMiddleware } from './types/middleware';
+import { nonceMiddleware } from './middlewares/nonce';
 
 /**
  * 필요한 환경 변수 설정
@@ -36,16 +37,59 @@ const app: Application = express();
 app.set('trust proxy', true);
 
 // 보안 설정
-app.use(helmet());
+app.use(
+  helmet({
+    // Content Security Policy: 웹사이트에서 로드할 수 있는 리소스(스크립트, 스타일, 이미지 등)를 제한
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"], // 기본적으로 같은 출처의 리소스만 허용
+        scriptSrc: ["'self'"], // 스크립트는 같은 출처에서만 로드 가능
+        styleSrc: ["'self'"], // 스타일시트는 같은 출처에서만 로드 가능
+        // 필요시 추가
+      },
+    },
+    // Cross-Origin Embedder Policy: 외부 리소스 임베딩 정책 설정
+    crossOriginEmbedderPolicy: { policy: 'require-corp' },
+    // Cross-Origin Opener Policy: 팝업 창과의 상호작용 정책 설정
+    crossOriginOpenerPolicy: { policy: 'same-origin' },
+    // Cross-Origin Resource Policy: 리소스 접근 정책 설정
+    crossOriginResourcePolicy: { policy: 'same-origin' },
+    // Referrer Policy: 리퍼러(referrer) 정보 전송 정책 설정
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+    // HTTP Strict Transport Security: HTTPS 사용 강제
+    hsts: {
+      maxAge: 63072000, // 2년 동안 HTTPS 사용 강제
+      includeSubDomains: true, // 서브도메인에도 적용
+      preload: true, // HSTS 프리로드 목록에 포함
+    },
+    // X-Content-Type-Options: MIME 타입 스니핑 방지
+    xContentTypeOptions: true,
+    // DNS Prefetch Control: DNS 프리페치 기능 제어
+    dnsPrefetchControl: { allow: false },
+    // X-Download-Options: IE에서 다운로드한 파일의 실행 방지
+    xDownloadOptions: true,
+    // Frame Guard: 클릭재킹 공격 방지
+    frameguard: { action: 'deny' },
+    // Cross-Domain Policy: Adobe Flash/PDF 관련 보안 설정
+    permittedCrossDomainPolicies: { permittedPolicies: 'none' },
+    // X-XSS-Protection: XSS 공격 방지를 위한 브라우저 내장 기능 (현대에는 비활성화 권장)
+    xXssProtection: false,
+    // X-Powered-By: 서버 기술 정보 숨김
+    xPoweredBy: false,
+  })
+);
+
+// Nonce 미들웨어 적용 (helmet 설정 이후에 추가)
+app.use(nonceMiddleware);
 
 // 요청 제한 설정 (15분에 1000개의 요청)
 // 참고) https://www.npmjs.com/package/express-rate-limit
-app.use(
-  rateLimit({
-    windowMs: 15 * 60 * 1000, // 15분
-    limit: 1000, // 15분에 100개의 요청
-  })
-);
+// app.use(
+//   rateLimit({
+//     windowMs: 15 * 60 * 1000, // 15분
+//     limit: 1000, // 15분에 100개의 요청
+//   })
+// );
 
 // 쿠키 파서 설정
 app.use(cookieParser());
