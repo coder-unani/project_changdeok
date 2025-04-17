@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import multer, { StorageEngine } from 'multer';
 import path from 'path';
 import fs from 'fs';
+import sharp from 'sharp';
 
 import { IMiddleware } from '../../types/middleware';
 
@@ -14,6 +15,8 @@ interface IMediaUploadMiddlewareOptions {
   maxFileSize?: number;
   convertExtension?: string;
   useDateFolder?: boolean;
+  convertToWebP?: boolean;
+  webpQuality?: number;
 }
 
 export class MediaUploadMiddleware implements IMiddleware {
@@ -23,6 +26,8 @@ export class MediaUploadMiddleware implements IMiddleware {
   private maxFileCount: number;
   private maxFileSize: number;
   private useDateFolder: boolean;
+  private convertToWebP: boolean;
+  private webpQuality: number;
 
   constructor(options: IMediaUploadMiddlewareOptions) {
     this.uploadPath = options.uploadPath ? options.uploadPath : 'public/uploads/';
@@ -31,6 +36,8 @@ export class MediaUploadMiddleware implements IMiddleware {
     this.maxFileCount = options.maxFileCount ? options.maxFileCount : 1;
     this.maxFileSize = options.maxFileSize ? options.maxFileSize : 20 * 1024 * 1024; // 20MB
     this.useDateFolder = options.useDateFolder !== undefined ? options.useDateFolder : false;
+    this.convertToWebP = options.convertToWebP !== undefined ? options.convertToWebP : false;
+    this.webpQuality = options.webpQuality ? options.webpQuality : 80;
   }
 
   handle(req: Request, res: Response, next: NextFunction): void {
@@ -102,12 +109,37 @@ export class MediaUploadMiddleware implements IMiddleware {
     }).array(this.fieldName, this.maxFileCount);
 
     // 파일 업로드 실행
-    upload(req, res, (err) => {
+    upload(req, res, async (err) => {
       if (err) {
         if (err instanceof multer.MulterError) {
           return res.status(400).json({ message: err.message });
         }
         return res.status(400).json({ message: err.message || '파일 업로드 중 오류가 발생했습니다.' });
+      }
+
+      // WebP 변환이 활성화되어 있고, 파일이 존재하는 경우
+      if (this.convertToWebP && req.files && Array.isArray(req.files)) {
+        try {
+          for (const file of req.files) {
+            if (file.mimetype.startsWith('image/')) {
+              const originalPath = file.path;
+              const webpPath = path.join(path.dirname(originalPath), `${path.parse(originalPath).name}.webp`);
+
+              // WebP로 변환
+              await sharp(originalPath).webp({ quality: this.webpQuality }).toFile(webpPath);
+
+              // 원본 파일 삭제
+              fs.unlinkSync(originalPath);
+
+              // 파일 정보 업데이트
+              file.path = webpPath;
+              file.filename = path.basename(webpPath);
+              file.mimetype = 'image/webp';
+            }
+          }
+        } catch (error) {
+          return res.status(500).json({ message: '이미지 변환 중 오류가 발생했습니다.' });
+        }
       }
 
       // 다음 미들웨어로 이동
