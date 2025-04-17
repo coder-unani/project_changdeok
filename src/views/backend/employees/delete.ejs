@@ -23,31 +23,39 @@
 </div>
 
 <script nonce="<%=nonce%>">
-  const btnDelete = document.getElementById('btn-delete');
-  btnDelete.addEventListener('click', async (e) => {
-    e.preventDefault();
+  document.addEventListener('DOMContentLoaded', () => {
+    const btnDelete = document.getElementById('btn-delete');
+    btnDelete.addEventListener('click', async (e) => {
+      e.preventDefault();
 
-    try {
-      // 직원 삭제 API 호출
-      const apiUrl = '<%=apiRoutes.employees.delete.url%>'.replace(':employeeId', '<%=data.id%>');
-      const response = await fetch(apiUrl, {
-        method: '<%=apiRoutes.employees.delete.method%>',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      try {
+        // 직원 삭제 API 호출
+        const apiUrl = '<%=apiRoutes.employees.delete.url%>'.replace(':employeeId', '<%=data.id%>');
+        const response = await fetch(apiUrl, {
+          method: '<%=apiRoutes.employees.delete.method%>',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
-      // 응답 오류
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || response.statusText);
+        // 응답 오류
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || response.statusText);
+        }
+
+        // 응답 성공
+        alert('<%=apiRoutes.employees.delete.title%> 성공');
+        window.location.href = '<%=routes.employees.url%>';
+      } catch (err) {
+        alert(error.message || '서버 오류가 발생했습니다.');
       }
+    });
 
-      // 응답 성공
-      alert('<%=apiRoutes.employees.delete.title%> 성공');
-      window.location.href = '<%=routes.employees.url%>';
-    } catch (err) {
-      alert(error.message || '서버 오류가 발생했습니다.');
-    }
+    const btnCancel = document.getElementById('btn-cancel');
+    btnCancel.addEventListener('click', async (e) => {
+      e.preventDefault();
+      window.history.back();
+    });
   });
 </script>
