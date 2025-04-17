@@ -30,7 +30,9 @@ export class MediaUploadMiddleware implements IMiddleware {
   private webpQuality: number;
 
   constructor(options: IMediaUploadMiddlewareOptions) {
-    this.uploadPath = options.uploadPath ? options.uploadPath : 'public/uploads/';
+    // 'public/' 밑에 options.uploadPath 경로가 있으면 경로 생성
+    this.uploadPath = options.uploadPath ? `public/${options.uploadPath}/` : 'public/uploads/';
+
     this.filter = options.filter ? options.filter : 'image';
     this.fieldName = options.fieldName ? options.fieldName : 'file';
     this.maxFileCount = options.maxFileCount ? options.maxFileCount : 1;

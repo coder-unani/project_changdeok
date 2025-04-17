@@ -20,17 +20,22 @@ router.use((req, res, next) => authMiddleware.handle(req, res, next));
 
 // 이미지 업로드 미들웨어
 const bannerUploadMiddleware = new MediaUploadMiddleware({
-  uploadPath: 'public/uploads/banners/',
+  uploadPath: 'uploads/banners/',
   filter: 'image',
   fieldName: 'image',
+  useDateFolder: true,
+  convertToWebP: true,
+  webpQuality: 80,
 });
 
 // 컨텐츠 이미지 업로드 미들웨어
 const contentImageUploadMiddleware = new MediaUploadMiddleware({
-  uploadPath: 'public/uploads/contents/',
+  uploadPath: 'uploads/contents/',
   filter: 'image',
   fieldName: 'image',
   useDateFolder: true,
+  convertToWebP: true,
+  webpQuality: 80,
 });
 
 // 컨트롤러
