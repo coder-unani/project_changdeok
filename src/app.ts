@@ -84,12 +84,12 @@ app.use(nonceMiddleware);
 
 // 요청 제한 설정 (15분에 1000개의 요청)
 // 참고) https://www.npmjs.com/package/express-rate-limit
-// app.use(
-//   rateLimit({
-//     windowMs: 15 * 60 * 1000, // 15분
-//     limit: 1000, // 15분에 100개의 요청
-//   })
-// );
+app.use(
+  rateLimit({
+    windowMs: 15 * 60 * 1000, // 15분
+    limit: 1000, // 15분에 1000개의 요청
+  })
+);
 
 // 쿠키 파서 설정
 app.use(cookieParser());
