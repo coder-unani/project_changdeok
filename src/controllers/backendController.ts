@@ -117,19 +117,22 @@ export class BackendController {
 
       // 배너 그룹 정보 조회
       const apiGroupInfo = await getApiBannerGroup(accessToken, [groupId]);
-      const groupInfo = apiGroupInfo.data?.[0] || null;
+      const bannerGroupInfo = apiGroupInfo.data?.[0] || null;
 
       // 배너 그룹 정보 조회 실패
-      if (!apiGroupInfo.result || !groupInfo) {
+      if (!apiGroupInfo.result || !bannerGroupInfo) {
         throw new AppError(apiGroupInfo.code as number, apiGroupInfo.message as string);
       }
 
       // 페이지 데이터 생성
       const data = {
         layout: route.layout,
-        title: `${groupInfo.title} ${route.title}`,
+        title: `${bannerGroupInfo.title} ${route.title}`,
         metadata: {
-          groupInfo,
+          groupInfo: {
+            id: apiGroupInfo.metadata.group.ids?.[0],
+            title: bannerGroupInfo.title,
+          },
           seq,
         },
         data: {},
@@ -845,7 +848,6 @@ export class BackendController {
     try {
       // Cookie에서 직원 정보 추출
       const cookieEmployee = getCookie(req, 'employee');
-      console.log(cookieEmployee);
       if (!cookieEmployee) {
         throw new Error('로그인이 필요합니다.');
       }

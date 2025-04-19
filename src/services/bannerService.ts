@@ -568,11 +568,6 @@ export class BannerService {
           : undefined,
       });
 
-      // 요청한 모든 ID에 대한 배너 그룹이 존재하는지 확인
-      if (groupIds?.length > 0 && prismaBannerGroups.length !== groupIds.length) {
-        throw new NotFoundError('일부 배너 그룹 정보를 찾을 수 없습니다.');
-      }
-
       // 배너 그룹 정보 변환
       const bannerGroups: IBannerGroup[] = prismaBannerGroups.map((prismaGroup) => {
         const group: IBannerGroup = {
@@ -602,6 +597,8 @@ export class BannerService {
           totalBanners: bannerGroups.reduce((acc, group) => acc + (group.banners?.length || 0), 0),
         },
       };
+
+      console.log('metadata = ', metadata);
 
       return {
         result: true,

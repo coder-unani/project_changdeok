@@ -9,20 +9,23 @@ API_BASE_URL = CONFIG.SERVICE_PORT ? `${API_BASE_URL}:${CONFIG.SERVICE_PORT}` : 
 
 export const getApiBannerGroup = async (
   accessToken: string,
-  groupIds: number[]
+  groupIds: number[] = []
 ): Promise<IApiResponse<IBannerGroup[]>> => {
   try {
+    // 배열이 비어있으면 all로 변환
+    const groupIdsString = groupIds.length > 0 ? groupIds.join(',') : 'all';
+
+    // API URL 생성
+    const apiUrl = `${API_BASE_URL}${apiRoutes.banners.group.url}`.replace(':groupIds', groupIdsString);
+
     // API 호출
-    const apiResponse = await fetch(
-      `${API_BASE_URL}${apiRoutes.banners.group.url}`.replace(':groupIds', groupIds.join(',')),
-      {
-        method: `${apiRoutes.banners.group.method}`,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
+    const apiResponse = await fetch(apiUrl, {
+      method: `${apiRoutes.banners.group.method}`,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
 
     // JSON 파싱
     const responseToJson = await apiResponse.json();

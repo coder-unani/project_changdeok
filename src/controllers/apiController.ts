@@ -293,7 +293,10 @@ export class ApiController {
       this.verifyPermission(req, permissions);
 
       // 배너 그룹 ID
-      const groupIds = req.params.groupIds.split(',').map((id) => parseInt(id));
+      let groupIds: number[] = [];
+      if (req.params.groupIds != 'all') {
+        groupIds = req.params.groupIds.split(',').map((id) => parseInt(id));
+      }
 
       // 배너 그룹 정보 조회
       const bannerService: IBannerService = new BannerService(prisma);
