@@ -42,6 +42,7 @@ export interface IBannerGroup {
 
 export interface IBanner {
   id: number;
+  groupId: number;
   seq: number;
   title: string;
   description?: typeOptionalString;
