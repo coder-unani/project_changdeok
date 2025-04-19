@@ -21,8 +21,8 @@ export interface IRequestBannerUpdate {
   linkType?: string;
   linkUrl?: string;
   isPublished?: boolean;
-  publishedAt?: string;
-  unpublishedAt?: string;
+  publishedAt?: Date;
+  unpublishedAt?: Date;
   updatedBy: number;
 }
 
@@ -97,7 +97,6 @@ export interface IRequestContents extends IRequestDefaultList {
 export interface IRequestEmployees extends IRequestDefaultList {
   sort?: typeListSort;
 }
-
 
 export interface IRequestEmployeeForceUpdatePassword {
   passwordNew: string;
