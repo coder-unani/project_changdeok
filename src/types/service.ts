@@ -23,7 +23,7 @@ export interface IBannerService {
   update(id: number, data: IRequestBannerUpdate): Promise<IServiceResponse>;
   delete(id: number): Promise<IServiceResponse>;
   list(data: IRequestBanners): Promise<IServiceResponse<IBanner[] | []>>;
-  groupInfo(groupId: number): Promise<IServiceResponse<IBannerGroup>>;
+  groupInfo(groupIds: number[], includeBanners: boolean): Promise<IServiceResponse<IBannerGroup[]>>;
 }
 
 export interface IContentService {

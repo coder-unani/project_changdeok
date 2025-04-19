@@ -34,8 +34,9 @@ export interface IBannerGroup {
   kind: string;
   title: string;
   description?: typeOptionalString;
-  imageWidth?: number;
-  imageHeight?: number;
+  imageWidth?: number | null;
+  imageHeight?: number | null;
+  banners?: IBanner[];
   createdAt: string;
   updatedAt?: typeOptionalString;
 }

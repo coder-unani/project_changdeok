@@ -30,14 +30,7 @@ import { formatApiResponse } from '../common/utils/format';
 import { createJWT, verifyJWT } from '../common/library/jwt';
 import { getCookie, setCookie, removeCookie } from '../common/utils/cookie';
 import { getAccessedEmployee } from '../common/utils/verify';
-import {
-  AppError,
-  ValidationError,
-  AuthError,
-  PermissionError,
-  NotFoundError,
-  ServerError,
-} from '../common/utils/error';
+import { AppError, ValidationError, AuthError, PermissionError } from '../common/utils/error';
 
 export class ApiController {
   // 배너 등록
@@ -300,22 +293,21 @@ export class ApiController {
       this.verifyPermission(req, permissions);
 
       // 배너 그룹 ID
-      const groupId = parseInt(req.params.groupId);
-      if (isNaN(groupId)) {
-        throw new ValidationError('배너 그룹 ID가 잘못되었습니다.');
-      }
+      const groupIds = req.params.groupIds.split(',').map((id) => parseInt(id));
 
       // 배너 그룹 정보 조회
       const bannerService: IBannerService = new BannerService(prisma);
-      const result = await bannerService.groupInfo(groupId);
+      const result = await bannerService.groupInfo(groupIds, true);
 
       // 조회 실패
       if (!result.result) {
         throw new AppError(result.code, result.message);
       }
 
-      // 응답 성공
+      // 배너 그룹 정보 조회 성공
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
+
+      // 응답 성공
       res.status(httpStatus.OK).json(response);
     } catch (error) {
       if (error instanceof AppError) {

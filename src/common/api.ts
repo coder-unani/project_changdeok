@@ -7,11 +7,14 @@ import { IRequestBanners, IRequestContents } from '../types/request';
 let API_BASE_URL = CONFIG.SERVICE_URL;
 API_BASE_URL = CONFIG.SERVICE_PORT ? `${API_BASE_URL}:${CONFIG.SERVICE_PORT}` : API_BASE_URL;
 
-export const getApiBannerGroup = async (accessToken: string, groupId: number): Promise<IApiResponse<IBannerGroup>> => {
+export const getApiBannerGroup = async (
+  accessToken: string,
+  groupIds: number[]
+): Promise<IApiResponse<IBannerGroup[]>> => {
   try {
     // API 호출
     const apiResponse = await fetch(
-      `${API_BASE_URL}${apiRoutes.banners.group.url}`.replace(':groupId', groupId.toString()),
+      `${API_BASE_URL}${apiRoutes.banners.group.url}`.replace(':groupIds', groupIds.join(',')),
       {
         method: `${apiRoutes.banners.group.method}`,
         headers: {

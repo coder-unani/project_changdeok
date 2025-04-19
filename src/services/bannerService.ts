@@ -223,33 +223,17 @@ export class BannerService {
       }
 
       // 조회 결과를 IBanner 타입으로 변환
-      const banner: IBanner = {
-        id: prismaBanner.id,
-        groupId: prismaBanner.groupId,
-        seq: prismaBanner.seq,
-        title: prismaBanner.title,
-        description: prismaBanner.description || null,
-        imagePath: prismaBanner.imagePath || null,
-        linkType: prismaBanner.linkType || null,
-        linkUrl: prismaBanner.linkUrl || null,
-        isPublished: prismaBanner.isPublished,
-        publishedAt: (formatDateToString(prismaBanner.publishedAt?.toISOString(), true, true) as string) || null,
-        unpublishedAt: (formatDateToString(prismaBanner.unpublishedAt?.toISOString(), true, true) as string) || null,
-        createdBy: prismaBanner.createdBy,
-        createdAt: formatDateToString(prismaBanner.createdAt.toISOString(), true, true) as string,
-        updatedBy: prismaBanner.updatedBy || null,
-        updatedAt: (formatDateToString(prismaBanner.updatedAt?.toISOString(), true, true) as string) || null,
-      };
+      const banner = this.convertToBanner(prismaBanner);
 
       // 배너 그룹정보 조회
-      const groupInfo = await this.groupInfo(prismaBanner.groupId);
+      const groupInfo = await this.groupInfo([prismaBanner.groupId], false);
       if (!groupInfo.result || !groupInfo.data) {
         throw new NotFoundError('배너 그룹 정보를 찾을 수 없습니다.');
       }
 
       // 메타데이터 생성
       const metadata = {
-        groupInfo: groupInfo.data,
+        groupInfo: groupInfo.data?.[0],
         id: banner.id,
       };
 
@@ -487,7 +471,7 @@ export class BannerService {
       }
 
       // 배너 그룹 정보 조회
-      const groupInfo = await this.groupInfo(data.groupId);
+      const groupInfo = await this.groupInfo([data.groupId], false);
       if (!groupInfo.result || !groupInfo.data) {
         throw new NotFoundError('배너 그룹 정보를 찾을 수 없습니다.');
       }
@@ -516,29 +500,11 @@ export class BannerService {
       });
 
       // 조회 결과를 IBanner 타입으로 변환
-      const banners: IBanner[] = prismaBanners.map((banner) => {
-        return {
-          id: banner.id,
-          groupId: banner.groupId,
-          seq: banner.seq,
-          title: banner.title,
-          description: banner.description || null,
-          imagePath: banner.imagePath || null,
-          linkType: banner.linkType || null,
-          linkUrl: banner.linkUrl || null,
-          isPublished: banner.isPublished,
-          publishedAt: (formatDateToString(banner.publishedAt?.toISOString(), true, true) as string) || null,
-          unpublishedAt: (formatDateToString(banner.unpublishedAt?.toISOString(), true, true) as string) || null,
-          createdBy: banner.createdBy,
-          createdAt: formatDateToString(banner.createdAt.toISOString(), true, true) as string,
-          updatedBy: banner.updatedBy || null,
-          updatedAt: (formatDateToString(banner.updatedAt?.toISOString(), true, true) as string) || null,
-        };
-      });
+      const banners: IBanner[] = prismaBanners.map((banner) => this.convertToBanner(banner));
 
       // 메타데이터 생성
       const metadata = {
-        groupInfo: groupInfo.data,
+        groupInfo: groupInfo.data?.[0],
         seq: data.seq,
         total: banners.length,
         page: data.page,
@@ -572,48 +538,75 @@ export class BannerService {
     }
   }
 
-  public async groupInfo(groupId: number): Promise<IServiceResponse<IBannerGroup>> {
+  public async groupInfo(
+    groupIds: number[],
+    includeBanners: boolean = false
+  ): Promise<IServiceResponse<IBannerGroup[]>> {
     try {
-      // ID가 없거나 숫자가 아니면 에러 반환
-      if (!groupId && isNaN(groupId)) {
-        throw new ValidationError('배너 그룹 ID가 필요합니다.');
-      }
+      // 배너 그룹 조회 쿼리 조건
+      const groupWhere = {
+        isDeleted: false,
+        ...(groupIds?.length > 0 && { id: { in: groupIds } }),
+      };
 
       // 배너 그룹 조회
-      const prismaGroup = await this.prisma.bannerGroup.findUnique({
-        where: {
-          id: groupId,
-          isDeleted: false,
-        },
+      const prismaBannerGroups = await this.prisma.bannerGroup.findMany({
+        where: groupWhere,
+        orderBy: { id: 'asc' },
+        include: includeBanners
+          ? {
+              banners: {
+                where: {
+                  isDeleted: false,
+                  isPublished: true,
+                  publishedAt: { lte: new Date() },
+                  unpublishedAt: { gte: new Date() },
+                },
+                orderBy: { seq: 'asc' },
+              },
+            }
+          : undefined,
       });
 
-      // 조회 결과가 없으면 에러 반환
-      if (!prismaGroup) {
-        throw new NotFoundError('배너 그룹 정보를 찾을 수 없습니다.');
+      // 요청한 모든 ID에 대한 배너 그룹이 존재하는지 확인
+      if (groupIds?.length > 0 && prismaBannerGroups.length !== groupIds.length) {
+        throw new NotFoundError('일부 배너 그룹 정보를 찾을 수 없습니다.');
       }
 
-      // 조회 결과를 IBannerGroup 타입으로 변환
-      const group: IBannerGroup = {
-        id: prismaGroup.id,
-        kind: prismaGroup.kind,
-        title: prismaGroup.title,
-        description: prismaGroup.description || null,
-        imageWidth: prismaGroup.imageWidth || 0,
-        imageHeight: prismaGroup.imageHeight || 0,
-        createdAt: prismaGroup.createdAt.toISOString(),
-        updatedAt: prismaGroup.updatedAt?.toISOString() || null,
-      };
+      // 배너 그룹 정보 변환
+      const bannerGroups: IBannerGroup[] = prismaBannerGroups.map((prismaGroup) => {
+        const group: IBannerGroup = {
+          id: prismaGroup.id,
+          kind: prismaGroup.kind,
+          title: prismaGroup.title,
+          description: prismaGroup.description || null,
+          imageWidth: prismaGroup.imageWidth || 0,
+          imageHeight: prismaGroup.imageHeight || 0,
+          createdAt: prismaGroup.createdAt.toISOString(),
+          updatedAt: prismaGroup.updatedAt?.toISOString() || null,
+        };
+
+        if (includeBanners && 'banners' in prismaGroup) {
+          const banners = (prismaGroup as any).banners;
+          group.banners = banners.map((banner: any) => this.convertToBanner(banner));
+        }
+
+        return group;
+      });
 
       // 메타데이터 생성
       const metadata = {
-        id: group.id,
+        group: {
+          ids: bannerGroups.map((group) => group.id),
+          total: bannerGroups.length,
+          totalBanners: bannerGroups.reduce((acc, group) => acc + (group.banners?.length || 0), 0),
+        },
       };
 
-      // 응답 성공
       return {
         result: true,
         metadata,
-        data: group,
+        data: bannerGroups,
       };
     } catch (error) {
       if (error instanceof AppError) {
@@ -630,5 +623,30 @@ export class BannerService {
         };
       }
     }
+  }
+
+  /**
+   * Prisma 배너 객체를 IBanner 타입으로 변환하는 private 메서드
+   * @param banner Prisma에서 조회한 배너 객체
+   * @returns IBanner 타입으로 변환된 배너 객체
+   */
+  private convertToBanner(banner: any): IBanner {
+    return {
+      id: banner.id,
+      groupId: banner.groupId,
+      seq: banner.seq,
+      title: banner.title,
+      description: banner.description || null,
+      imagePath: banner.imagePath || null,
+      linkType: banner.linkType || null,
+      linkUrl: banner.linkUrl || null,
+      isPublished: banner.isPublished,
+      publishedAt: (formatDateToString(banner.publishedAt?.toISOString(), true, true) as string) || null,
+      unpublishedAt: (formatDateToString(banner.unpublishedAt?.toISOString(), true, true) as string) || null,
+      createdBy: banner.createdBy,
+      createdAt: formatDateToString(banner.createdAt.toISOString(), true, true) as string,
+      updatedBy: banner.updatedBy || null,
+      updatedAt: (formatDateToString(banner.updatedAt?.toISOString(), true, true) as string) || null,
+    };
   }
 }
