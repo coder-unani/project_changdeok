@@ -69,69 +69,102 @@ export class BannerService {
         }
       }
 
+      // 발행 기간이 중복되는 배너가 있을 시 배너 등록 불가
+      const prismaPeriodCheck = await this.prisma.banner.findFirst({
+        where: {
+          groupId: data.groupId,
+          seq: data.seq,
+          isDeleted: false,
+          OR: [
+            // 기존 발행일이 새로운 발행일보다 적고, 마감일이 없거나 새로운 발행일보다 큰 경우
+            {
+              AND: [{ publishedAt: { lt: publishedAt } }, { unpublishedAt: { gte: publishedAt } }],
+            },
+            // 기존 발행일이 새로운 발행일보다 크고, 새로운 마감일보다 작고, 기존 마감일이 새로운 마감일보다 큰 경우
+            {
+              AND: [
+                { publishedAt: { gte: publishedAt } },
+                { publishedAt: { lte: unpublishedAt } },
+                { unpublishedAt: { gt: unpublishedAt } },
+              ],
+            },
+            // 기존 발행일이 새로운 발행일보다 크고, 새로운 마감일보다 작고, 기존 마감일이 새로운 마감일보다 작은 경우
+            {
+              AND: [
+                { publishedAt: { gte: publishedAt } },
+                { publishedAt: { lte: unpublishedAt } },
+                { unpublishedAt: { lte: unpublishedAt } },
+              ],
+            },
+          ],
+        },
+      });
+
+      if (prismaPeriodCheck) {
+        throw new ValidationError('발행 기간이 중복되는 배너가 있습니다.');
+      }
+
       // 발행 상태로 배너 등록시 기존 배너와 발행기간 중복 체크
       if (data.isPublished) {
         /**
          * 마감일이 겹치는 경우 배너 처리
          * 조건: 기존 발행일이 새로운 발행일보다 적고, 마감일이 없거나 새로운 발행일보다 큰 경우
          */
-        await this.prisma.banner.updateMany({
-          where: {
-            groupId: data.groupId,
-            seq: data.seq,
-            isDeleted: false,
-            isPublished: true,
-            AND: [
-              { publishedAt: { lt: publishedAt } }, // 기존 배너의 발행일 < 새 배너의 발행일
-              { unpublishedAt: { gte: publishedAt } }, // 기존 배너의 마감일 >= 새 배너의 발행일
-            ],
-          },
-          data: {
-            unpublishedAt: new Date(publishedAt.getTime() - 1000), // 새 배너 발행일 - 1초
-          },
-        });
-
+        // await this.prisma.banner.updateMany({
+        //   where: {
+        //     groupId: data.groupId,
+        //     seq: data.seq,
+        //     isDeleted: false,
+        //     isPublished: true,
+        //     AND: [
+        //       { publishedAt: { lt: publishedAt } }, // 기존 배너의 발행일 < 새 배너의 발행일
+        //       { unpublishedAt: { gte: publishedAt } }, // 기존 배너의 마감일 >= 새 배너의 발행일
+        //     ],
+        //   },
+        //   data: {
+        //     unpublishedAt: new Date(publishedAt.getTime() - 1000), // 새 배너 발행일 - 1초
+        //   },
+        // });
         /**
          * 발행일이 겹치는 경우 배너 처리
          * 조건: 기존 발행일이 새로운 발행일보다 크고, 새로운 마감일보다 작고, 기존 마감일이 새로운 마감일보다 큰 경우
          */
-        await this.prisma.banner.updateMany({
-          where: {
-            groupId: data.groupId,
-            seq: data.seq,
-            isDeleted: false,
-            isPublished: true,
-            AND: [
-              { publishedAt: { gte: publishedAt } }, // 기존 배너의 발행일 >= 새 배너의 발행일
-              { publishedAt: { lte: unpublishedAt } }, // 기존 배너의 발행일 <= 새 배너의 마감일
-              { unpublishedAt: { gt: unpublishedAt } }, // 기존 배너의 마감일 > 새 배너의 마감일
-            ],
-          },
-          data: {
-            publishedAt: new Date(unpublishedAt.getTime() + 1000), // 새 배너 마감일 + 1초
-          },
-        });
-
+        // await this.prisma.banner.updateMany({
+        //   where: {
+        //     groupId: data.groupId,
+        //     seq: data.seq,
+        //     isDeleted: false,
+        //     isPublished: true,
+        //     AND: [
+        //       { publishedAt: { gte: publishedAt } }, // 기존 배너의 발행일 >= 새 배너의 발행일
+        //       { publishedAt: { lte: unpublishedAt } }, // 기존 배너의 발행일 <= 새 배너의 마감일
+        //       { unpublishedAt: { gt: unpublishedAt } }, // 기존 배너의 마감일 > 새 배너의 마감일
+        //     ],
+        //   },
+        //   data: {
+        //     publishedAt: new Date(unpublishedAt.getTime() + 1000), // 새 배너 마감일 + 1초
+        //   },
+        // });
         /**
          * 발행기간이 완전히 겹치는 배너 처리
          * 조건: 기존 발행일이 새로운 발행일보다 크고, 새로운 마감일보다 작고, 기존 마감일이 새로운 마감일보다 작은 경우
          */
-        await this.prisma.banner.updateMany({
-          where: {
-            groupId: data.groupId,
-            seq: data.seq,
-            isDeleted: false,
-            isPublished: true,
-            AND: [
-              { publishedAt: { gte: publishedAt } }, // 기존 배너의 발행일 >= 새 배너의 발행일
-              { publishedAt: { lte: unpublishedAt } }, // 기존 배너의 발행일 <= 새 배너의 마감일
-              { unpublishedAt: { lt: unpublishedAt } }, // 기존 배너의 마감일 <= 새 배너의 마감일
-            ],
-          },
-          data: {
-            isPublished: false,
-          },
-        });
+        // await this.prisma.banner.updateMany({
+        //   where: {
+        //     groupId: data.groupId,
+        //     seq: data.seq,
+        //     isDeleted: false,
+        //     isPublished: true,
+        //     AND: [
+        //       { publishedAt: { gte: publishedAt } }, // 기존 배너의 발행일 >= 새 배너의 발행일
+        //       { publishedAt: { lte: unpublishedAt } }, // 기존 배너의 발행일 <= 새 배너의 마감일
+        //       { unpublishedAt: { lt: unpublishedAt } }, // 기존 배너의 마감일 <= 새 배너의 마감일
+        //     ],
+        //   },
+        //   data: {
+        //     isPublished: false,
+        //   },
+        // });
       }
 
       // 배너 생성
@@ -192,6 +225,7 @@ export class BannerService {
       // 조회 결과를 IBanner 타입으로 변환
       const banner: IBanner = {
         id: prismaBanner.id,
+        groupId: prismaBanner.groupId,
         seq: prismaBanner.seq,
         title: prismaBanner.title,
         description: prismaBanner.description || null,
@@ -244,6 +278,7 @@ export class BannerService {
 
   public async update(id: number, data: IRequestBannerUpdate): Promise<IServiceResponse> {
     try {
+      // 배너 ID
       const bannerId = id;
 
       // ID가 없거나 숫자가 아니면 에러 반환
@@ -268,8 +303,8 @@ export class BannerService {
       if (data.linkType) updateData.linkType = data.linkType;
       if (data.linkUrl) updateData.linkUrl = data.linkUrl;
       if (data.isPublished) updateData.isPublished = data.isPublished;
-      if (data.publishedAt) updateData.publishedAt = data.publishedAt;
-      if (data.unpublishedAt) updateData.unpublishedAt = data.unpublishedAt;
+      if (data.publishedAt) updateData.publishedAt = new Date(data.publishedAt);
+      if (data.unpublishedAt) updateData.unpublishedAt = new Date(data.unpublishedAt);
       if (data.updatedBy) updateData.updatedBy = data.updatedBy;
 
       // imagePath가 있으면 기존 이미지 삭제
@@ -298,13 +333,61 @@ export class BannerService {
         }
       }
 
+      // 발행 기간 검증
+      if (updateData.publishedAt && updateData.unpublishedAt) {
+        if (updateData.unpublishedAt && updateData.publishedAt > updateData.unpublishedAt) {
+          throw new ValidationError('발행 마감일은 발행일보다 빠를 수 없습니다.');
+        }
+
+        // 발행 마감일이 현재 시간보다 이전이면 등록 불가
+        if (updateData.unpublishedAt < new Date()) {
+          throw new ValidationError('발행 마감일은 현재 시간보다 이전일 수 없습니다.');
+        }
+
+        // 발행 기간이 중복되는 배너가 있을 시 배너 등록 불가
+        const prismaPeriodCheck = await this.prisma.banner.findFirst({
+          where: {
+            groupId: bannerInfo.data.groupId,
+            seq: bannerInfo.data.seq,
+            isDeleted: false,
+            OR: [
+              // 기존 발행일이 새로운 발행일보다 적고, 마감일이 없거나 새로운 발행일보다 큰 경우
+              {
+                AND: [
+                  { publishedAt: { lt: updateData.publishedAt } },
+                  { unpublishedAt: { gte: updateData.publishedAt } },
+                ],
+              },
+              // 기존 발행일이 새로운 발행일보다 크고, 새로운 마감일보다 작고, 기존 마감일이 새로운 마감일보다 큰 경우
+              {
+                AND: [
+                  { publishedAt: { gte: updateData.publishedAt } },
+                  { publishedAt: { lte: updateData.unpublishedAt } },
+                  { unpublishedAt: { gt: updateData.unpublishedAt } },
+                ],
+              },
+              // 기존 발행일이 새로운 발행일보다 크고, 새로운 마감일보다 작고, 기존 마감일이 새로운 마감일보다 작은 경우
+              {
+                AND: [
+                  { publishedAt: { gte: updateData.publishedAt } },
+                  { publishedAt: { lte: updateData.unpublishedAt } },
+                  { unpublishedAt: { lte: updateData.unpublishedAt } },
+                ],
+              },
+            ],
+          },
+        });
+
+        if (prismaPeriodCheck) {
+          throw new ValidationError('발행 기간이 중복되는 배너가 있습니다.');
+        }
+      }
+
       // 배너 업데이트
       await this.prisma.banner.update({
         where: { id: bannerId },
         data: {
           ...updateData,
-          publishedAt: updateData.publishedAt ? new Date(updateData.publishedAt) : null,
-          unpublishedAt: updateData.unpublishedAt ? new Date(updateData.unpublishedAt) : null,
           updatedAt: new Date(),
         },
       });
@@ -436,6 +519,7 @@ export class BannerService {
       const banners: IBanner[] = prismaBanners.map((banner) => {
         return {
           id: banner.id,
+          groupId: banner.groupId,
           seq: banner.seq,
           title: banner.title,
           description: banner.description || null,
