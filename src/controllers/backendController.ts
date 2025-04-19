@@ -116,19 +116,20 @@ export class BackendController {
       }
 
       // 배너 그룹 정보 조회
-      const apiGroupInfo = await getApiBannerGroup(accessToken, groupId);
+      const apiGroupInfo = await getApiBannerGroup(accessToken, [groupId]);
+      const groupInfo = apiGroupInfo.data?.[0] || null;
 
       // 배너 그룹 정보 조회 실패
-      if (!apiGroupInfo.result || !apiGroupInfo.data) {
+      if (!apiGroupInfo.result || !groupInfo) {
         throw new AppError(apiGroupInfo.code as number, apiGroupInfo.message as string);
       }
 
       // 페이지 데이터 생성
       const data = {
         layout: route.layout,
-        title: `${apiGroupInfo.data.title} ${route.title}`,
+        title: `${groupInfo.title} ${route.title}`,
         metadata: {
-          groupInfo: apiGroupInfo.data,
+          groupInfo,
           seq,
         },
         data: {},
