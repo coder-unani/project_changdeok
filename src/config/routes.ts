@@ -41,7 +41,6 @@ export const apiRoutes = {
     group: createApiRoute('GET', '배너 그룹 정보', '/banners/groups/:groupIds', []),
     screen: createApiRoute('GET', '배너 화면 정보', '/banners/screens', [1, 5]),
     popup: createApiRoute('GET', '배너 팝업 정보', '/banners/popups', [1, 5]),
-    usage: createApiRoute('GET', '배너 사용 현황', '/banners/usage', []),
   },
   contents: {
     list: createApiRoute('GET', '게시판 관리', '/contents/:groupId', []),
@@ -62,7 +61,6 @@ export const apiRoutes = {
     login: createApiRoute('POST', '관리자 로그인', '/employees/login', [1, 2]),
     logout: createApiRoute('POST', '관리자 로그아웃', '/employees/logout', [1, 2]),
   },
-
   permissions: createApiRoute('GET', '권한 목록', '/permissions', [1, 3]),
 };
 
@@ -71,7 +69,7 @@ export const backendRoutesLayout = 'layouts/backend/layout';
 export const backendRoutesNonHeaderLayout = 'layouts/backend/layoutNonHeader';
 export const backendRoutes = {
   index: createRoute('GET', '관리 시스템 홈', `${backendRoutesPrefix}/`, 'backend/index', backendRoutesLayout, []),
-  error: createRoute('GET', 'ERROR', '/error', `${backendRoutesPrefix}/error`, backendRoutesNonHeaderLayout, []),
+  error: createRoute('GET', 'ERROR', '${backendRoutesPrefix}/error', `backend/error`, backendRoutesNonHeaderLayout, []),
   // 대시보드
   dashboard: createRoute(
     'GET',
