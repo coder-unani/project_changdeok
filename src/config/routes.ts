@@ -33,22 +33,23 @@ const createRoute = (
 
 export const apiRoutes = {
   banners: {
-    list: createApiRoute('GET', '배너 목록', '/banners', [1, 5]),
+    list: createApiRoute('GET', '배너 목록', '/banners', []),
     write: createApiRoute('POST', '배너 등록', '/banners/write', [1, 5]),
-    detail: createApiRoute('GET', '배너 상세 정보', '/banners/:bannerId', [1, 5]),
+    detail: createApiRoute('GET', '배너 상세 정보', '/banners/:bannerId', []),
     update: createApiRoute('PUT', '배너 수정', '/banners/:bannerId', [1, 5]),
     delete: createApiRoute('DELETE', '배너 삭제', '/banners/:bannerId', [1, 5]),
-    group: createApiRoute('GET', '배너 그룹 정보', '/banners/groups/:groupId', [1, 5]),
+    group: createApiRoute('GET', '배너 그룹 정보', '/banners/groups/:groupIds', []),
     screen: createApiRoute('GET', '배너 화면 정보', '/banners/screens', [1, 5]),
     popup: createApiRoute('GET', '배너 팝업 정보', '/banners/popups', [1, 5]),
+    usage: createApiRoute('GET', '배너 사용 현황', '/banners/usage', []),
   },
   contents: {
-    list: createApiRoute('GET', '게시판 관리', '/contents/:groupId', [1, 4]),
+    list: createApiRoute('GET', '게시판 관리', '/contents/:groupId', []),
     write: createApiRoute('POST', '게시글 작성', '/contents/:groupId/write', [1, 4]),
-    detail: createApiRoute('GET', '게시글 상세', '/contents/:groupId/:contentId', [1, 4]),
+    detail: createApiRoute('GET', '게시글 상세', '/contents/:groupId/:contentId', []),
     update: createApiRoute('PUT', '게시글 수정', '/contents/:groupId/:contentId', [1, 4]),
     delete: createApiRoute('DELETE', '게시글 삭제', '/contents/:groupId/:contentId', [1, 4]),
-    group: createApiRoute('GET', '게시판 그룹 정보', '/contents/groups/:groupId', [1, 4]),
+    group: createApiRoute('GET', '게시판 그룹 정보', '/contents/groups/:groupId', []),
   },
   employees: {
     list: createApiRoute('GET', '관리자 목록', '/employees', [1, 2]),
