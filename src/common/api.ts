@@ -7,35 +7,35 @@ import { IRequestBanners, IRequestContents } from '../types/request';
 let API_BASE_URL = CONFIG.SERVICE_URL;
 API_BASE_URL = CONFIG.SERVICE_PORT ? `${API_BASE_URL}:${CONFIG.SERVICE_PORT}` : API_BASE_URL;
 
-export const getApiBannerGroup = async (
-  accessToken: string,
-  groupIds: number[] = []
-): Promise<IApiResponse<IBannerGroup[]>> => {
+interface FetchOptions {
+  method: string;
+  accessToken?: string;
+  params?: URLSearchParams;
+}
+
+const fetchApi = async <T>(url: string, options: FetchOptions): Promise<IApiResponse<T>> => {
   try {
-    // 배열이 비어있으면 all로 변환
-    const groupIdsString = groupIds.length > 0 ? groupIds.join(',') : 'all';
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
 
-    // API URL 생성
-    const apiUrl = `${API_BASE_URL}${apiRoutes.banners.group.url}`.replace(':groupIds', groupIdsString);
+    if (options.accessToken) {
+      headers['Authorization'] = `Bearer ${options.accessToken}`;
+    }
 
-    // API 호출
-    const apiResponse = await fetch(apiUrl, {
-      method: `${apiRoutes.banners.group.method}`,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
-      },
+    const finalUrl = options.params ? `${url}?${options.params.toString()}` : url;
+
+    const apiResponse = await fetch(finalUrl, {
+      method: options.method,
+      headers,
     });
 
-    // JSON 파싱
     const responseToJson = await apiResponse.json();
 
-    // 응답 오류
     if (!apiResponse.ok) {
       throw new Error(responseToJson.message || apiResponse.statusText);
     }
 
-    // API 조회 실패
     if (!responseToJson.result) {
       throw new Error(responseToJson.message);
     }
@@ -47,297 +47,82 @@ export const getApiBannerGroup = async (
       data: responseToJson.data,
     };
   } catch (error) {
-    return { result: false, metadata: null, message: error instanceof Error ? error.message : 'API 호출 실패' };
-  }
-};
-
-export const getApiBanners = async (
-  accessToken: string,
-  data: IRequestBanners
-): Promise<IApiResponse<IBanner[] | []>> => {
-  try {
-    // Params 생성
-    const params = new URLSearchParams(data as any);
-
-    // API URL
-    const apiUrl = `${API_BASE_URL}${apiRoutes.banners.list.url}`;
-
-    // API 호출
-    const apiResponse = await fetch(`${apiUrl}?${params.toString()}`, {
-      method: `${apiRoutes.banners.list.method}`,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-
-    // JSON 파싱
-    const responseToJson = await apiResponse.json();
-
-    // 응답 오류
-    if (!apiResponse.ok) {
-      throw new Error(responseToJson.message || apiResponse.statusText);
-    }
-
-    // API 조회 실패
-    if (!responseToJson.result) {
-      throw new Error(responseToJson.message);
-    }
-
-    // 응답 성공
-    return {
-      result: responseToJson.result,
-      metadata: responseToJson.metadata,
-      data: responseToJson.data,
-    };
-  } catch (error) {
     return {
       result: false,
       metadata: null,
-      data: [],
+      data: null as T,
       message: error instanceof Error ? error.message : 'API 호출 실패',
     };
   }
 };
 
-export const getApiBannerDetail = async (accessToken: string, bannerId: number): Promise<IApiResponse<IContent>> => {
-  try {
-    // API 호출
-    const apiResponse = await fetch(
-      `${API_BASE_URL}${apiRoutes.banners.detail.url}`.replace(':bannerId', bannerId.toString()),
-      {
-        method: `${apiRoutes.banners.detail.method}`,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
+export const getApiBannerGroup = async (groupIds: number[] = []): Promise<IApiResponse<IBannerGroup[]>> => {
+  const groupIdsString = groupIds.length > 0 ? groupIds.join(',') : 'all';
+  const apiUrl = `${API_BASE_URL}${apiRoutes.banners.group.url}`.replace(':groupIds', groupIdsString);
 
-    // JSON 파싱
-    const responseToJson = await apiResponse.json();
-
-    // 응답 오류
-    if (!apiResponse.ok) {
-      throw new Error(responseToJson.message || apiResponse.statusText);
-    }
-
-    // API 조회 실패
-    if (!responseToJson.result) {
-      throw new Error(responseToJson.message);
-    }
-
-    // 응답 성공
-    return {
-      result: responseToJson.result,
-      metadata: responseToJson.metadata,
-      data: responseToJson.data,
-    };
-  } catch (error) {
-    throw error;
-  }
+  return fetchApi<IBannerGroup[]>(apiUrl, {
+    method: apiRoutes.banners.group.method,
+  });
 };
 
-export const getApiContents = async (
-  accessToken: string,
-  groupId: number,
-  data: IRequestContents
-): Promise<IApiResponse<IContent[]>> => {
-  try {
-    // Params 생성
-    const params = new URLSearchParams(data as any);
+export const getApiBanners = async (data: IRequestBanners): Promise<IApiResponse<IBanner[] | []>> => {
+  const params = new URLSearchParams(data as any);
+  const apiUrl = `${API_BASE_URL}${apiRoutes.banners.list.url}`;
 
-    // Url 생성
-    let apiUrl = `${API_BASE_URL}${apiRoutes.contents.list.url}`.replace(':groupId', groupId.toString());
-    if (params.toString()) {
-      apiUrl += `?${params.toString()}`;
-    }
+  return fetchApi<IBanner[]>(apiUrl, {
+    method: apiRoutes.banners.list.method,
+    params,
+  });
+};
 
-    // API 호출
-    const apiResponse = await fetch(apiUrl, {
-      method: `${apiRoutes.contents.list.method}`,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+export const getApiBannerDetail = async (bannerId: number): Promise<IApiResponse<IContent>> => {
+  const apiUrl = `${API_BASE_URL}${apiRoutes.banners.detail.url}`.replace(':bannerId', bannerId.toString());
 
-    // JSON 파싱
-    const responseToJson = await apiResponse.json();
+  return fetchApi<IContent>(apiUrl, {
+    method: apiRoutes.banners.detail.method,
+  });
+};
 
-    // 응답 오류
-    if (!apiResponse.ok) {
-      throw new Error(responseToJson.message || apiResponse.statusText);
-    }
+export const getApiContents = async (groupId: number, data: IRequestContents): Promise<IApiResponse<IContent[]>> => {
+  const params = new URLSearchParams(data as any);
+  let apiUrl = `${API_BASE_URL}${apiRoutes.contents.list.url}`.replace(':groupId', groupId.toString());
 
-    // API 조회 실패
-    if (!responseToJson.result) {
-      throw new Error(responseToJson.message);
-    }
-
-    // 응답 성공
-    return {
-      result: responseToJson.result,
-      metadata: responseToJson.metadata,
-      data: responseToJson.data,
-    };
-  } catch (error) {
-    return {
-      result: false,
-      metadata: null,
-      data: [],
-      message: error instanceof Error ? error.message : 'API 호출 실패',
-    };
-  }
+  return fetchApi<IContent[]>(apiUrl, {
+    method: apiRoutes.contents.list.method,
+    params,
+  });
 };
 
 export const getApiContentDetail = async (groupId: number, contentId: number): Promise<IApiResponse<IContent>> => {
-  try {
-    // API 호출
-    const apiResponse = await fetch(
-      `${API_BASE_URL}${apiRoutes.contents.detail.url}`
-        .replace(':groupId', groupId.toString())
-        .replace(':contentId', contentId.toString()),
-      {
-        method: `${apiRoutes.contents.detail.method}`,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+  const apiUrl = `${API_BASE_URL}${apiRoutes.contents.detail.url}`
+    .replace(':groupId', groupId.toString())
+    .replace(':contentId', contentId.toString());
 
-    // JSON 파싱
-    const responseToJson = await apiResponse.json();
-
-    // 응답 오류
-    if (!apiResponse.ok) {
-      throw new Error(responseToJson.message || apiResponse.statusText);
-    }
-
-    // API 조회 실패
-    if (!responseToJson.result) {
-      throw new Error(responseToJson.message);
-    }
-
-    // 응답 성공
-    return {
-      result: responseToJson.result,
-      metadata: responseToJson.metadata,
-      data: responseToJson.data,
-    };
-  } catch (error) {
-    throw error;
-  }
+  return fetchApi<IContent>(apiUrl, {
+    method: apiRoutes.contents.detail.method,
+  });
 };
 
 export const getApiContentGroup = async (groupId: number): Promise<IApiResponse<IContentGroup>> => {
-  try {
-    // API 호출
-    const apiResponse = await fetch(
-      `${API_BASE_URL}${apiRoutes.contents.group.url}`.replace(':groupId', groupId.toString()),
-      {
-        method: `${apiRoutes.contents.group.method}`,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+  const apiUrl = `${API_BASE_URL}${apiRoutes.contents.group.url}`.replace(':groupId', groupId.toString());
 
-    // JSON 파싱
-    const responseToJson = await apiResponse.json();
-
-    // 응답 오류
-    if (!apiResponse.ok) {
-      throw new Error(responseToJson.message || apiResponse.statusText);
-    }
-
-    // API 조회 실패
-    if (!responseToJson.result) {
-      throw new Error(responseToJson.message);
-    }
-
-    // 응답 성공
-    return {
-      result: responseToJson.result,
-      metadata: responseToJson.metadata,
-      data: responseToJson.data,
-    };
-  } catch (error) {
-    throw error;
-  }
+  return fetchApi<IContentGroup>(apiUrl, {
+    method: apiRoutes.contents.group.method,
+  });
 };
 
 export const getApiEmployeeDetail = async (employeeId: number): Promise<IApiResponse<IEmployee>> => {
-  try {
-    // API 호출
-    const apiResponse = await fetch(
-      `${API_BASE_URL}${apiRoutes.employees.detail.url}`.replace(':employeeId', employeeId.toString()),
-      {
-        method: `${apiRoutes.employees.detail.method}`,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+  const apiUrl = `${API_BASE_URL}${apiRoutes.employees.detail.url}`.replace(':employeeId', employeeId.toString());
 
-    // JSON 파싱
-    const responseToJson = await apiResponse.json();
-
-    // 응답 오류
-    if (!apiResponse.ok) {
-      throw new Error(responseToJson.message || apiResponse.statusText);
-    }
-
-    // API 조회 실패
-    if (!responseToJson.result) {
-      throw new Error(responseToJson.message);
-    }
-
-    // metadata 생성
-    const metadata = {
-      code: responseToJson.code,
-      message: responseToJson.message,
-    };
-
-    // data 생성
-    const data: IEmployee = responseToJson.data;
-
-    // 응답 성공
-    return { result: responseToJson.result, metadata, data };
-  } catch (error) {
-    throw error;
-  }
+  return fetchApi<IEmployee>(apiUrl, {
+    method: apiRoutes.employees.detail.method,
+  });
 };
 
 export const getApiPermissionList = async (page: number, pageSize: number): Promise<IApiResponse<IPermission[]>> => {
-  try {
-    // API 호출
-    const apiResponse = await fetch(`${API_BASE_URL}${apiRoutes.permissions.url}`, {
-      method: `${apiRoutes.permissions.method}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+  const apiUrl = `${API_BASE_URL}${apiRoutes.permissions.url}`;
 
-    // JSON 파싱
-    const responseToJson = await apiResponse.json();
-
-    // 응답 오류
-    if (!apiResponse.ok) {
-      throw new Error(responseToJson.message || apiResponse.statusText);
-    }
-
-    // API 조회 실패
-    if (!responseToJson.result) {
-      throw new Error(responseToJson.message);
-    }
-
-    return {
-      result: responseToJson.result,
-      metadata: responseToJson.metadata,
-      data: responseToJson.data,
-    };
-  } catch (error) {
-    throw error;
-  }
+  return fetchApi<IPermission[]>(apiUrl, {
+    method: apiRoutes.permissions.method,
+  });
 };
