@@ -116,7 +116,7 @@ export class BackendController {
       }
 
       // 배너 그룹 정보 조회
-      const apiGroupInfo = await getApiBannerGroup(accessToken, [groupId]);
+      const apiGroupInfo = await getApiBannerGroup([groupId]);
       const bannerGroupInfo = apiGroupInfo.data?.[0] || null;
 
       // 배너 그룹 정보 조회 실패
@@ -163,7 +163,7 @@ export class BackendController {
         throw new Error('배너 ID가 올바르지 않습니다.');
       }
 
-      const { result, message, metadata, data: banner } = await getApiBannerDetail(accessToken, bannerId);
+      const { result, message, metadata, data: banner } = await getApiBannerDetail(bannerId);
 
       // 배너 상세 정보 조회 실패
       if (!result) {
@@ -203,7 +203,7 @@ export class BackendController {
         throw new Error('배너 ID가 올바르지 않습니다.');
       }
 
-      const { result, message, metadata, data: banner } = await getApiBannerDetail(accessToken, bannerId);
+      const { result, message, metadata, data: banner } = await getApiBannerDetail(bannerId);
 
       // 배너 상세 정보 조회 실패
       if (!result) {
@@ -259,7 +259,7 @@ export class BackendController {
       };
 
       // API 호출
-      const { result, message, metadata, data: banners } = await getApiBanners(accessToken, params);
+      const { result, message, metadata, data: banners } = await getApiBanners(params);
 
       // 호출 실패
       if (!result) {
@@ -356,7 +356,7 @@ export class BackendController {
         throw new Error('로그인이 필요합니다.');
       }
 
-      const { metadata, data: contents } = await getApiContents(accessToken, groupId, params);
+      const { metadata, data: contents } = await getApiContents(groupId, params);
 
       // 게시판 그룹 정보
       const { data: group } = await getApiContentGroup(groupId);
