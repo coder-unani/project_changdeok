@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response, Router } from 'express';
 
-import { CORS_BACKEND_OPTIONS } from '../config/config';
+import { CORS_API_OPTIONS } from '../config/config';
 import { IMiddleware } from '../types/middleware';
 import { CorsMiddleware } from '../middlewares/api/cors';
 import { AuthMiddleware } from '../middlewares/api/auth';
@@ -11,12 +11,12 @@ import { apiRoutes } from '../config/routes';
 const router: Router = Router();
 
 // CORS 설정
-const corsMiddleware: IMiddleware = new CorsMiddleware(CORS_BACKEND_OPTIONS);
+const corsMiddleware: IMiddleware = new CorsMiddleware(CORS_API_OPTIONS);
 router.use((req, res, next) => corsMiddleware.handle(req, res, next));
 
 // AUTH 미들웨어
-const authMiddleware: IMiddleware = new AuthMiddleware();
-router.use((req, res, next) => authMiddleware.handle(req, res, next));
+// const authMiddleware: IMiddleware = new AuthMiddleware();
+// router.use((req, res, next) => authMiddleware.handle(req, res, next));
 
 // 이미지 업로드 미들웨어
 const bannerUploadMiddleware = new MediaUploadMiddleware({
@@ -25,7 +25,7 @@ const bannerUploadMiddleware = new MediaUploadMiddleware({
   fieldName: 'image',
   useDateFolder: true,
   convertToWebP: true,
-  webpQuality: 80,
+  webpQuality: 90,
 });
 
 // 컨텐츠 이미지 업로드 미들웨어
@@ -35,7 +35,7 @@ const contentImageUploadMiddleware = new MediaUploadMiddleware({
   fieldName: 'image',
   useDateFolder: true,
   convertToWebP: true,
-  webpQuality: 80,
+  webpQuality: 90,
 });
 
 // 컨트롤러
