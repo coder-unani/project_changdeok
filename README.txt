@@ -1,3 +1,10 @@
+- 프로젝트 스펙
+Major Skills: NodeJs, Express
+Database: Prisma, PostgreSQL
+Styling: TailwindCss
+View Template: Ejs
+Etc: TypeScript
+
 - 프론트엔드에 사용되는 API 목록
 
 1. 웹사이트 기본 정보 : /api/info
