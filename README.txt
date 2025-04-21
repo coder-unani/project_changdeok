@@ -11,4 +11,5 @@ Etc: TypeScript
 2. 배너정보 : /api/banners/groups/all or /api/banners/groups/{groupId1},{groupId2}
 3. 게시글 목록 : /api/contents/{groupId}
 4. 게시글 상세 : /api/contents/{groupId}/{contentId}
+5. 게시글 작성 : /api/contents/{groupId}/write
 
