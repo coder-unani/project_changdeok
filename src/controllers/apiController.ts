@@ -31,8 +31,25 @@ import { createJWT, verifyJWT } from '../common/library/jwt';
 import { getCookie, setCookie, removeCookie } from '../common/utils/cookie';
 import { getAccessedEmployee } from '../common/utils/verify';
 import { AppError, ValidationError, AuthError, PermissionError } from '../common/utils/error';
+import { companyInfo } from '../config/info';
 
 export class ApiController {
+  // 웹사이트 정보
+  public async info(req: Request, res: Response): Promise<void> {
+    const { permissions } = apiRoutes.info;
+
+    try {
+      const response = formatApiResponse(true, null, null, null, companyInfo);
+      res.status(httpStatus.OK).json(response);
+    } catch (error) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
+    }
+  }
+
   // 배너 등록
   public async bannerWrite(req: Request, res: Response): Promise<void> {
     const { permissions } = apiRoutes.banners.write;

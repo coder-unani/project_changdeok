@@ -41,6 +41,11 @@ const contentImageUploadMiddleware = new MediaUploadMiddleware({
 // 컨트롤러
 const apiController = new ApiController();
 
+// 웹사이트 정보
+router.get(apiRoutes.info.url, (req: Request, res: Response) => {
+  apiController.info(req, res);
+});
+
 // 배너 등록
 router.post(
   apiRoutes.banners.write.url,
