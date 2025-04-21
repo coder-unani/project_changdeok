@@ -1,9 +1,7 @@
 <!-- 메인 배너 -->
 <div class="relative h-screen w-full pt-[56px] lg:h-[800px]">
   <!-- TODO: 배너 이미지 설정 -->
-  <div
-    class="absolute inset-0 -z-10 h-full w-full bg-[url('/uploads/images/1742233951314-698618677.jpg')] bg-cover bg-center"
-  >
+  <div class="absolute inset-0 -z-10 h-full w-full bg-[url('<%=data[0].banners[0].imagePath%>')] bg-cover bg-center">
     <div class="absolute inset-0 h-full w-full bg-black opacity-50"></div>
   </div>
   <div class="m-auto h-full w-full max-w-[1280px] px-10">
@@ -82,7 +80,7 @@
       </div>
       <div class="h-[150px] w-full lg:h-[450px]">
         <!-- TODO: 콘텐츠 이미지 설정 -->
-        <img src="/uploads/images/1742233951314-698618677.jpg" alt="콘텐츠 이미지" class="h-full w-full object-cover" />
+        <img src="<%=data[1].banners[0].imagePath%>" alt="<%=data[1].banners[0].description%>" class="h-full w-full object-cover" />
       </div>
     </div>
   </div>
@@ -107,78 +105,23 @@
       <!-- TODO: 콘텐츠 이미지 설정 -->
       <div id="mainContent2" class="swiper h-[475px] lg:h-[550px]">
         <div class="swiper-wrapper">
+        <% data[2].banners.forEach((banner, index) => { %>
           <div
-            class="swiper-slide cursor-pointer bg-[url(/uploads/images/1742233951314-698618677.jpg)] bg-cover bg-center"
+            class="swiper-slide cursor-pointer" 
           >
-            <div class="absolute inset-0 -z-10 bg-black opacity-50"></div>
+            <div class="absolute inset-0 -z-10">
+              <div class="absolute inset-0 bg-black opacity-50"></div>
+              <img class="relative h-full w-full -z-10 object-cover" src="<%=banner.imagePath%>" alt="<%=banner.description%>" />
+            </div>
             <div class="flex h-full w-full flex-col justify-between p-8">
               <div class="flex items-center justify-between">
                 <div class="mr-10 w-full border-2 border-b border-white"></div>
-                <p class="font-['Oswald'] text-2xl font-semibold text-white">01</p>
+                <p class="font-['Oswald'] text-2xl font-semibold text-white"><%=String(index + 1).padStart(2, '0')%></p>
               </div>
-              <p class="w-[50%] text-2xl font-semibold text-wrap break-keep text-white">치명적 상해사고</p>
+              <p class="w-[50%] text-2xl font-semibold text-wrap break-keep text-white"><%=banner.title%></p>
             </div>
           </div>
-          <div
-            class="swiper-slide cursor-pointer bg-[url(/uploads/images/1742233951314-698618677.jpg)] bg-cover bg-center"
-          >
-            <div class="absolute inset-0 -z-10 bg-black opacity-50"></div>
-            <div class="flex h-full w-full flex-col justify-between p-8">
-              <div class="flex items-center justify-between">
-                <div class="mr-10 w-full border-2 border-b border-white"></div>
-                <p class="font-['Oswald'] text-2xl font-semibold text-white">02</p>
-              </div>
-              <p class="w-[50%] text-2xl font-semibold text-wrap break-keep text-white">대형 교통사고</p>
-            </div>
-          </div>
-          <div
-            class="swiper-slide cursor-pointer bg-[url(/uploads/images/1742233951314-698618677.jpg)] bg-cover bg-center"
-          >
-            <div class="absolute inset-0 -z-10 bg-black opacity-50"></div>
-            <div class="flex h-full w-full flex-col justify-between p-8">
-              <div class="flex items-center justify-between">
-                <div class="mr-10 w-full border-2 border-b border-white"></div>
-                <p class="font-['Oswald'] text-2xl font-semibold text-white">03</p>
-              </div>
-              <p class="w-[50%] text-2xl font-semibold text-wrap break-keep text-white">의료 사고</p>
-            </div>
-          </div>
-          <div
-            class="swiper-slide cursor-pointer bg-[url(/uploads/images/1742233951314-698618677.jpg)] bg-cover bg-center"
-          >
-            <div class="absolute inset-0 -z-10 bg-black opacity-50"></div>
-            <div class="flex h-full w-full flex-col justify-between p-8">
-              <div class="flex items-center justify-between">
-                <div class="mr-10 w-full border-2 border-b border-white"></div>
-                <p class="font-['Oswald'] text-2xl font-semibold text-white">04</p>
-              </div>
-              <p class="w-[50%] text-2xl font-semibold text-wrap break-keep text-white">보행자 및 자전거 사고</p>
-            </div>
-          </div>
-          <div
-            class="swiper-slide cursor-pointer bg-[url(/uploads/images/1742233951314-698618677.jpg)] bg-cover bg-center"
-          >
-            <div class="absolute inset-0 -z-10 bg-black opacity-50"></div>
-            <div class="flex h-full w-full flex-col justify-between p-8">
-              <div class="flex items-center justify-between">
-                <div class="mr-10 w-full border-2 border-b border-white"></div>
-                <p class="font-['Oswald'] text-2xl font-semibold text-white">05</p>
-              </div>
-              <p class="w-[50%] text-2xl font-semibold text-wrap break-keep text-white">구내 상해사고</p>
-            </div>
-          </div>
-          <div
-            class="swiper-slide cursor-pointer bg-[url(/uploads/images/1742233951314-698618677.jpg)] bg-cover bg-center"
-          >
-            <div class="absolute inset-0 -z-10 bg-black opacity-50"></div>
-            <div class="flex h-full w-full flex-col justify-between p-8">
-              <div class="flex items-center justify-between">
-                <div class="mr-10 w-full border-2 border-b border-white"></div>
-                <p class="font-['Oswald'] text-2xl font-semibold text-white">06</p>
-              </div>
-              <p class="w-[50%] text-2xl font-semibold text-wrap break-keep text-white">개에게 물림 사고</p>
-            </div>
-          </div>
+        <% }) %>
         </div>
       </div>
     </div>
@@ -203,58 +146,21 @@
     <div class="lg:pl-50">
       <!-- TODO: 콘텐츠 이미지 설정 -->
       <div class="grid grid-cols-1 items-center justify-center gap-2 lg:grid-cols-2 lg:gap-4">
+      <% data[3].banners.forEach((banner) => { %>
         <div>
           <div class="h-[200px] w-full lg:h-[280px]">
             <img
-              src="/uploads/images/1742233951314-698618677.jpg"
-              alt="콘텐츠 이미지"
+              src="<%=banner.imagePath%>"
+              alt="<%=banner.description%>"
               class="h-full w-full object-cover"
             />
           </div>
           <div class="space-y-1 py-3 text-center">
             <p class="font-['Oswald'] text-2xl font-semibold text-cyan-800">19M</p>
-            <p class="text-base font-semibold text-zinc-500">교통사고</p>
+            <p class="text-base font-semibold text-zinc-500"><%=banner.title%></p>
           </div>
         </div>
-        <div>
-          <div class="h-[200px] w-full lg:h-[280px]">
-            <img
-              src="/uploads/images/1742233951314-698618677.jpg"
-              alt="콘텐츠 이미지"
-              class="h-full w-full object-cover"
-            />
-          </div>
-          <div class="space-y-1 py-3 text-center">
-            <p class="font-['Oswald'] text-2xl font-semibold text-cyan-800">2.15M</p>
-            <p class="text-base font-semibold text-zinc-500">보행자 및 차량</p>
-          </div>
-        </div>
-        <div>
-          <div class="h-[200px] w-full lg:h-[280px]">
-            <img
-              src="/uploads/images/1742233951314-698618677.jpg"
-              alt="콘텐츠 이미지"
-              class="h-full w-full object-cover"
-            />
-          </div>
-          <div class="space-y-1 py-3 text-center">
-            <p class="font-['Oswald'] text-2xl font-semibold text-cyan-800">1M</p>
-            <p class="text-base font-semibold text-zinc-500">의료과실</p>
-          </div>
-        </div>
-        <div>
-          <div class="h-[200px] w-full lg:h-[280px]">
-            <img
-              src="/uploads/images/1742233951314-698618677.jpg"
-              alt="콘텐츠 이미지"
-              class="h-full w-full object-cover"
-            />
-          </div>
-          <div class="space-y-1 py-3 text-center">
-            <p class="font-['Oswald'] text-2xl font-semibold text-cyan-800">3.5M</p>
-            <p class="text-base font-semibold text-zinc-500">오토바이 교통사고</p>
-          </div>
-        </div>
+      <% }) %>
       </div>
     </div>
   </div>
