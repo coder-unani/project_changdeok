@@ -1,7 +1,7 @@
-import STATUS from '../common/variables/httpStatus';
+import { httpStatus } from '../common/variables';
 
 // CODE_ERROR, CODE_FAIL_SERVER, CODE_FAIL_VALIDATION 상수를 사용하여 typeCode를 정의
-export type typeCode = (typeof STATUS)[keyof typeof STATUS];
+export type typeCode = (typeof httpStatus)[keyof typeof httpStatus];
 export type typeMessage = string | undefined;
 
 export interface IServiceResponse<T = undefined> {
