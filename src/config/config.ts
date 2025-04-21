@@ -43,10 +43,20 @@ export const CONFIG = {
     : parseInt(process.env.JWT_EXPIRE_SECOND || '3600'),
 };
 
+export const CORS_API_OPTIONS = {
+  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+  maxAge: 86400, // 24시간
+  optionsSuccessStatus: 200,
+};
+
 export const CORS_OPTIONS = {
   origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
   optionsSuccessStatus: 200,
 };
+
 export const CORS_BACKEND_OPTIONS = {
   origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
   optionsSuccessStatus: 200,
