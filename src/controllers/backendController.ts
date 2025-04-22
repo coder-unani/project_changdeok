@@ -133,6 +133,8 @@ export class BackendController {
           groupInfo: {
             id: apiGroupInfo.metadata.group.ids?.[0],
             title: bannerGroupInfo.title,
+            imageWidth: bannerGroupInfo.imageWidth,
+            imageHeight: bannerGroupInfo.imageHeight,
           },
           seq,
         },
