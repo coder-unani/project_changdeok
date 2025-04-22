@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 
 import { AppError } from '../common/utils/error';
 import { frontendRoutes } from '../config/routes';
-import { IRoute } from '../types/object';
+import { IRoute } from '../types/config';
 
 export class FrontendController {
   constructor() {}

@@ -1,14 +1,15 @@
+import { IBannerService } from 'types/service';
 import { AppError, NotFoundError, ValidationError } from '../common/utils/error';
 import { deleteFile } from '../common/utils/file';
 import { formatDateToString } from '../common/utils/format';
 import { validateStringLength } from '../common/utils/validate';
 import { httpStatus } from '../common/variables';
-import { ExtendedPrismaClient } from '../common/library/database';
+import { ExtendedPrismaClient } from '../library/database';
 import { IBanner, IBannerGroup } from '../types/object';
 import { IRequestBannerUpdate, IRequestBannerWrite, IRequestBanners } from '../types/request';
 import { IServiceResponse } from '../types/response';
 
-export class BannerService {
+export class BannerService implements IBannerService {
   private prisma: ExtendedPrismaClient;
 
   constructor(prisma: ExtendedPrismaClient) {

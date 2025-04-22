@@ -1,34 +1,6 @@
 type typeOptionalNumber = number | null | undefined;
 type typeOptionalString = string | null | undefined;
 
-export interface IApiRoute {
-  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
-  title: string;
-  url: string;
-  permissions: number[];
-}
-
-export interface IRoute {
-  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
-  title: string;
-  url: string;
-  view: string;
-  layout: string;
-  permissions: number[];
-}
-
-export interface INestedRoutes<T> {
-  [key: string]: T | INestedRoutes<T>;
-}
-
-export type IApiRoutes = INestedRoutes<IApiRoute>;
-export type IRoutes = INestedRoutes<IRoute>;
-
-export interface IError {
-  statusCode: number;
-  message: string;
-}
-
 export interface IBannerGroup {
   id: number;
   kind: string;

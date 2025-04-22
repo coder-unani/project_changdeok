@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import { httpStatus } from '../common/variables';
-import { prisma } from '../common/library/database';
+import { prisma } from '../library/database';
 import {
   typeListSort,
   IRequestBannerWrite,
@@ -27,7 +27,7 @@ import { PermissionService } from '../services/permissionService';
 import { BannerService } from '../services/bannerService';
 import { ContentService } from '../services/contentService';
 import { formatApiResponse } from '../common/utils/format';
-import { createJWT, verifyJWT } from '../common/library/jwt';
+import { createJWT, verifyJWT } from '../library/jwt';
 import { getCookie, setCookie, removeCookie } from '../common/utils/cookie';
 import { getAccessedEmployee } from '../common/utils/verify';
 import { AppError, ValidationError, AuthError, PermissionError } from '../common/utils/error';

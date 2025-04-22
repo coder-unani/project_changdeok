@@ -2,7 +2,7 @@ import { AppError, NotFoundError, ValidationError } from '../common/utils/error'
 import { formatDateToString } from '../common/utils/format';
 import { validateStringLength } from '../common/utils/validate';
 import { httpStatus } from '../common/variables';
-import { ExtendedPrismaClient } from '../common/library/database';
+import { ExtendedPrismaClient } from '../library/database';
 import { IContent, IContentGroup } from '../types/object';
 import { IRequestContentUpdate, IRequestContentWrite, IRequestContents } from '../types/request';
 import { IServiceResponse } from '../types/response';

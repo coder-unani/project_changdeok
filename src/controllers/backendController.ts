@@ -12,13 +12,14 @@ import {
 } from '../common/api';
 import { getCookie } from '../common/utils/cookie';
 import { AppError, AuthError, ValidationError } from '../common/utils/error';
-import { verifyJWT } from '../common/library/jwt';
+import { verifyJWT } from '../library/jwt';
 import { getAccessToken } from '../common/utils/verify';
 import { CONFIG } from '../config/config';
-import { prisma } from '../common/library/database';
+import { prisma } from '../library/database';
 import { apiRoutes, backendRoutes } from '../config/routes';
 import { EmployeeService } from '../services/employeeService';
-import { IEmployeeToken, IRoute } from '../types/object';
+import { IEmployeeToken } from '../types/object';
+import { IRoute } from '../types/config';
 import { IRequestBanners, IRequestContents, typeListSort } from '../types/request';
 
 // TODO: 권한을 체크해서 다른 계정도 수정하게 할 것인지 확인 필요
