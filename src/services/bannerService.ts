@@ -335,6 +335,8 @@ export class BannerService implements IBannerService {
             groupId: bannerInfo.data.groupId,
             seq: bannerInfo.data.seq,
             isDeleted: false,
+            // 발행 기간 중복 체크
+            NOT: { id: bannerId },
             OR: [
               // 기존 발행일이 새로운 발행일보다 적고, 마감일이 없거나 새로운 발행일보다 큰 경우
               {
