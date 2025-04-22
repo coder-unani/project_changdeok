@@ -4,6 +4,8 @@ import { AppError } from '../common/utils/error';
 import { frontendRoutes } from '../config/routes';
 import { IRoute } from '../types/config';
 import { getApiBannerGroup } from '../common/api';
+import { IBannerDisp, IBannerGroup } from '../types/object';
+import { IApiResponse } from '../types/response';
 
 export class FrontendController {
   constructor() {}
@@ -14,21 +16,68 @@ export class FrontendController {
       // 웹 사이트 기본 정보 가져오기
 
       // 배너 정보 가져오기
-      // TODO: 배너 그룹 ID(2,3,4,5) 어떻게 저장할지 정의 필요
       const groupIds: number[] = [2, 3, 4, 5];
 
       // API 호출
-      // TODO: backend api 호출 방식과 동일해도 되는지
-      const { result, message, metadata, data: banners } = await getApiBannerGroup(groupIds);
+      const { result, message, metadata, data: bannerGroups } = await getApiBannerGroup(groupIds);
+      let topBanner: IBannerDisp = {
+        title: 'Trusted Expertise, Proven Results.',
+        description:
+          '<span>사고와 상해로 인해 피해를 입은 분들을 위해</span><br /><span>마땅히 보호받아야 할 권리를 찾도록 최선을 다하겠습니다.</span>',
+        imagePath: '/uploads/images/1742233951314-698618677.jpg',
+      };
+      let midBanner1: IBannerDisp = {
+        title: '오르빗코드 법률 사무소에서는',
+        description: '',
+        imagePath: '/uploads/banners/1744909064625-782173125.png',
+      };
+      let midBanner2: IBannerDisp[] = [];
+      let midBanner3: IBannerDisp[] = [];
 
-      // 호출 실패
-      if (!result) {
-        throw new Error(message as string);
-      }
+      if (result) {
+        if (bannerGroups?.[0]) {
+          bannerGroups[0].banners?.forEach((banner) => {
+            if (banner.seq === 1) {
+              topBanner = {
+                title: banner.title,
+                description: banner.description,
+                imagePath: banner.imagePath,
+              };
+            }
+          });
+        }
 
-      // 배너 그룹 정보가 없을 경우
-      if (!banners || banners.length === 0) {
-        throw new Error(message as string);
+        if (bannerGroups?.[1]) {
+          bannerGroups[1].banners?.forEach((banner) => {
+            if (banner.seq === 1) {
+              midBanner1 = {
+                title: banner.title,
+                description: banner.description,
+                imagePath: banner.imagePath,
+              };
+            }
+          });
+        }
+
+        if (bannerGroups?.[2]) {
+          bannerGroups[2].banners?.forEach((banner) => {
+            midBanner2.push({
+              title: banner.title,
+              description: banner.description,
+              imagePath: banner.imagePath,
+            });
+          });
+        }
+
+        if (bannerGroups?.[3]) {
+          bannerGroups[3].banners?.forEach((banner) => {
+            midBanner3.push({
+              title: banner.title,
+              description: banner.description,
+              imagePath: banner.imagePath,
+            });
+          });
+        }
       }
 
       // 페이지 데이터 생성
@@ -36,7 +85,12 @@ export class FrontendController {
         layout: route.layout,
         title: route.title,
         metadata,
-        data: banners,
+        data: {
+          topBanner,
+          midBanner1,
+          midBanner2,
+          midBanner3,
+        },
       };
 
       res.render(route.view, data);

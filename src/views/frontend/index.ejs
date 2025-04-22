@@ -1,7 +1,7 @@
 <!-- 메인 배너 -->
 <div class="relative h-screen w-full pt-[56px] lg:h-[800px]">
   <!-- TODO: 배너 이미지 설정 -->
-  <div class="absolute inset-0 -z-10 h-full w-full bg-[url('<%=data[0].banners[0].imagePath%>')] bg-cover bg-center">
+  <div class="absolute inset-0 -z-10 h-full w-full bg-[url('<%=data.topBanner.imagePath%>')] bg-cover bg-center">
     <div class="absolute inset-0 h-full w-full bg-black opacity-50"></div>
   </div>
   <div class="m-auto h-full w-full max-w-[1280px] px-10">
@@ -9,13 +9,11 @@
       <!-- TODO: 배너 문구 설정 -->
       <p class="mb-2 text-center break-keep text-white">
         <span class="font-['Cinzel'] text-2xl lg:text-[48px]">
-          <strong>Trusted Expertise, Proven Results.</strong>
+          <strong><%-data.topBanner.title%></strong>
         </span>
       </p>
       <p class="text-center text-base font-semibold break-keep text-white lg:text-xl">
-        <span>사고와 상해로 인해 피해를 입은 분들을 위해</span>
-        <br />
-        <span>마땅히 보호받아야 할 권리를 찾도록 최선을 다하겠습니다.</span>
+        <%-data.topBanner.description%>
       </p>
       <button
         id="contactBtn"
@@ -80,13 +78,19 @@
       </div>
       <div class="h-[150px] w-full lg:h-[450px]">
         <!-- TODO: 콘텐츠 이미지 설정 -->
-        <img src="<%=data[1].banners[0].imagePath%>" alt="<%=data[1].banners[0].description%>" class="h-full w-full object-cover" />
+        <img src="<%=data.midBanner1.imagePath%>" alt="<%=data.midBanner1.description%>" class="h-full w-full object-cover" />
       </div>
     </div>
   </div>
 </div>
 
 <!-- 메인 콘텐츠 2 -->
+<% if (data.midBanner2.length !== 0) { %>
+<div class="w-full">
+  <div class="m-auto h-full w-full max-w-[1280px] px-4 py-10 lg:px-10 lg:py-20">
+    <p class="text-center text-sm font-semibold text-zinc-400">등록된 배너가 없습니다.</p>
+  </div>
+</div>
 <div class="w-full bg-sky-50">
   <div class="m-auto h-full w-full max-w-[1280px] px-4 py-10 lg:px-10 lg:py-20">
     <div class="flex items-end justify-between pb-6 lg:pb-10">
@@ -105,7 +109,7 @@
       <!-- TODO: 콘텐츠 이미지 설정 -->
       <div id="mainContent2" class="swiper h-[475px] lg:h-[550px]">
         <div class="swiper-wrapper">
-        <% data[2].banners.forEach((banner, index) => { %>
+        <% data.midBanner2.forEach((banner, index) => { %>
           <div
             class="swiper-slide cursor-pointer" 
           >
@@ -127,8 +131,10 @@
     </div>
   </div>
 </div>
+<% } %>
 
 <!-- 메인 콘텐츠 3 -->
+<% if (data.midBanner3.length !== 0) { %>
 <div class="w-full">
   <div class="m-auto h-full w-full max-w-[1280px] px-4 py-10 lg:px-10 lg:py-20">
     <div class="flex items-end justify-between pb-6 lg:pb-10">
@@ -146,7 +152,7 @@
     <div class="lg:pl-50">
       <!-- TODO: 콘텐츠 이미지 설정 -->
       <div class="grid grid-cols-1 items-center justify-center gap-2 lg:grid-cols-2 lg:gap-4">
-      <% data[3].banners.forEach((banner) => { %>
+      <% data.midBanner3.forEach((banner) => { %>
         <div>
           <div class="h-[200px] w-full lg:h-[280px]">
             <img
@@ -165,6 +171,7 @@
     </div>
   </div>
 </div>
+<% } %>
 
 <!-- 문의 폼 -->
 <div class="w-full">

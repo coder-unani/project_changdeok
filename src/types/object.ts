@@ -13,15 +13,18 @@ export interface IBannerGroup {
   updatedAt?: typeOptionalString;
 }
 
-export interface IBanner {
-  id: number;
-  groupId: number;
-  seq: number;
+export interface IBannerDisp {
   title: string;
   description?: typeOptionalString;
   imagePath: typeOptionalString;
-  linkType: typeOptionalString;
-  linkUrl: typeOptionalString;
+  linkType?: typeOptionalString;
+  linkUrl?: typeOptionalString;
+}
+
+export interface IBanner extends IBannerDisp {
+  id: number;
+  groupId: number;
+  seq: number;
   isPublished: boolean;
   publishedAt?: typeOptionalString;
   unpublishedAt?: typeOptionalString;
