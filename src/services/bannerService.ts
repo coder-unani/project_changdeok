@@ -335,7 +335,7 @@ export class BannerService implements IBannerService {
             groupId: bannerInfo.data.groupId,
             seq: bannerInfo.data.seq,
             isDeleted: false,
-            // 발행 기간 중복 체크
+            isPublished: true,
             NOT: { id: bannerId },
             OR: [
               // 기존 발행일이 새로운 발행일보다 적고, 마감일이 없거나 새로운 발행일보다 큰 경우
@@ -364,6 +364,8 @@ export class BannerService implements IBannerService {
             ],
           },
         });
+
+        console.log(prismaPeriodCheck);
 
         if (prismaPeriodCheck) {
           throw new ValidationError('발행 기간이 중복되는 배너가 있습니다.');
