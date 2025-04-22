@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import { IMiddleware } from '../../types/middleware';
 import { IEmployeeToken } from '../../types/object';
 import { backendRoutes } from '../../config/routes';
-import { verifyJWT } from '../../common/library/jwt';
+import { verifyJWT } from '../../library/jwt';
 import { removeCookie } from '../../common/utils/cookie';
 
 export class AuthMiddleware implements IMiddleware {

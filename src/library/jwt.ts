@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-import { CONFIG } from '../../config/config';
+import { CONFIG } from '../config/config';
 
 // JWT 토큰 생성
 export const createJWT = (data: any): string => {

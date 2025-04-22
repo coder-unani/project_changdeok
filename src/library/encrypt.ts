@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import CryptoJS from 'crypto-js';
 
-import { CONFIG } from '../../config/config';
+import { CONFIG } from '../config/config';
 
 /**
  * 비밀번호를 해싱하는 함수
