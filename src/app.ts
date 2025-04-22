@@ -15,7 +15,7 @@ import { LoggerMiddleware } from './middlewares/logger';
 import { SanitizeMiddleware } from './middlewares/sanitizer';
 import { apiRouter, frontendRouter, backendRouter } from './routes';
 import { IMiddleware } from './types/middleware';
-import { nonceMiddleware } from './middlewares/nonce';
+import { NonceMiddleware } from './middlewares/nonce';
 
 /**
  * 필요한 환경 변수 설정
@@ -80,7 +80,8 @@ app.use(
 );
 
 // Nonce 미들웨어 적용 (helmet 설정 이후에 추가)
-app.use(nonceMiddleware);
+const nonceMiddleware = new NonceMiddleware();
+app.use((req, res, next) => nonceMiddleware.handle(req, res, next));
 
 // 요청 제한 설정 (15분에 1000개의 요청)
 // 참고) https://www.npmjs.com/package/express-rate-limit
