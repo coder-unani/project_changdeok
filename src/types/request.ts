@@ -20,7 +20,7 @@ export interface IRequestBannerUpdate {
   imagePath?: string | undefined | null;
   linkType?: string;
   linkUrl?: string;
-  isPublished?: boolean;
+  isPublished: boolean;
   publishedAt?: Date;
   unpublishedAt?: Date;
   updatedBy: number;

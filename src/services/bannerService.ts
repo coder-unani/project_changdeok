@@ -287,10 +287,10 @@ export class BannerService implements IBannerService {
       if (data.imagePath) updateData.imagePath = data.imagePath;
       if (data.linkType) updateData.linkType = data.linkType;
       if (data.linkUrl) updateData.linkUrl = data.linkUrl;
-      if (data.isPublished) updateData.isPublished = data.isPublished;
       if (data.publishedAt) updateData.publishedAt = new Date(data.publishedAt);
       if (data.unpublishedAt) updateData.unpublishedAt = new Date(data.unpublishedAt);
       if (data.updatedBy) updateData.updatedBy = data.updatedBy;
+      updateData.isPublished = data.isPublished;
 
       // imagePath가 있으면 기존 이미지 삭제
       if (updateData.imagePath) {
