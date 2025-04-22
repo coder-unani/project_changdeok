@@ -1,4 +1,4 @@
-import { IApiRoute, IApiRoutes, IRoute, IRoutes } from '../types/object';
+import { IApiRoute, IApiRoutes, IRoute, IRoutes } from '../types/config';
 
 export const apiBaseUrl = 'http://localhost:3000';
 export const apiRoutesPrefix = '/api';
@@ -257,7 +257,7 @@ export const frontendRoutes = {
   index: createRoute('GET', '홈', `${frontendRoutesPrefix}/`, 'frontend/index', frontendRoutesLayout, []),
   about: createRoute(
     'GET',
-    '법무법인 소개',
+    '법률 사무소 소개',
     `${frontendRoutesPrefix}/about`,
     'frontend/about',
     frontendRoutesLayout,
