@@ -1,4 +1,4 @@
-import { ICompanyInfo } from '../types/base';
+import { ICompanyInfo } from '../types/config';
 
 export const companyInfo: ICompanyInfo = {
   name: '오르빗코드',
