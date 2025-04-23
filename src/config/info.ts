@@ -8,6 +8,6 @@ export const companyInfo: ICompanyInfo = {
   address: '서울특별시 강남구 논현로2길 51(개포동) 06315 한국',
   tel: '000-000-0000',
   fax: '000-000-0000',
-  email: 'groot@orbitcode.kr',
+  email: 'info@orbitcode.kr',
   logo: '/images/logo.svg',
 };
