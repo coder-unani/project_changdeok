@@ -24,8 +24,6 @@ export const formatDate = (date: string | Date | undefined | null): typeFormatte
     // 양 옆 공백 제거
     date = date.trim();
 
-    console.log('date = ', date);
-
     if (!REG_DATE_PATTERN.test(date)) {
       return {
         result: false,

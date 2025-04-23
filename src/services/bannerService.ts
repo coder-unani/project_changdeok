@@ -365,8 +365,6 @@ export class BannerService implements IBannerService {
           },
         });
 
-        console.log(prismaPeriodCheck);
-
         if (prismaPeriodCheck) {
           throw new ValidationError('발행 기간이 중복되는 배너가 있습니다.');
         }
@@ -602,8 +600,6 @@ export class BannerService implements IBannerService {
           totalBanners: bannerGroups.reduce((acc, group) => acc + (group.banners?.length || 0), 0),
         },
       };
-
-      console.log('metadata = ', metadata);
 
       return {
         result: true,
