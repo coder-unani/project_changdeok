@@ -1,12 +1,10 @@
-<!-- 메인 배너 -->
+<!-- 상단 배너 -->
 <div class="relative h-screen w-full pt-[56px] lg:h-[800px]">
-  <!-- TODO: 배너 이미지 설정 -->
   <div class="absolute inset-0 -z-10 h-full w-full bg-[url('<%=data.topBanner.imagePath%>')] bg-cover bg-center">
     <div class="absolute inset-0 h-full w-full bg-black opacity-50"></div>
   </div>
   <div class="m-auto h-full w-full max-w-[1280px] px-10">
     <div class="flex h-full flex-col items-center justify-center gap-8 py-20">
-      <!-- TODO: 배너 문구 설정 -->
       <p class="mb-2 text-center break-keep text-white">
         <span class="font-['Cinzel'] text-2xl lg:text-[48px]">
           <strong><%-data.topBanner.title%></strong>
@@ -20,11 +18,6 @@
         class="flex cursor-pointer items-center rounded-full bg-[#0c0c0c] px-6 py-3 text-sm font-semibold text-white lg:text-[15px]"
       >
         <span>무료 상담하기</span>
-        <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" class="ml-2 h-3 w-3">
-          <path
-            d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"
-          />
-        </svg> -->
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" class="ml-2 h-3 w-3">
           <path
             d="M347.1 24.6c7.7-18.6 28-28.5 47.4-23.2l88 24C499.9 30.2 512 46 512 64c0 247.4-200.6 448-448 448c-18 0-33.8-12.1-38.6-29.5l-24-88c-5.3-19.4 4.6-39.7 23.2-47.4l96-40c16.3-6.8 35.2-2.1 46.3 11.6L207.3 368c70.4-33.3 127.4-90.3 160.7-160.7L318.7 167c-13.7-11.2-18.4-30-11.6-46.3l40-96z"
@@ -35,11 +28,10 @@
   </div>
 </div>
 
-<!-- 메인 콘텐츠 1 -->
+<!-- 법률 사무소에서는 -->
 <div class="w-full">
   <div class="m-auto h-full w-full max-w-[1280px] px-4 py-10 lg:px-10 lg:py-20">
     <div class="flex items-end justify-between border-b border-black pb-6 lg:pb-10">
-      <!-- TODO: 콘텐츠 문구 설정 -->
       <h3 class="text-2xl font-semibold lg:text-[36px]">
         <p><%=company.name%></p>
         <p>법률 사무소에서는</p>
@@ -51,7 +43,6 @@
       </div>
     </div>
     <div class="lg:pl-50">
-      <!-- TODO: 콘텐츠 문구 설정 -->
       <div class="flex flex-wrap justify-end gap-y-5 py-6 lg:gap-0 lg:py-10">
         <div class="flex-[50%] space-y-2.5 lg:flex-1 lg:px-4">
           <p class="text-base font-semibold lg:text-lg">24시간</p>
@@ -77,24 +68,17 @@
         </div>
       </div>
       <div class="h-[150px] w-full lg:h-[450px]">
-        <!-- TODO: 콘텐츠 이미지 설정 -->
         <img src="<%=data.midBanner1.imagePath%>" alt="<%=data.midBanner1.description%>" class="h-full w-full object-cover" />
       </div>
     </div>
   </div>
 </div>
 
-<!-- 메인 콘텐츠 2 -->
+<!-- 다양한 법률 서비스 -->
 <% if (data.midBanner2.length !== 0) { %>
-<div class="w-full">
-  <div class="m-auto h-full w-full max-w-[1280px] px-4 py-10 lg:px-10 lg:py-20">
-    <p class="text-center text-sm font-semibold text-zinc-400">등록된 배너가 없습니다.</p>
-  </div>
-</div>
 <div class="w-full bg-sky-50">
   <div class="m-auto h-full w-full max-w-[1280px] px-4 py-10 lg:px-10 lg:py-20">
     <div class="flex items-end justify-between pb-6 lg:pb-10">
-      <!-- TODO: 콘텐츠 문구 설정 -->
       <h3 class="text-2xl font-semibold lg:text-[36px]">
         <p>다양한</p>
         <p>법률 서비스</p>
@@ -106,8 +90,7 @@
       </div>
     </div>
     <div class="lg:pl-50">
-      <!-- TODO: 콘텐츠 이미지 설정 -->
-      <div id="mainContent2" class="swiper h-[475px] lg:h-[550px]">
+      <div id="mainServices" class="swiper h-[475px] lg:h-[550px]">
         <div class="swiper-wrapper">
         <% data.midBanner2.forEach((banner, index) => { %>
           <div
@@ -133,12 +116,11 @@
 </div>
 <% } %>
 
-<!-- 메인 콘텐츠 3 -->
+<!-- 서비스 성공 사례 -->
 <% if (data.midBanner3.length !== 0) { %>
 <div class="w-full">
   <div class="m-auto h-full w-full max-w-[1280px] px-4 py-10 lg:px-10 lg:py-20">
     <div class="flex items-end justify-between pb-6 lg:pb-10">
-      <!-- TODO: 콘텐츠 문구 설정 -->
       <h3 class="text-2xl font-semibold lg:text-[36px]">
         <p>서비스</p>
         <p>성공 사례</p>
@@ -150,7 +132,6 @@
       </div>
     </div>
     <div class="lg:pl-50">
-      <!-- TODO: 콘텐츠 이미지 설정 -->
       <div class="grid grid-cols-1 items-center justify-center gap-2 lg:grid-cols-2 lg:gap-4">
       <% data.midBanner3.forEach((banner) => { %>
         <div>
@@ -177,7 +158,6 @@
 <div class="w-full">
   <div class="m-auto h-full w-full max-w-[1280px] border-t border-black px-4 py-10 lg:px-10 lg:py-20">
     <div class="flex flex-col justify-between pb-10 lg:flex-row lg:items-end">
-      <!-- TODO: 콘텐츠 문구 설정 -->
       <h3 class="mb-4 text-2xl font-semibold lg:mb-0 lg:text-[36px]">
         <p>온라인 상담</p>
       </h3>
@@ -187,7 +167,7 @@
     </div>
     <div class="lg:pl-50">
       <!-- TODO: 문의 폼 -->
-      <form action="" class="space-y-4">
+      <form id="formContact" action="" class="space-y-4">
         <!-- 이름 -->
         <div class="space-y-2 text-sm">
           <div class="text-sm font-medium">
@@ -284,44 +264,48 @@
 <script src="/js/swiper@11/swiper-bundle.min.js"></script>
 
 <script nonce="<%=nonce%>">
-  // 버튼 클릭시 상담 페이지로 이동
-  document.getElementById('contactBtn').addEventListener('click', () => {
-    location.href = '<%=routes.contact.url%>';
-  });
-
-  // 버튼 클릭시 소개 페이지로 이동
-  document.getElementById('aboutBtn').addEventListener('click', () => {
-    location.href = '<%=routes.about.url%>';
-  });
-
-  // 버튼 클릭시 업무분야 페이지로 이동
-  document.getElementById('servicesBtn').addEventListener('click', () => {
-    location.href = '<%=routes.services.url%>';
-  });
-
-  // 버튼 클릭시 성공사례 페이지로 이동
-  document.getElementById('resultsBtn').addEventListener('click', () => {
-    location.href = '<%=routes.results.url%>';
-  });
-
-  // 콘텐츠 2 스와이퍼 설정
-  const mainSwiper = new Swiper('#mainContent2', {
-    slidesPerView: 1.3,
-    spaceBetween: 4,
-    loop: true,
-    autoplay: {
-      delay: 3000,
-    },
-    pagination: {
-      el: '.swiper-pagination',
-      clickable: true,
-    },
-    // 1024px 이상일 때
-    breakpoints: {
-      1024: {
-        slidesPerView: 3.3,
-        spaceBetween: 4,
+  document.addEventListener("DOMContentLoaded", () => {
+    // 버튼 클릭시 상담 페이지로 이동
+    document.getElementById('contactBtn').addEventListener('click', () => {
+      location.href = '<%=routes.contact.url%>';
+    });
+  
+    // 버튼 클릭시 소개 페이지로 이동
+    document.getElementById('aboutBtn').addEventListener('click', () => {
+      location.href = '<%=routes.about.url%>';
+    });
+  
+    // 버튼 클릭시 업무분야 페이지로 이동
+    document.getElementById('servicesBtn').addEventListener('click', () => {
+      location.href = '<%=routes.services.url%>';
+    });
+  
+    // 버튼 클릭시 성공사례 페이지로 이동
+    document.getElementById('resultsBtn').addEventListener('click', () => {
+      location.href = '<%=routes.results.url%>';
+    });
+  
+    // 스와이퍼 설정
+    const mainServicesSwiper = new Swiper('#mainServices', {
+      slidesPerView: 1.3,
+      spaceBetween: 4,
+      loop: true,
+      autoplay: {
+        delay: 3000,
       },
-    },
-  });
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+      // 1024px 이상일 때
+      breakpoints: {
+        1024: {
+          slidesPerView: 3.3,
+          spaceBetween: 4,
+        },
+      },
+    });
+
+    // 폼
+  })
 </script>

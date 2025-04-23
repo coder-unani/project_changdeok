@@ -1,17 +1,15 @@
-<!-- 메인 배너 -->
+<!-- 소개 상단 배너 -->
 <div class="relative h-[50vh] w-full pt-[56px] lg:h-[460px]">
-  <!-- TODO: 배너 이미지 설정 -->
   <div
-    class="bg- absolute inset-0 -z-10 h-full w-full bg-[url('/uploads/images/1742233951314-698618677.jpg')] bg-cover bg-fixed bg-center"
+    class="bg- absolute inset-0 -z-10 h-full w-full bg-[url('/images/banner-about.webp')] bg-cover bg-fixed bg-center"
   >
     <div class="absolute inset-0 h-full w-full bg-black opacity-50"></div>
   </div>
   <div class="m-auto h-full w-full max-w-[1280px] px-10">
     <div class="flex h-full flex-col items-center justify-center gap-8 py-20">
-      <!-- TODO: 배너 문구 설정 -->
       <p class="mb-2 text-center break-keep text-white">
         <span class="text-2xl lg:text-[48px]">
-          <strong>법률 사무소 소개</strong>
+          <strong><%=routes.about.title%></strong>
         </span>
       </p>
       <p class="text-center font-['Oswald'] text-base break-keep text-white lg:text-xl">
@@ -21,10 +19,9 @@
   </div>
 </div>
 
-<!-- 소개 콘텐츠 1 -->
+<!-- 소개 문구 -->
 <div class="w-full">
   <div class="m-auto h-full w-full max-w-[1280px] px-4 py-10 lg:px-10 lg:py-20">
-    <!-- TODO: 콘텐츠 문구 설정 -->
     <div class="space-y-10 pb-10">
       <div>
         <h4 class="text-3xl font-semibold text-wrap break-keep">
@@ -65,15 +62,12 @@
   </div>
 </div>
 
-<!-- 소개 콘텐츠 2 -->
+<!-- 변호사 정보 -->
 <div class="relative w-full">
-  <!-- TODO: 배너 이미지 설정 -->
   <div
-    class="absolute inset-0 -z-10 h-full w-full bg-[url('/uploads/images/1742233951314-698618677.jpg')] bg-cover bg-center"
+    class="absolute inset-0 -z-10 h-full w-full bg-[url('/images/banner-lawyer1.webp')] bg-cover bg-center"
   >
-    <div class="absolute inset-0 h-full w-full bg-black opacity-50"></div>
   </div>
-  <!-- TODO: 콘텐츠 문구 설정 -->
   <div class="m-auto h-full w-full max-w-[1280px] px-4 py-10 lg:px-10 lg:py-20">
     <div class="space-y-10 pb-10 text-white">
       <div class="space-y-2">
@@ -88,7 +82,7 @@
   </div>
 </div>
 
-<!-- 소개 콘텐츠 3 -->
+<!-- 변호사 소개 -->
 <div class="w-full">
   <div class="m-auto h-full w-full max-w-[1280px] px-4 pt-10 lg:px-10 lg:pt-20">
     <div class="space-y-6 border-b border-zinc-300 pb-20">
@@ -127,14 +121,13 @@
   </div>
 </div>
 
-<!-- 소개 콘텐츠 4 -->
+<!-- 약력 -->
 <div class="w-full">
   <div class="m-auto h-full w-full max-w-[1280px] px-4 pt-10 lg:px-10 lg:pt-20">
     <div
       class="flex flex-col-reverse items-center justify-between border-b border-zinc-300 pb-20 lg:flex-row lg:items-start"
     >
       <div class="flex-1">
-        <!-- TODO: 콘텐츠 문구 설정 -->
         <h3 class="pb-6 text-2xl font-semibold lg:pb-10 lg:text-[36px]">
           <p>약력</p>
         </h3>
@@ -152,103 +145,48 @@
         </div>
       </div>
       <div class="aspect-2/3 w-[250px]">
-        <img src="/uploads/images/1742233951314-698618677.jpg" alt="소개 이미지" class="h-full w-full object-cover" />
+        <img src="/images/banner-lawyer2.jpeg" alt="변호사 이미지" class="h-full w-full object-cover" />
       </div>
     </div>
   </div>
 </div>
 
-<!-- 소개 콘텐츠 6 -->
+<!-- 다양한 법률 서비스 -->
+<% if (data.midBanner.length !== 0) { %>
 <div class="w-full">
   <div class="m-auto h-full w-full max-w-[1280px] px-4 py-10 lg:px-10 lg:py-20">
     <div class="flex items-end justify-between pb-6 lg:pb-10">
-      <!-- TODO: 콘텐츠 문구 설정 -->
       <h3 class="text-2xl font-semibold lg:text-[36px]">
         <p>다양한</p>
         <p>법률 서비스</p>
       </h3>
     </div>
     <div class="pb-10">
-      <!-- TODO: 콘텐츠 이미지 설정 -->
       <div id="aboutContent6" class="swiper h-[475px] lg:h-[550px]">
         <div class="swiper-wrapper">
-          <div
-            class="swiper-slide cursor-pointer bg-[url(/uploads/images/1742233951314-698618677.jpg)] bg-cover bg-center"
-          >
-            <div class="absolute inset-0 -z-10 bg-black opacity-50"></div>
-            <div class="flex h-full w-full flex-col justify-between p-8">
-              <div class="flex items-center justify-between">
-                <div class="mr-10 w-full border-2 border-b border-white"></div>
-                <p class="font-['Oswald'] text-2xl font-semibold text-white">01</p>
+          <% data.midBanner.forEach((banner, index) => { %>
+            <div
+              class="swiper-slide cursor-pointer"
+            >
+              <div class="absolute inset-0 -z-10">
+                <div class="absolute inset-0 bg-black opacity-50"></div>
+                <img class="relative h-full w-full -z-10 object-cover" src="<%=banner.imagePath%>" alt="<%=banner.description%>" />
               </div>
-              <p class="w-[50%] text-2xl font-semibold text-wrap break-keep text-white">치명적 상해사고</p>
-            </div>
-          </div>
-          <div
-            class="swiper-slide cursor-pointer bg-[url(/uploads/images/1742233951314-698618677.jpg)] bg-cover bg-center"
-          >
-            <div class="absolute inset-0 -z-10 bg-black opacity-50"></div>
-            <div class="flex h-full w-full flex-col justify-between p-8">
-              <div class="flex items-center justify-between">
-                <div class="mr-10 w-full border-2 border-b border-white"></div>
-                <p class="font-['Oswald'] text-2xl font-semibold text-white">02</p>
+              <div class="flex h-full w-full flex-col justify-between p-8">
+                <div class="flex items-center justify-between">
+                  <div class="mr-10 w-full border-2 border-b border-white"></div>
+                  <p class="font-['Oswald'] text-2xl font-semibold text-white"><%=String(index + 1).padStart(2, '0')%></p>
+                </div>
+                <p class="w-[50%] text-2xl font-semibold text-wrap break-keep text-white"><%=banner.title%></p>
               </div>
-              <p class="w-[50%] text-2xl font-semibold text-wrap break-keep text-white">대형 교통사고</p>
             </div>
-          </div>
-          <div
-            class="swiper-slide cursor-pointer bg-[url(/uploads/images/1742233951314-698618677.jpg)] bg-cover bg-center"
-          >
-            <div class="absolute inset-0 -z-10 bg-black opacity-50"></div>
-            <div class="flex h-full w-full flex-col justify-between p-8">
-              <div class="flex items-center justify-between">
-                <div class="mr-10 w-full border-2 border-b border-white"></div>
-                <p class="font-['Oswald'] text-2xl font-semibold text-white">03</p>
-              </div>
-              <p class="w-[50%] text-2xl font-semibold text-wrap break-keep text-white">의료 사고</p>
-            </div>
-          </div>
-          <div
-            class="swiper-slide cursor-pointer bg-[url(/uploads/images/1742233951314-698618677.jpg)] bg-cover bg-center"
-          >
-            <div class="absolute inset-0 -z-10 bg-black opacity-50"></div>
-            <div class="flex h-full w-full flex-col justify-between p-8">
-              <div class="flex items-center justify-between">
-                <div class="mr-10 w-full border-2 border-b border-white"></div>
-                <p class="font-['Oswald'] text-2xl font-semibold text-white">04</p>
-              </div>
-              <p class="w-[50%] text-2xl font-semibold text-wrap break-keep text-white">보행자 및 자전거 사고</p>
-            </div>
-          </div>
-          <div
-            class="swiper-slide cursor-pointer bg-[url(/uploads/images/1742233951314-698618677.jpg)] bg-cover bg-center"
-          >
-            <div class="absolute inset-0 -z-10 bg-black opacity-50"></div>
-            <div class="flex h-full w-full flex-col justify-between p-8">
-              <div class="flex items-center justify-between">
-                <div class="mr-10 w-full border-2 border-b border-white"></div>
-                <p class="font-['Oswald'] text-2xl font-semibold text-white">05</p>
-              </div>
-              <p class="w-[50%] text-2xl font-semibold text-wrap break-keep text-white">구내 상해사고</p>
-            </div>
-          </div>
-          <div
-            class="swiper-slide cursor-pointer bg-[url(/uploads/images/1742233951314-698618677.jpg)] bg-cover bg-center"
-          >
-            <div class="absolute inset-0 -z-10 bg-black opacity-50"></div>
-            <div class="flex h-full w-full flex-col justify-between p-8">
-              <div class="flex items-center justify-between">
-                <div class="mr-10 w-full border-2 border-b border-white"></div>
-                <p class="font-['Oswald'] text-2xl font-semibold text-white">06</p>
-              </div>
-              <p class="w-[50%] text-2xl font-semibold text-wrap break-keep text-white">개에게 물림 사고</p>
-            </div>
-          </div>
+          <% }) %>
         </div>
       </div>
     </div>
   </div>
 </div>
+<% } %>
 
 <!-- swiper -->
 <link rel="stylesheet" href="/js/swiper@11/swiper-bundle.min.css" />

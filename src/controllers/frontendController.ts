@@ -13,8 +13,6 @@ export class FrontendController {
   // 홈
   public index = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
-      // 웹 사이트 기본 정보 가져오기
-
       // 배너 정보 가져오기
       const groupIds: number[] = [2, 3, 4, 5];
 
@@ -34,6 +32,7 @@ export class FrontendController {
       let midBanner2: IBannerDisp[] = [];
       let midBanner3: IBannerDisp[] = [];
 
+      // 배너 정보 조회 성공
       if (result) {
         if (bannerGroups?.[0]) {
           bannerGroups[0].banners?.forEach((banner) => {
@@ -102,12 +101,33 @@ export class FrontendController {
   // 소개
   public about = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
+      // 배너 정보 가져오기
+      const groupIds: number[] = [4];
+
+      // API 호출
+      const { result, message, metadata, data: bannerGroups } = await getApiBannerGroup(groupIds);
+      const midBanner: IBannerDisp[] = [];
+
+      if (result) {
+        if (bannerGroups?.[0]) {
+          bannerGroups[0].banners?.forEach((banner) => {
+            midBanner.push({
+              title: banner.title,
+              description: banner.description,
+              imagePath: banner.imagePath,
+            });
+          });
+        }
+      }
+
       // 페이지 데이터 생성
       const data = {
         layout: route.layout,
         title: route.title,
         metadata: {},
-        data: {},
+        data: {
+          midBanner,
+        },
       };
 
       res.render(route.view, data);
@@ -119,12 +139,33 @@ export class FrontendController {
   // 업무분야
   public services = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
+      // 배너 정보 가져오기
+      const groupIds: number[] = [4];
+
+      // API 호출
+      const { result, message, metadata, data: bannerGroups } = await getApiBannerGroup(groupIds);
+      const midBanner: IBannerDisp[] = [];
+
+      if (result) {
+        if (bannerGroups?.[0]) {
+          bannerGroups[0].banners?.forEach((banner) => {
+            midBanner.push({
+              title: banner.title,
+              description: banner.description,
+              imagePath: banner.imagePath,
+            });
+          });
+        }
+      }
+
       // 페이지 데이터 생성
       const data = {
         layout: route.layout,
         title: route.title,
         metadata: {},
-        data: {},
+        data: {
+          midBanner,
+        },
       };
 
       res.render(route.view, data);
