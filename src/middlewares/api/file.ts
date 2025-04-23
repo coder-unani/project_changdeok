@@ -114,7 +114,13 @@ export class MediaUploadMiddleware implements IMiddleware {
     upload(req, res, async (err) => {
       if (err) {
         if (err instanceof multer.MulterError) {
-          return res.status(400).json({ message: err.message });
+          if (err.code === 'LIMIT_FILE_SIZE') {
+            // 원하는 코드와 메시지로 응답
+            return res.status(413).json({ error: '파일이 너무 큽니다. 최대 50MB까지 업로드 가능합니다.' });
+            // 또는 400 등 원하는 코드로 변경 가능
+          } else {
+            return res.status(400).json({ message: err.message });
+          }
         }
         return res.status(400).json({ message: err.message || '파일 업로드 중 오류가 발생했습니다.' });
       }
@@ -123,7 +129,7 @@ export class MediaUploadMiddleware implements IMiddleware {
       if (this.convertToWebP && req.files && Array.isArray(req.files)) {
         try {
           for (const file of req.files) {
-            if (file.mimetype.startsWith('image/')) {
+            if (file.mimetype.startsWith('image/') && file.mimetype !== 'image/webp') {
               const originalPath = file.path;
               const webpPath = path.join(path.dirname(originalPath), `${path.parse(originalPath).name}.webp`);
 
