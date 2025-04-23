@@ -21,6 +21,8 @@ export const CONFIG = {
    */
   LOG_PATH: process.env.LOG_PATH || undefined,
   LOG_LEVEL: process.env.LOG_LEVEL || undefined,
+
+  MAX_FILE_UPLOAD_SIZE: Number(process.env.MAX_FILE_UPLOAD_SIZE) || 20, // 20MB
   /**
    * Crypto 비밀키 (32바이트)
    * openssl rand -base64 32 (납품처가 변경될 때마다 새로운 키를 생성)
