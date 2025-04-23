@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { AppError } from '../common/utils/error';
 import { frontendRoutes } from '../config/routes';
 import { IRoute } from '../types/config';
-import { getApiBannerGroup } from '../common/api';
+import { getApiBannerGroup, getApiContentGroup } from '../common/api';
 import { IBannerDisp, IBannerGroup } from '../types/object';
 import { IApiResponse } from '../types/response';
 
@@ -14,10 +14,10 @@ export class FrontendController {
   public index = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 배너 정보 가져오기
-      const groupIds: number[] = [2, 3, 4, 5];
+      const bannerGroupIds: number[] = [2, 3, 4, 5];
 
       // API 호출
-      const { result, message, metadata, data: bannerGroups } = await getApiBannerGroup(groupIds);
+      const getBannerGroup = await getApiBannerGroup(bannerGroupIds);
       let topBanner: IBannerDisp = {
         title: 'Trusted Expertise, Proven Results.',
         description:
@@ -33,9 +33,9 @@ export class FrontendController {
       let midBanner3: IBannerDisp[] = [];
 
       // 배너 정보 조회 성공
-      if (result) {
-        if (bannerGroups?.[0]) {
-          bannerGroups[0].banners?.forEach((banner) => {
+      if (getBannerGroup.result) {
+        if (getBannerGroup.data?.[0]) {
+          getBannerGroup.data[0].banners?.forEach((banner) => {
             if (banner.seq === 1) {
               topBanner = {
                 title: banner.title,
@@ -46,8 +46,8 @@ export class FrontendController {
           });
         }
 
-        if (bannerGroups?.[1]) {
-          bannerGroups[1].banners?.forEach((banner) => {
+        if (getBannerGroup.data?.[1]) {
+          getBannerGroup.data[1].banners?.forEach((banner) => {
             if (banner.seq === 1) {
               midBanner1 = {
                 title: banner.title,
@@ -58,8 +58,8 @@ export class FrontendController {
           });
         }
 
-        if (bannerGroups?.[2]) {
-          bannerGroups[2].banners?.forEach((banner) => {
+        if (getBannerGroup.data?.[2]) {
+          getBannerGroup.data[2].banners?.forEach((banner) => {
             midBanner2.push({
               title: banner.title,
               description: banner.description,
@@ -68,8 +68,8 @@ export class FrontendController {
           });
         }
 
-        if (bannerGroups?.[3]) {
-          bannerGroups[3].banners?.forEach((banner) => {
+        if (getBannerGroup.data?.[3]) {
+          getBannerGroup.data[3].banners?.forEach((banner) => {
             midBanner3.push({
               title: banner.title,
               description: banner.description,
@@ -79,11 +79,20 @@ export class FrontendController {
         }
       }
 
+      // 콘텐츠 그룹 정보 가져오기
+      const contentGroupId: number = 3;
+
+      // API 호출
+      const getContentGroup = await getApiContentGroup(contentGroupId);
+
       // 페이지 데이터 생성
       const data = {
         layout: route.layout,
         title: route.title,
-        metadata,
+        metadata: {
+          banner: getBannerGroup.metadata,
+          content: getContentGroup.metadata,
+        },
         data: {
           topBanner,
           midBanner1,

@@ -1,7 +1,8 @@
 <!-- 상단 배너 -->
 <div class="relative h-screen w-full pt-[56px] lg:h-[800px]">
-  <div class="absolute inset-0 -z-10 h-full w-full bg-[url('<%=data.topBanner.imagePath%>')] bg-cover bg-center">
+  <div class="absolute inset-0 -z-10 h-full w-full">
     <div class="absolute inset-0 h-full w-full bg-black opacity-50"></div>
+    <img class="relative h-full w-full -z-10 object-cover object-center" src="<%=data.topBanner.imagePath%>" alt="<%-data.topBanner.description%>" />
   </div>
   <div class="m-auto h-full w-full max-w-[1280px] px-10">
     <div class="flex h-full flex-col items-center justify-center gap-8 py-20">
@@ -98,7 +99,7 @@
           >
             <div class="absolute inset-0 -z-10">
               <div class="absolute inset-0 bg-black opacity-50"></div>
-              <img class="relative h-full w-full -z-10 object-cover" src="<%=banner.imagePath%>" alt="<%=banner.description%>" />
+              <img class="relative h-full w-full -z-10 object-cover" src="<%=banner.imagePath%>" alt="<%=banner.title%>" />
             </div>
             <div class="flex h-full w-full flex-col justify-between p-8">
               <div class="flex items-center justify-between">
@@ -138,12 +139,12 @@
           <div class="h-[200px] w-full lg:h-[280px]">
             <img
               src="<%=banner.imagePath%>"
-              alt="<%=banner.description%>"
+              alt="<%=banner.title%>"
               class="h-full w-full object-cover"
             />
           </div>
           <div class="space-y-1 py-3 text-center">
-            <p class="font-['Oswald'] text-2xl font-semibold text-cyan-800">19M</p>
+            <p class="font-['Oswald'] text-2xl font-semibold text-cyan-800"><%=banner.description%></p>
             <p class="text-base font-semibold text-zinc-500"><%=banner.title%></p>
           </div>
         </div>
@@ -223,26 +224,26 @@
               class="w-full rounded-full border-r-12 border-transparent px-4 py-2 font-semibold placeholder:text-zinc-400 focus:ring-2 focus:ring-sky-500 focus:outline-none"
             >
               <option value="">업무분야를 선택해주세요.</option>
-              <option value="1">치명적 상해사고</option>
-              <option value="2">대형 교통사고</option>
-              <option value="3">의료사고</option>
-              <option value="4">보행자 및 자전거 사고</option>
-              <option value="5">구내 상해사고</option>
-              <option value="6">개에게 물림 사고</option>
-              <option value="7">제조물 책임</option>
-              <option value="8">기타</option>
+              <option value="치명적 상해사고">치명적 상해사고</option>
+              <option value="대형 교통사고">대형 교통사고</option>
+              <option value="의료사고">의료사고</option>
+              <option value="보향자 및 자전거 사고">보행자 및 자전거 사고</option>
+              <option value="구내 상해사고">구내 상해사고</option>
+              <option value="개에게 물림 사고">개에게 물림 사고</option>
+              <option value="제조물 책임">제조물 책임</option>
+              <option value="기타">기타</option>
             </select>
           </div>
         </div>
         <!-- 내용 -->
         <div class="space-y-2 text-sm">
           <div class="text-sm font-medium">
-            <label for="description">상담 내용</label>
+            <label for="content">상담 내용</label>
             <span class="text-rose-500">*</span>
           </div>
           <textarea
-            id="description"
-            name="description"
+            id="content"
+            name="content"
             class="min-h-[160px] w-full rounded-xl border border-zinc-400 px-4 py-2 font-semibold placeholder:text-sm placeholder:text-zinc-400 focus:ring-2 focus:ring-sky-500 focus:outline-none"
             placeholder="상담하실 내용을 작성해주세요."
             required
@@ -306,6 +307,56 @@
       },
     });
 
-    // 폼
+    // 폼 데이터 전송
+    document.getElementById('formContact').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      try {
+        // TODO: 폼 데이터 유효성 검사, 개인정보 암호화 처리
+        // isNonUserWrite, isEncrypt = true;
+
+        // 폼 데이터 수집
+        const formData = new FormData(e.target);
+        
+        // 폼 데이터 변환
+        const data = {};
+        formData.forEach((value, key) => {
+          data[key] = value;
+        });
+        
+        const formatData = {
+          title: data.subject,
+          content: `
+          이름: ${data.name}<br>
+          이메일: ${data.email}<br>
+          연락처: ${data.phone}<br>
+          업무분야: ${data.subject}<br>
+          내용: ${data.content}
+        `
+        };
+
+        // 콘텐츠 저장 API 호출
+        const groupId = '<%=metadata.content.group.id%>';
+        const saveUrl = '<%=apiRoutes.contents.write.url%>'.replace(':groupId', groupId);
+
+        const response = await fetch(saveUrl, {
+          method: '<%=apiRoutes.contents.write.method%>',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formatData),
+        });
+
+        // 응답 오류
+        if (!response.ok) {
+          throw new Error('상담 신청에 실패하였습니다.');
+        }
+
+        // 응답 성공
+        alert('상담 신청이 완료되었습니다. 빠른 시일 내에 연락드리겠습니다.');
+      } catch (err) {
+        alert('상담 신청에 실패하였습니다. 다시 시도해주세요.');
+      }
+    });
   })
 </script>

@@ -1,3 +1,4 @@
+import { encryptDataAES } from '../library/encrypt';
 import { AppError, NotFoundError, ValidationError } from '../common/utils/error';
 import { formatDateToString } from '../common/utils/format';
 import { validateStringLength } from '../common/utils/validate';
@@ -27,6 +28,19 @@ export class ContentService implements IContentService {
       const validateContent = validateStringLength(data.content, 1, 1000);
       if (!validateContent.result) {
         throw new ValidationError(validateContent.message);
+      }
+
+      // 컨텐츠 그룹 정보 조회
+      const groupInfo = await this.groupInfo(groupId);
+
+      if (!groupInfo.result) {
+        throw new AppError(groupInfo.code, groupInfo.message);
+      }
+
+      // 컨텐츠 암호화 여부 확인
+      if (groupInfo.data?.isEncrypt) {
+        // 컨텐츠 암호화
+        data.content = encryptDataAES(data.content);
       }
 
       // 컨텐츠 생성

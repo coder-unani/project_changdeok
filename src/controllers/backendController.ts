@@ -21,6 +21,7 @@ import { EmployeeService } from '../services/employeeService';
 import { IEmployeeToken } from '../types/object';
 import { IRoute } from '../types/config';
 import { IRequestBanners, IRequestContents, typeListSort } from '../types/request';
+import { decryptDataAES } from '../library/encrypt';
 
 // TODO: 권한을 체크해서 다른 계정도 수정하게 할 것인지 확인 필요
 export class BackendController {
@@ -337,12 +338,12 @@ export class BackendController {
 
       // 게시판 ID가 없는 경우
       if (!groupId) {
-        throw new Error('존재하지 않는 게시판입니다.');
+        throw new ValidationError('존재하지 않는 게시판입니다.');
       }
 
       // ID가 숫자가 아닌 경우
       if (isNaN(groupId)) {
-        throw new Error('게시판 아이디가 형식에 맞지 않습니다.');
+        throw new ValidationError('게시판 아이디가 형식에 맞지 않습니다.');
       }
 
       // params 생성
@@ -356,10 +357,14 @@ export class BackendController {
       // API 호출
       const accessToken = getAccessToken(req);
       if (!accessToken) {
-        throw new Error('로그인이 필요합니다.');
+        throw new AuthError('로그인이 필요합니다.');
       }
 
-      const { metadata, data: contents } = await getApiContents(groupId, params);
+      const { result, code, message, metadata, data: contents } = await getApiContents(groupId, params);
+
+      if (!result) {
+        throw new AppError(code || 500, message || '');
+      }
 
       // 게시판 그룹 정보
       const { data: group } = await getApiContentGroup(groupId);
@@ -431,33 +436,50 @@ export class BackendController {
       this.verifyPermission(req, route.permissions);
 
       // 게시판 ID와 게시글 ID 추출
-      const groupId = parseInt(req.params.groupId);
-      const contentId = parseInt(req.params.contentId);
+      const groupId = Number(req.params.groupId);
+      const contentId = Number(req.params.contentId);
 
       // 컨텐츠 그룹 ID가 없는 경우
-      if (!groupId) {
-        throw new Error('존재하지 않는 게시판입니다.');
+      if (!groupId || isNaN(groupId)) {
+        throw new ValidationError('잘못된 게시판 그룹 입니다.');
       }
 
       // 컨텐츠 ID가 없는 경우
-      if (!contentId) {
-        throw new Error('존재하지 않는 게시글입니다.');
+      if (!contentId || isNaN(contentId)) {
+        throw new ValidationError('잘못된 게시글 번호 입니다.');
       }
 
-      // API 호출
-      const { metadata, data: content } = await getApiContentDetail(groupId, contentId);
+      // 게시판 그룹 정보 API 호출
+      const getContentGroup = await getApiContentGroup(groupId);
 
-      // 게시판 그룹 정보
-      const { data: group } = await getApiContentGroup(groupId);
+      if (!getContentGroup.result) {
+        throw new AppError(getContentGroup.code || 500, getContentGroup.message || '');
+      }
 
-      const groupTitle = group?.title ?? '게시판';
+      const groupTitle = getContentGroup.data?.title ?? '게시판';
+
+      // 컨텐츠 상세 API 호출
+      const getContentDetail = await getApiContentDetail(groupId, contentId);
+
+      if (!getContentDetail.result) {
+        throw new AppError(getContentDetail.code || 500, getContentDetail.message || '');
+      }
+
+      // 게시글 상세 content가 있을 경우
+      if (getContentGroup.data?.isEncrypt && getContentDetail.data?.content) {
+        // AES 복호화
+        getContentDetail.data.content = decryptDataAES(getContentDetail.data?.content);
+      }
 
       // 페이지 데이터 생성
       const data = {
         layout: route.layout,
         title: `${groupTitle} 상세`,
-        metadata,
-        data: content,
+        metadata: {
+          group: getContentGroup.metadata,
+          content: getContentDetail.metadata,
+        },
+        data: getContentDetail.data,
       };
 
       // 게시글 상세 정보 페이지 렌더링
