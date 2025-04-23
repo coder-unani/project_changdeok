@@ -36,7 +36,7 @@ export class MediaUploadMiddleware implements IMiddleware {
     this.filter = options.filter ? options.filter : 'image';
     this.fieldName = options.fieldName ? options.fieldName : 'file';
     this.maxFileCount = options.maxFileCount ? options.maxFileCount : 1;
-    this.maxFileSize = options.maxFileSize ? options.maxFileSize : 20 * 1024 * 1024; // 20MB
+    this.maxFileSize = options.maxFileSize ? options.maxFileSize : 1 * 1024 * 1024; // 20MB
     this.useDateFolder = options.useDateFolder !== undefined ? options.useDateFolder : false;
     this.convertToWebP = options.convertToWebP !== undefined ? options.convertToWebP : false;
     this.webpQuality = options.webpQuality ? options.webpQuality : 80;
@@ -116,7 +116,7 @@ export class MediaUploadMiddleware implements IMiddleware {
         if (err instanceof multer.MulterError) {
           if (err.code === 'LIMIT_FILE_SIZE') {
             // 원하는 코드와 메시지로 응답
-            return res.status(413).json({ error: '파일이 너무 큽니다. 최대 50MB까지 업로드 가능합니다.' });
+            return res.status(413).json({ message: '파일이 너무 큽니다. 최대 20MB까지 업로드 가능합니다.' });
             // 또는 400 등 원하는 코드로 변경 가능
           } else {
             return res.status(400).json({ message: err.message });

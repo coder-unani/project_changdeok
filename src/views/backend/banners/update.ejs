@@ -39,6 +39,8 @@
         <span class="font-medium">TIP</span>
         <ul>
           <li><span>·</span> 이미지 사이즈: <%=metadata.groupInfo.imageWidth%>x<%=metadata.groupInfo.imageHeight%>px</li>
+          <!-- TODO: 이미지 크기 변수 처리 -->
+          <li><span>·</span> 이미지 크기: 20MB 이하</li>
         </ul>
       </div>
     </div>
@@ -147,7 +149,6 @@
 
     } catch (error) {
       alert(error.message || '서버 오류가 발생했습니다.');
-
     }
   });
 </script>
