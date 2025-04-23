@@ -36,7 +36,7 @@ export class MediaUploadMiddleware implements IMiddleware {
     this.filter = options.filter ? options.filter : 'image';
     this.fieldName = options.fieldName ? options.fieldName : 'file';
     this.maxFileCount = options.maxFileCount ? options.maxFileCount : 1;
-    this.maxFileSize = options.maxFileSize ? options.maxFileSize : 1 * 1024 * 1024; // 20MB
+    this.maxFileSize = options.maxFileSize ? options.maxFileSize : 20 * 1024 * 1024; // 20MB
     this.useDateFolder = options.useDateFolder !== undefined ? options.useDateFolder : false;
     this.convertToWebP = options.convertToWebP !== undefined ? options.convertToWebP : false;
     this.webpQuality = options.webpQuality ? options.webpQuality : 80;
