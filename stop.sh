@@ -4,4 +4,4 @@
 sudo systemctl stop nginx.service
 
 # Find and kill the node process
-pkill -f "node /dist/app.js" 
+pkill -f "node ./dist/app.js" 

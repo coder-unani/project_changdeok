@@ -4,4 +4,4 @@
 sudo systemctl start nginx.service
 
 # Start the application in the background
-node /dist/app.js & 
+node ./dist/app.js & 
