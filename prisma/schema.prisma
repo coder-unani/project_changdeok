@@ -207,6 +207,8 @@ model ContentGroup {
   isLike Boolean @default(false)
   isShare Boolean @default(false)
   isComment Boolean @default(false)
+  isFileUpload Boolean @default(false)
+  isEncrypt Boolean @default(false)
   isActivated Boolean @default(true)
   isDeleted Boolean @default(false)
   createdAt DateTime @default(now())

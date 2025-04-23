@@ -51,6 +51,8 @@ export interface IContentGroup {
   isLike: boolean;
   isShare: boolean;
   isComment: boolean;
+  isFileUpload: boolean;
+  isEncrypt: boolean;
   isActivated: boolean;
 }
 

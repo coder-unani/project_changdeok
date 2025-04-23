@@ -407,6 +407,8 @@ export class ContentService implements IContentService {
         isLike: prismaResult.isLike,
         isShare: prismaResult.isShare,
         isComment: prismaResult.isComment,
+        isFileUpload: prismaResult.isFileUpload,
+        isEncrypt: prismaResult.isEncrypt,
         isActivated: prismaResult.isActivated,
       };
 
