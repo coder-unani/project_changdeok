@@ -1,5 +1,4 @@
 <div class="relative h-[50vh] w-full pt-[56px] lg:h-[460px]">
-  <!-- TODO: 배너 이미지 설정 -->
   <div
     class="bg- absolute inset-0 -z-10 h-full w-full bg-[url('/images/banner-contact.webp')] bg-cover bg-fixed bg-center"
   >
@@ -7,7 +6,6 @@
   </div>
   <div class="m-auto h-full w-full max-w-[1280px] px-10">
     <div class="flex h-full flex-col items-center justify-center gap-8 py-20">
-      <!-- TODO: 배너 문구 설정 -->
       <p class="mb-2 text-center break-keep text-white">
         <span class="text-2xl lg:text-[48px]">
           <strong><%=routes.contact.title%></strong>
@@ -66,13 +64,11 @@
 
     <div class="w-full">
       <div class="flex w-full flex-col justify-between pb-10 lg:flex-row lg:items-end">
-        <!-- TODO: 콘텐츠 문구 설정 -->
         <h3 class="mb-4 text-2xl font-semibold lg:mb-0 lg:text-[36px]">
           <p>온라인 상담</p>
         </h3>
       </div>
-      <!-- TODO: 문의 폼 -->
-      <form action="" class="space-y-4">
+      <form id="formContact" action="" class="space-y-4">
         <!-- 이름 -->
         <div class="space-y-2 text-sm">
           <div class="text-sm font-medium">
@@ -128,26 +124,26 @@
               class="w-full rounded-full border-r-12 border-transparent px-4 py-2 font-semibold placeholder:text-zinc-400 focus:ring-2 focus:ring-sky-500 focus:outline-none"
             >
               <option value="">업무분야를 선택해주세요.</option>
-              <option value="1">치명적 상해사고</option>
-              <option value="2">대형 교통사고</option>
-              <option value="3">의료사고</option>
-              <option value="4">보행자 및 자전거 사고</option>
-              <option value="5">구내 상해사고</option>
-              <option value="6">개에게 물림 사고</option>
-              <option value="7">제조물 책임</option>
-              <option value="8">기타</option>
+              <option value="치명적 상해사고">치명적 상해사고</option>
+              <option value="대형 교통사고">대형 교통사고</option>
+              <option value="의료사고">의료사고</option>
+              <option value="보행자 및 자전거 사고">보행자 및 자전거 사고</option>
+              <option value="구내 상해사고">구내 상해사고</option>
+              <option value="개에게 물림 사고">개에게 물림 사고</option>
+              <option value="제조물 책임">제조물 책임</option>
+              <option value="기타">기타</option>
             </select>
           </div>
         </div>
         <!-- 내용 -->
         <div class="space-y-2 text-sm">
           <div class="text-sm font-medium">
-            <label for="description">상담 내용</label>
+            <label for="content">상담 내용</label>
             <span class="text-rose-500">*</span>
           </div>
           <textarea
-            id="description"
-            name="description"
+            id="content"
+            name="content"
             class="min-h-[160px] w-full rounded-xl border border-zinc-400 px-4 py-2 font-semibold placeholder:text-sm placeholder:text-zinc-400 focus:ring-2 focus:ring-sky-500 focus:outline-none"
             placeholder="상담하실 내용을 작성해주세요."
             required
@@ -163,3 +159,59 @@
     </div>
   </div>
 </div>
+
+<script nonce="<%=nonce%>">
+  document.addEventListener('DOMContentLoaded', () => {
+    // 폼 데이터 전송
+    document.getElementById('formContact').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      try {
+        // TODO: 폼 데이터 유효성 검사
+        // isNonUserWrite, isEncrypt = true;
+
+        // 폼 데이터 수집
+        const formData = new FormData(e.target);
+
+        // 폼 데이터 변환
+        const data = {};
+        formData.forEach((value, key) => {
+          data[key] = value;
+        });
+
+        const formatData = {
+          title: data.subject,
+          content: `
+          이름: ${data.name}<br>
+          이메일: ${data.email}<br>
+          연락처: ${data.phone}<br>
+          업무분야: ${data.subject}<br>
+          내용: ${data.content}
+        `,
+        };
+
+        // 콘텐츠 저장 API 호출
+        const groupId = '<%=metadata.content.group.id%>';
+        const saveUrl = '<%=apiRoutes.contents.write.url%>'.replace(':groupId', groupId);
+
+        const response = await fetch(saveUrl, {
+          method: '<%=apiRoutes.contents.write.method%>',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formatData),
+        });
+
+        // 응답 오류
+        if (!response.ok) {
+          throw new Error('상담 신청에 실패하였습니다.');
+        }
+
+        // 응답 성공
+        alert('상담 신청이 완료되었습니다. 빠른 시일 내에 연락드리겠습니다.');
+      } catch (err) {
+        alert('상담 신청에 실패하였습니다. 다시 시도해주세요.');
+      }
+    });
+  });
+</script>

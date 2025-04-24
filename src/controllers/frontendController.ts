@@ -220,11 +220,19 @@ export class FrontendController {
   // 상담 및 의뢰
   public contact = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
+      // 콘텐츠 그룹 정보 가져오기
+      const contentGroupId: number = 3;
+
+      // API 호출
+      const getContentGroup = await getApiContentGroup(contentGroupId);
+
       // 페이지 데이터 생성
       const data = {
         layout: route.layout,
         title: route.title,
-        metadata: {},
+        metadata: {
+          content: getContentGroup.metadata,
+        },
         data: {},
       };
 
