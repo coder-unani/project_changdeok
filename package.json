@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "main": "src/app.ts",
   "scripts": {
-    "dev": "npm-run-all --parallel nodemon sass tailwind:build",
+    "dev": "npm-run-all --parallel nodemon sass tailwind",
     "build": "tsc && npm run tailwind:build && npm run copy-files",
     "start": "node dist/app.js",
     "sass": "sass --watch src/styles:public/css",
-    "tailwind:build": "npx @tailwindcss/cli -i src/styles/tailwind.css -o public/css/tailwind.css --watch",
+    "tailwind": "npx @tailwindcss/cli -i src/styles/tailwind.css -o public/css/tailwind.css --watch",
+    "tailwind:build": "npx @tailwindcss/cli -i src/styles/tailwind.css -o public/css/tailwind.css",
     "copy-files": "cp -R src/views dist/views && cp -R public dist/static",
     "nodemon": "nodemon"
   },
