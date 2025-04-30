@@ -14,6 +14,7 @@ export interface IBannerGroup {
 }
 
 export interface IBannerDisp {
+  id?: number;
   title: string;
   description?: typeOptionalString;
   imagePath: typeOptionalString;

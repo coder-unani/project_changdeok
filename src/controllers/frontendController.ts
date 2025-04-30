@@ -14,10 +14,11 @@ export class FrontendController {
   public index = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 배너 정보 가져오기
-      const bannerGroupIds: number[] = [2, 3, 4, 5];
+      const bannerGroupIds: number[] = [1, 2, 3, 4, 5];
 
       // API 호출
       const getBannerGroup = await getApiBannerGroup(bannerGroupIds);
+      let popupBanner: IBannerDisp[] = [];
       let topBanner: IBannerDisp = {
         title: 'Trusted Expertise, Proven Results.',
         description:
@@ -36,6 +37,17 @@ export class FrontendController {
       if (getBannerGroup.result) {
         if (getBannerGroup.data?.[0]) {
           getBannerGroup.data[0].banners?.forEach((banner) => {
+            popupBanner.push({
+              id: banner.id,
+              title: banner.title,
+              description: banner.description,
+              imagePath: banner.imagePath,
+            });
+          });
+        }
+
+        if (getBannerGroup.data?.[1]) {
+          getBannerGroup.data[1].banners?.forEach((banner) => {
             if (banner.seq === 1) {
               topBanner = {
                 title: banner.title,
@@ -46,8 +58,8 @@ export class FrontendController {
           });
         }
 
-        if (getBannerGroup.data?.[1]) {
-          getBannerGroup.data[1].banners?.forEach((banner) => {
+        if (getBannerGroup.data?.[2]) {
+          getBannerGroup.data[2].banners?.forEach((banner) => {
             if (banner.seq === 1) {
               midBanner1 = {
                 title: banner.title,
@@ -58,8 +70,8 @@ export class FrontendController {
           });
         }
 
-        if (getBannerGroup.data?.[2]) {
-          getBannerGroup.data[2].banners?.forEach((banner) => {
+        if (getBannerGroup.data?.[3]) {
+          getBannerGroup.data[3].banners?.forEach((banner) => {
             midBanner2.push({
               title: banner.title,
               description: banner.description,
@@ -68,8 +80,8 @@ export class FrontendController {
           });
         }
 
-        if (getBannerGroup.data?.[3]) {
-          getBannerGroup.data[3].banners?.forEach((banner) => {
+        if (getBannerGroup.data?.[4]) {
+          getBannerGroup.data[4].banners?.forEach((banner) => {
             midBanner3.push({
               title: banner.title,
               description: banner.description,
@@ -94,6 +106,7 @@ export class FrontendController {
           content: getContentGroup.metadata,
         },
         data: {
+          popupBanner,
           topBanner,
           midBanner1,
           midBanner2,
