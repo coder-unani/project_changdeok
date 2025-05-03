@@ -45,62 +45,31 @@
     <table class="table-auto min-w-full">
       <thead>
         <tr>
-          <th class="hidden lg:table-cell text-center w-32 min-w-32 px-4 py-3 bg-gray-100 border-t border-b border-gray-200">
-            <p class="text-xs lg:text-[13px] font-semibold leading-none text-gray-500">최고 관리자</p>
-          </th>
-          <th class="hidden lg:table-cell text-center w-32 min-w-32 px-4 py-3 bg-gray-100 border-t border-b border-gray-200">
-            <p class="text-xs lg:text-[13px] font-semibold leading-none text-gray-500">직원 관리자</p>
-          </th>
-          <th class="hidden lg:table-cell text-center w-32 min-w-32 px-4 py-3 bg-gray-100 border-t border-b border-gray-200">
-            <p class="text-xs lg:text-[13px] font-semibold leading-none text-gray-500">권한 관리자</p>
-          </th>
-          <th class="hidden lg:table-cell text-center w-32 min-w-32 px-4 py-3 bg-gray-100 border-t border-b border-gray-200">
-            <p class="text-xs lg:text-[13px] font-semibold leading-none text-gray-500">게시판 관리자</p>
-          </th>
-          <th class="hidden lg:table-cell text-center w-32 min-w-32 px-4 py-3 bg-gray-100 border-t border-b border-gray-200">
-            <p class="text-xs lg:text-[13px] font-semibold leading-none text-gray-500">광고 관리자</p>
-          </th>
-          <th class="hidden lg:table-cell text-center w-32 min-w-32 px-4 py-3 bg-gray-100 border-t border-b border-gray-200">
-            <p class="text-xs lg:text-[13px] font-semibold leading-none text-gray-500">통계 관리자</p>
-          </th>
+          <% metadata.permissions.forEach((permission, index) => { %>
+            <th class="hidden lg:table-cell text-center w-32 min-w-32 px-4 py-3 bg-gray-100 border-t border-b border-gray-200">
+              <p class="text-xs lg:text-[13px] font-semibold leading-none text-gray-500"><%=permission.title%></p>
+            </th>
+          <% }); %>
         </tr>
         </thead>
         <tbody>
           <tr class="border-b border-gray-200">
-          <% Array.from({length: 6}).forEach((_, index) => { %>
-            <td class="px-4 py-3 text-center">
-              <input 
-                type="checkbox" 
-                name="permission" 
-                class="text-blue-500 border border-gray-300 focus:outline-none pointer-events-none"
-                value="<%=index + 1%>"
-                <% data.permissions.forEach(permission => { %>
-                  <%if (permission === index + 1) {%>checked<%}%>
-                <% }); %>
-                tab-index="-1"
-                readonly
-              >
-            </td>
-          <% }); %>
+            <% metadata.permissions.forEach((permission, index) => { %>
+              <td class="px-4 py-3 text-center">
+                <input 
+                  type="checkbox" 
+                  name="permission" 
+                  class="text-blue-500 border border-gray-300 focus:outline-none pointer-events-none"
+                  value="<%=permission.id%>"
+                  <%= data.permissions.includes(permission.id) ? 'checked' : '' %>
+                  tab-index="-1"
+                  readonly
+                >
+              </td>
+            <% }); %>
           </tr>
         </tbody>
     </table>
-    <!-- <div class="flex">
-      <label class="block w-32 flex-none text-gray-500 font-semibold">권한 범위</label>
-      <ul class="flex flex-wrap gap-1">
-        <% data.permissions.forEach(permission => { %>
-          <li class="rounded-full px-3 py-1 text-[13px] bg-blue-50 text-blue-500">
-            <%if (permission === 1) {%>최고 관리자
-            <%} else if (permission === 2) {%>직원 관리
-            <%} else if (permission === 3) {%>권한 관리
-            <%} else if (permission === 4) {%>게시판 관리
-            <%} else if (permission === 5) {%>광고 관리
-            <%} else if (permission === 6) {%>통계 관리
-            <%}%>
-          </li>
-        <% }) %>
-      </ul>
-    </div> -->
   </div>
 </div>
 
