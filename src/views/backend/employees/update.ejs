@@ -15,7 +15,7 @@
       <p
         class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
       >
-        <%=data.employee.email%>
+        <%=data.email%>
       </p>
     </div>
 
@@ -28,7 +28,7 @@
         id="name"
         name="name"
         class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        value="<%=data.employee.name%>"
+        value="<%=data.name%>"
         placeholder="이름을 입력해주세요."
         required
       />
@@ -41,7 +41,7 @@
         id="phone"
         name="phone"
         class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        value="<%=data.employee.phone%>"
+        value="<%=data.phone%>"
         placeholder="전화번호를 입력해주세요."
       />
     </div>
@@ -53,7 +53,7 @@
         id="mobile"
         name="mobile"
         class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        value="<%=data.employee.mobile%>"
+        value="<%=data.mobile%>"
         placeholder="휴대전화 번호를 입력해주세요."
       />
     </div>
@@ -65,7 +65,7 @@
         id="address"
         name="address"
         class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        value="<%=data.employee.address%>"
+        value="<%=data.address%>"
         placeholder="주소를 입력해주세요."
       />
     </div>
@@ -77,7 +77,7 @@
         id="birthDate"
         name="birthDate"
         class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        value="<%=data.employee.birthDate%>"
+        value="<%=data.birthDate%>"
       />
     </div>
 
@@ -88,7 +88,7 @@
         id="position"
         name="position"
         class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        value="<%=data.employee.position%>"
+        value="<%=data.position%>"
         placeholder="직급을 입력해주세요."
       />
     </div>
@@ -100,7 +100,7 @@
         id="description"
         name="description"
         class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        value="<%=data.employee.description%>"
+        value="<%=data.description%>"
         placeholder="설명을 입력해주세요."
       />
     </div>
@@ -113,7 +113,7 @@
           id="hireDate"
           name="hireDate"
           class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          value="<%=data.employee.hireDate%>"
+          value="<%=data.hireDate%>"
         />
       </div>
 
@@ -124,7 +124,7 @@
           id="fireDate"
           name="fireDate"
           class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          value="<%=data.employee.fireDate%>"
+          value="<%=data.fireDate%>"
         />
       </div>
     </div>
@@ -150,7 +150,7 @@
 
     try {
       // 직원 수정 API 호출
-      const apiUrl = '<%=apiRoutes.employees.update.url%>'.replace(':employeeId', '<%=data.employee.id%>');
+      const apiUrl = '<%=apiRoutes.employees.update.url%>'.replace(':employeeId', '<%=data.id%>');
       const response = await fetch(apiUrl, {
         method: '<%=apiRoutes.employees.update.method%>',
         headers: {

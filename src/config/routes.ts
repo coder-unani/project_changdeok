@@ -170,7 +170,7 @@ export const backendRoutes = {
   employees: {
     list: createRoute(
       'GET',
-      '관리자 목록',
+      '관리자',
       `${backendRoutesPrefix}/employees`,
       'backend/employees/list',
       backendRoutesLayout,

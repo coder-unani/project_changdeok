@@ -36,9 +36,9 @@
     <table>
       <thead>
       <tr>
-          <th class="text-center w-24 min-w-24"><p>아이디</p></th>
-          <th class="text-center w-32 min-w-32"><p>이름</p></th>
+          <th class="text-center w-24 min-w-24"><p>번호</p></th>
           <th class="text-center w-auto"><p>이메일</p></th>
+          <th class="text-center w-32 min-w-32"><p>이름</p></th>
           <th class="hidden lg:table-cell text-center w-32 min-w-32"><p>직급</p></th>
           <th class="hidden lg:table-cell text-center w-32 min-w-32"><p>생성일</p></th>
       </tr>
@@ -55,10 +55,10 @@
               <p><%=employee.id%></p>
             </td>
             <td>
-              <a href="/admin/employees/<%=employee.id%>" class="hover:underline decoration-gray-800"><p><%=employee.name%></p></a>
+              <a href="/admin/employees/<%=employee.id%>" class="hover:underline decoration-gray-800"><p><%=employee.email%></p></a>
             </td>
             <td>
-              <a href="/admin/employees/<%=employee.id%>" class="hover:underline decoration-gray-800"><p><%=employee.email%></p></a>
+              <a href="/admin/employees/<%=employee.id%>" class="hover:underline decoration-gray-800"><p><%=employee.name%></p></a>
             </td>
             <td class="hidden lg:table-cell text-center">
               <p><%=employee.position ?? '-'%></p>

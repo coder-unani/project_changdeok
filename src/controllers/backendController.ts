@@ -10,8 +10,9 @@ import {
   getApiEmployeeDetail,
   getApiPermissionList,
 } from '../common/api';
+import { httpStatus } from '../common/variables';
 import { getCookie } from '../common/utils/cookie';
-import { AppError, AuthError, ValidationError } from '../common/utils/error';
+import { AppError, AuthError, ValidationError, NotFoundError } from '../common/utils/error';
 import { verifyJWT } from '../library/jwt';
 import { getAccessToken } from '../common/utils/verify';
 import { CONFIG } from '../config/config';
@@ -546,11 +547,11 @@ export class BackendController {
   public employeeDetail = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 직원 ID 추출
-      const employeeId = parseInt(req.params.employeeId);
+      const employeeId = Number(req.params.employeeId);
 
       // ID가 숫자가 아닌 경우 에러 페이지로 이동
-      if (isNaN(employeeId)) {
-        throw new Error('직원 아이디가 형식에 맞지 않습니다.');
+      if (!employeeId || isNaN(employeeId)) {
+        throw new ValidationError('직원 아이디가 형식에 맞지 않습니다.');
       }
 
       // 접근 권한 체크
@@ -561,7 +562,7 @@ export class BackendController {
 
       // 결과가 없는 경우 에러 페이지 이동
       if (!employee) {
-        throw new Error('직원 정보 조회에 실패했습니다.');
+        throw new NotFoundError('존재하지 않는 직원 ID입니다.');
       }
 
       // 페이지 데이터 생성
@@ -583,11 +584,11 @@ export class BackendController {
   public employeeUpdate = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 직원 ID 추출
-      const employeeId = parseInt(req.params.employeeId);
+      const employeeId = Number(req.params.employeeId);
 
       // ID가 숫자가 아닌 경우 에러 페이지로 이동
-      if (isNaN(employeeId)) {
-        throw new Error('직원 아이디가 형식에 맞지 않습니다.');
+      if (!employeeId || isNaN(employeeId)) {
+        throw new ValidationError('직원 아이디가 형식에 맞지 않습니다.');
       }
 
       // 접근 권한 체크
@@ -598,7 +599,7 @@ export class BackendController {
 
       // 결과가 없는 경우 에러 페이지 이동
       if (!employee) {
-        throw new Error('직원 정보 조회에 실패했습니다.');
+        throw new NotFoundError('존재하지 않는 직원 ID입니다.');
       }
 
       // 페이지 데이터 생성
@@ -620,16 +621,11 @@ export class BackendController {
   public employeeUpdatePassword = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 직원 ID 추출
-      const employeeId = parseInt(req.params.employeeId);
+      const employeeId = Number(req.params.employeeId);
 
       // 직원 ID가 없는 경우 에러 페이지로 이동
-      if (!employeeId) {
-        throw new Error('직원 아이디가 필요합니다.');
-      }
-
-      // ID가 숫자가 아닌 경우 에러 페이지로 이동
-      if (isNaN(employeeId)) {
-        throw new Error('직원 아이디가 형식에 맞지 않습니다.');
+      if (!employeeId || isNaN(employeeId)) {
+        throw new ValidationError('직원 아이디가 형식에 맞지 않습니다.');
       }
 
       // 접근 권한 체크
@@ -664,16 +660,11 @@ export class BackendController {
   public employeeDelete = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 직원 ID 추출
-      const employeeId = parseInt(req.params.employeeId);
-
-      // 직원 ID가 없는 경우 에러 페이지로 이동
-      if (!employeeId) {
-        throw new Error('직원 아이디가 필요합니다.');
-      }
+      const employeeId = Number(req.params.employeeId);
 
       // ID가 숫자가 아닌 경우 에러 페이지로 이동
-      if (isNaN(employeeId)) {
-        throw new Error('직원 아이디가 형식에 맞지 않습니다.');
+      if (!employeeId || isNaN(employeeId)) {
+        throw new ValidationError('직원 아이디가 형식에 맞지 않습니다.');
       }
 
       // 접근 권한 체크
@@ -685,7 +676,7 @@ export class BackendController {
 
       // 직원 정보가 없는 경우 에러 페이지로 이동
       if (!employee.result) {
-        throw new Error('직원 정보 조회에 실패했습니다.');
+        throw new NotFoundError('존재하지 않는 직원 ID입니다.');
       }
 
       // 페이지 데이터 생성
@@ -710,16 +701,11 @@ export class BackendController {
       // this.verifyPermission(req, route.permissions);
 
       // 직원 ID 추출
-      const employeeId = parseInt(req.params.employeeId);
-
-      // 직원 ID가 없는 경우 에러 페이지로 이동
-      if (!employeeId) {
-        throw new Error('직원 아이디가 필요합니다.');
-      }
+      const employeeId = Number(req.params.employeeId);
 
       // ID가 숫자가 아닌 경우 에러 페이지로 이동
-      if (isNaN(employeeId)) {
-        throw new Error('직원 아이디가 형식에 맞지 않습니다.');
+      if (!employeeId || isNaN(employeeId)) {
+        throw new ValidationError('직원 아이디가 형식에 맞지 않습니다.');
       }
 
       // 직원 정보 조회
@@ -728,7 +714,7 @@ export class BackendController {
 
       // Access Token이 없는 경우 에러 페이지로 이동
       if (!decodedToken) {
-        throw new Error('로그인이 필요합니다.');
+        throw new AuthError('로그인이 필요합니다.');
       }
 
       // 현재 로그인한 직원 정보 조회
@@ -736,7 +722,7 @@ export class BackendController {
 
       // 현재 로그인한 직원 정보가 없는 경우 에러 페이지로 이동
       if (!grantedByEmployee) {
-        throw new Error('사용자의 정보 조회에 실패했습니다.');
+        throw new NotFoundError('권한 부여자의 정보가 확인되지 않았습니다.');
       }
 
       // 권한을 수정하려는 직원 정보 조회
@@ -744,11 +730,13 @@ export class BackendController {
 
       // 직원 정보가 없는 경우 에러 페이지로 이동
       if (!employee) {
-        throw new Error('직원 정보 조회에 실패했습니다.');
+        throw new NotFoundError('존재하지 않는 직원 ID입니다.');
       }
 
       // 전체 권한 목록
       const { data: permissionsAll } = await getApiPermissionList(1, 10);
+
+      console.log('permissionsAll = ', permissionsAll);
 
       // 페이지 데이터 생성
       const data = {
@@ -792,7 +780,7 @@ export class BackendController {
 
       // 응답 오류
       if (!apiResponse.ok) {
-        throw new Error(apiResponse.statusText);
+        throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, apiResponse.statusText);
       }
 
       // JSON 파싱
