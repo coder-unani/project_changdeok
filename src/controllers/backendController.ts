@@ -565,11 +565,17 @@ export class BackendController {
         throw new NotFoundError('존재하지 않는 직원 ID입니다.');
       }
 
+      // 전체 권한 목록
+      const { data: permissions } = await getApiPermissionList(1, 10);
+
       // 페이지 데이터 생성
       const data = {
         layout: route.layout,
         title: route.title,
-        metadata,
+        metadata: {
+          ...metadata,
+          permissions,
+        },
         data: employee,
       };
 
@@ -698,7 +704,7 @@ export class BackendController {
   public employeePermissions = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 접근 권한 체크
-      // this.verifyPermission(req, route.permissions);
+      this.verifyPermission(req, route.permissions);
 
       // 직원 ID 추출
       const employeeId = Number(req.params.employeeId);
@@ -734,20 +740,18 @@ export class BackendController {
       }
 
       // 전체 권한 목록
-      const { data: permissionsAll } = await getApiPermissionList(1, 10);
-
-      console.log('permissionsAll = ', permissionsAll);
+      const { data: permissions } = await getApiPermissionList(1, 10);
 
       // 페이지 데이터 생성
       const data = {
         layout: route.layout,
         title: route.title,
-        metadata: {},
-        data: {
-          employeeId,
-          employee,
+        metadata: {
+          permissions,
           grantedByEmployee,
-          permissions: permissionsAll,
+        },
+        data: {
+          ...employee,
         },
       };
 
