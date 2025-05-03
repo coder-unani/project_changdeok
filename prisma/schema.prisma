@@ -9,7 +9,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -50,8 +50,8 @@ model Employee {
   createdAt   DateTime @default(now())
   updatedAt   DateTime? @updatedAt 
 
-  permissions EmployeePermissionMap[]
-  grantedPermissions EmployeePermissionMap[] @relation("grantedBy")
+  permissions EmployeePermission[]
+  grantedPermissions EmployeePermission[] @relation("grantedBy")
 
   // 인덱스 설정
   @@index(email, name: "idx_employee_email")
@@ -82,7 +82,7 @@ model Permission {
   createdAt DateTime @default(now())
   updatedAt DateTime? @updatedAt
 
-  permissions EmployeePermissionMap[]
+  permissions EmployeePermission[]
 
   // 인덱스 설정
   @@index(title, name: "idx_permission_title")
@@ -101,7 +101,7 @@ model Permission {
   * - createdAt: 생성시간 (자동 기록)
   * - updatedAt: 업데이트시간 (자동 기록)
  **/
-model EmployeePermissionMap {
+model EmployeePermission {
   id Int @id @default(autoincrement())
   employeeId Int
   permissionId Int
@@ -115,7 +115,7 @@ model EmployeePermissionMap {
   grantedBy Employee @relation("grantedBy", fields: [grantedById], references: [id])
 
   // 테이블명 설정
-  @@map("orb_employee_permission_map")
+  @@map("orb_employee_permission")
 }
 
 /**
