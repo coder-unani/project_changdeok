@@ -1,3 +1,30 @@
+<!-- 팝업 배너 -->
+<% if (data.popupBanner.length !== 0) { %>
+  <div id="popupContainer" class="fixed inset-0 z-50 flex items-center justify-center gap-4 bg-black/50">
+    <% data.popupBanner.forEach((popup) => { %>
+      <div id="popupBanner<%=popup.id%>" class="flex flex-col items-end space-y-2 hidden" data-popup-id="<%=popup.id%>">
+        <!-- 팝업 닫기 버튼 -->
+        <button class="popup-close-btn text-white cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        
+        <!-- 팝업 이미지 -->
+        <div class="bg-white shadow-[0_2px_30px_rgba(0,0,0,.06)] w-[480px] h-[620px] p-2">
+          <img src="<%=popup.imagePath%>" alt="<%=popup.description%>" class="object-center object-cover w-full h-full" />
+        </div>
+      
+        <!-- 오늘 하루 보지 않기 체크박스-->
+        <div class="flex items-center mb-6">
+          <input type="checkbox" id="todayCheck" class="mr-2">
+          <label for="todayCheck" class="text-sm text-white">오늘 하루 보지 않기</label>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+<% } %>
+
 <!-- 상단 배너 -->
 <div class="relative h-screen w-full pt-[56px] lg:h-[800px]">
   <div class="absolute inset-0 -z-10 h-full w-full">
@@ -265,6 +292,98 @@
 
 <script nonce="<%=nonce%>">
   document.addEventListener("DOMContentLoaded", () => {
+    // 상수 정의
+    const POPUP_SHOWN_KEY = 'popup_shown';
+    const popupBanners = <%-JSON.stringify(data.popupBanner)%>;
+    const popupContainer = document.getElementById('popupContainer');
+
+    // 로컬스토리지 유틸리티
+    const storage = {
+      get: (key) => JSON.parse(localStorage.getItem(key)),
+      set: (key, value) => localStorage.setItem(key, JSON.stringify(value))
+    };
+
+    // 유틸리티 함수
+    const hideElement = (element) => element?.classList.add('hidden');
+    const showElement = (element) => element?.classList.remove('hidden');
+
+    // 만료일자 체크 함수
+    const isExpired = (expireDate) => {
+      if (!expireDate) return true;
+      return new Date() > new Date(expireDate);
+    };
+
+    // 팝업 필터링
+    const getCheckedPopups = () => {
+      const popupShown = storage.get(POPUP_SHOWN_KEY) || {};
+      // 오늘 하루 보지 않기 체크한 팝업이 만료되었거나 체크 안한 팝업만 필터링
+      return popupBanners.filter(popup => !popupShown[popup.id] || isExpired(popupShown[popup.id]));
+    };
+
+    // 팝업 초기 설정
+    const initPopups = () => {
+      const uncheckedPopups = getCheckedPopups();
+
+      if (uncheckedPopups.length === 0) {
+        hideElement(popupContainer);
+        return;
+      }
+
+      showElement(popupContainer);
+      uncheckedPopups.forEach(popup => {
+        const popupElement = document.getElementById(`popupBanner${popup.id}`);
+        showElement(popupElement);
+      });
+    };
+
+    // 팝업 닫기 처리
+    const closePopup = (popupId) => {
+      hideElement(document.getElementById(`popupBanner${popupId}`));
+
+      const remainingPopups = getCheckedPopups().filter(popup => popup.id !== Number(popupId));
+      if (remainingPopups.length === 0) {
+        hideElement(popupContainer);
+      }
+    };
+
+    // 오늘 하루 보지 않기 처리
+    const setPopupExpire = (popupId) => {
+      const popupShown = storage.get(POPUP_SHOWN_KEY) || {};
+      const expireDate = new Date();
+      expireDate.setDate(expireDate.getDate() + 1);
+      popupShown[popupId] = expireDate.toISOString();
+      storage.set(POPUP_SHOWN_KEY, popupShown);
+    };
+
+    // 이벤트 핸들러
+    const handleCloseClick = (e) => {
+      const popupId = e.target.closest('[data-popup-id]').dataset.popupId;
+      closePopup(popupId);
+    };
+
+    const handleCheckboxChange = (e) => {
+      if (e.target.checked) {
+        const popupId = e.target.closest('[data-popup-id]').dataset.popupId;
+        setPopupExpire(popupId);
+        closePopup(popupId);
+      }
+    };
+
+    // 이벤트 리스너 등록
+    const initEventListeners = () => {
+      document.querySelectorAll('button.popup-close-btn').forEach(btn => {
+        btn.addEventListener('click', handleCloseClick);
+      });
+
+      document.querySelectorAll('input#todayCheck').forEach(checkbox => {
+        checkbox.addEventListener('change', handleCheckboxChange);
+      });
+    };
+
+    // 초기화 실행
+    initPopups();
+    initEventListeners();
+    
     // 버튼 클릭시 상담 페이지로 이동
     document.getElementById('contactBtn').addEventListener('click', () => {
       location.href = '<%=routes.contact.url%>';
@@ -326,12 +445,12 @@
         const formatData = {
           title: data.subject,
           content: `
-          이름: ${data.name}<br>
-          이메일: ${data.email}<br>
-          연락처: ${data.phone}<br>
-          업무분야: ${data.subject}<br>
-          내용: ${data.content}
-        `
+            이름: ${data.name}<br>
+            이메일: ${data.email}<br>
+            연락처: ${data.phone}<br>
+            업무분야: ${data.subject}<br>
+            내용: ${data.content}
+          `,
         };
 
         // 콘텐츠 저장 API 호출
@@ -353,9 +472,9 @@
 
         // 응답 성공
         alert('상담 신청이 완료되었습니다. 빠른 시일 내에 연락드리겠습니다.');
-      } catch (err) {
+      } catch (error) {
         alert('상담 신청에 실패하였습니다. 다시 시도해주세요.');
       }
     });
-  })
+  });
 </script>
