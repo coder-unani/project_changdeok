@@ -536,6 +536,8 @@ export class EmployeeService implements IEmployeeService {
           hireDate: employee.hireDate?.toISOString(),
           birthDate: employee.birthDate?.toISOString(),
           fireDate: employee.fireDate?.toISOString(),
+          createdAt: formatDateToString(employee.createdAt, false, true, true) as string,
+          updatedAt: formatDateToString(employee.updatedAt, false, true, true) as string,
         };
       });
 

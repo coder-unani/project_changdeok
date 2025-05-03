@@ -103,8 +103,8 @@ export interface IEmployee {
   fireDate?: typeOptionalString;
   isActivated?: boolean;
   permissions?: number[];
-  // createdAt: string;
-  // updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface IEmployeeToken {

@@ -766,7 +766,7 @@ export class BackendController {
   public employees = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 접근 권한 체크
-      // this.verifyPermission(req, route.permissions);
+      this.verifyPermission(req, route.permissions);
 
       // 쿼리 파라미터 생성
       const queryParams = new URLSearchParams(req.body).toString();
