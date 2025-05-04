@@ -30,7 +30,7 @@ import { formatApiResponse } from '../common/utils/format';
 import { createJWT, verifyJWT } from '../library/jwt';
 import { getCookie, setCookie, removeCookie } from '../common/utils/cookie';
 import { getAccessedEmployee } from '../common/utils/verify';
-import { AppError, ValidationError, AuthError, PermissionError } from '../common/utils/error';
+import { AppError, ValidationError, AuthError, PermissionError } from '../common/error';
 import { companyInfo } from '../config/info';
 
 export class ApiController {
@@ -911,7 +911,7 @@ export class ApiController {
       }
 
       // 직원 권한 수정 처리
-      const permissionService: IPermissionService = new PermissionService();
+      const permissionService: IPermissionService = new PermissionService(prisma);
       const result = await permissionService.updateEmployeesPermissions(employeeId, requestPermissions, grantedById);
 
       // 수정 실패 처리
@@ -1059,7 +1059,7 @@ export class ApiController {
       };
 
       // 권한 목록 조회
-      const permissionService: IPermissionService = new PermissionService();
+      const permissionService: IPermissionService = new PermissionService(prisma);
       const result = await permissionService.list(requestData);
 
       // 조회 실패 처리

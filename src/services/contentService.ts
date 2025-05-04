@@ -1,19 +1,17 @@
 import { encryptDataAES } from '../library/encrypt';
-import { AppError, NotFoundError, ValidationError } from '../common/utils/error';
+import { AppError, NotFoundError, ValidationError } from '../common/error';
 import { formatDateToString } from '../common/utils/format';
 import { validateStringLength } from '../common/utils/validate';
-import { httpStatus } from '../common/variables';
 import { ExtendedPrismaClient } from '../library/database';
 import { IContent, IContentGroup } from '../types/object';
 import { IRequestContentUpdate, IRequestContentWrite, IRequestContents } from '../types/request';
 import { IServiceResponse } from '../types/response';
 import { IContentService } from '../types/service';
+import { BaseService } from './baseService';
 
-export class ContentService implements IContentService {
-  private prisma: ExtendedPrismaClient;
-
+export class ContentService extends BaseService implements IContentService {
   constructor(prisma: ExtendedPrismaClient) {
-    this.prisma = prisma;
+    super(prisma);
   }
 
   public async create(groupId: number, data: IRequestContentWrite): Promise<IServiceResponse> {
@@ -57,15 +55,7 @@ export class ContentService implements IContentService {
       // 성공
       return { result: true };
     } catch (error) {
-      if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message };
-      } else {
-        return {
-          result: false,
-          code: httpStatus.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.',
-        };
-      }
+      return this.handleError(error);
     }
   }
 
@@ -146,15 +136,7 @@ export class ContentService implements IContentService {
         data: content,
       };
     } catch (error) {
-      if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message };
-      } else {
-        return {
-          result: false,
-          code: httpStatus.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.',
-        };
-      }
+      return this.handleError(error);
     }
   }
 
@@ -198,15 +180,7 @@ export class ContentService implements IContentService {
       // 성공
       return { result: true };
     } catch (error) {
-      if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message };
-      } else {
-        return {
-          result: false,
-          code: httpStatus.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.',
-        };
-      }
+      return this.handleError(error);
     }
   }
 
@@ -239,15 +213,7 @@ export class ContentService implements IContentService {
       // 성공
       return { result: true };
     } catch (error) {
-      if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message };
-      } else {
-        return {
-          result: false,
-          code: httpStatus.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.',
-        };
-      }
+      return this.handleError(error);
     }
   }
 
@@ -377,15 +343,7 @@ export class ContentService implements IContentService {
       // 성공
       return { result: true, metadata, data: contents };
     } catch (error) {
-      if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message };
-      } else {
-        return {
-          result: false,
-          code: httpStatus.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.',
-        };
-      }
+      return this.handleError(error);
     }
   }
 
@@ -429,15 +387,7 @@ export class ContentService implements IContentService {
       // 성공
       return { result: true, metadata: { group: { id: groupId } }, data: groupInfo };
     } catch (error) {
-      if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message };
-      } else {
-        return {
-          result: false,
-          code: httpStatus.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.',
-        };
-      }
+      return this.handleError(error);
     }
   }
 }

@@ -12,7 +12,7 @@ import {
 } from '../common/api';
 import { httpStatus } from '../common/variables';
 import { getCookie } from '../common/utils/cookie';
-import { AppError, AuthError, ValidationError, NotFoundError } from '../common/utils/error';
+import { AppError, AuthError, ValidationError, NotFoundError } from '../common/error';
 import { verifyJWT } from '../library/jwt';
 import { getAccessToken } from '../common/utils/verify';
 import { CONFIG } from '../config/config';
@@ -24,6 +24,7 @@ import { IRoute, IPageData } from '../types/config';
 import { IRequestBanners, IRequestContents, typeListSort } from '../types/request';
 import { decryptDataAES } from '../library/encrypt';
 import { BaseWebController } from './BaseController';
+
 // TODO: 권한을 체크해서 다른 계정도 수정하게 할 것인지 확인 필요
 export class BackendController extends BaseWebController {
   // 직원 인증 및 정보 조회 메서드

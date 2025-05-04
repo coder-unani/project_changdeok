@@ -1,19 +1,17 @@
 import { IBannerService } from 'types/service';
-import { AppError, NotFoundError, ValidationError } from '../common/utils/error';
+import { NotFoundError, ValidationError } from '../common/error';
 import { deleteFile } from '../common/utils/file';
 import { formatDateToString } from '../common/utils/format';
 import { validateStringLength } from '../common/utils/validate';
-import { httpStatus } from '../common/variables';
 import { ExtendedPrismaClient } from '../library/database';
 import { IBanner, IBannerGroup } from '../types/object';
 import { IRequestBannerUpdate, IRequestBannerWrite, IRequestBanners } from '../types/request';
 import { IServiceResponse } from '../types/response';
+import { BaseService } from './baseService';
 
-export class BannerService implements IBannerService {
-  private prisma: ExtendedPrismaClient;
-
+export class BannerService extends BaseService implements IBannerService {
   constructor(prisma: ExtendedPrismaClient) {
-    this.prisma = prisma;
+    super(prisma);
   }
 
   public async create(data: IRequestBannerWrite): Promise<IServiceResponse> {
@@ -187,19 +185,7 @@ export class BannerService implements IBannerService {
 
       return { result: true };
     } catch (error) {
-      if (error instanceof AppError) {
-        return {
-          result: false,
-          code: error.statusCode,
-          message: error.message,
-        };
-      } else {
-        return {
-          result: false,
-          code: httpStatus.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.',
-        };
-      }
+      return this.handleError(error);
     }
   }
 
@@ -245,19 +231,7 @@ export class BannerService implements IBannerService {
         data: banner,
       };
     } catch (error) {
-      if (error instanceof AppError) {
-        return {
-          result: false,
-          code: error.statusCode,
-          message: error.message,
-        };
-      } else {
-        return {
-          result: false,
-          code: httpStatus.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.',
-        };
-      }
+      return this.handleError(error);
     }
   }
 
@@ -382,19 +356,7 @@ export class BannerService implements IBannerService {
       // 응답 성공
       return { result: true };
     } catch (error) {
-      if (error instanceof AppError) {
-        return {
-          result: false,
-          code: error.statusCode,
-          message: error.message,
-        };
-      } else {
-        return {
-          result: false,
-          code: httpStatus.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.',
-        };
-      }
+      return this.handleError(error);
     }
   }
 
@@ -434,19 +396,7 @@ export class BannerService implements IBannerService {
 
       return { result: true };
     } catch (error) {
-      if (error instanceof AppError) {
-        return {
-          result: false,
-          code: error.statusCode,
-          message: error.message,
-        };
-      } else {
-        return {
-          result: false,
-          code: httpStatus.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.',
-        };
-      }
+      return this.handleError(error);
     }
   }
 
@@ -525,19 +475,7 @@ export class BannerService implements IBannerService {
         data: banners,
       };
     } catch (error) {
-      if (error instanceof AppError) {
-        return {
-          result: false,
-          code: error.statusCode,
-          message: error.message,
-        };
-      } else {
-        return {
-          result: false,
-          code: httpStatus.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.',
-        };
-      }
+      return this.handleError(error);
     }
   }
 
@@ -607,19 +545,7 @@ export class BannerService implements IBannerService {
         data: bannerGroups,
       };
     } catch (error) {
-      if (error instanceof AppError) {
-        return {
-          result: false,
-          code: error.statusCode,
-          message: error.message,
-        };
-      } else {
-        return {
-          result: false,
-          code: httpStatus.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.',
-        };
-      }
+      return this.handleError(error);
     }
   }
 

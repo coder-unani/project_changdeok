@@ -1,8 +1,7 @@
 import { hashPassword, verifyPassword } from '../library/encrypt';
-import { AppError, AuthError, NotFoundError, ValidationError } from '../common/utils/error';
+import { AuthError, NotFoundError, ValidationError } from '../common/error';
 import { formatDate, formatDateToString, formatEmailMasking } from '../common/utils/format';
-import { validateDate, validateEmail, validatePassword, validatePhone } from '../common/utils/validate';
-import { httpStatus } from '../common/variables';
+import { validateEmail, validatePassword, validatePhone } from '../common/utils/validate';
 import { ExtendedPrismaClient } from '../library/database';
 import { IEmployee } from '../types/object';
 import {
@@ -16,24 +15,11 @@ import {
 } from '../types/request';
 import { IServiceResponse } from '../types/response';
 import { IEmployeeService } from '../types/service';
+import { BaseService } from './baseService';
 
-export class EmployeeService implements IEmployeeService {
-  private prisma: ExtendedPrismaClient;
-
+export class EmployeeService extends BaseService implements IEmployeeService {
   constructor(prisma: ExtendedPrismaClient) {
-    this.prisma = prisma;
-  }
-
-  // 공통 에러 처리 메서드
-  private handleError<T>(error: unknown): IServiceResponse<T> {
-    if (error instanceof AppError) {
-      return { result: false, code: error.statusCode, message: error.message } as IServiceResponse<T>;
-    }
-    return {
-      result: false,
-      code: httpStatus.INTERNAL_SERVER_ERROR,
-      message: '서버 오류가 발생했습니다.',
-    } as IServiceResponse<T>;
+    super(prisma);
   }
 
   // 공통 유효성 검사 메서드

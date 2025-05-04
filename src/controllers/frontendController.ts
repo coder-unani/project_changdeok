@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import { AppError } from '../common/utils/error';
+import { AppError } from '../common/error';
 import { frontendRoutes } from '../config/routes';
 import { IRoute } from '../types/config';
 import { getApiBannerGroup, getApiContentGroup } from '../common/api';

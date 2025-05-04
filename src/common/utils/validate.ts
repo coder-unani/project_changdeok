@@ -1,6 +1,6 @@
 import type { typeValidatedResult } from '../../types/validate';
 import { REG_DATE_PATTERN, REG_EMAIL_PATTERN, REG_PASSWORD_PATTERN, REG_PHONE_PATTERN } from '../../config/config';
-import { ValidationError } from './error';
+import { ValidationError } from '../error';
 
 // Integer 형식 체크 함수
 export const validateInteger = (_value: any, _fieldName: string = ''): number => {

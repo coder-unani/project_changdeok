@@ -1,5 +1,5 @@
 import { IRoute, IPageData } from '../types/config';
-import { AppError } from '../common/utils/error';
+import { AppError } from '../common/error';
 import { httpStatus } from '../common/variables';
 import { validateInteger, validateString, validateBoolean } from '../common/utils/validate';
 

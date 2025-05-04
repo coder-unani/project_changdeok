@@ -1,17 +1,13 @@
-import { PrismaClient } from '@prisma/client';
-
-import { httpStatus } from '../common/variables';
 import { IRequestDefaultList } from '../types/request';
 import { IServiceResponse } from 'types/response';
 import { IEmployee, IPermission } from '../types/object';
 import { IPermissionService } from '../types/service';
-import { AppError, ValidationError, NotFoundError } from '../common/utils/error';
+import { BaseService } from './baseService';
+import { ExtendedPrismaClient } from '../library/database';
 
-export class PermissionService implements IPermissionService {
-  private prisma: PrismaClient;
-
-  constructor() {
-    this.prisma = new PrismaClient();
+export class PermissionService extends BaseService implements IPermissionService {
+  constructor(prisma: ExtendedPrismaClient) {
+    super(prisma);
   }
 
   public async list(data: IRequestDefaultList): Promise<IServiceResponse<IPermission[]>> {
@@ -67,15 +63,7 @@ export class PermissionService implements IPermissionService {
 
       return { result: true, metadata, data: permissions };
     } catch (error) {
-      if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message };
-      } else {
-        return {
-          result: false,
-          code: httpStatus.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.',
-        };
-      }
+      return this.handleError(error);
     }
   }
 
@@ -121,15 +109,7 @@ export class PermissionService implements IPermissionService {
 
       return { result: true, data: employee };
     } catch (error) {
-      if (error instanceof AppError) {
-        return { result: false, code: error.statusCode, message: error.message };
-      } else {
-        return {
-          result: false,
-          code: httpStatus.INTERNAL_SERVER_ERROR,
-          message: '서버 오류가 발생했습니다.',
-        };
-      }
+      return this.handleError(error);
     }
   }
 }

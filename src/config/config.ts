@@ -3,6 +3,10 @@ export const NODE_ENV = process.env.NODE_ENV || 'development';
 // 프로젝트 설정
 export const CONFIG = {
   /**
+   * 실행 환경
+   */
+  ENV: process.env.NODE_ENV || 'development',
+  /**
    * 서비스 URL
    */
   SERVICE_URL: process.env.SERVICE_URL || '',

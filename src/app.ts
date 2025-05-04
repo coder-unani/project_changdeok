@@ -34,7 +34,9 @@ const app: Application = express();
  */
 
 // 프록시 설정 (Nginx 등에서 Reverse Proxy를 사용하는 경우)
-// app.set('trust proxy', true);
+if (CONFIG.ENV === 'production') {
+  app.set('trust proxy', true);
+}
 
 // 보안 설정
 app.use(
