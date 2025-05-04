@@ -153,7 +153,10 @@ export const formatEmailMasking = (email: string | undefined | null): typeFormat
     const emailId = emailArray[0];
     const emailDomain = emailArray[1];
     const emailIdLength = emailId.length;
-    const emailIdMasking = emailId.substr(0, 3) + '*'.repeat(emailIdLength - 3);
+    const emailIdMasking =
+      emailIdLength <= 3
+        ? emailId.charAt(0) + '*'.repeat(emailIdLength - 1)
+        : emailId.substr(0, 3) + '*'.repeat(emailIdLength - 3);
 
     return {
       result: true,
