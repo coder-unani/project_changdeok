@@ -24,11 +24,11 @@ import { IRoute, IPageData } from '../types/config';
 import { IRequestBanners, IRequestContents, typeListSort } from '../types/request';
 import { decryptDataAES } from '../library/encrypt';
 import { BaseWebController } from './BaseController';
-
+import { IPermission } from '../types/object';
 // TODO: 권한을 체크해서 다른 계정도 수정하게 할 것인지 확인 필요
 export class BackendController extends BaseWebController {
   // 직원 인증 및 정보 조회 메서드
-  private async verifyAndGetEmployee(req: Request, employeeId?: number): Promise<IEmployeeToken> {
+  private async getLoggedInEmployee(req: Request, employeeId?: number): Promise<IEmployeeToken> {
     // Cookie에서 직원 정보 추출
     const cookieEmployee = getCookie(req, 'employee');
     if (!cookieEmployee) {
@@ -37,10 +37,6 @@ export class BackendController extends BaseWebController {
 
     // Cookie 직원 정보 파싱
     const loggedInEmployee: IEmployeeToken = JSON.parse(cookieEmployee);
-
-    if (employeeId && loggedInEmployee.id !== employeeId) {
-      throw new AuthError('권한이 없습니다.');
-    }
 
     return loggedInEmployee;
   }
@@ -51,7 +47,7 @@ export class BackendController extends BaseWebController {
     accessPermissions: number[] = [],
     accessEmployeeId?: number
   ): Promise<void> => {
-    const loggedInEmployee = await this.verifyAndGetEmployee(req, accessEmployeeId);
+    const loggedInEmployee = await this.getLoggedInEmployee(req, accessEmployeeId);
 
     // 권한이 필요없는 페이지이면 접근 가능
     if (accessPermissions.length === 0 && !accessEmployeeId) {
@@ -478,8 +474,29 @@ export class BackendController extends BaseWebController {
       // 접근 권한 체크
       await this.verifyPermission(req, route.permissions);
 
+      // 직원 정보 조회
+      const accessToken = req.cookies.accessToken;
+      const decodedToken = accessToken ? verifyJWT(accessToken) : null;
+
+      // 현재 로그인한 직원 정보 조회
+      const { data: grantedByEmployee } = await getApiEmployeeDetail(decodedToken.id);
+
+      // 현재 로그인한 직원이 권한 관리자 또는 최고 관리자인 경우
+      let permissions: IPermission[] = [];
+      if (
+        grantedByEmployee &&
+        (grantedByEmployee.permissions?.includes(1) || grantedByEmployee.permissions?.includes(2))
+      ) {
+        const getPermissions = await getApiPermissionList(1, 10);
+        if (getPermissions.result && getPermissions.data) {
+          permissions = getPermissions.data;
+        }
+      }
+
       // 페이지 데이터 생성
-      const data = this.createPageData(route);
+      const data = this.createPageData(route, '', {
+        permissions,
+      });
 
       // 직원 등록 페이지 렌더링
       res.render(route.view, data);
