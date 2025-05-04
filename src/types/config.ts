@@ -5,6 +5,14 @@ export interface IApiRoute {
   permissions: number[];
 }
 
+// 페이지 데이터 인터페이스
+export interface IPageData {
+  layout: string;
+  title: string;
+  metadata: Record<string, any>;
+  data: Record<string, any>;
+}
+
 export interface IRoute {
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   title: string;
