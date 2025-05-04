@@ -640,6 +640,17 @@ export class ApiController {
       // 요청 데이터
       const requestData: IRequestEmployeeRegister = req.body;
 
+      // 로그인 확인
+      const accessToken = getCookie(req, 'accessToken');
+      const tokenEmployee = accessToken ? verifyJWT(accessToken) : null;
+      if (!tokenEmployee) {
+        throw new AuthError('로그인 정보가 없습니다.');
+      }
+
+      const loggedInEmployee: IEmployeeToken = tokenEmployee;
+
+      requestData.grantedById = loggedInEmployee.id;
+
       // 직원 등록 처리
       const employeeService: IEmployeeService = new EmployeeService(prisma);
       const result = await employeeService.create(requestData);

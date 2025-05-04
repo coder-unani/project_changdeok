@@ -54,6 +54,8 @@ export interface IRequestEmployeeRegister {
   address?: string;
   hireDate?: string; // 선택적 필드 (ISO 날짜 문자열)
   birthDate?: string; // 선택적 필드 (ISO 날짜 문자열)
+  permissions?: number[];
+  grantedById?: number;
 }
 
 export interface IRequestEmployeeUpdate {

@@ -105,7 +105,7 @@ export class EmployeeService extends BaseService implements IEmployeeService {
       const hashedPassword = await hashPassword(data.password);
 
       // 직원 등록
-      await this.prisma.employee.create({
+      const employee = await this.prisma.employee.create({
         data: {
           email: data.email.trim(),
           name: data.name.trim(),
@@ -119,6 +119,18 @@ export class EmployeeService extends BaseService implements IEmployeeService {
           birthDate,
         },
       });
+
+      // 권한 부여
+      if (data.permissions) {
+        await this.prisma.employeePermission.createMany({
+          data: data.permissions.map((permission) => ({
+            employeeId: employee.id,
+            permissionId: permission,
+            grantedAt: new Date(),
+            grantedById: data.grantedById || 0,
+          })),
+        });
+      }
 
       // 성공
       return { result: true };
