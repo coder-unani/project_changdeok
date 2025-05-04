@@ -302,6 +302,13 @@ export class BackendController {
         throw new ValidationError('배너 시퀀스 조건이 올바르지 않습니다.');
       }
 
+      const getBannerGroup = await getApiBannerGroup([groupId]);
+      const bannerGroupInfo = getBannerGroup.data?.[0] || null;
+
+      if (!getBannerGroup.result || !bannerGroupInfo) {
+        throw new ValidationError((getBannerGroup.message as string) || '배너 그룹 정보를 조회할 수 없습니다.');
+      }
+
       // API Params
       const params: IRequestBanners = {
         page: req.query.page ? parseInt(req.query.page as string) : 1,
