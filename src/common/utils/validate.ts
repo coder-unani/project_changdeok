@@ -1,5 +1,52 @@
 import type { typeValidatedResult } from '../../types/validate';
 import { REG_DATE_PATTERN, REG_EMAIL_PATTERN, REG_PASSWORD_PATTERN, REG_PHONE_PATTERN } from '../../config/config';
+import { ValidationError } from './error';
+
+// Integer 형식 체크 함수
+export const validateInteger = (_value: any, _fieldName: string = ''): number => {
+  const parsedValue = Number(_value);
+
+  if (isNaN(parsedValue)) {
+    const message = (_fieldName ? `${_fieldName}가` : '값이') + '올바르지 않습니다.';
+    throw new ValidationError(message);
+  }
+
+  return parsedValue;
+};
+
+// String 형식 체크 함수
+export const validateString = (_value: any, _fieldName: string = ''): string => {
+  const parsedValue = String(_value);
+
+  if (typeof parsedValue !== 'string') {
+    const message = (_fieldName ? `${_fieldName}가` : '값이') + '올바르지 않습니다.';
+    throw new ValidationError(message);
+  }
+
+  return parsedValue;
+};
+
+// Boolean 형식 체크 함수
+export const validateBoolean = (_value: any | boolean, _fieldName: string): boolean => {
+  let parsedValue = null;
+
+  if (typeof _value === 'string') {
+    parsedValue = ['Y', 'y', 'TRUE', 'true', '1'].includes(_value)
+      ? true
+      : ['N', 'n', 'FALSE', 'false', '0'].includes(_value)
+        ? false
+        : null;
+  } else {
+    parsedValue = _value;
+  }
+
+  if (typeof parsedValue !== 'boolean') {
+    const message = (_fieldName ? `${_fieldName}가` : '값이') + '올바르지 않습니다.';
+    throw new ValidationError(message);
+  }
+
+  return parsedValue;
+};
 
 // Email 형식 체크 함수
 export const validateEmail = (email: string): typeValidatedResult => {
