@@ -91,6 +91,10 @@ app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000, // 15분
     limit: 1000, // 15분에 1000개의 요청
+    standardHeaders: true, // RateLimit-* 헤더 추가
+    legacyHeaders: false, // X-RateLimit-* 헤더 비활성화
+    skipFailedRequests: false, // 실패한 요청도 제한에 포함
+    message: '요청이 너무 많습니다. 잠시 후 다시 시도해주세요.',
   })
 );
 
