@@ -23,38 +23,9 @@ import { IEmployeeToken } from '../types/object';
 import { IRoute, IPageData } from '../types/config';
 import { IRequestBanners, IRequestContents, typeListSort } from '../types/request';
 import { decryptDataAES } from '../library/encrypt';
-
+import { BaseWebController } from './BaseController';
 // TODO: 권한을 체크해서 다른 계정도 수정하게 할 것인지 확인 필요
-export class BackendController {
-  constructor() {}
-
-  // 페이지 데이터 생성 메서드
-  private createPageData(
-    route: IRoute,
-    title: string = '',
-    metadata: Record<string, any> = {},
-    data: Record<string, any> = {}
-  ): IPageData {
-    return {
-      layout: route.layout,
-      title: title || route.title,
-      metadata,
-      data,
-    };
-  }
-
-  // API 호출 에러 처리 메서드
-  private async handleApiCall<T>(apiCall: () => Promise<T>): Promise<T> {
-    try {
-      return await apiCall();
-    } catch (error) {
-      if (error instanceof AppError) {
-        throw error;
-      }
-      throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, 'API 호출 중 오류가 발생했습니다.');
-    }
-  }
-
+export class BackendController extends BaseWebController {
   // 직원 인증 및 정보 조회 메서드
   private async verifyAndGetEmployee(req: Request, employeeId?: number): Promise<IEmployeeToken> {
     // Cookie에서 직원 정보 추출
@@ -170,16 +141,10 @@ export class BackendController {
       }
 
       // 배너 그룹 ID
-      const groupId = Number(req.query.gp);
-      if (!groupId || isNaN(groupId)) {
-        throw new ValidationError('배너 그룹 ID가 올바르지 않습니다.');
-      }
+      const groupId = this.validateInteger(req.query.gp, '배너 그룹 ID');
 
       // 배너 시퀀스
-      const seq = Number(req.query.sq);
-      if (seq <= 0) {
-        throw new ValidationError('배너 시퀀스가 올바르지 않습니다.');
-      }
+      const seq = this.validateInteger(req.query.sq, '배너 시퀀스');
 
       // 배너 그룹 정보 조회
       const apiGroupInfo = await getApiBannerGroup([groupId]);
@@ -221,10 +186,7 @@ export class BackendController {
       }
 
       // 배너 ID
-      const bannerId = Number(req.params.bannerId);
-      if (!bannerId || isNaN(bannerId)) {
-        throw new ValidationError('배너 ID가 올바르지 않습니다.');
-      }
+      const bannerId = this.validateInteger(req.params.bannerId, '배너 ID');
 
       const { result, message, metadata, data: banner } = await getApiBannerDetail(bannerId);
 
@@ -256,10 +218,7 @@ export class BackendController {
       }
 
       // 배너 ID
-      const bannerId = Number(req.params.bannerId);
-      if (!bannerId || isNaN(bannerId)) {
-        throw new ValidationError('배너 ID가 올바르지 않습니다.');
-      }
+      const bannerId = this.validateInteger(req.params.bannerId, '배너 ID');
 
       const { result, message, metadata, data: banner } = await getApiBannerDetail(bannerId);
 
@@ -291,16 +250,10 @@ export class BackendController {
       }
 
       // 배너 그룹 ID
-      const groupId = Number(req.query.gp);
-      if (!groupId || isNaN(groupId)) {
-        throw new ValidationError('배너 그룹 ID가 올바르지 않습니다.');
-      }
+      const groupId = this.validateInteger(req.query.gp, '배너 그룹 ID');
 
       // 배너 시퀀스
-      const seq = Number(req.query.sq);
-      if (seq <= 0 || isNaN(seq)) {
-        throw new ValidationError('배너 시퀀스 조건이 올바르지 않습니다.');
-      }
+      const seq = this.validateInteger(req.query.sq, '배너 시퀀스');
 
       const getBannerGroup = await getApiBannerGroup([groupId]);
       const bannerGroupInfo = getBannerGroup.data?.[0] || null;
@@ -375,12 +328,7 @@ export class BackendController {
       await this.verifyPermission(req, route.permissions);
 
       // 게시판 ID 추출
-      const groupId = Number(req.params.groupId);
-
-      // 게시판 ID가 없는 경우
-      if (!groupId || isNaN(groupId)) {
-        throw new ValidationError('게시판 아이디가 형식에 맞지 않습니다.');
-      }
+      const groupId = this.validateInteger(req.params.groupId, '게시판 ID');
 
       // params 생성
       const params: IRequestContents = {
@@ -424,12 +372,7 @@ export class BackendController {
       await this.verifyPermission(req, route.permissions);
 
       // 게시판 ID 추출
-      const groupId = Number(req.params.groupId);
-
-      // 게시판 ID가 없는 경우
-      if (!groupId || isNaN(groupId)) {
-        throw new ValidationError('게시판 아이디가 형식에 맞지 않습니다.');
-      }
+      const groupId = this.validateInteger(req.params.groupId, '게시판 ID');
 
       // 게시판 그룹 정보
       const { data: group } = await getApiContentGroup(groupId);
@@ -457,18 +400,8 @@ export class BackendController {
       await this.verifyPermission(req, route.permissions);
 
       // 게시판 ID와 게시글 ID 추출
-      const groupId = Number(req.params.groupId);
-      const contentId = Number(req.params.contentId);
-
-      // 컨텐츠 그룹 ID가 없는 경우
-      if (!groupId || isNaN(groupId)) {
-        throw new ValidationError('잘못된 게시판 그룹 입니다.');
-      }
-
-      // 컨텐츠 ID가 없는 경우
-      if (!contentId || isNaN(contentId)) {
-        throw new ValidationError('잘못된 게시글 번호 입니다.');
-      }
+      const groupId = this.validateInteger(req.params.groupId, '게시판 ID');
+      const contentId = this.validateInteger(req.params.contentId, '게시글 ID');
 
       // 게시판 그룹 정보 API 호출
       const getContentGroup = await getApiContentGroup(groupId);
@@ -517,18 +450,8 @@ export class BackendController {
       await this.verifyPermission(req, route.permissions);
 
       // 게시판 ID와 게시글 ID 추출
-      const groupId = Number(req.params.groupId);
-      const contentId = Number(req.params.contentId);
-
-      // 컨텐츠 그룹 ID가 없는 경우
-      if (!groupId || isNaN(groupId)) {
-        throw new ValidationError('존재하지 않는 게시판입니다.');
-      }
-
-      // 컨텐츠 ID가 없는 경우
-      if (!contentId) {
-        throw new ValidationError('존재하지 않는 게시글입니다.');
-      }
+      const groupId = this.validateInteger(req.params.groupId, '게시판 ID');
+      const contentId = this.validateInteger(req.params.contentId, '게시글 ID');
 
       // API 호출
       const { metadata, data: content } = await getApiContentDetail(groupId, contentId);
@@ -568,12 +491,7 @@ export class BackendController {
   public employeeDetail = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 직원 ID 추출
-      const employeeId = Number(req.params.employeeId);
-
-      // ID가 숫자가 아닌 경우 에러 페이지로 이동
-      if (!employeeId || isNaN(employeeId)) {
-        throw new ValidationError('직원 아이디가 형식에 맞지 않습니다.');
-      }
+      const employeeId = this.validateInteger(req.params.employeeId, '직원 ID');
 
       // 접근 권한 체크
       await this.verifyPermission(req, route.permissions, employeeId);
@@ -611,12 +529,7 @@ export class BackendController {
   public employeeUpdate = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 직원 ID 추출
-      const employeeId = Number(req.params.employeeId);
-
-      // ID가 숫자가 아닌 경우 에러 페이지로 이동
-      if (!employeeId || isNaN(employeeId)) {
-        throw new ValidationError('직원 아이디가 형식에 맞지 않습니다.');
-      }
+      const employeeId = this.validateInteger(req.params.employeeId, '직원 ID');
 
       // 접근 권한 체크
       await this.verifyPermission(req, route.permissions, employeeId);
@@ -643,12 +556,7 @@ export class BackendController {
   public employeeUpdatePassword = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 직원 ID 추출
-      const employeeId = Number(req.params.employeeId);
-
-      // 직원 ID가 없는 경우 에러 페이지로 이동
-      if (!employeeId || isNaN(employeeId)) {
-        throw new ValidationError('직원 아이디가 형식에 맞지 않습니다.');
-      }
+      const employeeId = this.validateInteger(req.params.employeeId, '직원 ID');
 
       // 접근 권한 체크
       await this.verifyPermission(req, route.permissions, employeeId);
@@ -677,12 +585,7 @@ export class BackendController {
   public employeeDelete = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 직원 ID 추출
-      const employeeId = Number(req.params.employeeId);
-
-      // ID가 숫자가 아닌 경우 에러 페이지로 이동
-      if (!employeeId || isNaN(employeeId)) {
-        throw new ValidationError('직원 아이디가 형식에 맞지 않습니다.');
-      }
+      const employeeId = this.validateInteger(req.params.employeeId, '직원 ID');
 
       // 접근 권한 체크
       await this.verifyPermission(req, route.permissions, employeeId);
@@ -713,12 +616,7 @@ export class BackendController {
       await this.verifyPermission(req, route.permissions);
 
       // 직원 ID 추출
-      const employeeId = Number(req.params.employeeId);
-
-      // ID가 숫자가 아닌 경우 에러 페이지로 이동
-      if (!employeeId || isNaN(employeeId)) {
-        throw new ValidationError('직원 아이디가 형식에 맞지 않습니다.');
-      }
+      const employeeId = this.validateInteger(req.params.employeeId, '직원 ID');
 
       // 직원 정보 조회
       const accessToken = req.cookies.accessToken;
