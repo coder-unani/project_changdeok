@@ -23,8 +23,9 @@ import { IEmployeeToken } from '../types/object';
 import { IRoute, IPageData } from '../types/config';
 import { IRequestBanners, IRequestContents, typeListSort } from '../types/request';
 import { decryptDataAES } from '../library/encrypt';
-import { BaseWebController } from './BaseController';
+import { BaseWebController } from './controller';
 import { IPermission } from '../types/object';
+
 // TODO: 권한을 체크해서 다른 계정도 수정하게 할 것인지 확인 필요
 export class BackendController extends BaseWebController {
   // 직원 인증 및 정보 조회 메서드
