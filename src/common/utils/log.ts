@@ -116,15 +116,15 @@ export class ExpressLogger implements IHttpLogger {
 
     // 로그 메세지
     const logMessage =
-      `Path: ${originalUrl} || ` +
-      `Method: ${method} || ` +
-      `Status: ${res.statusCode} || ` +
-      `ClientIP: ${clientIp} || ` +
-      `Origin: ${headers.origin || 'N/A'} || ` +
-      `Referer: ${headers.referer || 'N/A'} || ` +
-      `Identifier: ${headers['x-identifier'] || 'N/A'} || ` +
-      `User-Agent: ${headers['user-agent']} || ` +
-      `Host: ${headers.host}`;
+      `${originalUrl} || ` + // Path 경로
+      `${method} || ` + // 요청 메서드
+      `${res.statusCode} || ` + // 응답 상태 코드
+      `${clientIp} || ` + // 클라이언트 IP
+      `${headers.origin || 'N/A'} || ` + // 원본 도메인
+      `${headers.referer || 'N/A'} || ` + // 리퍼러
+      `${headers['x-identifier'] || 'N/A'} || ` + // 식별자
+      `${headers['user-agent']} || ` + // 사용자 에이전트
+      `${headers.host}`; // 호스트
 
     // 로그 출력
     this.info(logMessage);
