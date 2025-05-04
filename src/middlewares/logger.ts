@@ -17,7 +17,7 @@ export class LoggerMiddleware implements IMiddleware {
     }
 
     // Request 로그 기록
-    this.logger.logRequest(req);
+    // this.logger.logRequest(req);
 
     // 로거 참조
     const logger = this.logger;
