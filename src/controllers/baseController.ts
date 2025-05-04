@@ -1,41 +1,25 @@
 import { IRoute, IPageData } from '../types/config';
 import { AppError, ValidationError } from '../common/utils/error';
 import { httpStatus } from '../common/variables';
+import { validateInteger, validateString, validateBoolean } from '../common/utils/validate';
 
-export class BaseWebController {
+export class BaseController {
   constructor() {}
 
   protected validateInteger(_value: any | number, _fieldName: string): number {
-    const parsedValue = Number(_value);
-    if (isNaN(parsedValue)) {
-      throw new ValidationError(`${_fieldName}가 올바르지 않습니다.`);
-    }
-    return parsedValue;
+    return validateInteger(_value, _fieldName);
   }
 
   protected validateString(_value: any | number, _fieldName: string): string {
-    const parsedValue = String(_value);
-    if (_value === null || _value === undefined || typeof parsedValue !== 'string') {
-      throw new ValidationError(`${_fieldName}가 올바르지 않습니다.`);
-    }
-    return parsedValue;
+    return validateString(_value, _fieldName);
   }
 
   protected validateBoolean(_value: any | boolean, _fieldName: string): boolean {
-    const parsedValue =
-      typeof _value === 'string'
-        ? ['Y', 'y', 'TRUE', 'true', '1'].includes(_value)
-          ? true
-          : ['N', 'n', 'FALSE', 'false', '0'].includes(_value)
-            ? false
-            : null
-        : _value;
-    if (typeof parsedValue !== 'boolean') {
-      throw new ValidationError(`${_fieldName}가 올바르지 않습니다.`);
-    }
-    return parsedValue;
+    return validateBoolean(_value, _fieldName);
   }
+}
 
+export class BaseWebController extends BaseController {
   // 페이지 데이터 생성 메서드
   protected createPageData(
     route: IRoute,
@@ -51,6 +35,7 @@ export class BaseWebController {
     };
   }
 
+  // API 호출 처리 메서드
   protected async handleApiCall<T>(apiCall: () => Promise<T>): Promise<T> {
     try {
       return await apiCall();
