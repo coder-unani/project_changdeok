@@ -41,6 +41,7 @@ export const apiRoutes = {
     referrer: createApiRoute('GET', '유입처별 통계', '/stats/referrer', []),
     hourly: createApiRoute('GET', '시간대별 통계', '/stats/hourly', []),
     browser: createApiRoute('GET', '브라우저별 통계', '/stats/browser', []),
+    accessLogs: createApiRoute('GET', '접속 로그 통계', '/stats/access-logs', []),
   },
   banners: {
     list: createApiRoute('GET', '배너 목록', '/banners', []),

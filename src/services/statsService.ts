@@ -1,7 +1,10 @@
+import { BetaAnalyticsDataClient } from '@google-analytics/data';
+
 import { BaseService } from './baseService';
 import { ExtendedPrismaClient } from '../library/database';
-import { BetaAnalyticsDataClient } from '@google-analytics/data';
-import { IServiceResponse } from 'types/response';
+import { IServiceResponse } from '../types/response';
+import { AppError, ForbiddenError, NotFoundError, TooManyRequestsError } from '../common/error';
+import { httpStatus } from '../common/variables';
 
 export class StatsService extends BaseService {
   private analyticsDataClient: BetaAnalyticsDataClient;
@@ -14,34 +17,6 @@ export class StatsService extends BaseService {
         private_key: process.env.GA_PRIVATE_KEY?.replace(/\\n/g, '\n'),
       },
     });
-  }
-
-  private handleGAError(error: any) {
-    console.error('GA4 API Error:', error);
-
-    // 할당량 초과 에러 처리
-    if (error.code === 429) {
-      return {
-        result: false,
-        code: 429,
-        message: '분당 API 할당량이 초과되었습니다. 잠시 후 다시 시도해주세요.',
-      };
-    }
-
-    if (error.code === 403 || error.message?.includes('Quota exceeded')) {
-      return {
-        result: false,
-        code: 403,
-        message: '일일 API 할당량이 초과되었습니다. 내일 다시 시도해주세요.',
-      };
-    }
-
-    // 기타 에러
-    return {
-      result: false,
-      code: error.code || 500,
-      message: error.message || '통계 데이터 조회 중 오류가 발생했습니다.',
-    };
   }
 
   public async getVisitorStats(startDate: string, endDate: string): Promise<IServiceResponse<any>> {
@@ -94,7 +69,7 @@ export class StatsService extends BaseService {
         data: aggregatedData,
       };
     } catch (error: any) {
-      return this.handleGAError(error);
+      return this.handleError(error);
     }
   }
 
@@ -143,7 +118,7 @@ export class StatsService extends BaseService {
         data: pageViewsData,
       };
     } catch (error: any) {
-      return this.handleGAError(error);
+      return this.handleError(error);
     }
   }
 
@@ -194,7 +169,7 @@ export class StatsService extends BaseService {
         data: countryData,
       };
     } catch (error: any) {
-      return this.handleGAError(error);
+      return this.handleError(error);
     }
   }
 
@@ -246,7 +221,7 @@ export class StatsService extends BaseService {
         data: referrerData,
       };
     } catch (error: any) {
-      return this.handleGAError(error);
+      return this.handleError(error);
     }
   }
 
@@ -297,7 +272,7 @@ export class StatsService extends BaseService {
         data: hourlyData,
       };
     } catch (error: any) {
-      return this.handleGAError(error);
+      return this.handleError(error);
     }
   }
 
@@ -355,7 +330,7 @@ export class StatsService extends BaseService {
         data: dailyData,
       };
     } catch (error: any) {
-      return this.handleGAError(error);
+      return this.handleError(error);
     }
   }
 
@@ -412,7 +387,84 @@ export class StatsService extends BaseService {
         data: browserData,
       };
     } catch (error: any) {
-      return this.handleGAError(error);
+      return this.handleError(error);
+    }
+  }
+
+  public async getAccessLogs(date: string): Promise<IServiceResponse<any>> {
+    try {
+      const logPath = `logs/info-${date}.log`;
+      const gzLogPath = `logs/info-${date}.log.gz`;
+      const fs = require('fs');
+      const zlib = require('zlib');
+      const path = require('path');
+
+      let logContent = '';
+
+      // Check if file exists
+      if (fs.existsSync(logPath)) {
+        try {
+          logContent = fs.readFileSync(logPath, 'utf8');
+        } catch (error) {
+          throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, '로그 파일을 읽는 중 오류가 발생했습니다.');
+        }
+      } else if (fs.existsSync(gzLogPath)) {
+        try {
+          // gzip 파일 압축 해제
+          const compressed = fs.readFileSync(gzLogPath);
+          logContent = zlib.gunzipSync(compressed).toString('utf8');
+        } catch (error) {
+          throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, '압축된 로그 파일을 해제하는 중 오류가 발생했습니다.');
+        }
+      } else {
+        throw new NotFoundError('해당 날짜의 로그 파일을 찾을 수 없습니다.');
+      }
+
+      if (!logContent) {
+        throw new NotFoundError('로그 파일이 비어있습니다.');
+      }
+
+      // Parse log entries
+      const logEntries = logContent
+        .split('\n')
+        .filter((line) => line.trim() !== '')
+        .map((line) => {
+          try {
+            const parts = line.split(' || ');
+            if (parts.length < 9) return null;
+
+            return {
+              timestamp: parts[0].split(' - ')[0],
+              level: parts[0].split(' - ')[1],
+              path: parts[0].split(' - ')[2],
+              method: parts[1],
+              status: parts[2],
+              ip: parts[3],
+              origin: parts[4],
+              referer: parts[5],
+              userAgent: parts[7],
+              host: parts[8],
+            };
+          } catch (error) {
+            throw new NotFoundError('로그 파일이 비어있습니다.');
+          }
+        })
+        .filter((entry) => entry !== null);
+
+      if (logEntries.length === 0) {
+        throw new NotFoundError('유효한 로그 데이터가 없습니다.');
+      }
+
+      return {
+        result: true,
+        metadata: {
+          date,
+          totalRequests: logEntries.length,
+        },
+        data: logEntries,
+      };
+    } catch (error: any) {
+      return this.handleError(error);
     }
   }
 }

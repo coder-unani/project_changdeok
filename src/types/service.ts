@@ -25,6 +25,7 @@ export interface IStatsService {
   getReferrerStats(startDate: string, endDate: string): Promise<IServiceResponse<any>>;
   getHourlyStats(startDate: string, endDate: string): Promise<IServiceResponse<any>>;
   getBrowserStats(startDate: string, endDate: string): Promise<IServiceResponse<any>>;
+  getAccessLogs(date: string): Promise<IServiceResponse<any>>;
 }
 
 export interface IBannerService {

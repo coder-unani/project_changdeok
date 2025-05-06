@@ -30,7 +30,7 @@ import { formatApiResponse } from '../common/utils/format';
 import { createJWT, verifyJWT } from '../library/jwt';
 import { getCookie, setCookie, removeCookie } from '../common/utils/cookie';
 import { getAccessedEmployee } from '../common/utils/verify';
-import { AppError, ValidationError, AuthError, PermissionError } from '../common/error';
+import { AppError, ValidationError, AuthError, ForbiddenError } from '../common/error';
 import { companyInfo } from '../config/info';
 import { StatsService } from '../services/statsService';
 import { IStatsService } from '../types/service';
@@ -218,6 +218,29 @@ export class ApiController {
         req.query.startDate as string,
         req.query.endDate as string
       );
+
+      if (!result) {
+        throw new AppError(code, message);
+      }
+
+      const response = formatApiResponse(true, null, null, metadata, data);
+      res.status(httpStatus.OK).json(response);
+    } catch (error) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
+    }
+  }
+
+  // 접속 로그 통계
+  public async statsAccessLogs(req: Request, res: Response): Promise<void> {
+    const { permissions } = apiRoutes.stats.accessLogs;
+
+    try {
+      const statsService: IStatsService = new StatsService(prisma);
+      const { result, code, message, metadata, data } = await statsService.getAccessLogs(req.query.date as string);
 
       if (!result) {
         throw new AppError(code, message);
@@ -997,7 +1020,7 @@ export class ApiController {
 
       // 권한 없음 처리
       if (!hasPermission) {
-        throw new PermissionError('권한이 없습니다.');
+        throw new ForbiddenError('권한이 없습니다.');
       }
 
       // 직원 비밀번호 변경 처리

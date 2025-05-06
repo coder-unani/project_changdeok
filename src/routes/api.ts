@@ -207,4 +207,9 @@ router.get(apiRoutes.stats.browser.url, (req: Request, res: Response) => {
   apiController.statsBrowser(req, res);
 });
 
+// 접속 로그 통계
+router.get(apiRoutes.stats.accessLogs.url, (req: Request, res: Response) => {
+  apiController.statsAccessLogs(req, res);
+});
+
 export default router;
