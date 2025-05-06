@@ -33,6 +33,15 @@ const createRoute = (
 
 export const apiRoutes = {
   info: createApiRoute('GET', '웹사이트 정보', '/info', []),
+  stats: {
+    visitor: createApiRoute('GET', '방문자 통계', '/stats/visitor', []),
+    dailyVisitor: createApiRoute('GET', '일일 방문자 통계', '/stats/daily-visitor', []),
+    pageView: createApiRoute('GET', '페이지뷰 통계', '/stats/page-view', []),
+    country: createApiRoute('GET', '국가별 통계', '/stats/country', []),
+    referrer: createApiRoute('GET', '유입처별 통계', '/stats/referrer', []),
+    hourly: createApiRoute('GET', '시간대별 통계', '/stats/hourly', []),
+    browser: createApiRoute('GET', '브라우저별 통계', '/stats/browser', []),
+  },
   banners: {
     list: createApiRoute('GET', '배너 목록', '/banners', []),
     write: createApiRoute('POST', '배너 등록', '/banners/write', [1, 5]),
@@ -77,6 +86,14 @@ export const backendRoutes = {
     '대시보드',
     `${backendRoutesPrefix}/dashboard`,
     'backend/dashboard',
+    backendRoutesLayout,
+    [1, 6]
+  ),
+  stats: createRoute(
+    'GET',
+    '접속 통계',
+    `${backendRoutesPrefix}/stats`,
+    'backend/stats/index',
     backendRoutesLayout,
     [1, 6]
   ),
