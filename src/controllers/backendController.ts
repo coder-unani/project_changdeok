@@ -90,13 +90,6 @@ export class BackendController extends BaseWebController {
       // 접근 권한 체크
       await this.verifyPermission(req, route.permissions);
 
-      const statsService = new StatsService(prisma);
-      const pageViews = await statsService.getPageViews('2025-05-01', '2025-05-06');
-      console.log(JSON.stringify(pageViews, null, 2));
-
-      const stats = await statsService.getVisitorStats('2025-05-01', '2025-05-06');
-      console.log(JSON.stringify(stats, null, 2));
-
       // 배너 정보
       const banners = [
         { title: '메인화면', published: 3, reserved: 1, expired: 2 },
