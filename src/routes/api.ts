@@ -172,4 +172,39 @@ router.get(apiRoutes.permissions.url, (req: Request, res: Response) => {
   apiController.permissions(req, res);
 });
 
+// 방문자 통계
+router.get(apiRoutes.stats.visitor.url, (req: Request, res: Response) => {
+  apiController.statsVisitor(req, res);
+});
+
+// 일간 방문자 통계
+router.get(apiRoutes.stats.dailyVisitor.url, (req: Request, res: Response) => {
+  apiController.statsDailyVisitor(req, res);
+});
+
+// 페이지 뷰 통계
+router.get(apiRoutes.stats.pageView.url, (req: Request, res: Response) => {
+  apiController.statsPageView(req, res);
+});
+
+// 국가 통계
+router.get(apiRoutes.stats.country.url, (req: Request, res: Response) => {
+  apiController.statsCountry(req, res);
+});
+
+// 참조 통계
+router.get(apiRoutes.stats.referrer.url, (req: Request, res: Response) => {
+  apiController.statsReferrer(req, res);
+});
+
+// 시간대별 통계
+router.get(apiRoutes.stats.hourly.url, (req: Request, res: Response) => {
+  apiController.statsHourly(req, res);
+});
+
+// 브라우저 통계
+router.get(apiRoutes.stats.browser.url, (req: Request, res: Response) => {
+  apiController.statsBrowser(req, res);
+});
+
 export default router;

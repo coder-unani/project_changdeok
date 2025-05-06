@@ -149,6 +149,13 @@ router.get(backendRoutes.employees.detail.url, function (req, res) {
 });
 
 /**
+ * 통계 관리
+ */
+router.get(backendRoutes.stats.url, function (req, res) {
+  backendController.stats(backendRoutes.stats, req, res);
+});
+
+/**
  * 에러 핸들러 설정
  */
 // const logger = new ExpressLogger(LOG_PATH, LOG_LEVEL);

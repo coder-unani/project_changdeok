@@ -17,6 +17,16 @@ import {
 } from './request';
 import { IServiceResponse } from './response';
 
+export interface IStatsService {
+  getVisitorStats(startDate: string, endDate: string): Promise<IServiceResponse<any>>;
+  getDailyVisitorStats(startDate: string, endDate: string): Promise<IServiceResponse<any>>;
+  getPageViews(startDate: string, endDate: string): Promise<IServiceResponse<any>>;
+  getCountryStats(startDate: string, endDate: string): Promise<IServiceResponse<any>>;
+  getReferrerStats(startDate: string, endDate: string): Promise<IServiceResponse<any>>;
+  getHourlyStats(startDate: string, endDate: string): Promise<IServiceResponse<any>>;
+  getBrowserStats(startDate: string, endDate: string): Promise<IServiceResponse<any>>;
+}
+
 export interface IBannerService {
   create(data: IRequestBannerWrite): Promise<IServiceResponse>;
   read(id: number): Promise<IServiceResponse<IBanner>>;

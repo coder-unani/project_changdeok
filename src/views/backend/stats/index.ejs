@@ -1,0 +1,351 @@
+<div class="mb-2 block pt-2">
+  <h1 class="flex items-center gap-1.5 justify-self-start py-2 text-center text-slate-700 transition-all">
+    <span class="text-xl font-bold"><%=title%></span>
+  </h1>
+</div>
+<div id="adminDetails">
+  <div class="mb-4 space-y-3 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
+    <div class="flex gap-2">
+      <div>
+        <label class="block w-28 font-semibold text-gray-500">시작일</label>
+        <input
+          type="date"
+          id="startDate"
+          name="startDate"
+          class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+          value="<%= new Date().toISOString().split('T')[0] %>"
+        />
+      </div>
+      <div>
+        <label class="block w-28 font-semibold text-gray-500">종료일</label>
+        <input
+          type="date"
+          id="endDate"
+          name="endDate"
+          class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+          value="<%= new Date().toISOString().split('T')[0] %>"
+        />
+      </div>
+    </div>
+    <div class="flex items-center justify-start">
+      <div class="gap-2 sm:grid sm:grid-cols-3 lg:flex">
+        <button
+          id="btn-all-stats"
+          class="rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
+        >
+          전체
+        </button>
+        <button
+          id="btn-daily-stats"
+          class="rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
+        >
+          일별
+        </button>
+        <button
+          id="btn-page-stats"
+          class="rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
+        >
+          페이지
+        </button>
+        <button
+          id="btn-country-stats"
+          class="rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
+        >
+          국가
+        </button>
+        <button
+          id="btn-referrer-stats"
+          class="rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
+        >
+          출처
+        </button>
+        <button
+          id="btn-hourly-stats"
+          class="rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
+        >
+          시간대
+        </button>
+        <button
+          id="btn-browser-stats"
+          class="rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
+        >
+          브라우저
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    class="mb-4 hidden space-y-3 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6"
+    id="stats-wrapper"
+  >
+    <div class="flex items-center justify-start">
+      <div id="stats-container"></div>
+    </div>
+  </div>
+</div>
+
+<link rel="stylesheet" href="/js/gridjs@6.2.0/mermaid.min.css" />
+<script src="/js/gridjs@6.2.0/gridjs.umd.js"></script>
+
+<script nonce="<%=nonce%>">
+  document.addEventListener('DOMContentLoaded', () => {
+    const statsContainer = document.getElementById('stats-container');
+    const startDate = document.getElementById('startDate');
+    const endDate = document.getElementById('endDate');
+    let currentGrid = null; // 현재 Grid 인스턴스를 저장할 변수
+
+    // Grid 인스턴스 정리 함수
+    const cleanupGrid = () => {
+      if (currentGrid) {
+        currentGrid.destroy();
+        currentGrid = null;
+      }
+    };
+
+    // 날짜 유효성 검사 함수
+    const validateDates = () => {
+      if (!startDate.value || !endDate.value) {
+        alert('시작일과 종료일을 입력해주세요.');
+        return false;
+      }
+
+      if (startDate.value > endDate.value) {
+        alert('시작일이 종료일보다 클 수 없습니다.');
+        return false;
+      }
+
+      const maxDate = new Date();
+      maxDate.setFullYear(maxDate.getFullYear() - 2);
+      if (startDate.value < maxDate) {
+        alert('최대 2년까지 조회 가능합니다.');
+        return false;
+      }
+
+      return true;
+    };
+
+    // API 호출 함수
+    const fetchStats = async (url, method) => {
+      try {
+        const response = await fetch(`${url}?startDate=${startDate.value}&endDate=${endDate.value}`, {
+          method,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const responseData = await response.json();
+
+        if (!response.ok) {
+          throw new Error(responseData.message || response.statusText);
+        }
+
+        return responseData.data;
+      } catch (error) {
+        throw new Error(error.message || '서버 오류가 발생했습니다.');
+      }
+    };
+
+    // HTML 생성 함수들
+    const createAllStatsHtml = (data) => {
+      cleanupGrid(); // 이전 Grid 인스턴스 정리
+      const dataArray = Array.isArray(data) ? data : [data];
+      const gridData = dataArray.map((item) => [item.activeUsers, item.newUsers, item.sessions, item.screenPageViews]);
+      currentGrid = new gridjs.Grid({
+        data: gridData,
+        columns: ['총 활성 사용자 수', '총 신규 사용자 수', '총 세션 수', '총 페이지 뷰 수'],
+      });
+      currentGrid.render(statsContainer);
+      return '';
+    };
+
+    const createDailyStatsHtml = (data) => {
+      cleanupGrid();
+      const dataArray = Array.isArray(data) ? data : [data];
+      const gridData = dataArray.map((item) => [
+        item.date,
+        item.activeUsers,
+        item.newUsers,
+        item.sessions,
+        item.pageViews,
+        item.averageSessionDuration,
+      ]);
+      currentGrid = new gridjs.Grid({
+        data: gridData,
+        columns: ['날짜', '활성 사용자 수', '신규 사용자 수', '세션 수', '페이지 뷰 수', '평균 세션 시간'],
+      });
+      currentGrid.render(statsContainer);
+      return '';
+    };
+
+    const createPageStatsHtml = (data) => {
+      cleanupGrid();
+      const dataArray = Array.isArray(data) ? data : [data];
+      const gridData = dataArray.map((item) => [item.pagePath, item.views]);
+      currentGrid = new gridjs.Grid({
+        data: gridData,
+        columns: ['페이지 경로', '페이지 뷰 수'],
+      });
+      currentGrid.render(statsContainer);
+      return '';
+    };
+
+    const createCountryStatsHtml = (data) => {
+      cleanupGrid();
+      const dataArray = Array.isArray(data) ? data : [data];
+      const gridData = dataArray.map((item) => [item.country, item.activeUsers, item.sessions, item.pageViews]);
+      currentGrid = new gridjs.Grid({
+        data: gridData,
+        columns: ['국가', '활성 사용자 수', '세션 수', '페이지 뷰 수'],
+      });
+      currentGrid.render(statsContainer);
+      return '';
+    };
+
+    const createReferrerStatsHtml = (data) => {
+      cleanupGrid();
+      const dataArray = Array.isArray(data) ? data : [data];
+      const gridData = dataArray.map((item) => [
+        item.source,
+        item.medium,
+        item.newUsers,
+        item.sessions,
+        item.pageViews,
+      ]);
+      currentGrid = new gridjs.Grid({
+        data: gridData,
+        columns: ['출처', '매체', '신규 사용자 수', '세션 수', '페이지 뷰 수'],
+      });
+      currentGrid.render(statsContainer);
+      return '';
+    };
+
+    const createHourlyStatsHtml = (data) => {
+      cleanupGrid();
+      const dataArray = Array.isArray(data) ? data : [data];
+      const gridData = dataArray.map((item) => [item.hour, item.activeUsers, item.sessions, item.pageViews]);
+      currentGrid = new gridjs.Grid({
+        data: gridData,
+        columns: ['시간대', '활성 사용자 수', '세션 수', '페이지 뷰 수'],
+      });
+      currentGrid.render(statsContainer);
+      return '';
+    };
+
+    const createBrowserStatsHtml = (data) => {
+      cleanupGrid();
+      const dataArray = Array.isArray(data) ? data : [data];
+      const gridData = dataArray.map((item) => [
+        item.browser,
+        item.activeUsers,
+        item.sessions,
+        item.pageViews,
+        item.averageSessionDuration,
+      ]);
+      currentGrid = new gridjs.Grid({
+        data: gridData,
+        columns: ['브라우저', '활성 사용자 수', '세션 수', '페이지 뷰 수', '평균 세션 시간'],
+      });
+      currentGrid.render(statsContainer);
+      return '';
+    };
+
+    // 이벤트 핸들러 함수
+    const handleStatsClick = async (url, method, createHtml) => {
+      if (!validateDates()) return;
+
+      try {
+        // 컨테이너 초기화
+        statsContainer.innerHTML = '';
+        const statsWrapper = document.getElementById('stats-wrapper');
+
+        // 데이터 가져오기
+        const data = await fetchStats(url, method);
+
+        if (data && (Array.isArray(data) ? data.length > 0 : Object.keys(data).length > 0)) {
+          // 데이터가 있는 경우에만 표시
+          statsWrapper.classList.remove('hidden');
+          statsContainer.innerHTML = createHtml(data);
+        } else {
+          // 데이터가 없는 경우 숨김
+          statsWrapper.classList.add('hidden');
+          statsContainer.innerHTML = '데이터가 없습니다.';
+        }
+      } catch (error) {
+        statsWrapper.classList.add('hidden');
+        statsContainer.innerHTML = error.message;
+      }
+    };
+
+    // 이벤트 리스너 등록
+    document
+      .getElementById('btn-all-stats')
+      .addEventListener('click', () =>
+        handleStatsClick(
+          '<%= apiRoutes.stats.visitor.url %>',
+          '<%= apiRoutes.stats.visitor.method %>',
+          createAllStatsHtml
+        )
+      );
+
+    document
+      .getElementById('btn-daily-stats')
+      .addEventListener('click', () =>
+        handleStatsClick(
+          '<%= apiRoutes.stats.dailyVisitor.url %>',
+          '<%= apiRoutes.stats.dailyVisitor.method %>',
+          createDailyStatsHtml
+        )
+      );
+
+    document
+      .getElementById('btn-page-stats')
+      .addEventListener('click', () =>
+        handleStatsClick(
+          '<%= apiRoutes.stats.pageView.url %>',
+          '<%= apiRoutes.stats.pageView.method %>',
+          createPageStatsHtml
+        )
+      );
+
+    document
+      .getElementById('btn-country-stats')
+      .addEventListener('click', () =>
+        handleStatsClick(
+          '<%= apiRoutes.stats.country.url %>',
+          '<%= apiRoutes.stats.country.method %>',
+          createCountryStatsHtml
+        )
+      );
+
+    document
+      .getElementById('btn-referrer-stats')
+      .addEventListener('click', () =>
+        handleStatsClick(
+          '<%= apiRoutes.stats.referrer.url %>',
+          '<%= apiRoutes.stats.referrer.method %>',
+          createReferrerStatsHtml
+        )
+      );
+
+    document
+      .getElementById('btn-hourly-stats')
+      .addEventListener('click', () =>
+        handleStatsClick(
+          '<%= apiRoutes.stats.hourly.url %>',
+          '<%= apiRoutes.stats.hourly.method %>',
+          createHourlyStatsHtml
+        )
+      );
+
+    document
+      .getElementById('btn-browser-stats')
+      .addEventListener('click', () =>
+        handleStatsClick(
+          '<%= apiRoutes.stats.browser.url %>',
+          '<%= apiRoutes.stats.browser.method %>',
+          createBrowserStatsHtml
+        )
+      );
+  });
+</script>

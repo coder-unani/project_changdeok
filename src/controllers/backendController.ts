@@ -25,7 +25,7 @@ import { IRequestBanners, IRequestContents, typeListSort } from '../types/reques
 import { decryptDataAES } from '../library/encrypt';
 import { BaseWebController } from './controller';
 import { IPermission } from '../types/object';
-
+import { StatsService } from '../services/statsService';
 // TODO: 권한을 체크해서 다른 계정도 수정하게 할 것인지 확인 필요
 export class BackendController extends BaseWebController {
   // 직원 인증 및 정보 조회 메서드
@@ -89,6 +89,13 @@ export class BackendController extends BaseWebController {
     try {
       // 접근 권한 체크
       await this.verifyPermission(req, route.permissions);
+
+      const statsService = new StatsService(prisma);
+      const pageViews = await statsService.getPageViews('2025-05-01', '2025-05-06');
+      console.log(JSON.stringify(pageViews, null, 2));
+
+      const stats = await statsService.getVisitorStats('2025-05-01', '2025-05-06');
+      console.log(JSON.stringify(stats, null, 2));
 
       // 배너 정보
       const banners = [
@@ -753,6 +760,19 @@ export class BackendController extends BaseWebController {
       const data = this.createPageData(route);
 
       // 비밀번호 찾기 페이지 렌더링
+      res.render(route.view, data);
+    } catch (error) {
+      this.renderError(res, error);
+    }
+  };
+
+  // 통계 관리
+  public stats = async (route: IRoute, req: Request, res: Response): Promise<void> => {
+    try {
+      // 페이지 데이터 생성
+      const data = this.createPageData(route);
+
+      // 통계 페이지 렌더링
       res.render(route.view, data);
     } catch (error) {
       this.renderError(res, error);
