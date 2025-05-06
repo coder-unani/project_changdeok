@@ -28,7 +28,7 @@ export class AuthError extends AppError {
   }
 }
 
-export class PermissionError extends AppError {
+export class ForbiddenError extends AppError {
   constructor(message: string) {
     super(httpStatus.FORBIDDEN, message);
   }
@@ -37,6 +37,12 @@ export class PermissionError extends AppError {
 export class NotFoundError extends AppError {
   constructor(message: string) {
     super(httpStatus.NOT_FOUND, message);
+  }
+}
+
+export class TooManyRequestsError extends AppError {
+  constructor(message: string) {
+    super(httpStatus.TOO_MANY_REQUESTS, message);
   }
 }
 
