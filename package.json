@@ -10,7 +10,9 @@
     "tailwind": "npx @tailwindcss/cli -i src/styles/tailwind.css -o public/css/tailwind.css --watch",
     "tailwind:build": "npx @tailwindcss/cli -i src/styles/tailwind.css -o public/css/tailwind.css",
     "copy-files": "cp -R src/views dist/views && cp -R public dist/static",
-    "nodemon": "nodemon"
+    "nodemon": "nodemon",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,scss,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,css,scss,md}\""
   },
   "repository": {
     "type": "git",
