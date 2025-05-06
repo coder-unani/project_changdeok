@@ -433,10 +433,14 @@ export class StatsService extends BaseService {
             const parts = line.split(' || ');
             if (parts.length < 9) return null;
 
+            const path = parts[0].split(' - ')[2];
+            // Skip entries where path starts with /api
+            if (path.startsWith('/api')) return null;
+
             return {
               timestamp: parts[0].split(' - ')[0],
               level: parts[0].split(' - ')[1],
-              path: parts[0].split(' - ')[2],
+              path: path,
               method: parts[1],
               status: parts[2],
               ip: parts[3],
