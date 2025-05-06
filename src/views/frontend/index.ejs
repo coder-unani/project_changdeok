@@ -294,7 +294,8 @@
   document.addEventListener("DOMContentLoaded", () => {
     // 상수 정의
     const POPUP_SHOWN_KEY = 'popup_shown';
-    const popupBanners = <%-JSON.stringify(data.popupBanner)%>;
+    const bannerData = `<%-JSON.stringify(data.popupBanner)%>`;
+    const popupBanners = bannerData ? JSON.parse(bannerData) : [];
     const popupContainer = document.getElementById('popupContainer');
 
     // 로컬스토리지 유틸리티
