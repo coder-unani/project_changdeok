@@ -13,7 +13,7 @@
           id="startDate"
           name="startDate"
           class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-          value="<%= new Date().toISOString().split('T')[0] %>"
+          value="<%= new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0] %>"
         />
       </div>
       <div>
@@ -23,7 +23,7 @@
           id="endDate"
           name="endDate"
           class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-          value="<%= new Date().toISOString().split('T')[0] %>"
+          value="<%= new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0] %>"
         />
       </div>
     </div>
@@ -80,10 +80,10 @@
       </div>
     </div>
   </div>
-  <div
-    id="stats-wrapper"
-    class="mb-4 hidden space-y-3 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6"
-  >
+  <div class="mb-4 space-y-3 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
+    <div id="chart-container" class="hidden h-[400px] w-full items-center justify-center">
+      <canvas id="stats-chart"></canvas>
+    </div>
     <div id="stats-metadata"></div>
     <div class="flex items-center justify-start">
       <div id="stats-container"></div>
@@ -93,10 +93,12 @@
 
 <link rel="stylesheet" href="/js/gridjs@6.2.0/mermaid.min.css" />
 <script src="/js/gridjs@6.2.0/gridjs.umd.js"></script>
+<script src="/js/chart.js@4.4.9/chart.umd.js"></script>
 
 <script nonce="<%=nonce%>">
   document.addEventListener('DOMContentLoaded', () => {
-    const statsWrapper = document.getElementById('stats-wrapper');
+    const chartContainer = document.getElementById('chart-container');
+    const statsChart = document.getElementById('stats-chart');
     const statsContainer = document.getElementById('stats-container');
     const statsMetadata = document.getElementById('stats-metadata');
     const startDate = document.getElementById('startDate');
@@ -164,6 +166,9 @@
       // Grid 인스턴스 정리
       cleanupGrid();
 
+      // 메타데이터 생성
+      statsMetadata.innerHTML = `조회 기간: ${metadata.startDate} ~ ${metadata.endDate} / 결과 행 수: ${metadata.rowCount}`;
+
       // 데이터 배열 생성
       const statsArray = Array.isArray(stats) ? stats : [stats];
       const gridData = statsArray.map((item) => [item.activeUsers, item.newUsers, item.sessions, item.screenPageViews]);
@@ -186,6 +191,9 @@
 
       // Grid 인스턴스 정리
       cleanupGrid();
+
+      // 메타데이터 생성
+      statsMetadata.innerHTML = `조회 기간: ${metadata.startDate} ~ ${metadata.endDate} / 결과 행 수: ${metadata.rowCount}`;
 
       // 데이터 배열 생성
       const statsArray = Array.isArray(stats) ? stats : [stats];
@@ -217,6 +225,9 @@
       // Grid 인스턴스 정리
       cleanupGrid();
 
+      // 메타데이터 생성
+      statsMetadata.innerHTML = `조회 기간: ${metadata.startDate} ~ ${metadata.endDate} / 결과 행 수: ${metadata.rowCount}`;
+
       // 데이터 배열 생성
       const statsArray = Array.isArray(stats) ? stats : [stats];
       const gridData = statsArray.map((item) => [item.pagePath, item.views]);
@@ -240,6 +251,9 @@
       // Grid 인스턴스 정리
       cleanupGrid();
 
+      // 메타데이터 생성
+      statsMetadata.innerHTML = `조회 기간: ${metadata.startDate} ~ ${metadata.endDate} / 결과 행 수: ${metadata.rowCount}`;
+
       // 데이터 배열 생성
       const statsArray = Array.isArray(stats) ? stats : [stats];
       const gridData = statsArray.map((item) => [item.country, item.activeUsers, item.sessions, item.pageViews]);
@@ -260,6 +274,9 @@
 
       // Grid 인스턴스 정리
       cleanupGrid();
+
+      // 메타데이터 생성
+      statsMetadata.innerHTML = `조회 기간: ${metadata.startDate} ~ ${metadata.endDate} / 결과 행 수: ${metadata.rowCount}`;
 
       // 데이터 배열 생성
       const statsArray = Array.isArray(stats) ? stats : [stats];
@@ -290,6 +307,9 @@
       // Grid 인스턴스 정리
       cleanupGrid();
 
+      // 메타데이터 생성
+      statsMetadata.innerHTML = `조회 기간: ${metadata.startDate} ~ ${metadata.endDate} / 결과 행 수: ${metadata.rowCount}`;
+
       // 데이터 배열 생성
       const statsArray = Array.isArray(stats) ? stats : [stats];
       const gridData = statsArray.map((item) => [item.hour, item.activeUsers, item.sessions, item.pageViews]);
@@ -313,6 +333,9 @@
       // Grid 인스턴스 정리
       cleanupGrid();
 
+      // 메타데이터 생성
+      statsMetadata.innerHTML = `조회 기간: ${metadata.startDate} ~ ${metadata.endDate} / 결과 행 수: ${metadata.rowCount}`;
+
       // 데이터 배열 생성
       const statsArray = Array.isArray(stats) ? stats : [stats];
       const gridData = statsArray.map((item) => [
@@ -331,6 +354,52 @@
         sort: true,
       });
       currentGrid.render(statsContainer);
+
+      // 차트 생성
+      const chartData = {
+        labels: gridData.map((item) => item.browser),
+        datasets: [
+          {
+            label: '브라우저 활성 사용자 수',
+            data: gridData.map((item) => item.activeUsers),
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.8)',
+              'rgba(54, 162, 235, 0.8)',
+              'rgba(255, 206, 86, 0.8)',
+              'rgba(75, 192, 192, 0.8)',
+              'rgba(153, 102, 255, 0.8)',
+              'rgba(255, 159, 64, 0.8)',
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)',
+            ],
+            borderWidth: 1,
+            hoverOffset: 4,
+          },
+        ],
+      };
+
+      const config = {
+        type: 'doughnut',
+        data: chartData,
+      };
+
+      // 이전 차트가 있다면 제거
+      const existingChart = Chart.getChart(statsChart);
+      if (existingChart) {
+        existingChart.destroy();
+      }
+
+      // 차트 컨테이너 표시
+      chartContainer.classList.remove('hidden');
+
+      // 차트 생성
+      const chart = new Chart(statsChart, config);
       return '';
     };
 
@@ -380,7 +449,7 @@
 
       try {
         // 래퍼/컨테이너/메타데이터 초기화
-        statsWrapper.classList.add('hidden');
+        chartContainer.classList.add('hidden');
         statsContainer.innerHTML = '';
         statsMetadata.innerHTML = '';
 
@@ -397,19 +466,11 @@
         const data = await fetchStats(apiUrl, method);
 
         if (data && (Array.isArray(data) ? data.length > 0 : Object.keys(data).length > 0)) {
-          // 데이터가 있는 경우에만 표시
-          statsWrapper.classList.remove('hidden');
           createHtml(data);
         } else {
-          // 데이터가 없는 경우 숨김
-          statsWrapper.classList.add('hidden');
           statsContainer.innerHTML = '<p class="text-gray-500">데이터가 없습니다.</p>';
         }
       } catch (error) {
-        const statsWrapper = document.getElementById('stats-wrapper');
-        if (statsWrapper) {
-          statsWrapper.classList.add('hidden');
-        }
         statsContainer.innerHTML = `<p class="text-red-500">오류가 발생했습니다: ${error.message}</p>`;
       }
     };
