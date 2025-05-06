@@ -13,7 +13,7 @@ export class NonceMiddleware implements IMiddleware {
     // Add nonce to response headers for CSP
     res.setHeader(
       'Content-Security-Policy',
-      `script-src 'self' 'nonce-${nonce}' https://www.googletagmanager.com; style-src 'self' 'nonce-${nonce}';`
+      `script-src 'self' 'nonce-${nonce}' https://www.googletagmanager.com; style-src 'self' 'nonce-${nonce}' 'unsafe-inline';`
     );
 
     next();
