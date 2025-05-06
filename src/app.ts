@@ -145,5 +145,5 @@ app.use(backendRouter); // Backend 라우터
  * 서버 실행
  */
 app.listen(CONFIG.SERVICE_PORT, () => {
-  console.log(`Server is running at http://localhost:${CONFIG.SERVICE_PORT}`);
+  console.log(`Server is running at http://localhost:${CONFIG.SERVICE_PORT}\n`);
 });
