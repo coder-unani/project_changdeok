@@ -11,10 +11,17 @@ export class NonceMiddleware implements IMiddleware {
     res.locals.nonce = nonce;
 
     // Add nonce to response headers for CSP
-    res.setHeader(
-      'Content-Security-Policy',
-      `script-src 'self' 'nonce-${nonce}' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://www.googletagmanager.com;`
-    );
+    const cspDirectives = [
+      "default-src 'self'",
+      `script-src 'self' 'nonce-${nonce}' https://www.googletagmanager.com https://tagassistant.google.com`,
+      `style-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://fonts.googleapis.com`,
+      "font-src 'self' https://fonts.gstatic.com",
+      "img-src 'self' https://www.googletagmanager.com data:",
+      "connect-src 'self' https://www.googletagmanager.com",
+      "frame-src 'self' https://www.googletagmanager.com",
+    ].join('; ');
+
+    res.setHeader('Content-Security-Policy', cspDirectives);
 
     next();
   }
