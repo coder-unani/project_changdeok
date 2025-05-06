@@ -22,7 +22,6 @@ const config = {
   useTabs: false, // 탭 사용 여부
   vueIndentScriptAndStyle: false, // Vue 파일에서 <script>와 <style> 태그 들여쓰기 여부
   plugins: ['@trivago/prettier-plugin-sort-imports', 'prettier-plugin-tailwindcss'], // 사용할 플러그인
-  plugins: ['prettier-plugin-tailwindcss'], // 사용할 플러그인
   importOrder: ['^[^./(@/)]', '^(@/)', '^[./]'], // import 순서
   importOrderSeparation: true, // import 그룹 사이에 빈 줄 삽입 여부
   importOrderSortSpecifiers: true, // import 구문에서 명시자 정렬 여부
