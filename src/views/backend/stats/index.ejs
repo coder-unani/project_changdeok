@@ -3,141 +3,139 @@
     <span class="text-xl font-bold"><%=title%></span>
   </h1>
 </div>
-<div id="adminDetails">
-  <div class="mb-4 space-y-3 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
-    <div
-      class="border-b border-gray-200 text-center text-sm font-medium text-gray-500 dark:border-gray-700 dark:text-gray-400"
-    >
-      <ul class="-mb-px flex flex-wrap">
-        <li class="me-2">
-          <button
-            class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
-            data-tab="access-logs"
-          >
-            접속 로그
-          </button>
-        </li>
-        <li class="me-2">
-          <button
-            class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
-            data-tab="all-stats"
-          >
-            사용자
-          </button>
-        </li>
-        <li class="me-2">
-          <button
-            class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
-            data-tab="daily-stats"
-          >
-            일별 사용자
-          </button>
-        </li>
-        <li class="me-2">
-          <button
-            class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
-            data-tab="page-stats"
-          >
-            페이지 뷰
-          </button>
-        </li>
-        <li class="me-2">
-          <button
-            class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
-            data-tab="referrer-stats"
-          >
-            출처
-          </button>
-        </li>
-        <li class="me-2">
-          <button
-            class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
-            data-tab="hourly-stats"
-          >
-            시간대
-          </button>
-        </li>
-        <li class="me-2">
-          <button
-            class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
-            data-tab="browser-stats"
-          >
-            브라우저
-          </button>
-        </li>
-        <li class="me-2">
-          <button
-            class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
-            data-tab="country-stats"
-          >
-            국가
-          </button>
-        </li>
-      </ul>
-    </div>
+<div class="mb-4 space-y-3 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
+  <div
+    class="border-b border-gray-200 text-center text-sm font-medium text-gray-500 dark:border-gray-700 dark:text-gray-400"
+  >
+    <ul class="-mb-px flex flex-wrap">
+      <li class="me-2">
+        <button
+          class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+          data-tab="access-logs"
+        >
+          접속 로그
+        </button>
+      </li>
+      <li class="me-2">
+        <button
+          class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+          data-tab="all-stats"
+        >
+          사용자
+        </button>
+      </li>
+      <li class="me-2">
+        <button
+          class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+          data-tab="daily-stats"
+        >
+          일별 사용자
+        </button>
+      </li>
+      <li class="me-2">
+        <button
+          class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+          data-tab="page-stats"
+        >
+          페이지 뷰
+        </button>
+      </li>
+      <li class="me-2">
+        <button
+          class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+          data-tab="referrer-stats"
+        >
+          출처
+        </button>
+      </li>
+      <li class="me-2">
+        <button
+          class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+          data-tab="hourly-stats"
+        >
+          시간대
+        </button>
+      </li>
+      <li class="me-2">
+        <button
+          class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+          data-tab="browser-stats"
+        >
+          브라우저
+        </button>
+      </li>
+      <li class="me-2">
+        <button
+          class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+          data-tab="country-stats"
+        >
+          국가
+        </button>
+      </li>
+    </ul>
+  </div>
 
-    <div id="date-container" class="hidden">
-      <div class="flex items-center justify-start gap-2">
-        <div>
-          <label class="block w-28 font-semibold text-gray-500">날짜</label>
-          <input
-            type="date"
-            id="date"
-            name="date"
-            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            value="<%= new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0] %>"
-          />
-        </div>
-        <button
-          id="btn-logs-view"
-          class="cursor-pointer rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
-        >
-          조회
-        </button>
+  <div id="date-container" class="hidden">
+    <div class="flex items-center justify-start gap-2">
+      <div>
+        <label class="block w-28 font-semibold text-gray-500">날짜</label>
+        <input
+          type="date"
+          id="date"
+          name="date"
+          class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+          value="<%= new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0] %>"
+        />
       </div>
-    </div>
-    <div id="date-range-container" class="hidden">
-      <div class="flex items-center justify-start gap-2">
-        <div>
-          <label class="block w-28 font-semibold text-gray-500">시작일</label>
-          <input
-            type="date"
-            id="startDate"
-            name="startDate"
-            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            value="<%= new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0] %>"
-          />
-        </div>
-        <div>
-          <label class="block w-28 font-semibold text-gray-500">종료일</label>
-          <input
-            type="date"
-            id="endDate"
-            name="endDate"
-            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            value="<%= new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0] %>"
-          />
-        </div>
-        <button
-          id="btn-stats-search"
-          class="cursor-pointer rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
-        >
-          조회
-        </button>
-      </div>
-      <p class="text-sm text-gray-500">* 접속 통계는 Google Analytics 데이터를 기반으로 합니다.</p>
-      <p class="text-sm text-gray-500">* 접속 통계는 최근 2년간의 데이터만 조회 가능합니다.</p>
-      <p class="text-sm text-gray-500">* 접속 통계에 표시되는 날짜는 UTC 기준입니다.</p>
+      <button
+        id="btn-logs-view"
+        class="cursor-pointer rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
+      >
+        조회
+      </button>
     </div>
   </div>
-  <div class="mb-4 space-y-3 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
-    <div id="chart-container" class="hidden h-[400px] w-full items-center justify-center">
-      <canvas id="stats-chart"></canvas>
+  <div id="date-range-container" class="hidden">
+    <div class="flex items-center justify-start gap-2">
+      <div>
+        <label class="block w-28 font-semibold text-gray-500">시작일</label>
+        <input
+          type="date"
+          id="startDate"
+          name="startDate"
+          class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+          value="<%= new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0] %>"
+        />
+      </div>
+      <div>
+        <label class="block w-28 font-semibold text-gray-500">종료일</label>
+        <input
+          type="date"
+          id="endDate"
+          name="endDate"
+          class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+          value="<%= new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0] %>"
+        />
+      </div>
+      <button
+        id="btn-stats-search"
+        class="cursor-pointer rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
+      >
+        조회
+      </button>
     </div>
-    <div id="stats-metadata"></div>
-    <div class="flex items-center justify-start">
-      <div id="stats-container"></div>
-    </div>
+    <p class="text-sm text-gray-500">* 접속 통계는 Google Analytics 데이터를 기반으로 합니다.</p>
+    <p class="text-sm text-gray-500">* 접속 통계는 최근 2년간의 데이터만 조회 가능합니다.</p>
+    <p class="text-sm text-gray-500">* 접속 통계에 표시되는 날짜는 UTC 기준입니다.</p>
+  </div>
+</div>
+<div class="mb-4 space-y-3 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
+  <div id="chart-container" class="hidden h-[400px] w-full items-center justify-center">
+    <canvas id="stats-chart"></canvas>
+  </div>
+  <div id="stats-metadata"></div>
+  <div class="flex items-center justify-start">
+    <div id="stats-container"></div>
   </div>
 </div>
 
@@ -155,10 +153,13 @@
     const statsChart = document.getElementById('stats-chart');
     const statsContainer = document.getElementById('stats-container');
     const statsMetadata = document.getElementById('stats-metadata');
+    const date = document.getElementById('date');
     const startDate = document.getElementById('startDate');
     const endDate = document.getElementById('endDate');
+
     let currentGrid = null; // 현재 Grid 인스턴스를 저장할 변수
     let currentTab = null; // 현재 탭을 저장할 변수
+
     // 탭 전환 함수
     const switchTab = (activeTab) => {
       // 모든 탭 버튼에서 active 클래스 제거
@@ -207,21 +208,23 @@
 
     // 날짜 유효성 검사 함수
     const validateDates = () => {
-      if (!startDate.value || !endDate.value) {
-        alert('시작일과 종료일을 입력해주세요.');
-        return false;
-      }
+      if (currentTab !== 'access-logs') {
+        if (!startDate.value || !endDate.value) {
+          alert('시작일과 종료일을 입력해주세요.');
+          return false;
+        }
 
-      if (startDate.value > endDate.value) {
-        alert('시작일이 종료일보다 클 수 없습니다.');
-        return false;
-      }
+        if (startDate.value > endDate.value) {
+          alert('시작일이 종료일보다 클 수 없습니다.');
+          return false;
+        }
 
-      const maxDate = new Date();
-      maxDate.setFullYear(maxDate.getFullYear() - 2);
-      if (startDate.value < maxDate) {
-        alert('최대 2년까지 조회 가능합니다.');
-        return false;
+        const maxDate = new Date();
+        maxDate.setFullYear(maxDate.getFullYear() - 2);
+        if (startDate.value < maxDate) {
+          alert('최대 2년까지 조회 가능합니다.');
+          return false;
+        }
       }
 
       return true;
@@ -549,7 +552,7 @@
         let apiUrl;
         if (url === '<%= apiRoutes.stats.accessLogs.url %>') {
           // 접속 로그는 endDate만 사용
-          apiUrl = '<%= apiRoutes.stats.accessLogs.url %>?date=' + endDate.value;
+          apiUrl = '<%= apiRoutes.stats.accessLogs.url %>?date=' + date.value;
         } else {
           apiUrl = url + '?startDate=' + startDate.value + '&endDate=' + endDate.value;
         }
