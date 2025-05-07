@@ -23,3 +23,41 @@
     </div>
   </div>
 </footer>
+
+<script nonce="<%=nonce%>">
+  document.addEventListener('DOMContentLoaded', () => {
+    // fallback image 설정 (투명 1x1 png)
+    // const FALLBACK_IMAGE = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+    const FALLBACK_IMAGE = '/images/no-image.png';
+
+    // 에러 이미지 처리
+    const handleImageError = (img) => {
+      const fallback = img.dataset.fallback || FALLBACK_IMAGE;
+      if (img.src !== fallback) {
+        img.src = fallback;
+        img.classList.add('error-image');
+        // 무한 루프 방지
+        img.onerror = null;
+      }
+    };
+
+    // 기존 이미지 처리
+    document.querySelectorAll('img').forEach((img) => {
+      img.onerror = () => handleImageError(img);
+      if (!img.complete || img.naturalWidth === 0) {
+        img.dispatchEvent(new Event('error'));
+      }
+    });
+
+    // 동적으로 추가되는 이미지 관찰
+    new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node.tagName === 'IMG') {
+            node.onerror = () => handleImageError(node);
+          }
+        });
+      });
+    }).observe(document.body, { childList: true, subtree: true });
+  });
+</script>

@@ -1,83 +1,66 @@
 @import 'tailwindcss';
 
+/* 기본 스타일이 적용되는 레이어 */
 @layer base {
   /* Pretendard */
   @font-face {
     font-family: 'Pretendard';
-    src: url('/fonts/Pretendard-Regular.woff2') format('woff2');
-    font-weight: 400;
-    font-display: swap;
-  }
-  @font-face {
-    font-family: 'Pretendard';
-    src: url('/fonts/Pretendard-Medium.woff2') format('woff2');
-    font-weight: 500;
-    font-display: swap;
-  }
-  @font-face {
-    font-family: 'Pretendard';
-    src: url('/fonts/Pretendard-SemiBold.woff2') format('woff2');
-    font-weight: 600;
-    font-display: swap;
-  }
-  @font-face {
-    font-family: 'Pretendard';
-    src: url('/fonts/Pretendard-Bold.woff2') format('woff2');
-    font-weight: 700;
+    src: url('/fonts/Pretendard-Variable.woff2') format('woff2');
+    font-weight: 100 900;
     font-display: swap;
   }
   /* Cinzel */
   @font-face {
     font-family: 'Cinzel';
-    src: url('/fonts/Cinzel-Regular.ttf') format('truetype');
-    font-weight: 400;
-    font-display: swap;
-  }
-  @font-face {
-    font-family: 'Cinzel';
-    src: url('/fonts/Cinzel-Medium.ttf') format('truetype');
-    font-weight: 500;
-    font-display: swap;
-  }
-  @font-face {
-    font-family: 'Cinzel';
-    src: url('/fonts/Cinzel-SemiBold.ttf') format('truetype');
-    font-weight: 600;
-    font-display: swap;
-  }
-  @font-face {
-    font-family: 'Cinzel';
-    src: url('/fonts/Cinzel-Bold.ttf') format('truetype');
-    font-weight: 700;
+    src: url('/fonts/Cinzel-Variable.woff2') format('woff2');
+    font-weight: 400 900;
     font-display: swap;
   }
   /* Oswald */
   @font-face {
     font-family: 'Oswald';
-    src: url('/fonts/Oswald-Regular.ttf') format('truetype');
-    font-weight: 400;
+    src: url('/fonts/Oswald-Variable.woff2') format('woff2');
+    font-weight: 200 700;
     font-display: swap;
   }
-  @font-face {
-    font-family: 'Oswald';
-    src: url('/fonts/Oswald-Medium.ttf') format('truetype');
-    font-weight: 500;
-    font-display: swap;
+
+  :root {
+    /* font */
+    --primary-font: 'Pretendard', system-ui, sans-serif;
+    --secondary-font: 'Oswald', var(--primary-font);
+    --tertiary-font: 'Cinzel', var(--primary-font);
+
+    /* color */
+    --color-white: #ffffff;
+    --color-black: #0c0c0c;
+
+    /* border */
+    --color-border: #e0e0e0;
   }
-  @font-face {
-    font-family: 'Oswald';
-    src: url('/fonts/Oswald-SemiBold.ttf') format('truetype');
-    font-weight: 600;
-    font-display: swap;
+
+  html {
+    font-family: var(--primary-font);
+    color: var(--color-black);
   }
-  @font-face {
-    font-family: 'Oswald';
-    src: url('/fonts/Oswald-Bold.ttf') format('truetype');
-    font-weight: 700;
-    font-display: swap;
+
+  /* 에러 이미지 */
+  img.error-image {
+    object-fit: none !important;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-white);
   }
 }
 
+@theme {
+  --color-white: var(--color-white);
+  --color-black: var(--color-black);
+
+  --font-primary: var(--primary-font);
+  --font-secondary: var(--secondary-font);
+  --font-tertiary: var(--tertiary-font);
+}
+
+/* 재사용 가능한 컴포넌트 클래스 */
 @layer components {
   .orb-hightlight {
     @apply bg-blue-50 text-blue-500 dark:bg-gray-600 dark:text-white;
