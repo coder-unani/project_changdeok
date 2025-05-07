@@ -5,79 +5,129 @@
 </div>
 <div id="adminDetails">
   <div class="mb-4 space-y-3 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
-    <div class="flex gap-2">
-      <div>
-        <label class="block w-28 font-semibold text-gray-500">시작일</label>
-        <input
-          type="date"
-          id="startDate"
-          name="startDate"
-          class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-          value="<%= new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0] %>"
-        />
-      </div>
-      <div>
-        <label class="block w-28 font-semibold text-gray-500">종료일</label>
-        <input
-          type="date"
-          id="endDate"
-          name="endDate"
-          class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-          value="<%= new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0] %>"
-        />
+    <div
+      class="border-b border-gray-200 text-center text-sm font-medium text-gray-500 dark:border-gray-700 dark:text-gray-400"
+    >
+      <ul class="-mb-px flex flex-wrap">
+        <li class="me-2">
+          <button
+            class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+            data-tab="access-logs"
+          >
+            접속 로그
+          </button>
+        </li>
+        <li class="me-2">
+          <button
+            class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+            data-tab="all-stats"
+          >
+            사용자
+          </button>
+        </li>
+        <li class="me-2">
+          <button
+            class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+            data-tab="daily-stats"
+          >
+            일별 사용자
+          </button>
+        </li>
+        <li class="me-2">
+          <button
+            class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+            data-tab="page-stats"
+          >
+            페이지 뷰
+          </button>
+        </li>
+        <li class="me-2">
+          <button
+            class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+            data-tab="referrer-stats"
+          >
+            출처
+          </button>
+        </li>
+        <li class="me-2">
+          <button
+            class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+            data-tab="hourly-stats"
+          >
+            시간대
+          </button>
+        </li>
+        <li class="me-2">
+          <button
+            class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+            data-tab="browser-stats"
+          >
+            브라우저
+          </button>
+        </li>
+        <li class="me-2">
+          <button
+            class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+            data-tab="country-stats"
+          >
+            국가
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <div id="date-container" class="hidden">
+      <div class="flex items-center justify-start gap-2">
+        <div>
+          <label class="block w-28 font-semibold text-gray-500">날짜</label>
+          <input
+            type="date"
+            id="date"
+            name="date"
+            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            value="<%= new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0] %>"
+          />
+        </div>
+        <button
+          id="btn-logs-view"
+          class="cursor-pointer rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
+        >
+          조회
+        </button>
       </div>
     </div>
-    <div class="flex items-center justify-start">
-      <div class="gap-2 sm:grid sm:grid-cols-3 lg:flex">
+    <div id="date-range-container" class="hidden">
+      <div class="flex items-center justify-start gap-2">
+        <div>
+          <label class="block w-28 font-semibold text-gray-500">시작일</label>
+          <input
+            type="date"
+            id="startDate"
+            name="startDate"
+            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            value="<%= new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0] %>"
+          />
+        </div>
+        <div>
+          <label class="block w-28 font-semibold text-gray-500">종료일</label>
+          <input
+            type="date"
+            id="endDate"
+            name="endDate"
+            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            value="<%= new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0] %>"
+          />
+        </div>
         <button
-          id="btn-access-logs"
-          class="rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
+          id="btn-stats-search"
+          class="cursor-pointer rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
         >
-          접속 로그
-        </button>
-        <button
-          id="btn-all-stats"
-          class="rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
-        >
-          사용자
-        </button>
-        <button
-          id="btn-daily-stats"
-          class="rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
-        >
-          일별
-        </button>
-        <button
-          id="btn-page-stats"
-          class="rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
-        >
-          페이지
-        </button>
-        <button
-          id="btn-referrer-stats"
-          class="rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
-        >
-          출처
-        </button>
-        <button
-          id="btn-hourly-stats"
-          class="rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
-        >
-          시간대
-        </button>
-        <button
-          id="btn-browser-stats"
-          class="rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
-        >
-          브라우저
-        </button>
-        <button
-          id="btn-country-stats"
-          class="rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
-        >
-          국가
+          조회
         </button>
       </div>
+      <p class="text-sm text-gray-500">* 접속 통계는 Google Analytics 데이터를 기반으로 합니다.</p>
+      <p class="text-sm text-gray-500">* 접속 통계는 최근 2년간의 데이터만 조회 가능합니다.</p>
+      <p class="text-sm text-gray-500">* 접속 통계에 표시되는 날짜는 UTC 기준입니다.</p>
     </div>
   </div>
   <div class="mb-4 space-y-3 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
@@ -97,6 +147,10 @@
 
 <script nonce="<%=nonce%>">
   document.addEventListener('DOMContentLoaded', () => {
+    const dateContainer = document.getElementById('date-container');
+    const dateRangeContainer = document.getElementById('date-range-container');
+    const buttonLogsView = document.getElementById('btn-logs-view');
+    const buttonStatsSearch = document.getElementById('btn-stats-search');
     const chartContainer = document.getElementById('chart-container');
     const statsChart = document.getElementById('stats-chart');
     const statsContainer = document.getElementById('stats-container');
@@ -104,6 +158,44 @@
     const startDate = document.getElementById('startDate');
     const endDate = document.getElementById('endDate');
     let currentGrid = null; // 현재 Grid 인스턴스를 저장할 변수
+    let currentTab = null; // 현재 탭을 저장할 변수
+    // 탭 전환 함수
+    const switchTab = (activeTab) => {
+      // 모든 탭 버튼에서 active 클래스 제거
+      document.querySelectorAll('[data-tab]').forEach((button) => {
+        button.classList.remove(
+          'active',
+          'border-blue-600',
+          'text-blue-600',
+          'dark:border-blue-500',
+          'dark:text-blue-500'
+        );
+        button.classList.add('border-transparent');
+      });
+
+      // 클릭된 탭 버튼에 active 클래스 추가
+      const activeButton = document.querySelector(`[data-tab="${activeTab}"]`);
+      if (activeButton) {
+        activeButton.classList.remove('border-transparent');
+        activeButton.classList.add(
+          'active',
+          'border-blue-600',
+          'text-blue-600',
+          'dark:border-blue-500',
+          'dark:text-blue-500'
+        );
+      }
+
+      if (activeTab === 'access-logs') {
+        dateContainer.classList.remove('hidden');
+        dateRangeContainer.classList.add('hidden');
+      } else {
+        dateContainer.classList.add('hidden');
+        dateRangeContainer.classList.remove('hidden');
+      }
+
+      currentTab = activeTab;
+    };
 
     // Grid 인스턴스 정리 함수
     const cleanupGrid = () => {
@@ -475,92 +567,71 @@
       }
     };
 
-    // 전체
-    document
-      .getElementById('btn-all-stats')
-      .addEventListener('click', () =>
+    // 초기 탭 설정 (사용자 탭)
+    switchTab('access-logs');
+
+    // 탭 버튼에 이벤트 리스너 추가
+    document.querySelectorAll('[data-tab]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const tabName = button.getAttribute('data-tab');
+        switchTab(tabName);
+      });
+    });
+
+    buttonLogsView.addEventListener('click', () => {
+      handleStatsClick(
+        '<%= apiRoutes.stats.accessLogs.url %>',
+        '<%= apiRoutes.stats.accessLogs.method %>',
+        createAccessLogsHtml
+      );
+    });
+
+    buttonStatsSearch.addEventListener('click', () => {
+      console.log(currentTab);
+      if (currentTab === null) return;
+      if (currentTab === 'all-stats') {
         handleStatsClick(
           '<%= apiRoutes.stats.visitor.url %>',
           '<%= apiRoutes.stats.visitor.method %>',
           createAllStatsHtml
-        )
-      );
-
-    // 일별
-    document
-      .getElementById('btn-daily-stats')
-      .addEventListener('click', () =>
+        );
+      } else if (currentTab === 'daily-stats') {
         handleStatsClick(
           '<%= apiRoutes.stats.dailyVisitor.url %>',
           '<%= apiRoutes.stats.dailyVisitor.method %>',
           createDailyStatsHtml
-        )
-      );
-
-    // 페이지
-    document
-      .getElementById('btn-page-stats')
-      .addEventListener('click', () =>
+        );
+      } else if (currentTab === 'page-stats') {
         handleStatsClick(
           '<%= apiRoutes.stats.pageView.url %>',
           '<%= apiRoutes.stats.pageView.method %>',
           createPageStatsHtml
-        )
-      );
-
-    // 국가
-    document
-      .getElementById('btn-country-stats')
-      .addEventListener('click', () =>
+        );
+      } else if (currentTab === 'country-stats') {
         handleStatsClick(
           '<%= apiRoutes.stats.country.url %>',
           '<%= apiRoutes.stats.country.method %>',
           createCountryStatsHtml
-        )
-      );
-
-    // 출처
-    document
-      .getElementById('btn-referrer-stats')
-      .addEventListener('click', () =>
+        );
+      } else if (currentTab === 'referrer-stats') {
         handleStatsClick(
           '<%= apiRoutes.stats.referrer.url %>',
           '<%= apiRoutes.stats.referrer.method %>',
           createReferrerStatsHtml
-        )
-      );
-
-    // 시간대
-    document
-      .getElementById('btn-hourly-stats')
-      .addEventListener('click', () =>
+        );
+      } else if (currentTab === 'hourly-stats') {
         handleStatsClick(
           '<%= apiRoutes.stats.hourly.url %>',
           '<%= apiRoutes.stats.hourly.method %>',
           createHourlyStatsHtml
-        )
-      );
-
-    // 브라우저
-    document
-      .getElementById('btn-browser-stats')
-      .addEventListener('click', () =>
+        );
+      } else if (currentTab === 'browser-stats') {
         handleStatsClick(
           '<%= apiRoutes.stats.browser.url %>',
           '<%= apiRoutes.stats.browser.method %>',
           createBrowserStatsHtml
-        )
-      );
-
-    // 접속 로그
-    document
-      .getElementById('btn-access-logs')
-      .addEventListener('click', () =>
-        handleStatsClick(
-          '<%= apiRoutes.stats.accessLogs.url %>',
-          '<%= apiRoutes.stats.accessLogs.method %>',
-          createAccessLogsHtml
-        )
-      );
+        );
+      }
+    });
   });
 </script>
