@@ -1,83 +1,67 @@
 @import 'tailwindcss';
 
+@theme {
+  /* font */
+  --font-pretendard: 'Pretendard', system-ui, sans-serif;
+  --font-oswald: 'Oswald', var(--font-pretendard);
+  --font-cinzel: 'Cinzel', var(--font-pretendard);
+
+  /* color */
+  --color-white: #ffffff;
+  --color-black: #0c0c0c;
+  /* --color-primary: oklch(45% 0.085 224.283); */
+
+  /* border */
+  --color-border: #e0e0e0;
+}
+
+/* 기본 스타일이 적용되는 레이어 */
 @layer base {
   /* Pretendard */
   @font-face {
     font-family: 'Pretendard';
-    src: url('/fonts/Pretendard-Regular.woff2') format('woff2');
-    font-weight: 400;
-    font-display: swap;
-  }
-  @font-face {
-    font-family: 'Pretendard';
-    src: url('/fonts/Pretendard-Medium.woff2') format('woff2');
-    font-weight: 500;
-    font-display: swap;
-  }
-  @font-face {
-    font-family: 'Pretendard';
-    src: url('/fonts/Pretendard-SemiBold.woff2') format('woff2');
-    font-weight: 600;
-    font-display: swap;
-  }
-  @font-face {
-    font-family: 'Pretendard';
-    src: url('/fonts/Pretendard-Bold.woff2') format('woff2');
-    font-weight: 700;
-    font-display: swap;
-  }
-  /* Cinzel */
-  @font-face {
-    font-family: 'Cinzel';
-    src: url('/fonts/Cinzel-Regular.ttf') format('truetype');
-    font-weight: 400;
-    font-display: swap;
-  }
-  @font-face {
-    font-family: 'Cinzel';
-    src: url('/fonts/Cinzel-Medium.ttf') format('truetype');
-    font-weight: 500;
-    font-display: swap;
-  }
-  @font-face {
-    font-family: 'Cinzel';
-    src: url('/fonts/Cinzel-SemiBold.ttf') format('truetype');
-    font-weight: 600;
-    font-display: swap;
-  }
-  @font-face {
-    font-family: 'Cinzel';
-    src: url('/fonts/Cinzel-Bold.ttf') format('truetype');
-    font-weight: 700;
+    src: url('/fonts/Pretendard-Variable.woff2') format('woff2');
+    font-weight: 100 900;
     font-display: swap;
   }
   /* Oswald */
   @font-face {
     font-family: 'Oswald';
-    src: url('/fonts/Oswald-Regular.ttf') format('truetype');
-    font-weight: 400;
+    src: url('/fonts/Oswald-Variable.woff2') format('woff2');
+    font-weight: 200 700;
     font-display: swap;
   }
+  /* Cinzel */
   @font-face {
-    font-family: 'Oswald';
-    src: url('/fonts/Oswald-Medium.ttf') format('truetype');
-    font-weight: 500;
+    font-family: 'Cinzel';
+    src: url('/fonts/Cinzel-Variable.woff2') format('woff2');
+    font-weight: 400 900;
     font-display: swap;
   }
-  @font-face {
-    font-family: 'Oswald';
-    src: url('/fonts/Oswald-SemiBold.ttf') format('truetype');
-    font-weight: 600;
-    font-display: swap;
+
+  /* 다크테마 */
+  /* html[data-theme='dark'] {
+    --color-primary: oklch(78.9% 0.154 211.53);
+  } */
+
+  /* 라이트테마 */
+  /* html[data-theme='light'] {
+    --color-primary: var(--color-primary);
+  } */
+
+  html {
+    font-family: var(--font-pretendard);
+    color: var(--color-black);
   }
-  @font-face {
-    font-family: 'Oswald';
-    src: url('/fonts/Oswald-Bold.ttf') format('truetype');
-    font-weight: 700;
-    font-display: swap;
+
+  img.error-image {
+    object-fit: none !important;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-white);
   }
 }
 
+/* 재사용 가능한 컴포넌트 클래스 */
 @layer components {
   .orb-hightlight {
     @apply bg-blue-50 text-blue-500 dark:bg-gray-600 dark:text-white;

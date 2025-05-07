@@ -1,21 +1,19 @@
 <!-- 팝업 배너 -->
-<% if (data.popupBanner.length !== 0) { %>
+<% if (data?.popupBanner?.length > 0) { %>
   <div id="popupContainer" class="fixed inset-0 z-50 flex items-center justify-center gap-4 bg-black/50">
     <% data.popupBanner.forEach((popup) => { %>
       <div id="popupBanner<%=popup.id%>" class="flex flex-col items-end space-y-2 hidden" data-popup-id="<%=popup.id%>">
-        <!-- 팝업 닫기 버튼 -->
         <button class="popup-close-btn text-white cursor-pointer">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
         
-        <!-- 팝업 이미지 -->
         <div class="bg-white shadow-[0_2px_30px_rgba(0,0,0,.06)] w-[480px] h-[620px] p-2">
-          <img src="<%=popup.imagePath%>" alt="<%=popup.description%>" class="object-center object-cover w-full h-full" />
+          <img 
+            class="object-center object-cover w-full h-full" src="<%=popup.imagePath%>" alt="<%=popup.description%>" />
         </div>
       
-        <!-- 오늘 하루 보지 않기 체크박스-->
         <div class="flex items-center mb-6">
           <input type="checkbox" id="todayCheck" class="mr-2">
           <label for="todayCheck" class="text-sm text-white">오늘 하루 보지 않기</label>
@@ -29,12 +27,14 @@
 <div class="relative h-screen w-full pt-[56px] lg:h-[800px]">
   <div class="absolute inset-0 -z-10 h-full w-full">
     <div class="absolute inset-0 h-full w-full bg-black opacity-50"></div>
-    <img class="relative h-full w-full -z-10 object-cover object-center" src="<%=data.topBanner.imagePath%>" alt="<%-data.topBanner.description%>" />
+    <% if (Object.keys(data?.topBanner || {}).length > 0) { %>
+      <img class="relative h-full w-full -z-10 object-cover object-center" src="<%=data.topBanner.imagePath%>" alt="<%-data.topBanner.description%>" />
+    <% } %>
   </div>
   <div class="m-auto h-full w-full max-w-[1280px] px-10">
     <div class="flex h-full flex-col items-center justify-center gap-8 py-20">
       <p class="mb-2 text-center break-keep text-white">
-        <span class="font-['Cinzel'] text-2xl lg:text-[48px]">
+        <span class="font-cinzel text-2xl lg:text-[48px]">
           <strong><%-data.topBanner.title%></strong>
         </span>
       </p>
@@ -131,7 +131,7 @@
             <div class="flex h-full w-full flex-col justify-between p-8">
               <div class="flex items-center justify-between">
                 <div class="mr-10 w-full border-2 border-b border-white"></div>
-                <p class="font-['Oswald'] text-2xl font-semibold text-white"><%=String(index + 1).padStart(2, '0')%></p>
+                <p class="font-oswald text-2xl font-semibold text-white"><%=String(index + 1).padStart(2, '0')%></p>
               </div>
               <p class="w-[50%] text-2xl font-semibold text-wrap break-keep text-white"><%=banner.title%></p>
             </div>
@@ -171,7 +171,7 @@
             />
           </div>
           <div class="space-y-1 py-3 text-center">
-            <p class="font-['Oswald'] text-2xl font-semibold text-cyan-800"><%=banner.description%></p>
+            <p class="font-oswald text-2xl font-semibold text-cyan-800"><%=banner.description%></p>
             <p class="text-base font-semibold text-zinc-500"><%=banner.title%></p>
           </div>
         </div>

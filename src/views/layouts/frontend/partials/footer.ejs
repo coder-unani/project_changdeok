@@ -2,24 +2,62 @@
   <div class="m-auto w-full max-w-[1280px] px-4 py-6 lg:px-[40px]">
     <div class="flex justify-between gap-6">
       <div class="flex flex-1 flex-col break-keep text-zinc-500">
-        <h5 class="my-2.5 font-['Oswald'] text-2xl font-medium">Office Location</h5>
+        <h5 class="font-oswald my-2.5 text-2xl font-medium">Office Location</h5>
         <p class="flex flex-col text-sm">
           <span><%=company.address%></span>
         </p>
       </div>
       <div class="flex flex-1 flex-col text-right break-keep text-zinc-500">
-        <h5 class="my-2.5 font-['Oswald'] text-2xl font-medium">Contact Us</h5>
+        <h5 class="font-oswald my-2.5 text-2xl font-medium">Contact Us</h5>
         <p class="flex flex-col text-sm">
-          <span>대표전화 | <em class="font-['Oswald'] font-medium not-italic"><%=company.tel%></em></span>
-          <span>팩스번호 | <em class="font-['Oswald'] font-medium not-italic"><%=company.fax%></em></span>
-          <span>이메일 | <em class="font-['Oswald'] font-medium not-italic"><%=company.email%></em></span>
+          <span>대표전화 | <em class="font-oswald font-medium not-italic"><%=company.tel%></em></span>
+          <span>팩스번호 | <em class="font-oswald font-medium not-italic"><%=company.fax%></em></span>
+          <span>이메일 | <em class="font-oswald font-medium not-italic"><%=company.email%></em></span>
         </p>
       </div>
     </div>
     <div class="mt-6 lg:mt-0">
-      <p class="py-4 text-center font-['Oswald'] text-[13px] text-zinc-500">
-        &copy; <span class="font-['Pretendard']"><%=company.name%></span> All rights reserved.
+      <p class="font-oswald py-4 text-center text-[13px] text-zinc-500">
+        &copy; <span class="font-pretendard"><%=company.name%></span> All rights reserved.
       </p>
     </div>
   </div>
 </footer>
+
+<script nonce="<%=nonce%>">
+  document.addEventListener('DOMContentLoaded', () => {
+    // fallback image 설정 (투명 1x1 png)
+    // const FALLBACK_IMAGE = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+    const FALLBACK_IMAGE = '/images/no-image.png';
+
+    // 에러 이미지 처리
+    const handleImageError = (img) => {
+      const fallback = img.dataset.fallback || FALLBACK_IMAGE;
+      if (img.src !== fallback) {
+        img.src = fallback;
+        img.classList.add('error-image');
+        // 무한 루프 방지
+        img.onerror = null;
+      }
+    };
+
+    // 기존 이미지 처리
+    document.querySelectorAll('img').forEach((img) => {
+      img.onerror = () => handleImageError(img);
+      if (!img.complete || img.naturalWidth === 0) {
+        img.dispatchEvent(new Event('error'));
+      }
+    });
+
+    // 동적으로 추가되는 이미지 관찰
+    new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node.tagName === 'IMG') {
+            node.onerror = () => handleImageError(node);
+          }
+        });
+      });
+    }).observe(document.body, { childList: true, subtree: true });
+  });
+</script>
