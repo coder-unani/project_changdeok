@@ -104,69 +104,6 @@ export class BannerService extends BaseService implements IBannerService {
         throw new ValidationError('발행 기간이 중복되는 배너가 있습니다.');
       }
 
-      // 발행 상태로 배너 등록시 기존 배너와 발행기간 중복 체크
-      if (data.isPublished) {
-        /**
-         * 마감일이 겹치는 경우 배너 처리
-         * 조건: 기존 발행일이 새로운 발행일보다 적고, 마감일이 없거나 새로운 발행일보다 큰 경우
-         */
-        // await this.prisma.banner.updateMany({
-        //   where: {
-        //     groupId: data.groupId,
-        //     seq: data.seq,
-        //     isDeleted: false,
-        //     isPublished: true,
-        //     AND: [
-        //       { publishedAt: { lt: publishedAt } }, // 기존 배너의 발행일 < 새 배너의 발행일
-        //       { unpublishedAt: { gte: publishedAt } }, // 기존 배너의 마감일 >= 새 배너의 발행일
-        //     ],
-        //   },
-        //   data: {
-        //     unpublishedAt: new Date(publishedAt.getTime() - 1000), // 새 배너 발행일 - 1초
-        //   },
-        // });
-        /**
-         * 발행일이 겹치는 경우 배너 처리
-         * 조건: 기존 발행일이 새로운 발행일보다 크고, 새로운 마감일보다 작고, 기존 마감일이 새로운 마감일보다 큰 경우
-         */
-        // await this.prisma.banner.updateMany({
-        //   where: {
-        //     groupId: data.groupId,
-        //     seq: data.seq,
-        //     isDeleted: false,
-        //     isPublished: true,
-        //     AND: [
-        //       { publishedAt: { gte: publishedAt } }, // 기존 배너의 발행일 >= 새 배너의 발행일
-        //       { publishedAt: { lte: unpublishedAt } }, // 기존 배너의 발행일 <= 새 배너의 마감일
-        //       { unpublishedAt: { gt: unpublishedAt } }, // 기존 배너의 마감일 > 새 배너의 마감일
-        //     ],
-        //   },
-        //   data: {
-        //     publishedAt: new Date(unpublishedAt.getTime() + 1000), // 새 배너 마감일 + 1초
-        //   },
-        // });
-        /**
-         * 발행기간이 완전히 겹치는 배너 처리
-         * 조건: 기존 발행일이 새로운 발행일보다 크고, 새로운 마감일보다 작고, 기존 마감일이 새로운 마감일보다 작은 경우
-         */
-        // await this.prisma.banner.updateMany({
-        //   where: {
-        //     groupId: data.groupId,
-        //     seq: data.seq,
-        //     isDeleted: false,
-        //     isPublished: true,
-        //     AND: [
-        //       { publishedAt: { gte: publishedAt } }, // 기존 배너의 발행일 >= 새 배너의 발행일
-        //       { publishedAt: { lte: unpublishedAt } }, // 기존 배너의 발행일 <= 새 배너의 마감일
-        //       { unpublishedAt: { lt: unpublishedAt } }, // 기존 배너의 마감일 <= 새 배너의 마감일
-        //     ],
-        //   },
-        //   data: {
-        //     isPublished: false,
-        //   },
-        // });
-      }
-
       // 배너 생성
       await this.prisma.banner.create({
         data: {
