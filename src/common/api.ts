@@ -1,7 +1,7 @@
 import { CONFIG } from '../config/config';
 import { apiRoutes } from '../config/routes';
 import { IApiResponse } from '../types/config';
-import { IBanner, IBannerGroup, IContent, IContentGroup, IEmployee, IPermission } from '../types/object';
+import { IBanner, IBannerGroup, IContent, IContentGroup, IEmployee, IPermission, ISiteSettings } from '../types/object';
 import { IRequestBanners, IRequestContents } from '../types/request';
 
 let API_BASE_URL = CONFIG.SERVICE_URL;
@@ -124,5 +124,13 @@ export const getApiPermissionList = async (page: number, pageSize: number): Prom
 
   return fetchApi<IPermission[]>(apiUrl, {
     method: apiRoutes.permissions.method,
+  });
+};
+
+export const getApiSiteSettings = async (): Promise<IApiResponse<ISiteSettings>> => {
+  const apiUrl = `${API_BASE_URL}${apiRoutes.siteSettings.read.url}`;
+
+  return fetchApi<ISiteSettings>(apiUrl, {
+    method: apiRoutes.siteSettings.read.method,
   });
 };

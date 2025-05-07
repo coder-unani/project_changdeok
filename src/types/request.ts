@@ -108,3 +108,33 @@ export interface IRequestEmployeeForceUpdatePassword {
 export interface IRequestEmployeeUpdatePassword extends IRequestEmployeeForceUpdatePassword {
   password: string;
 }
+
+export interface IRequestSiteSettings {
+  title: string;
+  titleEn: string;
+  favicon: string;
+  logo: string;
+  description: string;
+  keywords: string;
+}
+
+export interface IRequestCompanySettings {
+  name: string;
+  ceo: string;
+  businessNumber: string;
+  phone: string;
+  fax: string;
+  email: string;
+  address: string;
+  zipCode: string;
+  latitude: string;
+  longitude: string;
+}
+
+export interface IRequestAccessSettings {
+  blockedIp: string;
+}
+
+export interface IRequestSystemSettings {
+  gaPropertyId: string;
+}

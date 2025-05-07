@@ -17,24 +17,34 @@ router.use((req, res, next) => corsMiddleware.handle(req, res, next));
 // const authMiddleware: IMiddleware = new AuthMiddleware();
 // router.use((req, res, next) => authMiddleware.handle(req, res, next));
 
-// 이미지 업로드 미들웨어
+// 배너 이미지 업로드 미들웨어
 const bannerUploadMiddleware = new MediaUploadMiddleware({
-  uploadPath: 'uploads/banners/',
+  uploadPath: 'public/uploads/banners/',
   filter: 'image',
-  fieldName: 'image',
   useDateFolder: true,
   convertToWebP: true,
   webpQuality: 90,
+  fields: [{ name: 'image', maxCount: 1 }],
 });
 
 // 컨텐츠 이미지 업로드 미들웨어
 const contentImageUploadMiddleware = new MediaUploadMiddleware({
-  uploadPath: 'uploads/contents/',
+  uploadPath: 'public/uploads/contents/',
   filter: 'image',
-  fieldName: 'image',
   useDateFolder: true,
   convertToWebP: true,
   webpQuality: 90,
+  fields: [{ name: 'image', maxCount: 1 }],
+});
+
+const siteSettingsUploadMiddleware = new MediaUploadMiddleware({
+  uploadPath: 'public/',
+  filter: 'image',
+  useDateFolder: false,
+  fields: [
+    { name: 'site-favicon', maxCount: 1, filename: 'favicon' },
+    { name: 'site-logo', maxCount: 1, filename: 'logo', allowOverwrite: false },
+  ],
 });
 
 // 컨트롤러
@@ -115,10 +125,10 @@ router.delete(apiRoutes.contents.delete.url, (req: Request, res: Response) => {
 
 // 컨텐츠 이미지 업로드
 router.post(
-  '/api/contents/:groupId/upload-image',
+  apiRoutes.contents.uploadImage.url,
   (req: Request, res: Response, next: NextFunction) => contentImageUploadMiddleware.handle(req, res, next),
   (req: Request, res: Response) => {
-    apiController.contentImageUpload(req, res);
+    apiController.uploadContentImage(req, res);
   }
 );
 
@@ -209,6 +219,47 @@ router.get(apiRoutes.stats.browser.url, (req: Request, res: Response) => {
 // 접속 로그 통계
 router.get(apiRoutes.stats.accessLogs.url, (req: Request, res: Response) => {
   apiController.statsAccessLogs(req, res);
+});
+
+// 기본 설정
+router.get(apiRoutes.siteSettings.read.url, (req: Request, res: Response) => {
+  apiController.getSiteSettings(req, res);
+});
+
+// 기본 설정 수정
+router.patch(
+  apiRoutes.siteSettings.update.url,
+  (req: Request, res: Response, next: NextFunction) => siteSettingsUploadMiddleware.handle(req, res, next),
+  (req: Request, res: Response) => {
+    apiController.setSiteSettings(req, res);
+  }
+);
+
+// 회사 설정
+router.get(apiRoutes.settings.company.url, (req: Request, res: Response) => {
+  apiController.getCompanySettings(req, res);
+});
+
+router.post(apiRoutes.settings.company.url, (req: Request, res: Response) => {
+  apiController.setCompanySettings(req, res);
+});
+
+// 접속 제한
+router.get(apiRoutes.settings.access.url, (req: Request, res: Response) => {
+  apiController.getAccessSettings(req, res);
+});
+
+router.post(apiRoutes.settings.access.url, (req: Request, res: Response) => {
+  apiController.setAccessSettings(req, res);
+});
+
+// 시스템 설정
+router.get(apiRoutes.settings.system.url, (req: Request, res: Response) => {
+  apiController.getSystemSettings(req, res);
+});
+
+router.post(apiRoutes.settings.system.url, (req: Request, res: Response) => {
+  apiController.setSystemSettings(req, res);
 });
 
 export default router;

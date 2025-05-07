@@ -33,16 +33,6 @@ const createRoute = (
 
 export const apiRoutes = {
   info: createApiRoute('GET', '웹사이트 정보', '/info', []),
-  stats: {
-    visitor: createApiRoute('GET', '방문자 통계', '/stats/visitor', []),
-    dailyVisitor: createApiRoute('GET', '일일 방문자 통계', '/stats/daily-visitor', []),
-    pageView: createApiRoute('GET', '페이지뷰 통계', '/stats/page-view', []),
-    country: createApiRoute('GET', '국가별 통계', '/stats/country', []),
-    referrer: createApiRoute('GET', '유입처별 통계', '/stats/referrer', []),
-    hourly: createApiRoute('GET', '시간대별 통계', '/stats/hourly', []),
-    browser: createApiRoute('GET', '브라우저별 통계', '/stats/browser', []),
-    accessLogs: createApiRoute('GET', '접속 로그 통계', '/stats/access-logs', []),
-  },
   banners: {
     list: createApiRoute('GET', '배너 목록', '/banners', []),
     write: createApiRoute('POST', '배너 등록', '/banners/write', [1, 5]),
@@ -60,6 +50,7 @@ export const apiRoutes = {
     update: createApiRoute('PUT', '게시글 수정', '/contents/:groupId/:contentId', [1, 4]),
     delete: createApiRoute('DELETE', '게시글 삭제', '/contents/:groupId/:contentId', [1, 4]),
     group: createApiRoute('GET', '게시판 그룹 정보', '/contents/groups/:groupId', []),
+    uploadImage: createApiRoute('POST', '게시글 이미지 업로드', '/contents/:groupId/upload-image', [1, 4]),
   },
   employees: {
     list: createApiRoute('GET', '관리자 목록', '/employees', [1, 2]),
@@ -73,6 +64,26 @@ export const apiRoutes = {
     logout: createApiRoute('POST', '관리자 로그아웃', '/employees/logout', [1, 2]),
   },
   permissions: createApiRoute('GET', '권한 목록', '/permissions', [1, 3]),
+  stats: {
+    visitor: createApiRoute('GET', '방문자 통계', '/stats/visitor', []),
+    dailyVisitor: createApiRoute('GET', '일일 방문자 통계', '/stats/daily-visitor', []),
+    pageView: createApiRoute('GET', '페이지뷰 통계', '/stats/page-view', []),
+    country: createApiRoute('GET', '국가별 통계', '/stats/country', []),
+    referrer: createApiRoute('GET', '유입처별 통계', '/stats/referrer', []),
+    hourly: createApiRoute('GET', '시간대별 통계', '/stats/hourly', []),
+    browser: createApiRoute('GET', '브라우저별 통계', '/stats/browser', []),
+    accessLogs: createApiRoute('GET', '접속 로그 통계', '/stats/access-logs', []),
+  },
+  siteSettings: {
+    read: createApiRoute('GET', '사이트 설정 조회', '/settings/site', [1, 6]),
+    update: createApiRoute('PATCH', '사이트 설정 수정', '/settings/site', [1, 6]),
+  },
+  settings: {
+    site: createApiRoute('POST', '사이트 설정', '/settings/site', [1, 6]),
+    company: createApiRoute('POST', '회사 설정', '/settings/company', [1, 6]),
+    access: createApiRoute('POST', '접속 제한', '/settings/access', [1, 6]),
+    system: createApiRoute('POST', '시스템 설정', '/settings/system', [1, 6]),
+  },
 };
 
 export const backendRoutesPrefix = '/admin';

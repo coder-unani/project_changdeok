@@ -1,9 +1,11 @@
 import { IServiceResponse } from './config';
 import { IBanner, IBannerGroup, IContent, IContentGroup, IEmployee, IPermission } from './object';
 import {
+  IRequestAccessSettings,
   IRequestBannerUpdate,
   IRequestBannerWrite,
   IRequestBanners,
+  IRequestCompanySettings,
   IRequestContentUpdate,
   IRequestContentWrite,
   IRequestContents,
@@ -15,18 +17,9 @@ import {
   IRequestEmployeeUpdate,
   IRequestEmployeeUpdatePassword,
   IRequestEmployees,
+  IRequestSiteSettings,
+  IRequestSystemSettings,
 } from './request';
-
-export interface IStatsService {
-  getVisitorStats(startDate: string, endDate: string): Promise<IServiceResponse<any>>;
-  getDailyVisitorStats(startDate: string, endDate: string): Promise<IServiceResponse<any>>;
-  getPageViews(startDate: string, endDate: string): Promise<IServiceResponse<any>>;
-  getCountryStats(startDate: string, endDate: string): Promise<IServiceResponse<any>>;
-  getReferrerStats(startDate: string, endDate: string): Promise<IServiceResponse<any>>;
-  getHourlyStats(startDate: string, endDate: string): Promise<IServiceResponse<any>>;
-  getBrowserStats(startDate: string, endDate: string): Promise<IServiceResponse<any>>;
-  getAccessLogs(date: string): Promise<IServiceResponse<any>>;
-}
 
 export interface IBannerService {
   create(data: IRequestBannerWrite): Promise<IServiceResponse>;
@@ -64,4 +57,26 @@ export interface IPermissionService {
     permissionIds: number[],
     grantedById: number
   ): Promise<IServiceResponse<IEmployee>>;
+}
+
+export interface IStatsService {
+  getVisitorStats(startDate: string, endDate: string): Promise<IServiceResponse<any>>;
+  getDailyVisitorStats(startDate: string, endDate: string): Promise<IServiceResponse<any>>;
+  getPageViews(startDate: string, endDate: string): Promise<IServiceResponse<any>>;
+  getCountryStats(startDate: string, endDate: string): Promise<IServiceResponse<any>>;
+  getReferrerStats(startDate: string, endDate: string): Promise<IServiceResponse<any>>;
+  getHourlyStats(startDate: string, endDate: string): Promise<IServiceResponse<any>>;
+  getBrowserStats(startDate: string, endDate: string): Promise<IServiceResponse<any>>;
+  getAccessLogs(date: string): Promise<IServiceResponse<any>>;
+}
+
+export interface ISettingsService {
+  getSiteSettings(): Promise<IServiceResponse<any>>;
+  updateSiteSettings(data: IRequestSiteSettings): Promise<IServiceResponse<any>>;
+  getCompanySettings(): Promise<IServiceResponse<any>>;
+  updateCompanySettings(data: IRequestCompanySettings): Promise<IServiceResponse<any>>;
+  getAccessSettings(): Promise<IServiceResponse<any>>;
+  updateAccessSettings(data: IRequestAccessSettings): Promise<IServiceResponse<any>>;
+  getSystemSettings(): Promise<IServiceResponse<any>>;
+  updateSystemSettings(data: IRequestSystemSettings): Promise<IServiceResponse<any>>;
 }

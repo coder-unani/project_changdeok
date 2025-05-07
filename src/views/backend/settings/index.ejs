@@ -1,0 +1,381 @@
+<div class="mb-2 block pt-2">
+  <h1 class="flex items-center gap-1.5 justify-self-start py-2 text-center text-slate-700 transition-all">
+    <span class="text-xl font-bold"><%=title%></span>
+  </h1>
+</div>
+
+<div class="mb-4 space-y-3 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
+  <div
+    class="border-b border-gray-200 text-center text-sm font-medium text-gray-500 dark:border-gray-700 dark:text-gray-400"
+  >
+    <ul class="-mb-px flex flex-wrap">
+      <li class="me-2">
+        <button
+          class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+          data-tab="site-settings"
+        >
+          사이트 설정
+        </button>
+      </li>
+      <li class="me-2">
+        <button
+          class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+          data-tab="company-settings"
+        >
+          회사 설정
+        </button>
+      </li>
+      <li class="me-2">
+        <button
+          class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+          data-tab="access-settings"
+        >
+          접속 설정
+        </button>
+      </li>
+      <li class="me-2">
+        <button
+          class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+          data-tab="system-settings"
+        >
+          시스템 설정
+        </button>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="mb-4 space-y-3 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
+  <!-- 사이트 설정 -->
+  <div id="site-settings-container" class="hidden">
+    <form id="site-settings-form" enctype="multipart/form-data">
+      <ul>
+        <li>
+          <label for="site-name">사이트명</label>
+          <input type="text" id="site-name" name="site-name" placeholder="한글명" />
+          <input type="text" id="site-name-en" name="site-name-en" placeholder="영어명" />
+        </li>
+        <li>
+          <label for="site-favicon">파비콘</label>
+          <input
+            type="file"
+            id="site-favicon"
+            name="site-favicon"
+            class="hidden"
+            accept="image/x-icon"
+            placeholder="파비콘 주소"
+          />
+          <div class="relative aspect-3/2 w-full lg:w-[250px]">
+            <button
+              type="button"
+              id="site-favicon-add"
+              class="absolute top-0 left-0 h-full w-full cursor-pointer rounded-lg border border-dashed border-gray-200 bg-gray-100"
+            >
+              <span class="absolute inset-0 flex flex-col items-center justify-center">
+                <img class="block w-[50px] opacity-50" src="/images/add-image-512x512.png" alt="이미지 추가" />
+                <p class="mt-1 text-xs text-gray-400">(512x512)</p>
+              </span>
+            </button>
+            <div
+              id="site-favicon-preview-container"
+              class="relative z-10 hidden h-full w-full overflow-hidden rounded-lg"
+            >
+              <button
+                type="button"
+                id="site-favicon-delete"
+                class="absolute top-2 right-2 z-20 h-[24px] w-[24px] cursor-pointer rounded-full bg-white opacity-80"
+              >
+                <span class="absolute inset-0 flex items-center justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 384 512"
+                    fill="currentColor"
+                    class="h-[16px] w-[16px] text-gray-400"
+                  >
+                    <path
+                      d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
+                    />
+                  </svg>
+                </span>
+              </button>
+              <div class="relative z-10 h-full w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
+                <img id="site-favicon-preview" class="h-full w-full object-contain" src="" alt="이미지 미리보기" />
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <label for="site-logo">로고</label>
+          <input type="file" id="site-logo" name="site-logo" class="hidden" accept="image/*" placeholder="로고 주소" />
+          <div class="relative aspect-3/2 w-full lg:w-[250px]">
+            <button
+              type="button"
+              id="site-logo-add"
+              class="absolute top-0 left-0 h-full w-full cursor-pointer rounded-lg border border-dashed border-gray-200 bg-gray-100"
+            >
+              <span class="absolute inset-0 flex flex-col items-center justify-center">
+                <img class="block w-[50px] opacity-50" src="/images/add-image-512x512.png" alt="이미지 추가" />
+                <p class="mt-1 text-xs text-gray-400">(512x512)</p>
+              </span>
+            </button>
+            <div id="site-logo-preview-container" class="relative z-10 hidden h-full w-full overflow-hidden rounded-lg">
+              <button
+                type="button"
+                id="site-logo-delete"
+                class="absolute top-2 right-2 z-20 h-[24px] w-[24px] cursor-pointer rounded-full bg-white opacity-80"
+              >
+                <span class="absolute inset-0 flex items-center justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 384 512"
+                    fill="currentColor"
+                    class="h-[16px] w-[16px] text-gray-400"
+                  >
+                    <path
+                      d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
+                    />
+                  </svg>
+                </span>
+              </button>
+              <div class="relative z-10 h-full w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
+                <img id="site-logo-preview" class="h-full w-full object-contain" src="" alt="이미지 미리보기" />
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <label for="site-intro">사이트 소개</label>
+          <input type="text" id="site-intro" name="site-intro" placeholder="사이트 소개" />
+        </li>
+        <li>
+          <label for="site-description">사이트 설명</label>
+          <textarea id="site-description" name="site-description" placeholder="사이트 설명"></textarea>
+        </li>
+        <li>
+          <label for="site-keyword">사이트 키워드</label>
+          <input id="site-keyword" name="site-keyword" placeholder="사이트 키워드" />
+          <p>* 콤마(,)로 구분하여 여러 개의 키워드를 입력할 수 있습니다.</p>
+        </li>
+      </ul>
+      <div class="flex justify-end">
+        <button type="submit" id="btn-site-save">저장</button>
+      </div>
+    </form>
+  </div>
+  <!-- 회사 설정 -->
+  <div id="company-settings-container" class="hidden">
+    <ul>
+      <li>
+        <label for="company-name">회사명</label>
+        <input type="text" id="company-name" name="company-name" placeholder="회사명" />
+      </li>
+      <li>
+        <label for="company-ceo">대표자</label>
+        <input type="text" id="company-ceo" name="company-ceo" placeholder="대표자" />
+      </li>
+      <li>
+        <label for="company-fax">사업자 번호</label>
+        <input type="text" id="company-fax" name="company-fax" placeholder="사업자 번호" />
+      </li>
+      <li>
+        <label for="company-phone">대표번호</label>
+        <input type="text" id="company-phone" name="company-phone" placeholder="대표번호" />
+      </li>
+      <li>
+        <label for="company-fax">팩스</label>
+        <input type="text" id="company-fax" name="company-fax" placeholder="팩스" />
+      </li>
+      <li>
+        <label for="company-address">주소</label>
+        <input type="text" id="company-address" name="company-address" placeholder="주소" />
+      </li>
+      <li>
+        <label for="company-zip-code">우편번호</label>
+        <input type="text" id="company-zip-code" name="company-zip-code" placeholder="우편번호" />
+      </li>
+      <li>
+        <label for="company-email">이메일</label>
+        <input type="text" id="company-email" name="company-email" placeholder="이메일" />
+      </li>
+      <li>
+        <label for="company-latitude">위도</label>
+        <input type="text" id="company-latitude" name="company-latitude" placeholder="위도" />
+      </li>
+      <li>
+        <label for="company-longitude">경도</label>
+        <input type="text" id="company-longitude" name="company-longitude" placeholder="경도" />
+      </li>
+      <li>
+        <label for="company-lunchtime-start">점심시간</label>
+        <input type="text" id="company-lunchtime-start" name="company-lunchtime-start" placeholder="점심시간" /> ~
+        <input type="text" id="company-lunchtime-end" name="company-lunchtime-end" placeholder="점심시간" />
+      </li>
+    </ul>
+  </div>
+  <!-- 접속 제한 -->
+  <div id="access-settings-container" class="hidden">
+    <ul>
+      <li>
+        <label for="access-block">접속 차단 IP</label>
+        <textarea id="access-block" name="access-block" placeholder="접속 차단 IP"></textarea>
+      </li>
+    </ul>
+  </div>
+  <!-- 시스템 설정 -->
+  <div id="system-settings-container" class="hidden">
+    <ul>
+      <li>
+        <label for="system-admin-login-time">관리자 로그인 유지 시간</label>
+        <input type="text" id="system-admin-login-time" name="system-admin-login-time" placeholder="시간" />
+      </li>
+      <li>
+        <label for="system-admin-login-time">관리자 로그인 유지 시간</label>
+        <input type="text" id="system-admin-login-time" name="system-admin-login-time" placeholder="시간" />
+      </li>
+    </ul>
+  </div>
+</div>
+
+<script nonce="<%=nonce%>">
+  document.addEventListener('DOMContentLoaded', () => {
+    const siteSettingsContainer = document.getElementById('site-settings-container');
+    const companySettingsContainer = document.getElementById('company-settings-container');
+    const accessSettingsContainer = document.getElementById('access-settings-container');
+    const systemSettingsContainer = document.getElementById('system-settings-container');
+
+    let currentTab = null;
+
+    const switchTab = (activeTab) => {
+      // 모든 탭 버튼에서 active 클래스 제거
+      document.querySelectorAll('[data-tab]').forEach((button) => {
+        button.classList.remove(
+          'active',
+          'border-blue-600',
+          'text-blue-600',
+          'dark:border-blue-500',
+          'dark:text-blue-500'
+        );
+        button.classList.add('border-transparent');
+      });
+
+      // 클릭된 탭 버튼에 active 클래스 추가
+      const activeButton = document.querySelector(`[data-tab="${activeTab}"]`);
+      if (activeButton) {
+        activeButton.classList.remove('border-transparent');
+        activeButton.classList.add(
+          'active',
+          'border-blue-600',
+          'text-blue-600',
+          'dark:border-blue-500',
+          'dark:text-blue-500'
+        );
+      }
+
+      if (activeTab === 'site-settings') {
+        siteSettingsContainer.classList.remove('hidden');
+        companySettingsContainer.classList.add('hidden');
+        accessSettingsContainer.classList.add('hidden');
+        systemSettingsContainer.classList.add('hidden');
+      } else if (activeTab === 'company-settings') {
+        siteSettingsContainer.classList.add('hidden');
+        companySettingsContainer.classList.remove('hidden');
+        accessSettingsContainer.classList.add('hidden');
+        systemSettingsContainer.classList.add('hidden');
+      } else if (activeTab === 'access-settings') {
+        siteSettingsContainer.classList.add('hidden');
+        companySettingsContainer.classList.add('hidden');
+        accessSettingsContainer.classList.remove('hidden');
+        systemSettingsContainer.classList.add('hidden');
+      } else if (activeTab === 'system-settings') {
+        siteSettingsContainer.classList.add('hidden');
+        companySettingsContainer.classList.add('hidden');
+        accessSettingsContainer.classList.add('hidden');
+        systemSettingsContainer.classList.remove('hidden');
+      }
+
+      currentTab = activeTab;
+    };
+
+    switchTab('site-settings');
+
+    // 탭 버튼에 이벤트 리스너 추가
+    document.querySelectorAll('[data-tab]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const tabName = button.getAttribute('data-tab');
+        switchTab(tabName);
+      });
+    });
+
+    // 파비콘 등록
+    document.getElementById('site-favicon-add').addEventListener('click', (e) => {
+      e.preventDefault();
+      document.getElementById('site-favicon').click();
+    });
+
+    // 파비콘 미리보기
+    document.getElementById('site-favicon').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        document.getElementById('site-favicon-preview').src = e.target.result;
+        document.getElementById('site-favicon-preview-container').classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // 파비콘 삭제
+    document.getElementById('site-favicon-delete').addEventListener('click', (e) => {
+      document.getElementById('site-favicon').value = '';
+      document.getElementById('site-favicon-preview').src = '';
+      document.getElementById('site-favicon-preview-container').classList.add('hidden');
+    });
+
+    // 로고 등록
+    document.getElementById('site-logo-add').addEventListener('click', (e) => {
+      e.preventDefault();
+      document.getElementById('site-logo').click();
+    });
+
+    // 로고 미리보기
+    document.getElementById('site-logo').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        document.getElementById('site-logo-preview').src = e.target.result;
+        document.getElementById('site-logo-preview-container').classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // 로고 삭제
+    document.getElementById('site-logo-delete').addEventListener('click', (e) => {
+      document.getElementById('site-logo').value = '';
+      document.getElementById('site-logo-preview').src = '';
+      document.getElementById('site-logo-preview-container').classList.add('hidden');
+    });
+
+    // 사이트 설정 저장
+    document.getElementById('site-settings-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      try {
+        const formData = new FormData(e.target);
+
+        console.log('formData = ', formData);
+
+        const response = await fetch('<%=apiRoutes.settings.site.url%>', {
+          method: '<%=apiRoutes.settings.site.method%>',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error('설정 저장 중 오류가 발생했습니다.');
+        }
+
+        alert('사이트 설정이 저장되었습니다.');
+      } catch (error) {
+        alert(error.message || '설정 저장 중 오류가 발생했습니다.');
+      }
+    });
+  });
+</script>

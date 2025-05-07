@@ -9,6 +9,7 @@ import {
   getApiContents,
   getApiEmployeeDetail,
   getApiPermissionList,
+  getApiSiteSettings,
 } from '../../common/api';
 import { AppError, AuthError, NotFoundError, ValidationError } from '../../common/error';
 import { getCookie } from '../../common/utils/cookie';
@@ -775,8 +776,16 @@ export class BackendController extends BaseWebController {
   // 설정
   public settings = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
+      // 사이트 설정 조회
+      const { result, data: siteSettings } = await getApiSiteSettings();
+
+      // 결과가 없는 경우 에러 페이지로 이동
+      if (!result || !siteSettings) {
+        throw new NotFoundError('사이트 설정 정보가 존재하지 않습니다.');
+      }
+
       // 페이지 데이터 생성
-      const data = this.createPageData(route);
+      const data = this.createPageData(route, route.title, {}, siteSettings);
 
       // 설정 페이지 렌더링
       res.render(route.view, data);

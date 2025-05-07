@@ -9,7 +9,14 @@ import { companyInfo } from '../../config/info';
 import { apiRoutes } from '../../config/routes';
 import { prisma } from '../../library/database';
 import { createJWT, verifyJWT } from '../../library/jwt';
-import { BannerService, ContentService, EmployeeService, PermissionService, StatsService } from '../../services';
+import {
+  BannerService,
+  ContentService,
+  EmployeeService,
+  PermissionService,
+  SettingsService,
+  StatsService,
+} from '../../services';
 import { IEmployeeToken } from '../../types/object';
 import {
   IRequestBannerUpdate,
@@ -26,9 +33,16 @@ import {
   IRequestEmployeeUpdate,
   IRequestEmployeeUpdatePassword,
   IRequestEmployees,
+  IRequestSiteSettings,
   typeListSort,
 } from '../../types/request';
-import { IBannerService, IContentService, IEmployeeService, IPermissionService } from '../../types/service';
+import {
+  IBannerService,
+  IContentService,
+  IEmployeeService,
+  IPermissionService,
+  ISettingsService,
+} from '../../types/service';
 import { IStatsService } from '../../types/service';
 
 export class ApiController {
@@ -281,11 +295,17 @@ export class ApiController {
 
       // 이미지 경로
       let imagePath = null;
-      if (req.files && req.files instanceof Array && req.files.length > 0) {
-        imagePath = req.files[0].path;
-        // public 경로 제거
-        if (imagePath.startsWith('public')) {
-          imagePath = imagePath.replace('public', '');
+      if (req.files) {
+        const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+
+        // 특정 필드명의 파일을 가져옴
+        const fieldFiles = files['image'];
+        if (fieldFiles && fieldFiles.length > 0) {
+          imagePath = fieldFiles[0].path;
+          // public 경로 제거
+          if (imagePath.startsWith('public')) {
+            imagePath = imagePath.replace('public', '');
+          }
         }
       }
 
@@ -379,13 +399,18 @@ export class ApiController {
         throw new ValidationError('배너 ID가 잘못되었습니다.');
       }
 
-      // 이미지 경로
       let imagePath = null;
-      if (req.files && req.files instanceof Array && req.files.length > 0) {
-        imagePath = req.files[0].path;
-        // public 경로 제거
-        if (imagePath.startsWith('public')) {
-          imagePath = imagePath.replace('public', '');
+      if (req.files) {
+        const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+
+        // 특정 필드명의 파일을 가져옴
+        const fieldFiles = files['image'];
+        if (fieldFiles && fieldFiles.length > 0) {
+          imagePath = fieldFiles[0].path;
+          // public 경로 제거
+          if (imagePath.startsWith('public')) {
+            imagePath = imagePath.replace('public', '');
+          }
         }
       }
 
@@ -764,19 +789,27 @@ export class ApiController {
    * @param req Request
    * @param res Response
    */
-  public contentImageUpload(req: Request, res: Response): void {
+  public uploadContentImage(req: Request, res: Response): void {
     try {
       // 파일이 없는 경우
-      if (!req.files || (Array.isArray(req.files) && req.files.length === 0)) {
+      if (!req.files) {
+        res.status(400).json({ message: '업로드할 파일이 없습니다.' });
+        return;
+      }
+
+      // req.files는 이제 { [fieldname: string]: Express.Multer.File[] } 형태
+      const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+
+      // 첫 번째 필드의 첫 번째 파일을 가져옴
+      const firstFieldName = Object.keys(files)[0];
+      if (!firstFieldName || !files[firstFieldName] || files[firstFieldName].length === 0) {
         res.status(400).json({ message: '업로드할 파일이 없습니다.' });
         return;
       }
 
       // 파일 정보
-      const files = Array.isArray(req.files) ? req.files : [req.files];
-      const file = files[0];
-
-      if (!file || !file.path || typeof file.path !== 'string') {
+      const file = files[firstFieldName][0];
+      if (!file.path || typeof file.path !== 'string') {
         res.status(400).json({ message: '업로드할 파일이 없습니다.' });
         return;
       }
@@ -1291,6 +1324,137 @@ export class ApiController {
         res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
       }
     }
+  }
+
+  // 기본 설정 조회
+  public async getSiteSettings(req: Request, res: Response): Promise<void> {
+    const { permissions } = apiRoutes.settings.site;
+
+    try {
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+
+      // 사이트 설정 조회
+      const settingsService: ISettingsService = new SettingsService(prisma);
+      const result = await settingsService.getSiteSettings();
+
+      // 조회 실패 처리
+      if (!result.result) {
+        throw new AppError(result.code, result.message);
+      }
+
+      // 조회 성공
+      const response = formatApiResponse(true, null, null, result.metadata, result.data);
+      res.status(httpStatus.OK).json(response);
+    } catch (error) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
+    }
+  }
+
+  // 기본 설정 수정
+  public async setSiteSettings(req: Request, res: Response): Promise<void> {
+    const { permissions } = apiRoutes.settings.site;
+
+    try {
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+
+      // 로그인 직원 정보
+      const accessedEmployee = getAccessedEmployee(req);
+      if (!accessedEmployee) {
+        throw new AuthError('로그인 정보가 없습니다.');
+      }
+
+      // 파일 정보 처리
+      let faviconPath = null;
+      let logoPath = null;
+
+      if (req.files) {
+        const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+
+        // 파비콘 파일 처리
+        const faviconFiles = files['site-favicon'];
+        if (faviconFiles && faviconFiles.length > 0) {
+          faviconPath = faviconFiles[0].path;
+          if (faviconPath.startsWith('public')) {
+            faviconPath = faviconPath.replace('public', '');
+          }
+        }
+
+        // 로고 파일 처리
+        const logoFiles = files['site-logo'];
+        if (logoFiles && logoFiles.length > 0) {
+          logoPath = logoFiles[0].path;
+          if (logoPath.startsWith('public')) {
+            logoPath = logoPath.replace('public', '');
+          }
+        }
+      }
+
+      console.log('body = ', req.body);
+
+      // 요청 데이터
+      const requestData: IRequestSiteSettings = {
+        title: req.body['site-name'],
+        titleEn: req.body['site-name-en'],
+        description: req.body['site-description'],
+        keywords: req.body['site-keyword'],
+        favicon: faviconPath || '',
+        logo: logoPath || '',
+      };
+
+      console.log('requestData = ', requestData);
+
+      const settingsService: ISettingsService = new SettingsService(prisma);
+      const result = await settingsService.updateSiteSettings(requestData);
+
+      if (!result.result) {
+        throw new AppError(result.code, result.message);
+      }
+
+      // 임시로 성공 응답
+      res.status(httpStatus.NO_CONTENT).send(null);
+    } catch (error) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
+    }
+  }
+
+  // 회사 설정 조회
+  public async getCompanySettings(req: Request, res: Response): Promise<void> {
+    const { permissions } = apiRoutes.settings.company;
+  }
+
+  // 회사 설정 수정
+  public async setCompanySettings(req: Request, res: Response): Promise<void> {
+    const { permissions } = apiRoutes.settings.company;
+  }
+
+  // 접속 제한 조회
+  public async getAccessSettings(req: Request, res: Response): Promise<void> {
+    const { permissions } = apiRoutes.settings.access;
+  }
+
+  // 접속 제한 수정
+  public async setAccessSettings(req: Request, res: Response): Promise<void> {
+    const { permissions } = apiRoutes.settings.access;
+  }
+
+  // 시스템 설정 조회
+  public async getSystemSettings(req: Request, res: Response): Promise<void> {
+    const { permissions } = apiRoutes.settings.system;
+  }
+
+  // 시스템 설정 수정
+  public async setSystemSettings(req: Request, res: Response): Promise<void> {
+    const { permissions } = apiRoutes.settings.system;
   }
 
   public verifyPermission(req: Request, permissions: number[] = []): void {}

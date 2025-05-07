@@ -134,3 +134,12 @@ export interface IPermission {
   title: string;
   description: string | null;
 }
+
+export interface ISiteSettings {
+  siteTitle: string;
+  siteTitleEn: string;
+  siteFavicon: string;
+  siteLogo: string;
+  siteDescription: string;
+  siteKeywords: string;
+}
