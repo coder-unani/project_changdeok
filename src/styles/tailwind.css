@@ -1,5 +1,20 @@
 @import 'tailwindcss';
 
+@theme {
+  /* font */
+  --font-pretendard: 'Pretendard', system-ui, sans-serif;
+  --font-oswald: 'Oswald', var(--font-pretendard);
+  --font-cinzel: 'Cinzel', var(--font-pretendard);
+
+  /* color */
+  --color-white: #ffffff;
+  --color-black: #0c0c0c;
+  /* --color-primary: oklch(45% 0.085 224.283); */
+
+  /* border */
+  --color-border: #e0e0e0;
+}
+
 /* 기본 스타일이 적용되는 레이어 */
 @layer base {
   /* Pretendard */
@@ -9,13 +24,6 @@
     font-weight: 100 900;
     font-display: swap;
   }
-  /* Cinzel */
-  @font-face {
-    font-family: 'Cinzel';
-    src: url('/fonts/Cinzel-Variable.woff2') format('woff2');
-    font-weight: 400 900;
-    font-display: swap;
-  }
   /* Oswald */
   @font-face {
     font-family: 'Oswald';
@@ -23,41 +31,34 @@
     font-weight: 200 700;
     font-display: swap;
   }
-
-  :root {
-    /* font */
-    --primary-font: 'Pretendard', system-ui, sans-serif;
-    --secondary-font: 'Oswald', var(--primary-font);
-    --tertiary-font: 'Cinzel', var(--primary-font);
-
-    /* color */
-    --color-white: #ffffff;
-    --color-black: #0c0c0c;
-
-    /* border */
-    --color-border: #e0e0e0;
+  /* Cinzel */
+  @font-face {
+    font-family: 'Cinzel';
+    src: url('/fonts/Cinzel-Variable.woff2') format('woff2');
+    font-weight: 400 900;
+    font-display: swap;
   }
 
+  /* 다크테마 */
+  /* html[data-theme='dark'] {
+    --color-primary: oklch(78.9% 0.154 211.53);
+  } */
+
+  /* 라이트테마 */
+  /* html[data-theme='light'] {
+    --color-primary: var(--color-primary);
+  } */
+
   html {
-    font-family: var(--primary-font);
+    font-family: var(--font-pretendard);
     color: var(--color-black);
   }
 
-  /* 에러 이미지 */
   img.error-image {
     object-fit: none !important;
     border: 1px solid var(--color-border);
     background-color: var(--color-white);
   }
-}
-
-@theme {
-  --color-white: var(--color-white);
-  --color-black: var(--color-black);
-
-  --font-primary: var(--primary-font);
-  --font-secondary: var(--secondary-font);
-  --font-tertiary: var(--tertiary-font);
 }
 
 /* 재사용 가능한 컴포넌트 클래스 */
