@@ -1,7 +1,7 @@
-import { IRoute, IPageData } from '../types/config';
-import { AppError } from '../common/error';
-import { httpStatus } from '../common/variables';
-import { validateInteger, validateString, validateBoolean } from '../common/utils/validate';
+import { AppError } from '../../common/error';
+import { validateBoolean, validateInteger, validateString } from '../../common/utils/validate';
+import { httpStatus } from '../../common/variables';
+import { IPageData, IRoute } from '../../types/config';
 
 export class BaseController {
   constructor() {}

@@ -1,10 +1,10 @@
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
 
-import { BaseService } from './baseService';
-import { ExtendedPrismaClient } from '../library/database';
-import { IServiceResponse } from '../types/response';
-import { AppError, ForbiddenError, NotFoundError, TooManyRequestsError } from '../common/error';
-import { httpStatus } from '../common/variables';
+import { AppError, ForbiddenError, NotFoundError, TooManyRequestsError } from '../../common/error';
+import { httpStatus } from '../../common/variables';
+import { ExtendedPrismaClient } from '../../library/database';
+import { IServiceResponse } from '../../types/config';
+import { BaseService } from './service';
 
 export class StatsService extends BaseService {
   private analyticsDataClient: BetaAnalyticsDataClient;

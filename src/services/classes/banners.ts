@@ -1,13 +1,14 @@
 import { IBannerService } from 'types/service';
-import { NotFoundError, ValidationError } from '../common/error';
-import { deleteFile } from '../common/utils/file';
-import { formatDateToString } from '../common/utils/format';
-import { validateStringLength } from '../common/utils/validate';
-import { ExtendedPrismaClient } from '../library/database';
-import { IBanner, IBannerGroup } from '../types/object';
-import { IRequestBannerUpdate, IRequestBannerWrite, IRequestBanners } from '../types/request';
-import { IServiceResponse } from '../types/response';
-import { BaseService } from './baseService';
+
+import { NotFoundError, ValidationError } from '../../common/error';
+import { deleteFile } from '../../common/utils/file';
+import { formatDateToString } from '../../common/utils/format';
+import { validateStringLength } from '../../common/utils/validate';
+import { ExtendedPrismaClient } from '../../library/database';
+import { IServiceResponse } from '../../types/config';
+import { IBanner, IBannerGroup } from '../../types/object';
+import { IRequestBannerUpdate, IRequestBannerWrite, IRequestBanners } from '../../types/request';
+import { BaseService } from './service';
 
 export class BannerService extends BaseService implements IBannerService {
   constructor(prisma: ExtendedPrismaClient) {

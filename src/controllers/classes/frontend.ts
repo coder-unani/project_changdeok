@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 
-import { AppError } from '../common/error';
-import { frontendRoutes } from '../config/routes';
-import { IRoute } from '../types/config';
-import { getApiBannerGroup, getApiContentGroup } from '../common/api';
-import { IBannerDisp, IBannerGroup } from '../types/object';
-import { IApiResponse } from '../types/response';
+import { getApiBannerGroup, getApiContentGroup } from '../../common/api';
+import { AppError } from '../../common/error';
+import { frontendRoutes } from '../../config/routes';
+import { IRoute } from '../../types/config';
+import { IApiResponse } from '../../types/config';
+import { IBanner, IBannerDisp, IBannerGroup } from '../../types/object';
 
 export class FrontendController {
   constructor() {}
@@ -36,7 +36,7 @@ export class FrontendController {
       // 배너 정보 조회 성공
       if (getBannerGroup.result) {
         if (getBannerGroup.data?.[0]) {
-          getBannerGroup.data[0].banners?.forEach((banner) => {
+          getBannerGroup.data[0].banners?.forEach((banner: IBanner) => {
             popupBanner.push({
               id: banner.id,
               title: banner.title,
@@ -47,7 +47,7 @@ export class FrontendController {
         }
 
         if (getBannerGroup.data?.[1]) {
-          getBannerGroup.data[1].banners?.forEach((banner) => {
+          getBannerGroup.data[1].banners?.forEach((banner: IBanner) => {
             if (banner.seq === 1) {
               topBanner = {
                 title: banner.title,
@@ -59,7 +59,7 @@ export class FrontendController {
         }
 
         if (getBannerGroup.data?.[2]) {
-          getBannerGroup.data[2].banners?.forEach((banner) => {
+          getBannerGroup.data[2].banners?.forEach((banner: IBanner) => {
             if (banner.seq === 1) {
               midBanner1 = {
                 title: banner.title,
@@ -71,7 +71,7 @@ export class FrontendController {
         }
 
         if (getBannerGroup.data?.[3]) {
-          getBannerGroup.data[3].banners?.forEach((banner) => {
+          getBannerGroup.data[3].banners?.forEach((banner: IBanner) => {
             midBanner2.push({
               title: banner.title,
               description: banner.description,
@@ -81,7 +81,7 @@ export class FrontendController {
         }
 
         if (getBannerGroup.data?.[4]) {
-          getBannerGroup.data[4].banners?.forEach((banner) => {
+          getBannerGroup.data[4].banners?.forEach((banner: IBanner) => {
             midBanner3.push({
               title: banner.title,
               description: banner.description,
@@ -132,7 +132,7 @@ export class FrontendController {
 
       if (result) {
         if (bannerGroups?.[0]) {
-          bannerGroups[0].banners?.forEach((banner) => {
+          bannerGroups[0].banners?.forEach((banner: IBanner) => {
             midBanner.push({
               title: banner.title,
               description: banner.description,
@@ -170,7 +170,7 @@ export class FrontendController {
 
       if (result) {
         if (bannerGroups?.[0]) {
-          bannerGroups[0].banners?.forEach((banner) => {
+          bannerGroups[0].banners?.forEach((banner: IBanner) => {
             midBanner.push({
               title: banner.title,
               description: banner.description,

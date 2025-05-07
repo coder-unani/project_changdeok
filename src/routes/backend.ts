@@ -1,13 +1,11 @@
 import { NextFunction, Request, Response, Router } from 'express';
 
-import { ExpressLogger } from '../common/utils/log';
 import { CONFIG } from '../config/config';
 import { apiRoutes, backendRoutes } from '../config/routes';
-import { BackendController } from '../controllers/backendController';
+import { BackendController } from '../controllers';
 import { AuthMiddleware } from '../middlewares/backend/auth';
-import { ErrorMiddleware } from '../middlewares/backend/error';
 import { PermissionMiddleware } from '../middlewares/backend/permission';
-import { IErrorMiddleware, IMiddleware } from '../types/middleware';
+import { IMiddleware } from '../types/middleware';
 
 const router: Router = Router();
 

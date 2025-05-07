@@ -1,10 +1,8 @@
 import { NextFunction, Request, Response, Router } from 'express';
 
-import { ExpressLogger } from '../common/utils/log';
 import { CONFIG } from '../config/config';
-import { FrontendController } from '../controllers/frontendController';
-import { IErrorMiddleware, IMiddleware } from '../types/middleware';
 import { apiRoutes, frontendRoutes } from '../config/routes';
+import { FrontendController } from '../controllers';
 
 const router: Router = Router();
 

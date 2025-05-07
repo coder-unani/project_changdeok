@@ -1,13 +1,13 @@
-import { encryptDataAES } from '../library/encrypt';
-import { AppError, NotFoundError, ValidationError } from '../common/error';
-import { formatDateToString } from '../common/utils/format';
-import { validateStringLength } from '../common/utils/validate';
-import { ExtendedPrismaClient } from '../library/database';
-import { IContent, IContentGroup } from '../types/object';
-import { IRequestContentUpdate, IRequestContentWrite, IRequestContents } from '../types/request';
-import { IServiceResponse } from '../types/response';
-import { IContentService } from '../types/service';
-import { BaseService } from './baseService';
+import { AppError, NotFoundError, ValidationError } from '../../common/error';
+import { formatDateToString } from '../../common/utils/format';
+import { validateStringLength } from '../../common/utils/validate';
+import { ExtendedPrismaClient } from '../../library/database';
+import { encryptDataAES } from '../../library/encrypt';
+import { IServiceResponse } from '../../types/config';
+import { IContent, IContentGroup } from '../../types/object';
+import { IRequestContentUpdate, IRequestContentWrite, IRequestContents } from '../../types/request';
+import { IContentService } from '../../types/service';
+import { BaseService } from './service';
 
 export class ContentService extends BaseService implements IContentService {
   constructor(prisma: ExtendedPrismaClient) {

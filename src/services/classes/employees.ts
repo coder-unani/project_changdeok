@@ -1,9 +1,10 @@
-import { hashPassword, verifyPassword } from '../library/encrypt';
-import { AuthError, NotFoundError, ValidationError } from '../common/error';
-import { formatDate, formatDateToString, formatEmailMasking } from '../common/utils/format';
-import { validateEmail, validatePassword, validatePhone } from '../common/utils/validate';
-import { ExtendedPrismaClient } from '../library/database';
-import { IEmployee } from '../types/object';
+import { AuthError, NotFoundError, ValidationError } from '../../common/error';
+import { formatDate, formatDateToString, formatEmailMasking } from '../../common/utils/format';
+import { validateEmail, validatePassword, validatePhone } from '../../common/utils/validate';
+import { ExtendedPrismaClient } from '../../library/database';
+import { hashPassword, verifyPassword } from '../../library/encrypt';
+import { IServiceResponse } from '../../types/config';
+import { IEmployee } from '../../types/object';
 import {
   IRequestEmployeeDelete,
   IRequestEmployeeForceUpdatePassword,
@@ -12,10 +13,9 @@ import {
   IRequestEmployeeUpdate,
   IRequestEmployeeUpdatePassword,
   IRequestEmployees,
-} from '../types/request';
-import { IServiceResponse } from '../types/response';
-import { IEmployeeService } from '../types/service';
-import { BaseService } from './baseService';
+} from '../../types/request';
+import { IEmployeeService } from '../../types/service';
+import { BaseService } from './service';
 
 export class EmployeeService extends BaseService implements IEmployeeService {
   constructor(prisma: ExtendedPrismaClient) {

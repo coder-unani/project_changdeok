@@ -1,9 +1,9 @@
-import { IRequestDefaultList } from '../types/request';
-import { IServiceResponse } from 'types/response';
-import { IEmployee, IPermission } from '../types/object';
-import { IPermissionService } from '../types/service';
-import { BaseService } from './baseService';
-import { ExtendedPrismaClient } from '../library/database';
+import { ExtendedPrismaClient } from '../../library/database';
+import { IServiceResponse } from '../../types/config';
+import { IEmployee, IPermission } from '../../types/object';
+import { IRequestDefaultList } from '../../types/request';
+import { IPermissionService } from '../../types/service';
+import { BaseService } from './service';
 
 export class PermissionService extends BaseService implements IPermissionService {
   constructor(prisma: ExtendedPrismaClient) {

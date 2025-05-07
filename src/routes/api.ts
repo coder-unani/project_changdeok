@@ -1,12 +1,11 @@
 import { NextFunction, Request, Response, Router } from 'express';
 
 import { CORS_API_OPTIONS } from '../config/config';
-import { IMiddleware } from '../types/middleware';
-import { CorsMiddleware } from '../middlewares/api/cors';
-import { AuthMiddleware } from '../middlewares/api/auth';
-import { MediaUploadMiddleware } from '../middlewares/api/file';
-import { ApiController } from '../controllers';
 import { apiRoutes } from '../config/routes';
+import { ApiController } from '../controllers';
+import { CorsMiddleware } from '../middlewares/api/cors';
+import { MediaUploadMiddleware } from '../middlewares/api/file';
+import { IMiddleware } from '../types/middleware';
 
 const router: Router = Router();
 

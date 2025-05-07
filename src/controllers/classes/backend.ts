@@ -9,23 +9,22 @@ import {
   getApiContents,
   getApiEmployeeDetail,
   getApiPermissionList,
-} from '../common/api';
-import { AppError, AuthError, NotFoundError, ValidationError } from '../common/error';
-import { getCookie } from '../common/utils/cookie';
-import { getAccessToken } from '../common/utils/verify';
-import { httpStatus } from '../common/variables';
-import { CONFIG } from '../config/config';
-import { apiRoutes, backendRoutes } from '../config/routes';
-import { prisma } from '../library/database';
-import { decryptDataAES } from '../library/encrypt';
-import { verifyJWT } from '../library/jwt';
-import { EmployeeService } from '../services/employeeService';
-import { StatsService } from '../services/statsService';
-import { IPageData, IRoute } from '../types/config';
-import { IEmployeeToken } from '../types/object';
-import { IPermission } from '../types/object';
-import { IRequestBanners, IRequestContents, typeListSort } from '../types/request';
-import { BaseWebController } from './controller';
+} from '../../common/api';
+import { AppError, AuthError, NotFoundError, ValidationError } from '../../common/error';
+import { getCookie } from '../../common/utils/cookie';
+import { getAccessToken } from '../../common/utils/verify';
+import { httpStatus } from '../../common/variables';
+import { CONFIG } from '../../config/config';
+import { apiRoutes, backendRoutes } from '../../config/routes';
+import { prisma } from '../../library/database';
+import { decryptDataAES } from '../../library/encrypt';
+import { verifyJWT } from '../../library/jwt';
+import { EmployeeService, StatsService } from '../../services';
+import { IPageData, IRoute } from '../../types/config';
+import { IEmployeeToken } from '../../types/object';
+import { IPermission } from '../../types/object';
+import { IRequestBanners, IRequestContents, typeListSort } from '../../types/request';
+import { BaseWebController } from './base';
 
 // TODO: 권한을 체크해서 다른 계정도 수정하게 할 것인지 확인 필요
 export class BackendController extends BaseWebController {

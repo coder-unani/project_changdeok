@@ -1,7 +1,7 @@
-import { ExtendedPrismaClient } from '../library/database';
-import { AppError } from '../common/error';
-import { httpStatus } from '../common/variables';
-import { IServiceResponse } from '../types/response';
+import { AppError } from '../../common/error';
+import { httpStatus } from '../../common/variables';
+import { ExtendedPrismaClient } from '../../library/database';
+import { IServiceResponse } from '../../types/config';
 
 export class BaseService {
   protected prisma: ExtendedPrismaClient;
