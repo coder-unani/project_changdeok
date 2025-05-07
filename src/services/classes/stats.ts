@@ -453,7 +453,8 @@ export class StatsService extends BaseService {
             throw new NotFoundError('로그 파일이 비어있습니다.');
           }
         })
-        .filter((entry) => entry !== null);
+        .filter((entry) => entry !== null)
+        .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
       if (logEntries.length === 0) {
         throw new NotFoundError('유효한 로그 데이터가 없습니다.');
