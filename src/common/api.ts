@@ -1,7 +1,7 @@
 import { CONFIG } from '../config/config';
-import { IApiResponse } from '../types/response';
-import { IBannerGroup, IBanner, IContent, IContentGroup, IEmployee, IPermission } from '../types/object';
 import { apiRoutes } from '../config/routes';
+import { IApiResponse } from '../types/config';
+import { IBanner, IBannerGroup, IContent, IContentGroup, IEmployee, IPermission } from '../types/object';
 import { IRequestBanners, IRequestContents } from '../types/request';
 
 let API_BASE_URL = CONFIG.SERVICE_URL;

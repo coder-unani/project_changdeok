@@ -1,3 +1,4 @@
+import { IServiceResponse } from './config';
 import { IBanner, IBannerGroup, IContent, IContentGroup, IEmployee, IPermission } from './object';
 import {
   IRequestBannerUpdate,
@@ -15,7 +16,6 @@ import {
   IRequestEmployeeUpdatePassword,
   IRequestEmployees,
 } from './request';
-import { IServiceResponse } from './response';
 
 export interface IStatsService {
   getVisitorStats(startDate: string, endDate: string): Promise<IServiceResponse<any>>;

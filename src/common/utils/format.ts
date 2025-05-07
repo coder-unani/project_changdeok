@@ -1,6 +1,6 @@
-import { typeFormattedResult } from '../../types/format';
 import { REG_DATE_PATTERN, REG_EMAIL_PATTERN } from '../../config/config';
-import { IApiResponse } from '../../types/response';
+import { IApiResponse } from '../../types/config';
+import { typeFormattedResult } from '../../types/format';
 
 export const formatDate = (date: string | Date | undefined | null): typeFormattedResult => {
   try {
