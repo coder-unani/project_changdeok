@@ -10,22 +10,23 @@ import {
   getApiEmployeeDetail,
   getApiPermissionList,
 } from '../common/api';
-import { httpStatus } from '../common/variables';
+import { AppError, AuthError, NotFoundError, ValidationError } from '../common/error';
 import { getCookie } from '../common/utils/cookie';
-import { AppError, AuthError, ValidationError, NotFoundError } from '../common/error';
-import { verifyJWT } from '../library/jwt';
 import { getAccessToken } from '../common/utils/verify';
+import { httpStatus } from '../common/variables';
 import { CONFIG } from '../config/config';
-import { prisma } from '../library/database';
 import { apiRoutes, backendRoutes } from '../config/routes';
-import { EmployeeService } from '../services/employeeService';
-import { IEmployeeToken } from '../types/object';
-import { IRoute, IPageData } from '../types/config';
-import { IRequestBanners, IRequestContents, typeListSort } from '../types/request';
+import { prisma } from '../library/database';
 import { decryptDataAES } from '../library/encrypt';
-import { BaseWebController } from './controller';
-import { IPermission } from '../types/object';
+import { verifyJWT } from '../library/jwt';
+import { EmployeeService } from '../services/employeeService';
 import { StatsService } from '../services/statsService';
+import { IPageData, IRoute } from '../types/config';
+import { IEmployeeToken } from '../types/object';
+import { IPermission } from '../types/object';
+import { IRequestBanners, IRequestContents, typeListSort } from '../types/request';
+import { BaseWebController } from './controller';
+
 // TODO: 권한을 체크해서 다른 계정도 수정하게 할 것인지 확인 필요
 export class BackendController extends BaseWebController {
   // 직원 인증 및 정보 조회 메서드
@@ -766,6 +767,19 @@ export class BackendController extends BaseWebController {
       const data = this.createPageData(route);
 
       // 통계 페이지 렌더링
+      res.render(route.view, data);
+    } catch (error) {
+      this.renderError(res, error);
+    }
+  };
+
+  // 설정
+  public settings = async (route: IRoute, req: Request, res: Response): Promise<void> => {
+    try {
+      // 페이지 데이터 생성
+      const data = this.createPageData(route);
+
+      // 설정 페이지 렌더링
       res.render(route.view, data);
     } catch (error) {
       this.renderError(res, error);

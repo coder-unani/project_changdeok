@@ -90,14 +90,6 @@ export const backendRoutes = {
     backendRoutesLayout,
     [1, 6]
   ),
-  stats: createRoute(
-    'GET',
-    '접속 통계',
-    `${backendRoutesPrefix}/stats`,
-    'backend/stats/index',
-    backendRoutesLayout,
-    [1, 6]
-  ),
   // 배너 관리
   banners: {
     list: createRoute(
@@ -267,6 +259,22 @@ export const backendRoutes = {
       []
     ),
   },
+  stats: createRoute(
+    'GET',
+    '접속 통계',
+    `${backendRoutesPrefix}/stats`,
+    'backend/stats/index',
+    backendRoutesLayout,
+    [1, 6]
+  ),
+  settings: createRoute(
+    'GET',
+    '설정',
+    `${backendRoutesPrefix}/settings`,
+    'backend/settings/index',
+    backendRoutesLayout,
+    [1, 6]
+  ),
 };
 
 export const frontendRoutesPrefix = '';

@@ -1,13 +1,13 @@
-import { Router, Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response, Router } from 'express';
 
-import { CONFIG } from '../config/config';
-import { IMiddleware, IErrorMiddleware } from '../types/middleware';
-import { backendRoutes, apiRoutes } from '../config/routes';
-import { AuthMiddleware } from '../middlewares/backend/auth';
-import { PermissionMiddleware } from '../middlewares/backend/permission';
-import { ErrorMiddleware } from '../middlewares/backend/error';
-import { BackendController } from '../controllers/backendController';
 import { ExpressLogger } from '../common/utils/log';
+import { CONFIG } from '../config/config';
+import { apiRoutes, backendRoutes } from '../config/routes';
+import { BackendController } from '../controllers/backendController';
+import { AuthMiddleware } from '../middlewares/backend/auth';
+import { ErrorMiddleware } from '../middlewares/backend/error';
+import { PermissionMiddleware } from '../middlewares/backend/permission';
+import { IErrorMiddleware, IMiddleware } from '../types/middleware';
 
 const router: Router = Router();
 
@@ -153,6 +153,13 @@ router.get(backendRoutes.employees.detail.url, function (req, res) {
  */
 router.get(backendRoutes.stats.url, function (req, res) {
   backendController.stats(backendRoutes.stats, req, res);
+});
+
+/**
+ * 설정
+ */
+router.get(backendRoutes.settings.url, function (req, res) {
+  backendController.settings(backendRoutes.settings, req, res);
 });
 
 /**
