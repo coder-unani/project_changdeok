@@ -1,3 +1,3 @@
-export { ApiController } from './apiController';
-export { FrontendController } from './frontendController';
-export { BackendController } from './backendController';
+export { ApiController } from './classes/api';
+export { FrontendController } from './classes/frontend';
+export { BackendController } from './classes/backend';

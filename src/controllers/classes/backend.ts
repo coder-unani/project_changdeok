@@ -24,7 +24,7 @@ import { IPageData, IRoute } from '../../types/config';
 import { IEmployeeToken } from '../../types/object';
 import { IPermission } from '../../types/object';
 import { IRequestBanners, IRequestContents, typeListSort } from '../../types/request';
-import { BaseWebController } from './base';
+import { BaseWebController } from './controller';
 
 // TODO: 권한을 체크해서 다른 계정도 수정하게 할 것인지 확인 필요
 export class BackendController extends BaseWebController {
