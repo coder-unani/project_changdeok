@@ -14,29 +14,29 @@ datasource db {
 }
 
 /**
-  * Config
-  company_name String @default("")
-  company_name_en String
-  company_ceo String
-  company_business_number String
-  company_zipcode String
-  company_address String
-  company_phone String
-  company_fax String
-  company_email String
-  company_homepage String
-  company_lunchtime_start String
-  company_lunchtime_end String
-  company_holiday String
- **/
+  * Settings (설정)
+  * - id: ID (자동 증가)
+  * - title: 사이트명
+  * - introduction: 소개
+  * - description: 설명
+  * - keywords: 키워드
+  * - favicon: 파비콘
+  * - logo: 로고
+  * - icon: 아이콘
+  * - ogTagJson: OG 태그 (JSON 형식)
+  * - createdAt: 생성일
+  * - updatedAt: 수정일
+  **/
 model Settings {
   id Int @id @default(autoincrement())
-  siteTitle String?
-  siteTitleEn String?
-  siteFavicon String?
-  siteLogo String?
-  siteDescription String?
-  siteKeywords String?
+  title String
+  introduction String?
+  description String?
+  keywords String?
+  favicon String?
+  logo String?
+  icon String?
+  ogTagJson String?
   
   @@map("orb_setting")
 }
