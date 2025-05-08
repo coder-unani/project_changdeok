@@ -311,7 +311,7 @@ export class StatsService extends BaseService {
         orderBys: [
           {
             dimension: { dimensionName: 'date' },
-            desc: false,
+            desc: true,
           },
         ],
       });
