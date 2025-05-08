@@ -62,211 +62,6 @@ export class ApiController {
     }
   }
 
-  // 방문자 통계
-  public async statsVisitor(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.stats.visitor;
-
-    try {
-      const statsService: IStatsService = new StatsService(prisma);
-      const { result, code, message, metadata, data } = await statsService.getVisitorStats(
-        req.query.startDate as string,
-        req.query.endDate as string
-      );
-
-      if (!result) {
-        throw new AppError(code, message);
-      }
-
-      const response = formatApiResponse(true, null, null, metadata, data);
-      res.status(httpStatus.OK).json(response);
-    } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
-    }
-  }
-
-  // 일간 방문자 통계
-  public async statsDailyVisitor(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.stats.dailyVisitor;
-
-    try {
-      const statsService: IStatsService = new StatsService(prisma);
-      const { result, code, message, metadata, data } = await statsService.getDailyVisitorStats(
-        req.query.startDate as string,
-        req.query.endDate as string
-      );
-
-      if (!result) {
-        throw new AppError(code, message);
-      }
-
-      const response = formatApiResponse(true, null, null, metadata, data);
-      res.status(httpStatus.OK).json(response);
-    } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
-    }
-  }
-
-  // 페이지 뷰 통계
-  public async statsPageView(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.stats.pageView;
-
-    try {
-      const statsService: IStatsService = new StatsService(prisma);
-      const { result, code, message, metadata, data } = await statsService.getPageViews(
-        req.query.startDate as string,
-        req.query.endDate as string
-      );
-
-      if (!result) {
-        throw new AppError(code, message);
-      }
-
-      const response = formatApiResponse(true, null, null, metadata, data);
-      res.status(httpStatus.OK).json(response);
-    } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
-    }
-  }
-
-  // 국가 통계
-  public async statsCountry(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.stats.country;
-
-    try {
-      const statsService: IStatsService = new StatsService(prisma);
-      const { result, code, message, metadata, data } = await statsService.getCountryStats(
-        req.query.startDate as string,
-        req.query.endDate as string
-      );
-
-      if (!result) {
-        throw new AppError(code, message);
-      }
-
-      const response = formatApiResponse(true, null, null, metadata, data);
-      res.status(httpStatus.OK).json(response);
-    } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
-    }
-  }
-
-  // 참조 통계
-  public async statsReferrer(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.stats.referrer;
-
-    try {
-      const statsService: IStatsService = new StatsService(prisma);
-      const { result, code, message, metadata, data } = await statsService.getReferrerStats(
-        req.query.startDate as string,
-        req.query.endDate as string
-      );
-
-      if (!result) {
-        throw new AppError(code, message);
-      }
-
-      const response = formatApiResponse(true, null, null, metadata, data);
-      res.status(httpStatus.OK).json(response);
-    } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
-    }
-  }
-
-  // 시간대별 통계
-  public async statsHourly(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.stats.hourly;
-
-    try {
-      const statsService: IStatsService = new StatsService(prisma);
-      const { result, code, message, metadata, data } = await statsService.getHourlyStats(
-        req.query.startDate as string,
-        req.query.endDate as string
-      );
-
-      if (!result) {
-        throw new AppError(code, message);
-      }
-
-      const response = formatApiResponse(true, null, null, metadata, data);
-      res.status(httpStatus.OK).json(response);
-    } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
-    }
-  }
-
-  // 브라우저 통계
-  public async statsBrowser(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.stats.browser;
-
-    try {
-      const statsService: IStatsService = new StatsService(prisma);
-      const { result, code, message, metadata, data } = await statsService.getBrowserStats(
-        req.query.startDate as string,
-        req.query.endDate as string
-      );
-
-      if (!result) {
-        throw new AppError(code, message);
-      }
-
-      const response = formatApiResponse(true, null, null, metadata, data);
-      res.status(httpStatus.OK).json(response);
-    } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
-    }
-  }
-
-  // 접속 로그 통계
-  public async statsAccessLogs(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.stats.accessLogs;
-
-    try {
-      const statsService: IStatsService = new StatsService(prisma);
-      const { result, code, message, metadata, data } = await statsService.getAccessLogs(req.query.date as string);
-
-      if (!result) {
-        throw new AppError(code, message);
-      }
-
-      const response = formatApiResponse(true, null, null, metadata, data);
-      res.status(httpStatus.OK).json(response);
-    } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
-    }
-  }
-
   // 배너 등록
   public async bannerWrite(req: Request, res: Response): Promise<void> {
     const { permissions } = apiRoutes.banners.write;
@@ -1326,9 +1121,214 @@ export class ApiController {
     }
   }
 
+  // 방문자 통계
+  public async statsVisitor(req: Request, res: Response): Promise<void> {
+    const { permissions } = apiRoutes.stats.visitor;
+
+    try {
+      const statsService: IStatsService = new StatsService(prisma);
+      const { result, code, message, metadata, data } = await statsService.getVisitorStats(
+        req.query.startDate as string,
+        req.query.endDate as string
+      );
+
+      if (!result) {
+        throw new AppError(code, message);
+      }
+
+      const response = formatApiResponse(true, null, null, metadata, data);
+      res.status(httpStatus.OK).json(response);
+    } catch (error) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
+    }
+  }
+
+  // 일간 방문자 통계
+  public async statsDailyVisitor(req: Request, res: Response): Promise<void> {
+    const { permissions } = apiRoutes.stats.dailyVisitor;
+
+    try {
+      const statsService: IStatsService = new StatsService(prisma);
+      const { result, code, message, metadata, data } = await statsService.getDailyVisitorStats(
+        req.query.startDate as string,
+        req.query.endDate as string
+      );
+
+      if (!result) {
+        throw new AppError(code, message);
+      }
+
+      const response = formatApiResponse(true, null, null, metadata, data);
+      res.status(httpStatus.OK).json(response);
+    } catch (error) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
+    }
+  }
+
+  // 페이지 뷰 통계
+  public async statsPageView(req: Request, res: Response): Promise<void> {
+    const { permissions } = apiRoutes.stats.pageView;
+
+    try {
+      const statsService: IStatsService = new StatsService(prisma);
+      const { result, code, message, metadata, data } = await statsService.getPageViews(
+        req.query.startDate as string,
+        req.query.endDate as string
+      );
+
+      if (!result) {
+        throw new AppError(code, message);
+      }
+
+      const response = formatApiResponse(true, null, null, metadata, data);
+      res.status(httpStatus.OK).json(response);
+    } catch (error) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
+    }
+  }
+
+  // 국가 통계
+  public async statsCountry(req: Request, res: Response): Promise<void> {
+    const { permissions } = apiRoutes.stats.country;
+
+    try {
+      const statsService: IStatsService = new StatsService(prisma);
+      const { result, code, message, metadata, data } = await statsService.getCountryStats(
+        req.query.startDate as string,
+        req.query.endDate as string
+      );
+
+      if (!result) {
+        throw new AppError(code, message);
+      }
+
+      const response = formatApiResponse(true, null, null, metadata, data);
+      res.status(httpStatus.OK).json(response);
+    } catch (error) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
+    }
+  }
+
+  // 참조 통계
+  public async statsReferrer(req: Request, res: Response): Promise<void> {
+    const { permissions } = apiRoutes.stats.referrer;
+
+    try {
+      const statsService: IStatsService = new StatsService(prisma);
+      const { result, code, message, metadata, data } = await statsService.getReferrerStats(
+        req.query.startDate as string,
+        req.query.endDate as string
+      );
+
+      if (!result) {
+        throw new AppError(code, message);
+      }
+
+      const response = formatApiResponse(true, null, null, metadata, data);
+      res.status(httpStatus.OK).json(response);
+    } catch (error) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
+    }
+  }
+
+  // 시간대별 통계
+  public async statsHourly(req: Request, res: Response): Promise<void> {
+    const { permissions } = apiRoutes.stats.hourly;
+
+    try {
+      const statsService: IStatsService = new StatsService(prisma);
+      const { result, code, message, metadata, data } = await statsService.getHourlyStats(
+        req.query.startDate as string,
+        req.query.endDate as string
+      );
+
+      if (!result) {
+        throw new AppError(code, message);
+      }
+
+      const response = formatApiResponse(true, null, null, metadata, data);
+      res.status(httpStatus.OK).json(response);
+    } catch (error) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
+    }
+  }
+
+  // 브라우저 통계
+  public async statsBrowser(req: Request, res: Response): Promise<void> {
+    const { permissions } = apiRoutes.stats.browser;
+
+    try {
+      const statsService: IStatsService = new StatsService(prisma);
+      const { result, code, message, metadata, data } = await statsService.getBrowserStats(
+        req.query.startDate as string,
+        req.query.endDate as string
+      );
+
+      if (!result) {
+        throw new AppError(code, message);
+      }
+
+      const response = formatApiResponse(true, null, null, metadata, data);
+      res.status(httpStatus.OK).json(response);
+    } catch (error) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
+    }
+  }
+
+  // 접속 로그 통계
+  public async statsAccessLogs(req: Request, res: Response): Promise<void> {
+    const { permissions } = apiRoutes.stats.accessLogs;
+
+    try {
+      const statsService: IStatsService = new StatsService(prisma);
+      const { result, code, message, metadata, data } = await statsService.getAccessLogs(req.query.date as string);
+
+      if (!result) {
+        throw new AppError(code, message);
+      }
+
+      const response = formatApiResponse(true, null, null, metadata, data);
+      res.status(httpStatus.OK).json(response);
+    } catch (error) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
+    }
+  }
+
   // 기본 설정 조회
   public async getSiteSettings(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.settings.site;
+    const { permissions } = apiRoutes.siteSettings.read;
 
     try {
       // 접근 권한 체크
@@ -1345,6 +1345,7 @@ export class ApiController {
 
       // 조회 성공
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
+
       res.status(httpStatus.OK).json(response);
     } catch (error) {
       if (error instanceof AppError) {
@@ -1357,7 +1358,7 @@ export class ApiController {
 
   // 기본 설정 수정
   public async setSiteSettings(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.settings.site;
+    const { permissions } = apiRoutes.siteSettings.update;
 
     try {
       // 접근 권한 체크
@@ -1372,12 +1373,13 @@ export class ApiController {
       // 파일 정보 처리
       let faviconPath = null;
       let logoPath = null;
+      let ogImagePath = null;
 
       if (req.files) {
         const files = req.files as { [fieldname: string]: Express.Multer.File[] };
 
         // 파비콘 파일 처리
-        const faviconFiles = files['site-favicon'];
+        const faviconFiles = files['favicon'];
         if (faviconFiles && faviconFiles.length > 0) {
           faviconPath = faviconFiles[0].path;
           if (faviconPath.startsWith('public')) {
@@ -1386,39 +1388,58 @@ export class ApiController {
         }
 
         // 로고 파일 처리
-        const logoFiles = files['site-logo'];
+        const logoFiles = files['logo'];
         if (logoFiles && logoFiles.length > 0) {
           logoPath = logoFiles[0].path;
           if (logoPath.startsWith('public')) {
             logoPath = logoPath.replace('public', '');
           }
         }
+
+        // OG태그 이미지 파일 처리
+        const ogImageFiles = files['ogImage'];
+        if (ogImageFiles && ogImageFiles.length > 0) {
+          ogImagePath = ogImageFiles[0].path;
+          if (ogImagePath.startsWith('public')) {
+            ogImagePath = ogImagePath.replace('public', '');
+          }
+        }
       }
 
-      console.log('body = ', req.body);
+      // favicon 파일 경로 삽입
+      const favicon = faviconPath || req.body.faviconOrig || '';
+
+      // 로고 파일 경로 삽입
+      const logo = logoPath || req.body.logoOrig || '';
+
+      // OG태그 이미지 파일 경로 삽입
+      const ogTag = req.body.ogTagJson ? JSON.parse(req.body.ogTagJson) : {};
+      ogTag.image = ogImagePath || req.body.ogImageOrig || '';
 
       // 요청 데이터
       const requestData: IRequestSiteSettings = {
-        title: req.body['site-name'],
-        titleEn: req.body['site-name-en'],
-        description: req.body['site-description'],
-        keywords: req.body['site-keyword'],
-        favicon: faviconPath || '',
-        logo: logoPath || '',
+        title: req.body.title,
+        introduction: req.body.introduction,
+        description: req.body.description,
+        keywords: req.body.keywords,
+        favicon: favicon,
+        logo: logo,
+        ogTagJson: ogTag ? JSON.stringify(ogTag) : '',
       };
 
-      console.log('requestData = ', requestData);
-
+      // 사이트 설정 수정
       const settingsService: ISettingsService = new SettingsService(prisma);
       const result = await settingsService.updateSiteSettings(requestData);
 
+      // 수정 실패 처리
       if (!result.result) {
         throw new AppError(result.code, result.message);
       }
 
-      // 임시로 성공 응답
+      // 응답 성공
       res.status(httpStatus.NO_CONTENT).send(null);
     } catch (error) {
+      // 오류 처리
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
       } else {
@@ -1429,32 +1450,32 @@ export class ApiController {
 
   // 회사 설정 조회
   public async getCompanySettings(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.settings.company;
+    const { permissions } = apiRoutes.companySettings.read;
   }
 
   // 회사 설정 수정
   public async setCompanySettings(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.settings.company;
+    const { permissions } = apiRoutes.companySettings.update;
   }
 
   // 접속 제한 조회
   public async getAccessSettings(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.settings.access;
+    const { permissions } = apiRoutes.accessSettings.read;
   }
 
   // 접속 제한 수정
   public async setAccessSettings(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.settings.access;
+    const { permissions } = apiRoutes.accessSettings.update;
   }
 
   // 시스템 설정 조회
   public async getSystemSettings(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.settings.system;
+    const { permissions } = apiRoutes.systemSettings.read;
   }
 
   // 시스템 설정 수정
   public async setSystemSettings(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.settings.system;
+    const { permissions } = apiRoutes.systemSettings.update;
   }
 
   public verifyPermission(req: Request, permissions: number[] = []): void {}

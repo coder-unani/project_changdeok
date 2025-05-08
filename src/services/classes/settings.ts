@@ -18,28 +18,30 @@ export class SettingsService extends BaseService implements ISettingsService {
 
   public async getSiteSettings(): Promise<IServiceResponse<ISiteSettings>> {
     try {
+      // 사이트 셋팅 조회
       const prismaData = await this.prisma.settings.findUnique({
         where: {
           id: 1,
         },
       });
 
-      console.log('????');
-      console.log('prismaData = ', prismaData);
-
+      // 사이트 셋팅이 존재하지 않으면 예외 발생
       if (!prismaData) {
         throw new NotFoundError('사이트 셋팅이 존재하지 않습니다.');
       }
 
+      // 사이트 셋팅 데이터 반환
       const siteSettings: ISiteSettings = {
-        siteTitle: prismaData?.siteTitle || '',
-        siteTitleEn: prismaData?.siteTitleEn || '',
-        siteFavicon: prismaData?.siteFavicon || '',
-        siteLogo: prismaData?.siteLogo || '',
-        siteDescription: prismaData?.siteDescription || '',
-        siteKeywords: prismaData?.siteKeywords || '',
+        title: prismaData?.title || '',
+        introduction: prismaData?.introduction || '',
+        description: prismaData?.description || '',
+        keywords: prismaData?.keywords || '',
+        favicon: prismaData?.favicon || '',
+        logo: prismaData?.logo || '',
+        ogTagJson: prismaData?.ogTagJson || '',
       };
 
+      // 응답 성공
       return { result: true, data: siteSettings };
     } catch (error) {
       return this.handleError(error);
@@ -48,15 +50,19 @@ export class SettingsService extends BaseService implements ISettingsService {
 
   public async updateSiteSettings(data: IRequestSiteSettings): Promise<IServiceResponse<void>> {
     try {
+      // 사이트 셋팅 업데이트 데이터
       const updateData: Partial<ISiteSettings> = {};
 
-      if (data.title) updateData.siteTitle = data.title;
-      if (data.titleEn) updateData.siteTitleEn = data.titleEn;
-      if (data.description) updateData.siteDescription = data.description;
-      if (data.keywords) updateData.siteKeywords = data.keywords;
-      if (data.favicon) updateData.siteFavicon = data.favicon;
-      if (data.logo) updateData.siteLogo = data.logo;
+      // 사이트 셋팅 업데이트 데이터 설정
+      if (data.title) updateData.title = data.title;
+      if (data.introduction) updateData.introduction = data.introduction;
+      if (data.description) updateData.description = data.description;
+      if (data.keywords) updateData.keywords = data.keywords;
+      if (data.ogTagJson) updateData.ogTagJson = data.ogTagJson;
+      updateData.favicon = data.favicon;
+      updateData.logo = data.logo;
 
+      // 사이트 셋팅 업데이트
       await this.prisma.settings.update({
         where: {
           id: 1,
@@ -64,9 +70,10 @@ export class SettingsService extends BaseService implements ISettingsService {
         data: updateData,
       });
 
+      // 응답 성공
       return { result: true };
     } catch (error) {
-      return { result: false };
+      return this.handleError(error);
     }
   }
   public async getCompanySettings(): Promise<IServiceResponse<any>> {

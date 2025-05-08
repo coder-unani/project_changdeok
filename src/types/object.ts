@@ -136,10 +136,11 @@ export interface IPermission {
 }
 
 export interface ISiteSettings {
-  siteTitle: string;
-  siteTitleEn: string;
-  siteFavicon: string;
-  siteLogo: string;
-  siteDescription: string;
-  siteKeywords: string;
+  title: string;
+  introduction?: string;
+  description?: string;
+  keywords?: string;
+  favicon?: string;
+  logo?: string;
+  ogTagJson?: string;
 }

@@ -49,26 +49,22 @@
   <!-- 사이트 설정 -->
   <div id="site-settings-container" class="hidden">
     <form id="site-settings-form" enctype="multipart/form-data">
+      <input type="hidden" id="favicon-orig" name="faviconOrig" value="<%=data.favicon%>" />
+      <input type="hidden" id="logo-orig" name="logoOrig" value="<%=data.logo%>" />
+      <input type="hidden" id="og-image-orig" name="ogImageOrig" value="" />
+      <input type="hidden" id="og-tag-json" name="ogTagJson" value="<%=data.ogTagJson%>" />
       <ul>
         <li>
-          <label for="site-name">사이트명</label>
-          <input type="text" id="site-name" name="site-name" placeholder="한글명" />
-          <input type="text" id="site-name-en" name="site-name-en" placeholder="영어명" />
+          <label for="title">사이트명</label>
+          <input type="text" id="title" name="title" placeholder="사이트명" value="<%=data.title%>" />
         </li>
         <li>
-          <label for="site-favicon">파비콘</label>
-          <input
-            type="file"
-            id="site-favicon"
-            name="site-favicon"
-            class="hidden"
-            accept="image/x-icon"
-            placeholder="파비콘 주소"
-          />
+          <label for="favicon">파비콘</label>
+          <input type="file" id="favicon" name="favicon" class="hidden" accept="image/x-icon" />
           <div class="relative aspect-3/2 w-full lg:w-[250px]">
             <button
               type="button"
-              id="site-favicon-add"
+              id="favicon-add"
               class="absolute top-0 left-0 h-full w-full cursor-pointer rounded-lg border border-dashed border-gray-200 bg-gray-100"
             >
               <span class="absolute inset-0 flex flex-col items-center justify-center">
@@ -77,12 +73,12 @@
               </span>
             </button>
             <div
-              id="site-favicon-preview-container"
-              class="relative z-10 hidden h-full w-full overflow-hidden rounded-lg"
+              id="favicon-preview-container"
+              class="<% if (!data.favicon) { %>hidden<% } %> relative z-10 h-full w-full overflow-hidden rounded-lg"
             >
               <button
                 type="button"
-                id="site-favicon-delete"
+                id="favicon-delete"
                 class="absolute top-2 right-2 z-20 h-[24px] w-[24px] cursor-pointer rounded-full bg-white opacity-80"
               >
                 <span class="absolute inset-0 flex items-center justify-center">
@@ -99,18 +95,23 @@
                 </span>
               </button>
               <div class="relative z-10 h-full w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
-                <img id="site-favicon-preview" class="h-full w-full object-contain" src="" alt="이미지 미리보기" />
+                <img
+                  id="favicon-preview"
+                  class="h-full w-full object-contain"
+                  src="<%=data.favicon%>"
+                  alt="이미지 미리보기"
+                />
               </div>
             </div>
           </div>
         </li>
         <li>
-          <label for="site-logo">로고</label>
-          <input type="file" id="site-logo" name="site-logo" class="hidden" accept="image/*" placeholder="로고 주소" />
+          <label for="logo">로고</label>
+          <input type="file" id="logo" name="logo" class="hidden" accept="image/*" placeholder="로고 주소" />
           <div class="relative aspect-3/2 w-full lg:w-[250px]">
             <button
               type="button"
-              id="site-logo-add"
+              id="logo-add"
               class="absolute top-0 left-0 h-full w-full cursor-pointer rounded-lg border border-dashed border-gray-200 bg-gray-100"
             >
               <span class="absolute inset-0 flex flex-col items-center justify-center">
@@ -118,10 +119,13 @@
                 <p class="mt-1 text-xs text-gray-400">(512x512)</p>
               </span>
             </button>
-            <div id="site-logo-preview-container" class="relative z-10 hidden h-full w-full overflow-hidden rounded-lg">
+            <div
+              id="logo-preview-container"
+              class="<% if (!data.logo) { %>hidden<% } %> relative z-10 h-full w-full overflow-hidden rounded-lg"
+            >
               <button
                 type="button"
-                id="site-logo-delete"
+                id="logo-delete"
                 class="absolute top-2 right-2 z-20 h-[24px] w-[24px] cursor-pointer rounded-full bg-white opacity-80"
               >
                 <span class="absolute inset-0 flex items-center justify-center">
@@ -138,23 +142,91 @@
                 </span>
               </button>
               <div class="relative z-10 h-full w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
-                <img id="site-logo-preview" class="h-full w-full object-contain" src="" alt="이미지 미리보기" />
+                <img
+                  id="logo-preview"
+                  class="h-full w-full object-contain"
+                  src="<%=data.logo%>"
+                  alt="이미지 미리보기"
+                />
               </div>
             </div>
           </div>
         </li>
         <li>
-          <label for="site-intro">사이트 소개</label>
-          <input type="text" id="site-intro" name="site-intro" placeholder="사이트 소개" />
+          <label for="introduction">사이트 소개</label>
+          <input
+            type="text"
+            id="introduction"
+            name="introduction"
+            value="<%=data.introduction%>"
+            placeholder="사이트 소개"
+          />
         </li>
         <li>
-          <label for="site-description">사이트 설명</label>
-          <textarea id="site-description" name="site-description" placeholder="사이트 설명"></textarea>
+          <label for="description">사이트 설명</label>
+          <textarea id="description" name="description" placeholder="사이트 설명"><%=data.description%></textarea>
         </li>
         <li>
-          <label for="site-keyword">사이트 키워드</label>
-          <input id="site-keyword" name="site-keyword" placeholder="사이트 키워드" />
+          <label for="keyword">사이트 키워드</label>
+          <input id="keyword" name="keywords" value="<%=data.keywords%>" placeholder="사이트 키워드" />
           <p>* 콤마(,)로 구분하여 여러 개의 키워드를 입력할 수 있습니다.</p>
+        </li>
+        <li>
+          <label for="og-title">Open Graph 타이틀</label>
+          <input id="og-title" value="" placeholder="Open Graph 타이틀" />
+        </li>
+        <li>
+          <label for="og-description">Open Graph 설명</label>
+          <input id="og-description" value="" placeholder="Open Graph 설명" />
+        </li>
+        <li>
+          <label for="og-image">Open Graph 이미지</label>
+          <input
+            type="file"
+            id="og-image"
+            name="ogImage"
+            class="hidden"
+            accept="image/*"
+            placeholder="Open Graph 이미지"
+          />
+          <div class="relative aspect-3/2 w-full lg:w-[250px]">
+            <button
+              type="button"
+              id="og-image-add"
+              class="absolute top-0 left-0 h-full w-full cursor-pointer rounded-lg border border-dashed border-gray-200 bg-gray-100"
+            >
+              <span class="absolute inset-0 flex flex-col items-center justify-center">
+                <img class="block w-[50px] opacity-50" src="/images/add-image-512x512.png" alt="이미지 추가" />
+                <p class="mt-1 text-xs text-gray-400">(512x512)</p>
+              </span>
+            </button>
+            <div
+              id="og-image-preview-container"
+              class="<% if (!data.logo) { %>hidden<% } %> relative z-10 h-full w-full overflow-hidden rounded-lg"
+            >
+              <button
+                type="button"
+                id="og-image-delete"
+                class="absolute top-2 right-2 z-20 h-[24px] w-[24px] cursor-pointer rounded-full bg-white opacity-80"
+              >
+                <span class="absolute inset-0 flex items-center justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 384 512"
+                    fill="currentColor"
+                    class="h-[16px] w-[16px] text-gray-400"
+                  >
+                    <path
+                      d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
+                    />
+                  </svg>
+                </span>
+              </button>
+              <div class="relative z-10 h-full w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
+                <img id="og-image-preview" class="h-full w-full object-contain" src="" alt="이미지 미리보기" />
+              </div>
+            </div>
+          </div>
         </li>
       </ul>
       <div class="flex justify-end">
@@ -296,7 +368,24 @@
       currentTab = activeTab;
     };
 
-    switchTab('site-settings');
+    const init = () => {
+      switchTab('site-settings');
+
+      const ogTagJson = document.getElementById('og-tag-json').value;
+      const ogTag = JSON.parse(ogTagJson);
+
+      console.log('ogTag = ', ogTag.image);
+
+      document.getElementById('og-title').value = ogTag.title ? ogTag.title : '';
+      document.getElementById('og-description').value = ogTag.description ? ogTag.description : '';
+      document.getElementById('og-image-preview').src = ogTag.image ? ogTag.image : '';
+      document.getElementById('og-image-orig').value = ogTag.image ? ogTag.image : '';
+      if (ogTag.image) {
+        document.getElementById('og-image-preview-container').classList.remove('hidden');
+      }
+    };
+
+    init();
 
     // 탭 버튼에 이벤트 리스너 추가
     document.querySelectorAll('[data-tab]').forEach((button) => {
@@ -307,51 +396,78 @@
     });
 
     // 파비콘 등록
-    document.getElementById('site-favicon-add').addEventListener('click', (e) => {
+    document.getElementById('favicon-add').addEventListener('click', (e) => {
       e.preventDefault();
-      document.getElementById('site-favicon').click();
+      document.getElementById('favicon').click();
     });
 
     // 파비콘 미리보기
-    document.getElementById('site-favicon').addEventListener('change', (e) => {
+    document.getElementById('favicon').addEventListener('change', (e) => {
       const file = e.target.files[0];
       const reader = new FileReader();
       reader.onload = (e) => {
-        document.getElementById('site-favicon-preview').src = e.target.result;
-        document.getElementById('site-favicon-preview-container').classList.remove('hidden');
+        document.getElementById('favicon-preview').src = e.target.result;
+        document.getElementById('favicon-preview-container').classList.remove('hidden');
       };
       reader.readAsDataURL(file);
     });
 
     // 파비콘 삭제
-    document.getElementById('site-favicon-delete').addEventListener('click', (e) => {
-      document.getElementById('site-favicon').value = '';
-      document.getElementById('site-favicon-preview').src = '';
-      document.getElementById('site-favicon-preview-container').classList.add('hidden');
+    document.getElementById('favicon-delete').addEventListener('click', (e) => {
+      document.getElementById('favicon').value = '';
+      document.getElementById('favicon-orig').value = '';
+      document.getElementById('favicon-preview').src = '';
+      document.getElementById('favicon-preview-container').classList.add('hidden');
     });
 
     // 로고 등록
-    document.getElementById('site-logo-add').addEventListener('click', (e) => {
+    document.getElementById('logo-add').addEventListener('click', (e) => {
       e.preventDefault();
-      document.getElementById('site-logo').click();
+      document.getElementById('logo').click();
     });
 
     // 로고 미리보기
-    document.getElementById('site-logo').addEventListener('change', (e) => {
+    document.getElementById('logo').addEventListener('change', (e) => {
       const file = e.target.files[0];
       const reader = new FileReader();
       reader.onload = (e) => {
-        document.getElementById('site-logo-preview').src = e.target.result;
-        document.getElementById('site-logo-preview-container').classList.remove('hidden');
+        document.getElementById('logo-preview').src = e.target.result;
+        document.getElementById('logo-preview-container').classList.remove('hidden');
       };
       reader.readAsDataURL(file);
     });
 
     // 로고 삭제
-    document.getElementById('site-logo-delete').addEventListener('click', (e) => {
-      document.getElementById('site-logo').value = '';
-      document.getElementById('site-logo-preview').src = '';
-      document.getElementById('site-logo-preview-container').classList.add('hidden');
+    document.getElementById('logo-delete').addEventListener('click', (e) => {
+      document.getElementById('logo').value = '';
+      document.getElementById('logo-orig').value = '';
+      document.getElementById('logo-preview').src = '';
+      document.getElementById('logo-preview-container').classList.add('hidden');
+    });
+
+    // Open Graph 이미지 등록
+    document.getElementById('og-image-add').addEventListener('click', (e) => {
+      e.preventDefault();
+      document.getElementById('og-image').click();
+    });
+
+    // Open Graph 이미지 미리보기
+    document.getElementById('og-image').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        document.getElementById('og-image-preview').src = e.target.result;
+        document.getElementById('og-image-preview-container').classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Open Graph 이미지 삭제
+    document.getElementById('og-image-delete').addEventListener('click', (e) => {
+      document.getElementById('og-image').value = '';
+      document.getElementById('og-image-orig').value = '';
+      document.getElementById('og-image-preview').src = '';
+      document.getElementById('og-image-preview-container').classList.add('hidden');
     });
 
     // 사이트 설정 저장
@@ -359,12 +475,20 @@
       e.preventDefault();
 
       try {
+        const ogTitle = document.getElementById('og-title').value;
+        const ogDescription = document.getElementById('og-description').value;
+        const ogTag = {
+          title: ogTitle,
+          description: ogDescription,
+          image: '',
+        };
+
+        document.getElementById('og-tag-json').value = JSON.stringify(ogTag);
+
         const formData = new FormData(e.target);
 
-        console.log('formData = ', formData);
-
-        const response = await fetch('<%=apiRoutes.settings.site.url%>', {
-          method: '<%=apiRoutes.settings.site.method%>',
+        const response = await fetch('<%=apiRoutes.siteSettings.update.url%>', {
+          method: '<%=apiRoutes.siteSettings.update.method%>',
           body: formData,
         });
 
@@ -373,6 +497,7 @@
         }
 
         alert('사이트 설정이 저장되었습니다.');
+        window.location.reload();
       } catch (error) {
         alert(error.message || '설정 저장 중 오류가 발생했습니다.');
       }

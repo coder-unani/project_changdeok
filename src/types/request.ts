@@ -111,11 +111,12 @@ export interface IRequestEmployeeUpdatePassword extends IRequestEmployeeForceUpd
 
 export interface IRequestSiteSettings {
   title: string;
-  titleEn: string;
-  favicon: string;
-  logo: string;
-  description: string;
-  keywords: string;
+  introduction?: string;
+  description?: string;
+  keywords?: string;
+  favicon?: string;
+  logo?: string;
+  ogTagJson?: string;
 }
 
 export interface IRequestCompanySettings {
