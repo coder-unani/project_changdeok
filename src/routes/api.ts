@@ -4,7 +4,7 @@ import { CORS_API_OPTIONS } from '../config/config';
 import { apiRoutes } from '../config/routes';
 import { ApiController } from '../controllers';
 import { CorsMiddleware } from '../middlewares/api/cors';
-import { MediaUploadMiddleware } from '../middlewares/api/file';
+import { FileUploadMiddleware } from '../middlewares/api/file';
 import { IMiddleware } from '../types/middleware';
 
 const router: Router = Router();
@@ -18,32 +18,63 @@ router.use((req, res, next) => corsMiddleware.handle(req, res, next));
 // router.use((req, res, next) => authMiddleware.handle(req, res, next));
 
 // 배너 이미지 업로드 미들웨어
-const bannerUploadMiddleware = new MediaUploadMiddleware({
-  uploadPath: 'public/uploads/banners/',
-  filter: 'image',
-  useDateFolder: true,
-  convertToWebP: true,
-  webpQuality: 90,
-  fields: [{ name: 'image', maxCount: 1 }],
+const bannerUploadMiddleware = new FileUploadMiddleware({
+  fields: [
+    {
+      filter: 'image',
+      name: 'image',
+      maxCount: 1,
+      uploadPath: 'public/uploads/banners/',
+      useDateFolder: true,
+      convertToWebP: true,
+      webpQuality: 90,
+    },
+  ],
 });
 
 // 컨텐츠 이미지 업로드 미들웨어
-const contentImageUploadMiddleware = new MediaUploadMiddleware({
-  uploadPath: 'public/uploads/contents/',
-  filter: 'image',
-  useDateFolder: true,
-  convertToWebP: true,
-  webpQuality: 90,
-  fields: [{ name: 'image', maxCount: 1 }],
+const contentImageUploadMiddleware = new FileUploadMiddleware({
+  fields: [
+    {
+      filter: 'image',
+      name: 'image',
+      maxCount: 1,
+      uploadPath: 'public/uploads/contents/',
+      useDateFolder: true,
+      convertToWebP: true,
+      webpQuality: 90,
+    },
+  ],
 });
 
-const siteSettingsUploadMiddleware = new MediaUploadMiddleware({
-  uploadPath: 'public/',
-  filter: 'image',
-  useDateFolder: false,
+const siteSettingsUploadMiddleware = new FileUploadMiddleware({
   fields: [
-    { name: 'site-favicon', maxCount: 1, filename: 'favicon' },
-    { name: 'site-logo', maxCount: 1, filename: 'logo', allowOverwrite: false },
+    {
+      filter: 'image',
+      name: 'favicon',
+      maxCount: 1,
+      filename: 'favicon',
+      uploadPath: 'public/',
+      useDateFolder: false,
+    },
+    {
+      filter: 'image',
+      name: 'logo',
+      maxCount: 1,
+      uploadPath: 'public/uploads/logos/',
+      useDateFolder: false,
+      convertToWebP: true,
+      webpQuality: 90,
+    },
+    {
+      filter: 'image',
+      name: 'ogImage',
+      maxCount: 1,
+      uploadPath: 'public/uploads/og-images/',
+      useDateFolder: false,
+      convertToWebP: true,
+      webpQuality: 90,
+    },
   ],
 });
 
@@ -236,29 +267,29 @@ router.patch(
 );
 
 // 회사 설정
-router.get(apiRoutes.settings.company.url, (req: Request, res: Response) => {
+router.get(apiRoutes.companySettings.read.url, (req: Request, res: Response) => {
   apiController.getCompanySettings(req, res);
 });
 
-router.post(apiRoutes.settings.company.url, (req: Request, res: Response) => {
+router.post(apiRoutes.companySettings.update.url, (req: Request, res: Response) => {
   apiController.setCompanySettings(req, res);
 });
 
 // 접속 제한
-router.get(apiRoutes.settings.access.url, (req: Request, res: Response) => {
+router.get(apiRoutes.accessSettings.read.url, (req: Request, res: Response) => {
   apiController.getAccessSettings(req, res);
 });
 
-router.post(apiRoutes.settings.access.url, (req: Request, res: Response) => {
+router.post(apiRoutes.accessSettings.update.url, (req: Request, res: Response) => {
   apiController.setAccessSettings(req, res);
 });
 
 // 시스템 설정
-router.get(apiRoutes.settings.system.url, (req: Request, res: Response) => {
+router.get(apiRoutes.systemSettings.read.url, (req: Request, res: Response) => {
   apiController.getSystemSettings(req, res);
 });
 
-router.post(apiRoutes.settings.system.url, (req: Request, res: Response) => {
+router.post(apiRoutes.systemSettings.update.url, (req: Request, res: Response) => {
   apiController.setSystemSettings(req, res);
 });
 
