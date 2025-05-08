@@ -78,11 +78,17 @@ export const apiRoutes = {
     read: createApiRoute('GET', '사이트 설정 조회', '/settings/site', [1, 6]),
     update: createApiRoute('PATCH', '사이트 설정 수정', '/settings/site', [1, 6]),
   },
-  settings: {
-    site: createApiRoute('POST', '사이트 설정', '/settings/site', [1, 6]),
-    company: createApiRoute('POST', '회사 설정', '/settings/company', [1, 6]),
-    access: createApiRoute('POST', '접속 제한', '/settings/access', [1, 6]),
-    system: createApiRoute('POST', '시스템 설정', '/settings/system', [1, 6]),
+  companySettings: {
+    read: createApiRoute('GET', '회사 설정 조회', '/settings/company', [1, 6]),
+    update: createApiRoute('PATCH', '회사 설정 수정', '/settings/company', [1, 6]),
+  },
+  accessSettings: {
+    read: createApiRoute('GET', '접속 제한 조회', '/settings/access', [1, 6]),
+    update: createApiRoute('PATCH', '접속 제한 수정', '/settings/access', [1, 6]),
+  },
+  systemSettings: {
+    read: createApiRoute('GET', '시스템 설정 조회', '/settings/system', [1, 6]),
+    update: createApiRoute('PATCH', '시스템 설정 수정', '/settings/system', [1, 6]),
   },
 };
 
