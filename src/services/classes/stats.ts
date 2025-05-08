@@ -250,26 +250,36 @@ export class StatsService extends BaseService {
         ],
       });
 
-      // 시간대별 통계 데이터 생성
-      const hourlyData =
-        response.rows?.map((row) => ({
-          hour: parseInt(row.dimensionValues?.[0].value || '0'),
+      // 0-23시 기본 데이터 생성
+      const defaultHourlyData = Array.from({ length: 24 }, (_, hour) => ({
+        hour,
+        activeUsers: 0,
+        sessions: 0,
+        pageViews: 0,
+      }));
+
+      // API 응답 데이터를 기본 데이터에 병합
+      response.rows?.forEach((row) => {
+        const hour = parseInt(row.dimensionValues?.[0].value || '0');
+        defaultHourlyData[hour] = {
+          hour,
           activeUsers: parseInt(row.metricValues?.[0].value || '0'),
           sessions: parseInt(row.metricValues?.[1].value || '0'),
           pageViews: parseInt(row.metricValues?.[2].value || '0'),
-        })) || [];
+        };
+      });
 
       // 메타데이터 생성
       const metadata = {
         startDate, // 조회 시작일
         endDate, // 조회 종료일
-        rowCount: response.rows?.length || 0, // 조회 행 수
+        rowCount: defaultHourlyData.length, // 조회 행 수
       };
 
       return {
         result: true,
         metadata,
-        data: hourlyData,
+        data: defaultHourlyData,
       };
     } catch (error: any) {
       return this.handleError(error);
