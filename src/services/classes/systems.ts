@@ -89,7 +89,7 @@ export class SystemService implements ISystemService {
       if (this.isMacOS()) {
         // macOS - CPU 사용률 확인
         const { stdout } = await execAsync('top -l 1 -stats cpu | grep "CPU usage"');
-        const match = stdout.match(/CPU usage: (\d+\.\d+)% user, (\d+\.\d+)% sys, (\d+\.\d+)% idle/);
+        const match = stdout.match(/CPU usage: (\d+\.\d+)% user, (\d+\.\d+)% sys, (\d+\.\d+)% (?:idle|id)/);
         if (match) {
           const user = parseFloat(match[1]);
           const sys = parseFloat(match[2]);
@@ -103,7 +103,7 @@ export class SystemService implements ISystemService {
       } else {
         // Linux - CPU 사용률 확인
         const { stdout } = await execAsync('top -bn1 | grep "Cpu(s)"');
-        const match = stdout.match(/(\d+\.\d+) us,\s+(\d+\.\d+) sy,\s+(\d+\.\d+) id/);
+        const match = stdout.match(/(\d+\.\d+) us,\s+(\d+\.\d+) sy,\s+(\d+\.\d+) (?:id|idle)/);
         if (match) {
           const user = parseFloat(match[1]);
           const sys = parseFloat(match[2]);
