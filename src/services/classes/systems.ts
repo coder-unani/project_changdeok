@@ -123,20 +123,16 @@ export class SystemService implements ISystemService {
 
   public async restart(): Promise<IServiceResponse> {
     try {
-      // PM2로 프로세스 재시작
-      await execAsync('npx pm2 restart cms_express');
+      // PM2로 프로세스 재시작 (비동기 실행)
+      execAsync('npx pm2 restart cms_express').catch((error) => {
+        console.error('PM2 restart error:', error);
+      });
 
-      // 현재 프로세스 상태 확인
-      const processInfo = await this.checkProcessStatus();
-      if (processInfo.isRunning) {
-        return {
-          result: true,
-          code: 200,
-          message: '서버가 재시작되었습니다.',
-        };
-      }
-
-      throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, 'PM2 재시작 실패');
+      return {
+        result: true,
+        code: 204,
+        message: '서버 재시작이 요청되었습니다.',
+      };
     } catch (error) {
       if (error instanceof AppError) {
         return { result: false, code: error.statusCode, message: error.message };
