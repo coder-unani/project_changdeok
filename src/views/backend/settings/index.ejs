@@ -507,8 +507,8 @@
 
         const formData = new FormData(e.target);
 
-        const response = await fetch('<%=apiRoutes.siteSettings.update.url%>', {
-          method: '<%=apiRoutes.siteSettings.update.method%>',
+        const response = await fetch('<%=apiRoutes.settings.updateSite.url%>', {
+          method: '<%=apiRoutes.settings.updateSite.method%>',
           body: formData,
         });
 
@@ -555,8 +555,8 @@
           lunchtimeEnd: lunchtimeEnd,
         };
 
-        const response = await fetch('<%=apiRoutes.companySettings.update.url%>', {
-          method: '<%=apiRoutes.companySettings.update.method%>',
+        const response = await fetch('<%=apiRoutes.settings.updateCompany.url%>', {
+          method: '<%=apiRoutes.settings.updateCompany.method%>',
           body: {
             companyJson: JSON.stringify(company),
           },
