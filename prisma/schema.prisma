@@ -31,13 +31,13 @@ model Settings {
   id Int @id @default(autoincrement())
   title String
   introduction String?
-  description String?
+  description String? @db.Text
   keywords String?
   favicon String?
   logo String?
   icon String?
   ogTagJson String?
-  companyJson String?
+  companyJson String? @db.Text
   
   @@map("orb_setting")
 }
@@ -66,7 +66,7 @@ model Employee {
   name        String
   password    String
   position    String?
-  description String?
+  description String? @db.Text
   phone       String?
   mobile      String?
   address     String?
@@ -104,7 +104,7 @@ model Employee {
 model Permission {
   id Int @id @default(autoincrement())
   title String
-  description String?
+  description String? @db.Text
   isWrite Boolean @default(false)
   isRead Boolean @default(false)
   isAdmin Boolean @default(false)
@@ -177,7 +177,7 @@ model User {
   address String?
   birthDate DateTime?
   photoUrl String?
-  description String?
+  description String? @db.Text
   isEmployee Boolean @default(false)
   isActivated Boolean @default(true)
   isDeleted Boolean @default(false)
@@ -223,7 +223,7 @@ model ContentGroup {
   id Int @id @default(autoincrement())
   kind String
   title String
-  description String?
+  description String? @db.Text
   bannerTopUrl String?
   sizePerPage Int @default(10)
   isUserWrite Boolean @default(false)
@@ -273,7 +273,7 @@ model Content {
   id Int @id @default(autoincrement())
   groupId Int
   title String
-  content String?
+  content String? @db.Text
   writerId Int?
   writerName String?
   writerEmail String?
@@ -319,7 +319,7 @@ model Content {
   */
 model Comment {
   id Int @id @default(autoincrement())
-  comment String?
+  comment String? @db.Text
   contentId Int
   writerId Int?
   writerName String?
@@ -388,7 +388,7 @@ model BannerGroup {
   id Int @id @default(autoincrement())
   kind String
   title String
-  description String?
+  description String? @db.Text
   imageWidth Int?
   imageHeight Int?
   isDeleted Boolean @default(false)
@@ -429,7 +429,7 @@ model Banner {
   groupId Int
   seq Int
   title String
-  description String?
+  description String? @db.Text
   imagePath String?
   linkType String?
   linkUrl String?
