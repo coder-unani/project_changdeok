@@ -1,13 +1,8 @@
 import { NotFoundError } from '../../common/error';
 import { ExtendedPrismaClient } from '../../library/database';
 import { IServiceResponse } from '../../types/config';
-import { ISettings, ISiteSettings } from '../../types/object';
-import {
-  IRequestAccessSettings,
-  IRequestCompanySettings,
-  IRequestSiteSettings,
-  IRequestSystemSettings,
-} from '../../types/request';
+import { ISettings, ISiteSettings } from '../../types/config';
+import { IRequestAccessSettings, IRequestSiteSettings, IRequestSystemSettings } from '../../types/request';
 import { ISettingsService } from '../../types/service';
 import { BaseService } from './service';
 

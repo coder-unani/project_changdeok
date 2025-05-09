@@ -1,6 +1,6 @@
 import { ExtendedPrismaClient } from '../../library/database';
-import { IServiceResponse } from '../../types/config';
-import { IEmployee, IPermission } from '../../types/object';
+import { IPermission, IServiceResponse } from '../../types/config';
+import { IEmployee } from '../../types/object';
 import { IRequestDefaultList } from '../../types/request';
 import { IPermissionService } from '../../types/service';
 import { BaseService } from './service';

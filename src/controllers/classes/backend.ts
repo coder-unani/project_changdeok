@@ -21,9 +21,8 @@ import { prisma } from '../../library/database';
 import { decryptDataAES } from '../../library/encrypt';
 import { verifyJWT } from '../../library/jwt';
 import { EmployeeService, StatsService } from '../../services';
-import { IPageData, IRoute } from '../../types/config';
+import { IPageData, IPermission, IRoute } from '../../types/config';
 import { IEmployeeToken } from '../../types/object';
-import { IPermission } from '../../types/object';
 import { IRequestBanners, IRequestContents, typeListSort } from '../../types/request';
 import { BaseWebController } from './controller';
 
