@@ -466,15 +466,8 @@
 
         const data = await response.json();
 
-        if (data.success) {
-          alert('서버가 재시작되었습니다. 잠시 후 페이지가 새로고침됩니다.');
-          // 5초 후 페이지 새로고침
-          setTimeout(() => {
-            window.location.reload();
-          }, 5000);
-        } else {
-          throw new Error(data.message || '서버 재시작 중 오류가 발생했습니다.');
-        }
+        alert(data.message);
+        await getSystemStatus();
       } catch (error) {
         alert(error.message || '서버 재시작 중 오류가 발생했습니다.');
       }
