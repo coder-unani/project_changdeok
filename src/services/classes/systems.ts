@@ -124,6 +124,8 @@ export class SystemService implements ISystemService {
       // PM2로 프로세스 재시작
       const { stdout } = await execAsync('npx pm2 restart cms_express');
 
+      console.log('stdout = ', stdout);
+
       // PM2의 출력에 'restarted' 또는 'success'가 포함되어 있으면 성공으로 간주
       if (stdout.includes('restarted') || stdout.includes('success') || stdout.includes('online')) {
         return {
