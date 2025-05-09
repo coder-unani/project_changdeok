@@ -119,27 +119,53 @@ export class SystemService implements ISystemService {
     }
   }
 
-  public async restart(): Promise<IServiceResponse<void>> {
+  public async restart(): Promise<IServiceResponse> {
     try {
       // PM2로 프로세스 재시작
-      const { stdout } = await execAsync('pm2 restart all');
+      const { stdout } = await execAsync('npx pm2 restart cms_express');
 
-      if (stdout.includes('restarted')) {
+      // PM2의 출력에 'restarted' 또는 'success'가 포함되어 있으면 성공으로 간주
+      if (stdout.includes('restarted') || stdout.includes('success') || stdout.includes('online')) {
         return {
           result: true,
           code: 200,
           message: '서버가 재시작되었습니다.',
-          data: undefined,
         };
       } else {
+        // 프로세스가 실행 중인지 확인
+        const { stdout: listOutput } = await execAsync('npx pm2 list');
+        if (listOutput.includes('cms_express') && listOutput.includes('online')) {
+          return {
+            result: true,
+            code: 200,
+            message: '서버가 재시작되었습니다.',
+          };
+        }
         throw new Error('PM2 재시작 실패');
       }
     } catch (error) {
+      // 에러가 발생했지만 프로세스가 실행 중인지 한번 더 확인
+      try {
+        const { stdout: listOutput } = await execAsync('npx pm2 list');
+        if (listOutput.includes('cms_express') && listOutput.includes('online')) {
+          return {
+            result: true,
+            code: 200,
+            message: '서버가 재시작되었습니다.',
+          };
+        }
+      } catch (checkError) {
+        // 프로세스 확인 중 에러가 발생한 경우에만 실패로 처리
+        return {
+          result: false,
+          code: 500,
+          message: '서버 재시작 중 오류가 발생했습니다.',
+        };
+      }
       return {
         result: false,
         code: 500,
         message: '서버 재시작 중 오류가 발생했습니다.',
-        data: undefined,
       };
     }
   }
