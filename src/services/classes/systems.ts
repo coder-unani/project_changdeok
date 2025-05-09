@@ -104,6 +104,7 @@ export class SystemService implements ISystemService {
       } else {
         // Linux - CPU 사용률 확인
         const { stdout } = await execAsync('top -bn1 | grep "Cpu(s)"');
+        console.log('stdout = ', stdout);
         const match = stdout.match(/(\d+\.\d+) us,\s+(\d+\.\d+) sy,\s+(\d+\.\d+) (?:id|idle)/);
         console.log('match = ', match);
         if (match) {
