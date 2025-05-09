@@ -46,6 +46,47 @@
 </div>
 
 <div class="mb-4 space-y-3 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
+  <div id="system-status-container">
+    <div class="mb-2 flex items-center justify-between">
+      <h3 class="text-lg font-semibold">시스템 상태</h3>
+      <div class="flex gap-2">
+        <button
+          id="refresh-system-status"
+          class="rounded bg-blue-500 px-3 py-1 text-sm text-white transition-colors hover:bg-blue-600"
+        >
+          새로고침
+        </button>
+        <button
+          id="restart-server"
+          class="rounded bg-red-500 px-3 py-1 text-sm text-white transition-colors hover:bg-red-600"
+        >
+          재시작
+        </button>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 gap-2 text-sm">
+      <div class="flex items-center gap-2">
+        <span class="font-medium">프로세스:</span>
+        <span id="process-status" class="text-gray-600">-</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="font-medium">CPU:</span>
+        <span id="cpu-status" class="text-gray-600">-</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="font-medium">메모리:</span>
+        <span id="memory-status" class="text-gray-600">-</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="font-medium">가동시간:</span>
+        <span id="uptime" class="text-gray-600">-</span>
+      </div>
+    </div>
+    <p id="system-status-message" class="mt-2 text-sm text-red-500"></p>
+  </div>
+</div>
+
+<div class="mb-4 space-y-3 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
   <!-- 사이트 설정 -->
   <div id="site-settings-container" class="hidden">
     <form id="site-settings-form" enctype="multipart/form-data">
@@ -374,7 +415,72 @@
       currentTab = activeTab;
     };
 
-    const init = () => {
+    const getSystemStatus = async () => {
+      try {
+        const response = await fetch('<%=apiRoutes.systems.status.url%>', {
+          method: '<%=apiRoutes.systems.status.method%>',
+        });
+
+        if (!response.ok) {
+          throw new Error('시스템 상태 확인 중 오류가 발생했습니다.');
+        }
+
+        const data = await response.json();
+
+        const processInfo = data.data.processInfo;
+        const memoryInfo = data.data.memoryInfo;
+        const cpuInfo = data.data.cpuInfo;
+        const uptime = data.data.uptime;
+
+        const processStatus = processInfo.isRunning ? `실행 중 (PID: ${processInfo.pid})` : '중지됨';
+        const memoryStatus = `${memoryInfo.free} / ${memoryInfo.total}`;
+        const cpuStatus = `${cpuInfo.used} / ${cpuInfo.idle}`;
+
+        document.getElementById('process-status').textContent = processStatus;
+        document.getElementById('memory-status').textContent = memoryStatus;
+        document.getElementById('cpu-status').textContent = cpuStatus;
+        document.getElementById('uptime').textContent = uptime;
+        document.getElementById('system-status-message').textContent = '';
+      } catch (error) {
+        document.getElementById('process-status').textContent = '확인 불가';
+        document.getElementById('memory-status').textContent = '확인 불가';
+        document.getElementById('cpu-status').textContent = '확인 불가';
+        document.getElementById('uptime').textContent = '확인 불가';
+        document.getElementById('system-status-message').textContent = '시스템 상태를 불러오는 중 오류가 발생했습니다.';
+      }
+    };
+
+    const restartServer = async () => {
+      if (!confirm('서버를 재시작하시겠습니까?')) {
+        return;
+      }
+
+      try {
+        const response = await fetch('<%=apiRoutes.systems.restart.url%>', {
+          method: '<%=apiRoutes.systems.restart.method%>',
+        });
+
+        if (!response.ok) {
+          throw new Error('서버 재시작 중 오류가 발생했습니다.');
+        }
+
+        const data = await response.json();
+
+        if (data.success) {
+          alert('서버가 재시작되었습니다. 잠시 후 페이지가 새로고침됩니다.');
+          // 5초 후 페이지 새로고침
+          setTimeout(() => {
+            window.location.reload();
+          }, 5000);
+        } else {
+          throw new Error(data.message || '서버 재시작 중 오류가 발생했습니다.');
+        }
+      } catch (error) {
+        alert(error.message || '서버 재시작 중 오류가 발생했습니다.');
+      }
+    };
+
+    const init = async () => {
       try {
         const ogTagJson = document.getElementById('og-tag-json').value;
         const ogTag = JSON.parse(ogTagJson);
@@ -411,6 +517,8 @@
       }
 
       switchTab('site-settings');
+
+      await getSystemStatus();
     };
 
     init();
@@ -585,5 +693,11 @@
         alert(error.message || '설정 저장 중 오류가 발생했습니다.');
       }
     });
+
+    // 새로고침 버튼 이벤트 리스너 추가
+    document.getElementById('refresh-system-status').addEventListener('click', getSystemStatus);
+
+    // 재시작 버튼 이벤트 리스너 추가
+    document.getElementById('restart-server').addEventListener('click', restartServer);
   });
 </script>
