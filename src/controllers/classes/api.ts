@@ -1496,8 +1496,6 @@ export class ApiController {
       const systemService: ISystemService = new SystemService(prisma);
       const result = await systemService.restart();
 
-      console.log('result = ', result);
-
       if (!result.result) {
         throw new AppError(result.code, result.message);
       }

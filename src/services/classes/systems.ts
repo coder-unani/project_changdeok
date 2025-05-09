@@ -122,42 +122,36 @@ export class SystemService implements ISystemService {
   public async restart(): Promise<IServiceResponse> {
     try {
       // PM2로 프로세스 재시작
-      console.error('PM2 재시작 시도...');
       const { stdout } = await execAsync('npx pm2 restart cms_express');
-      console.error('PM2 재시작 결과:', stdout);
 
-      // PM2의 출력에 'restarted' 또는 'success'가 포함되어 있으면 성공으로 간주
-      if (stdout.includes('restarted') || stdout.includes('success') || stdout.includes('online')) {
-        console.error('PM2 재시작 성공');
+      // PM2의 출력에서 테이블 형태의 상태 정보를 확인
+      const lines = stdout.split('\n');
+      const statusLine = lines.find((line) => line.includes('cms_express') && line.includes('online'));
+
+      if (statusLine) {
         return {
           result: true,
           code: 200,
           message: '서버가 재시작되었습니다.',
         };
-      } else {
-        // 프로세스가 실행 중인지 확인
-        console.error('PM2 상태 확인 중...');
-        const { stdout: listOutput } = await execAsync('npx pm2 list');
-        console.error('PM2 상태:', listOutput);
-        if (listOutput.includes('cms_express') && listOutput.includes('online')) {
-          console.error('PM2 프로세스가 정상 실행 중');
-          return {
-            result: true,
-            code: 200,
-            message: '서버가 재시작되었습니다.',
-          };
-        }
-        throw new Error('PM2 재시작 실패');
       }
+
+      // 테이블에서 상태를 찾지 못한 경우, 프로세스가 실행 중인지 한번 더 확인
+      const { stdout: listOutput } = await execAsync('npx pm2 list');
+      if (listOutput.includes('cms_express') && listOutput.includes('online')) {
+        return {
+          result: true,
+          code: 200,
+          message: '서버가 재시작되었습니다.',
+        };
+      }
+
+      throw new Error('PM2 재시작 실패');
     } catch (error) {
-      console.error('PM2 재시작 에러:', error);
       // 에러가 발생했지만 프로세스가 실행 중인지 한번 더 확인
       try {
-        console.error('PM2 상태 재확인 중...');
         const { stdout: listOutput } = await execAsync('npx pm2 list');
-        console.error('PM2 상태:', listOutput);
         if (listOutput.includes('cms_express') && listOutput.includes('online')) {
-          console.error('PM2 프로세스가 정상 실행 중');
           return {
             result: true,
             code: 200,
@@ -165,17 +159,17 @@ export class SystemService implements ISystemService {
           };
         }
       } catch (checkError) {
-        console.error('PM2 상태 확인 실패:', checkError);
+        // 프로세스 확인 중 에러가 발생한 경우에만 실패로 처리
         return {
           result: false,
           code: 500,
-          message: '서버 재시작 중 오류가 발생했습니다.',
+          message: '서버 재시작 중 오류가 발생했습니다. ' + checkError,
         };
       }
       return {
         result: false,
         code: 500,
-        message: '서버 재시작 중 오류가 발생했습니다.',
+        message: '서버 재시작 중 오류가 발생했습니다. ' + error,
       };
     }
   }
