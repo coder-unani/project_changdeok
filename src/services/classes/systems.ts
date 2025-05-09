@@ -1,7 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 
 import { exec } from 'child_process';
+import { spawn } from 'child_process';
 import { platform } from 'os';
+import { join } from 'path';
 import { pid } from 'process';
 import { promisify } from 'util';
 
@@ -119,13 +121,35 @@ export class SystemService implements ISystemService {
 
   public async restart(): Promise<IServiceResponse<void>> {
     try {
-      await execAsync('./restart.sh');
-      return {
-        result: true,
-        code: 200,
-        message: '서버가 재시작되었습니다.',
-        data: undefined,
-      };
+      // 현재 프로세스의 PID 저장
+      const currentPid = pid;
+
+      // 새로운 Node.js 프로세스 시작
+      const appPath = join(process.cwd(), 'dist', 'app.js');
+      const newProcess = spawn('node', [appPath], {
+        detached: true,
+        stdio: 'ignore',
+      });
+
+      // 새 프로세스의 PID 저장
+      const newPid = newProcess.pid;
+
+      // 새 프로세스가 시작되면 현재 프로세스 종료
+      if (newPid) {
+        // 1초 후 현재 프로세스 종료
+        setTimeout(() => {
+          process.kill(currentPid);
+        }, 1000);
+
+        return {
+          result: true,
+          code: 200,
+          message: '서버가 재시작되었습니다.',
+          data: undefined,
+        };
+      } else {
+        throw new Error('새 프로세스 시작 실패');
+      }
     } catch (error) {
       return {
         result: false,
