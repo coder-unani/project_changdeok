@@ -125,7 +125,7 @@ export class SystemService implements ISystemService {
       await execAsync('npx pm2 restart cms_express');
 
       // 잠시 대기하여 프로세스가 재시작될 시간을 줌
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 3000));
 
       // 현재 프로세스 상태 확인
       const processInfo = await this.checkProcessStatus();
