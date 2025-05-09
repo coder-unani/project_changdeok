@@ -237,7 +237,7 @@
   <!-- 회사 설정 -->
   <div id="company-settings-container" class="hidden">
     <form id="company-settings-form">
-      <input type="hidden" id="company-json" name="companyJson" value="<%=data.company%>" />
+      <input type="hidden" id="company-json" name="companyJson" value="<%=data.companyJson%>" />
       <ul>
         <li>
           <label for="company-name">회사명</label>
@@ -375,34 +375,42 @@
     };
 
     const init = () => {
-      switchTab('site-settings');
+      try {
+        const ogTagJson = document.getElementById('og-tag-json').value;
+        const ogTag = JSON.parse(ogTagJson);
 
-      const ogTagJson = document.getElementById('og-tag-json').value;
-      const ogTag = JSON.parse(ogTagJson);
-
-      document.getElementById('og-title').value = ogTag['og:title'] ? ogTag['og:title'] : '';
-      document.getElementById('og-description').value = ogTag['og:description'] ? ogTag['og:description'] : '';
-      document.getElementById('og-image-preview').src = ogTag['og:image'] ? ogTag['og:image'] : '';
-      document.getElementById('og-image-orig').value = ogTag['og:image'] ? ogTag['og:image'] : '';
-      if (ogTag['og:image']) {
-        document.getElementById('og-image-preview-container').classList.remove('hidden');
+        document.getElementById('og-title').value = ogTag['og:title'] ? ogTag['og:title'] : '';
+        document.getElementById('og-description').value = ogTag['og:description'] ? ogTag['og:description'] : '';
+        document.getElementById('og-image-preview').src = ogTag['og:image'] ? ogTag['og:image'] : '';
+        document.getElementById('og-image-orig').value = ogTag['og:image'] ? ogTag['og:image'] : '';
+        if (ogTag['og:image']) {
+          document.getElementById('og-image-preview-container').classList.remove('hidden');
+        }
+      } catch (error) {
+        console.error(error);
       }
 
-      const companyJson = document.getElementById('company-json').value;
-      const company = JSON.parse(companyJson);
+      try {
+        const companyJson = document.getElementById('company-json').value;
+        const company = JSON.parse(companyJson);
 
-      document.getElementById('company-name').value = company.name ? company.name : '';
-      document.getElementById('company-ceo').value = company.ceo ? company.ceo : '';
-      document.getElementById('company-business-number').value = company.businessNumber ? company.businessNumber : '';
-      document.getElementById('company-tel').value = company.tel ? company.tel : '';
-      document.getElementById('company-fax').value = company.fax ? company.fax : '';
-      document.getElementById('company-address').value = company.address ? company.address : '';
-      document.getElementById('company-zip-code').value = company.zipCode ? company.zipCode : '';
-      document.getElementById('company-email').value = company.email ? company.email : '';
-      document.getElementById('company-latitude').value = company.latitude ? company.latitude : '';
-      document.getElementById('company-longitude').value = company.longitude ? company.longitude : '';
-      document.getElementById('company-lunchtime-start').value = company.lunchtimeStart ? company.lunchtimeStart : '';
-      document.getElementById('company-lunchtime-end').value = company.lunchtimeEnd ? company.lunchtimeEnd : '';
+        document.getElementById('company-name').value = company.name ? company.name : '';
+        document.getElementById('company-ceo').value = company.ceo ? company.ceo : '';
+        document.getElementById('company-business-number').value = company.businessNumber ? company.businessNumber : '';
+        document.getElementById('company-tel').value = company.tel ? company.tel : '';
+        document.getElementById('company-fax').value = company.fax ? company.fax : '';
+        document.getElementById('company-address').value = company.address ? company.address : '';
+        document.getElementById('company-zip-code').value = company.zipCode ? company.zipCode : '';
+        document.getElementById('company-email').value = company.email ? company.email : '';
+        document.getElementById('company-latitude').value = company.latitude ? company.latitude : '';
+        document.getElementById('company-longitude').value = company.longitude ? company.longitude : '';
+        document.getElementById('company-lunchtime-start').value = company.lunchtimeStart ? company.lunchtimeStart : '';
+        document.getElementById('company-lunchtime-end').value = company.lunchtimeEnd ? company.lunchtimeEnd : '';
+      } catch (error) {
+        console.error(error);
+      }
+
+      switchTab('site-settings');
     };
 
     init();
@@ -555,11 +563,16 @@
           lunchtimeEnd: lunchtimeEnd,
         };
 
+        console.log(company);
+
         const response = await fetch('<%=apiRoutes.settings.updateCompany.url%>', {
           method: '<%=apiRoutes.settings.updateCompany.method%>',
-          body: {
-            companyJson: JSON.stringify(company),
+          headers: {
+            'Content-Type': 'application/json',
           },
+          body: JSON.stringify({
+            companyJson: JSON.stringify(company),
+          }),
         });
 
         if (!response.ok) {
@@ -567,7 +580,7 @@
         }
 
         alert('회사 설정이 저장되었습니다.');
-        window.location.reload();
+        // window.location.reload();
       } catch (error) {
         alert(error.message || '설정 저장 중 오류가 발생했습니다.');
       }
