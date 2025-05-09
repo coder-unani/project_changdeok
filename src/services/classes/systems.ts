@@ -161,13 +161,13 @@ export class SystemService implements ISystemService {
         return {
           result: false,
           code: 500,
-          message: '서버 재시작 중 오류가 발생했습니다.',
+          message: '서버 재시작 중 오류가 발생했습니다. ' + checkError,
         };
       }
       return {
         result: false,
         code: 500,
-        message: '서버 재시작 중 오류가 발생했습니다.',
+        message: '서버 재시작 중 오류가 발생했습니다. ' + error,
       };
     }
   }
