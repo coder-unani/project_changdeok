@@ -74,21 +74,12 @@ export const apiRoutes = {
     browser: createApiRoute('GET', '브라우저별 통계', '/stats/browser', []),
     accessLogs: createApiRoute('GET', '접속 로그 통계', '/stats/access-logs', []),
   },
-  siteSettings: {
-    read: createApiRoute('GET', '사이트 설정 조회', '/settings/site', [1, 6]),
-    update: createApiRoute('PATCH', '사이트 설정 수정', '/settings/site', [1, 6]),
-  },
-  companySettings: {
-    read: createApiRoute('GET', '회사 설정 조회', '/settings/company', [1, 6]),
-    update: createApiRoute('PATCH', '회사 설정 수정', '/settings/company', [1, 6]),
-  },
-  accessSettings: {
-    read: createApiRoute('GET', '접속 제한 조회', '/settings/access', [1, 6]),
-    update: createApiRoute('PATCH', '접속 제한 수정', '/settings/access', [1, 6]),
-  },
-  systemSettings: {
-    read: createApiRoute('GET', '시스템 설정 조회', '/settings/system', [1, 6]),
-    update: createApiRoute('PATCH', '시스템 설정 수정', '/settings/system', [1, 6]),
+  settings: {
+    read: createApiRoute('GET', '설정 조회', '/settings', [1, 6]),
+    updateSite: createApiRoute('PATCH', '사이트 설정 수정', '/settings/site', [1, 6]),
+    updateCompany: createApiRoute('PATCH', '회사 설정 수정', '/settings/company', [1, 6]),
+    updateAccess: createApiRoute('PATCH', '접속 제한 수정', '/settings/access', [1, 6]),
+    updateSystem: createApiRoute('PATCH', '시스템 설정 수정', '/settings/system', [1, 6]),
   },
 };
 
