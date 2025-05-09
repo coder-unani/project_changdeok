@@ -37,6 +37,7 @@ model Settings {
   logo String?
   icon String?
   ogTagJson String?
+  companyJson String?
   
   @@map("orb_setting")
 }
