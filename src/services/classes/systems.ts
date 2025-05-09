@@ -54,15 +54,15 @@ export class SystemService implements ISystemService {
       if (this.isMacOS()) {
         // macOS - 메모리 정보 확인
         const { stdout } = await execAsync('top -l 1 -stats mem | grep "PhysMem"');
-        const match = stdout.match(/PhysMem: (\d+)M used, (\d+)M wired, (\d+)M unused/);
+        const match = stdout.match(/PhysMem: (\d+)G used \((\d+)M wired, \d+M compressor\), (\d+)M unused/);
         if (match) {
-          const used = parseInt(match[1]);
-          const wired = parseInt(match[2]);
-          const unused = parseInt(match[3]);
-          const total = used + wired + unused;
+          const usedGB = parseInt(match[1]);
+          const wiredMB = parseInt(match[2]);
+          const unusedMB = parseInt(match[3]);
+          const totalMB = usedGB * 1024 + unusedMB;
           return {
-            free: `${unused}MB`,
-            total: `${total}MB`,
+            free: `${unusedMB}MB`,
+            total: `${totalMB}MB`,
           };
         }
       } else {
