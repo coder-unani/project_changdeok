@@ -127,9 +127,9 @@ export class SystemService implements ISystemService {
       // 잠시 대기하여 프로세스가 재시작될 시간을 줌
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // 프로세스가 실행 중인지 확인
-      const { stdout: listOutput } = await execAsync('npx pm2 list');
-      if (listOutput.includes('cms_express') && listOutput.includes('online')) {
+      // 현재 프로세스 상태 확인
+      const processInfo = await this.checkProcessStatus();
+      if (processInfo.isRunning) {
         return {
           result: true,
           code: 200,
