@@ -123,21 +123,31 @@ export class SystemService implements ISystemService {
     try {
       // PM2로 프로세스 재시작
       const { stdout } = await execAsync('npx pm2 restart cms_express');
+      console.log('PM2 restart output:', stdout);
 
       // PM2의 출력에서 테이블 형태의 상태 정보를 확인
       const lines = stdout.split('\n');
-      const statusLine = lines.find((line) => line.includes('cms_express') && line.includes('online'));
+      console.log('Parsed lines:', lines);
 
-      if (statusLine) {
-        return {
-          result: true,
-          code: 200,
-          message: '서버가 재시작되었습니다.',
-        };
+      // 테이블 헤더 이후의 라인에서 상태 확인
+      const tableStartIndex = lines.findIndex((line) => line.includes('┌────┬────────────────'));
+      if (tableStartIndex !== -1) {
+        const statusLine = lines[tableStartIndex + 2]; // 헤더 다음 라인이 실제 데이터
+        console.log('Status line:', statusLine);
+
+        if (statusLine && statusLine.includes('cms_express') && statusLine.includes('online')) {
+          return {
+            result: true,
+            code: 200,
+            message: '서버가 재시작되었습니다.',
+          };
+        }
       }
 
       // 테이블에서 상태를 찾지 못한 경우, 프로세스가 실행 중인지 한번 더 확인
       const { stdout: listOutput } = await execAsync('npx pm2 list');
+      console.log('PM2 list output:', listOutput);
+
       if (listOutput.includes('cms_express') && listOutput.includes('online')) {
         return {
           result: true,
@@ -148,9 +158,12 @@ export class SystemService implements ISystemService {
 
       throw new Error('PM2 재시작 실패');
     } catch (error) {
+      console.error('Restart error:', error);
       // 에러가 발생했지만 프로세스가 실행 중인지 한번 더 확인
       try {
         const { stdout: listOutput } = await execAsync('npx pm2 list');
+        console.log('Error recovery - PM2 list output:', listOutput);
+
         if (listOutput.includes('cms_express') && listOutput.includes('online')) {
           return {
             result: true,
@@ -159,6 +172,7 @@ export class SystemService implements ISystemService {
           };
         }
       } catch (checkError) {
+        console.error('Error recovery check failed:', checkError);
         // 프로세스 확인 중 에러가 발생한 경우에만 실패로 처리
         return {
           result: false,
