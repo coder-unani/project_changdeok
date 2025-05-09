@@ -37,7 +37,7 @@
       <button
         type="submit"
         class="focus:ring-opacity-50 w-full cursor-pointer rounded-md bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        <% if (metadata.recaptchaSiteKey) { %>
+        <% if (!metadata.recaptchaSiteKey) { %>
           disabled
         <% } %>
       >
@@ -64,7 +64,7 @@
         // reCAPTCHA 토큰 추가
         const recaptchaResponse = grecaptcha.getResponse();
         if (!recaptchaResponse) {
-          alert('일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+          alert('보안을 위해 "로봇이 아닙니다" 확인을 해주세요.');
           return;
         }
         data.recaptchaToken = recaptchaResponse;
