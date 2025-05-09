@@ -7,6 +7,8 @@ import { join } from 'path';
 import { pid } from 'process';
 import { promisify } from 'util';
 
+import { AppError } from '../../common/error';
+import { httpStatus } from '../../common/variables';
 import { ICpuInfo, IMemoryInfo, IProcessInfo, IServiceResponse, ISystemStatus } from '../../types/config';
 import { ISystemService } from '../../types/service';
 
@@ -134,12 +136,15 @@ export class SystemService implements ISystemService {
         };
       }
 
-      throw new Error('PM2 재시작 실패');
+      throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, 'PM2 재시작 실패');
     } catch (error) {
+      if (error instanceof AppError) {
+        return { result: false, code: error.statusCode, message: error.message };
+      }
       return {
         result: false,
-        code: 500,
-        message: '서버 재시작 중 오류가 발생했습니다. ' + error,
+        code: httpStatus.INTERNAL_SERVER_ERROR,
+        message: '서버 오류가 발생했습니다.',
       };
     }
   }
