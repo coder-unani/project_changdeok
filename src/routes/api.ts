@@ -289,4 +289,14 @@ router.patch(apiRoutes.settings.updateSystem.url, (req: Request, res: Response) 
   apiController.setSystemSettings(req, res);
 });
 
+// 서비스 재시작
+router.post(apiRoutes.systems.restart.url, (req: Request, res: Response) => {
+  apiController.systemRestart(req, res);
+});
+
+// 서버 상태 확인
+router.get(apiRoutes.systems.status.url, (req: Request, res: Response) => {
+  apiController.systemStatus(req, res);
+});
+
 export default router;

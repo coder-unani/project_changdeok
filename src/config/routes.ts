@@ -81,6 +81,10 @@ export const apiRoutes = {
     updateAccess: createApiRoute('PATCH', '접속 제한 수정', '/settings/access', [1, 6]),
     updateSystem: createApiRoute('PATCH', '시스템 설정 수정', '/settings/system', [1, 6]),
   },
+  systems: {
+    restart: createApiRoute('POST', '서버 재시작', '/systems/restart', [1]),
+    status: createApiRoute('GET', '서버 상태 확인', '/systems/status', [1]),
+  },
 };
 
 export const backendRoutesPrefix = '/admin';

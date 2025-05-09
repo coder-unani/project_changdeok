@@ -1,4 +1,6 @@
+import { exec } from 'child_process';
 import { Request, Response } from 'express';
+import { promisify } from 'util';
 
 import { AppError, AuthError, ForbiddenError, ValidationError } from '../../common/error';
 import { getCookie, removeCookie, setCookie } from '../../common/utils/cookie';
@@ -16,6 +18,7 @@ import {
   PermissionService,
   SettingsService,
   StatsService,
+  SystemService,
 } from '../../services';
 import { IEmployeeToken } from '../../types/object';
 import {
@@ -42,8 +45,9 @@ import {
   IEmployeeService,
   IPermissionService,
   ISettingsService,
+  IStatsService,
+  ISystemService,
 } from '../../types/service';
-import { IStatsService } from '../../types/service';
 
 export class ApiController {
   // 웹사이트 정보
@@ -1484,6 +1488,52 @@ export class ApiController {
   // 시스템 설정 수정
   public async setSystemSettings(req: Request, res: Response): Promise<void> {
     const { permissions } = apiRoutes.settings.updateSystem;
+  }
+
+  // 서버 재시작
+  public async systemRestart(req: Request, res: Response): Promise<void> {
+    try {
+      const systemService: ISystemService = new SystemService(prisma);
+      const result = await systemService.restart();
+
+      if (!result.result) {
+        throw new AppError(result.code, result.message);
+      }
+
+      res.status(200).json({
+        success: true,
+        message: result.message,
+      });
+    } catch (error) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '서버 재시작 중 오류가 발생했습니다.' });
+      }
+    }
+  }
+
+  // 서버 상태 확인
+  public async systemStatus(req: Request, res: Response): Promise<void> {
+    try {
+      const systemService: ISystemService = new SystemService(prisma);
+      const result = await systemService.getStatus();
+
+      if (!result.result) {
+        throw new AppError(result.code, result.message);
+      }
+
+      res.status(200).json({
+        success: true,
+        data: result.data,
+      });
+    } catch (error) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '서버 상태 확인 중 오류가 발생했습니다.' });
+      }
+    }
   }
 
   public verifyPermission(req: Request, permissions: number[] = []): void {}

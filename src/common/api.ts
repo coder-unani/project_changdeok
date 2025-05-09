@@ -1,7 +1,8 @@
 import { CONFIG } from '../config/config';
 import { apiRoutes } from '../config/routes';
 import { IApiResponse } from '../types/config';
-import { IBanner, IBannerGroup, IContent, IContentGroup, IEmployee, IPermission, ISiteSettings } from '../types/object';
+import { IPermission, ISiteSettings, ISystemStatus } from '../types/config';
+import { IBanner, IBannerGroup, IContent, IContentGroup, IEmployee } from '../types/object';
 import { IRequestBanners, IRequestContents } from '../types/request';
 
 let API_BASE_URL = CONFIG.SERVICE_URL;
@@ -132,5 +133,13 @@ export const getApiSiteSettings = async (): Promise<IApiResponse<ISiteSettings>>
 
   return fetchApi<ISiteSettings>(apiUrl, {
     method: apiRoutes.settings.read.method,
+  });
+};
+
+export const getApiSystemStatus = async (): Promise<IApiResponse<ISystemStatus>> => {
+  const apiUrl = `${API_BASE_URL}${apiRoutes.systems.status.url}`;
+
+  return fetchApi<ISystemStatus>(apiUrl, {
+    method: apiRoutes.systems.status.method,
   });
 };

@@ -67,3 +67,67 @@ export interface IApiResponse<T = undefined | null> {
   metadata?: any | null;
   data?: T;
 }
+
+export interface IPermission {
+  id: number;
+  title: string;
+  description: string | null;
+}
+
+export interface ISiteSettings {
+  title: string;
+  introduction?: string;
+  description?: string;
+  keywords?: string;
+  favicon?: string;
+  logo?: string;
+  ogTagJson?: string;
+}
+
+export interface ICompanySettings {
+  name: string;
+  ceo: string;
+  businessNumber: string;
+  tel: string;
+  fax: string;
+  address: string;
+  zipCode: string;
+  email: string;
+  latitude: string;
+  longitude: string;
+  lunchtimeStart: string;
+  lunchtimeEnd: string;
+}
+
+export interface IAccessSettings {
+  blockIp: string[];
+}
+export interface ISystemSettings {
+  uploadMaxSize: number;
+}
+
+export interface ISettings extends ISiteSettings {
+  companyJson: string;
+}
+
+export interface IProcessInfo {
+  isRunning: boolean;
+  pid: number;
+}
+
+export interface IMemoryInfo {
+  free: string;
+  total: string;
+}
+
+export interface ICpuInfo {
+  used: string;
+  idle: string;
+}
+
+export interface ISystemStatus {
+  processInfo: IProcessInfo;
+  memoryInfo: IMemoryInfo;
+  cpuInfo: ICpuInfo;
+  uptime: string;
+}
