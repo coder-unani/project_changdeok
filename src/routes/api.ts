@@ -5,6 +5,7 @@ import { apiRoutes } from '../config/routes';
 import { ApiController } from '../controllers';
 import { CorsMiddleware } from '../middlewares/api/cors';
 import { FileUploadMiddleware } from '../middlewares/api/file';
+import { RecaptchaMiddleware } from '../middlewares/api/recaptcha';
 import { IMiddleware } from '../types/middleware';
 
 const router: Router = Router();
@@ -12,6 +13,9 @@ const router: Router = Router();
 // CORS 설정
 const corsMiddleware: IMiddleware = new CorsMiddleware(CORS_API_OPTIONS);
 router.use((req, res, next) => corsMiddleware.handle(req, res, next));
+
+// reCAPTCHA 미들웨어
+const recaptchaMiddleware: IMiddleware = new RecaptchaMiddleware();
 
 // AUTH 미들웨어
 // const authMiddleware: IMiddleware = new AuthMiddleware();
@@ -193,9 +197,13 @@ router.get(apiRoutes.employees.list.url, (req: Request, res: Response) => {
 });
 
 // 직원 로그인
-router.post(apiRoutes.employees.login.url, (req: Request, res: Response) => {
-  apiController.employeeLogin(req, res);
-});
+router.post(
+  apiRoutes.employees.login.url,
+  (req, res, next) => recaptchaMiddleware.handle(req, res, next),
+  (req: Request, res: Response) => {
+    apiController.employeeLogin(req, res);
+  }
+);
 
 // 직원 로그아웃
 router.post(apiRoutes.employees.logout.url, (req: Request, res: Response) => {

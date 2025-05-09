@@ -29,9 +29,17 @@
           placeholder="비밀번호를 입력하세요"
         />
       </div>
+      <% if (metadata.recaptchaSiteKey) { %>
+        <div class="mb-6 flex justify-center">
+          <div class="g-recaptcha" data-sitekey="<%=metadata.recaptchaSiteKey%>"></div>
+        </div>
+      <% } %>
       <button
         type="submit"
         class="focus:ring-opacity-50 w-full cursor-pointer rounded-md bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        <% if (!metadata.recaptchaSiteKey) { %>
+          disabled
+        <% } %>
       >
         로그인
       </button>
@@ -44,40 +52,56 @@
   </div>
 </div>
 
+<script src="https://www.google.com/recaptcha/api.js" defer></script>
 <script nonce="<%=nonce%>">
-  document.getElementById('formAdminLogin').addEventListener('submit', async (e) => {
-    e.preventDefault();
+  document.addEventListener('DOMContentLoaded', () => {
+    if ('<%=metadata.recaptchaSiteKey%>' !== '') {
+      document.getElementById('formAdminLogin').addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-    // 폼 데이터 수집
-    const formData = new FormData(e.target);
+        const data = {};
+        
+        // reCAPTCHA 토큰 추가
+        const recaptchaResponse = grecaptcha.getResponse();
+        if (!recaptchaResponse) {
+          alert('보안을 위해 "로봇이 아닙니다" 확인을 해주세요.');
+          return;
+        }
+        data.recaptchaToken = recaptchaResponse;
 
-    // 폼 데이터 변환
-    const data = {};
-    formData.forEach((value, key) => {
-      data[key] = value;
-    });
+        // 폼 데이터 수집
+        const formData = new FormData(e.target);
+        // 폼 데이터 변환
+        formData.forEach((value, key) => {
+          data[key] = value;
+        });
 
-    try {
-      // 로그인 API 호출
-      const response = await fetch('<%=apiRoutes.employees.login.url%>', {
-        method: '<%=apiRoutes.employees.login.method%>',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
+        try {
+          // 로그인 API 호출
+          const response = await fetch('<%=apiRoutes.employees.login.url%>', {
+            method: '<%=apiRoutes.employees.login.method%>',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          });
+
+          // 응답 오류
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || response.statusText);
+          }
+
+          // 응답 성공
+          alert('로그인 성공');
+          window.location.href = '<%=routes.index.url%>';
+        } catch (error) {
+          alert(error.message || '서버 오류가 발생했습니다.');
+          grecaptcha.reset();
+        }
       });
-
-      // 응답 오류
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || response.statusText);
-      }
-
-      // 응답 성공
-      alert('로그인 성공');
-      window.location.href = '<%=routes.index.url%>';
-    } catch (error) {
-      alert(error.message || '서버 오류가 발생했습니다.');
+    } else {
+      alert('일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
     }
   });
 </script>

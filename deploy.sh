@@ -8,6 +8,10 @@ git pull origin main
 echo "** 의존성 설치 **"
 npm install
 
+# Prisma 스키마 업데이트
+echo "** Prisma 스키마 업데이트 **"
+npx prisma generate
+
 # Remove ./dist/views
 echo "** ./dist/views 삭제 **"
 rm -rf ./dist/views
