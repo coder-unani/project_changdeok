@@ -441,12 +441,16 @@
         document.getElementById('cpu-status').textContent = cpuStatus;
         document.getElementById('uptime').textContent = uptime;
         document.getElementById('system-status-message').textContent = '';
+
+        return true;
       } catch (error) {
         document.getElementById('process-status').textContent = '확인 불가';
         document.getElementById('memory-status').textContent = '확인 불가';
         document.getElementById('cpu-status').textContent = '확인 불가';
         document.getElementById('uptime').textContent = '확인 불가';
         document.getElementById('system-status-message').textContent = '시스템 상태를 불러오는 중 오류가 발생했습니다.';
+
+        return false;
       }
     };
 
@@ -460,34 +464,15 @@
           method: '<%=apiRoutes.systems.restart.method%>',
         });
 
-        const data = await response.json();
-
-        // 204 응답이 오면 재시작이 요청된 것
-        if (response.status === 204) {
-          alert('서버 재시작이 요청되었습니다. 잠시 후 페이지가 새로고침됩니다.');
-          // 5초 후 페이지 새로고침
-          setTimeout(() => {
-            window.location.reload();
-          }, 5000);
-          return;
-        }
-
-        // 204가 아닌 경우 기존 로직대로 처리
-        if (!response.ok) {
-          throw new Error('서버 재시작 중 오류가 발생했습니다.');
-        }
-
-        alert(data.message);
-        await getSystemStatus();
+        setTimeout(() => {
+          const result = getSystemStatus();
+          if (result) {
+            alert('서버가 재시작되었습니다. 잠시 후 페이지가 새로고침됩니다.');
+          } else {
+            alert('서버 재시작 중 오류가 발생했습니다.');
+          }
+        }, 2000);
       } catch (error) {
-        // 502 에러는 재시작 과정에서 발생하는 정상적인 에러이므로 무시
-        if (error.message.includes('502')) {
-          alert('서버 재시작이 요청되었습니다. 잠시 후 페이지가 새로고침됩니다.');
-          setTimeout(() => {
-            window.location.reload();
-          }, 5000);
-          return;
-        }
         alert(error.message || '서버 재시작 중 오류가 발생했습니다.');
       }
     };
