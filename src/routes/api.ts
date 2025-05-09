@@ -5,6 +5,7 @@ import { apiRoutes } from '../config/routes';
 import { ApiController } from '../controllers';
 import { CorsMiddleware } from '../middlewares/api/cors';
 import { FileUploadMiddleware } from '../middlewares/api/file';
+import { RecaptchaMiddleware } from '../middlewares/api/recaptcha';
 import { IMiddleware } from '../types/middleware';
 
 const router: Router = Router();
@@ -12,6 +13,10 @@ const router: Router = Router();
 // CORS 설정
 const corsMiddleware: IMiddleware = new CorsMiddleware(CORS_API_OPTIONS);
 router.use((req, res, next) => corsMiddleware.handle(req, res, next));
+
+// reCAPTCHA 미들웨어
+const recaptchaMiddleware: IMiddleware = new RecaptchaMiddleware();
+router.use((req: Request, res: Response, next: NextFunction) => recaptchaMiddleware.handle(req, res, next));
 
 // AUTH 미들웨어
 // const authMiddleware: IMiddleware = new AuthMiddleware();

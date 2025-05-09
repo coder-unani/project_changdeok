@@ -47,6 +47,13 @@ export const CONFIG = {
   JWT_EXPIRE_SECOND: Number.isNaN(parseInt(process.env.JWT_EXPIRE_SECOND || ''))
     ? 3600
     : parseInt(process.env.JWT_EXPIRE_SECOND || '3600'),
+  /**
+   * Google reCAPTCHA 설정
+   */
+  RECAPTCHA: {
+    SITE_KEY: process.env.RECAPTCHA_SITE_KEY || '',
+    SECRET_KEY: process.env.RECAPTCHA_SECRET_KEY || '',
+  },
 };
 
 export const CORS_API_OPTIONS = {

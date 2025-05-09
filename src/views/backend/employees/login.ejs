@@ -29,6 +29,9 @@
           placeholder="비밀번호를 입력하세요"
         />
       </div>
+      <div class="mb-6 flex justify-center">
+        <div class="g-recaptcha" data-sitekey="<%=recaptchaSiteKey%>"></div>
+      </div>
       <button
         type="submit"
         class="focus:ring-opacity-50 w-full cursor-pointer rounded-md bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
@@ -44,15 +47,24 @@
   </div>
 </div>
 
+<script nonce="<%=nonce%>" src="https://www.google.com/recaptcha/api.js" defer></script>
 <script nonce="<%=nonce%>">
   document.getElementById('formAdminLogin').addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    const data = {};
+
+    // reCAPTCHA 토큰 추가
+    const recaptchaResponse = grecaptcha.getResponse();
+    if (!recaptchaResponse) {
+      alert('reCAPTCHA를 확인해주세요.');
+      return;
+    }
+    data.recaptchaToken = recaptchaResponse;
+
     // 폼 데이터 수집
     const formData = new FormData(e.target);
-
     // 폼 데이터 변환
-    const data = {};
     formData.forEach((value, key) => {
       data[key] = value;
     });
@@ -78,6 +90,7 @@
       window.location.href = '<%=routes.index.url%>';
     } catch (error) {
       alert(error.message || '서버 오류가 발생했습니다.');
+      grecaptcha.reset();
     }
   });
 </script>
