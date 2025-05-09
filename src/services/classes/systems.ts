@@ -122,13 +122,13 @@ export class SystemService implements ISystemService {
   public async restart(): Promise<IServiceResponse> {
     try {
       // PM2로 프로세스 재시작
+      console.error('PM2 재시작 시도...');
       const { stdout } = await execAsync('npx pm2 restart cms_express');
-
-      console.log('?????');
-      console.log('stdout = ', stdout);
+      console.error('PM2 재시작 결과:', stdout);
 
       // PM2의 출력에 'restarted' 또는 'success'가 포함되어 있으면 성공으로 간주
       if (stdout.includes('restarted') || stdout.includes('success') || stdout.includes('online')) {
+        console.error('PM2 재시작 성공');
         return {
           result: true,
           code: 200,
@@ -136,8 +136,11 @@ export class SystemService implements ISystemService {
         };
       } else {
         // 프로세스가 실행 중인지 확인
+        console.error('PM2 상태 확인 중...');
         const { stdout: listOutput } = await execAsync('npx pm2 list');
+        console.error('PM2 상태:', listOutput);
         if (listOutput.includes('cms_express') && listOutput.includes('online')) {
+          console.error('PM2 프로세스가 정상 실행 중');
           return {
             result: true,
             code: 200,
@@ -147,10 +150,14 @@ export class SystemService implements ISystemService {
         throw new Error('PM2 재시작 실패');
       }
     } catch (error) {
+      console.error('PM2 재시작 에러:', error);
       // 에러가 발생했지만 프로세스가 실행 중인지 한번 더 확인
       try {
+        console.error('PM2 상태 재확인 중...');
         const { stdout: listOutput } = await execAsync('npx pm2 list');
+        console.error('PM2 상태:', listOutput);
         if (listOutput.includes('cms_express') && listOutput.includes('online')) {
+          console.error('PM2 프로세스가 정상 실행 중');
           return {
             result: true,
             code: 200,
@@ -158,17 +165,17 @@ export class SystemService implements ISystemService {
           };
         }
       } catch (checkError) {
-        // 프로세스 확인 중 에러가 발생한 경우에만 실패로 처리
+        console.error('PM2 상태 확인 실패:', checkError);
         return {
           result: false,
           code: 500,
-          message: '서버 재시작 중 오류가 발생했습니다. ' + checkError,
+          message: '서버 재시작 중 오류가 발생했습니다.',
         };
       }
       return {
         result: false,
         code: 500,
-        message: '서버 재시작 중 오류가 발생했습니다. ' + error,
+        message: '서버 재시작 중 오류가 발생했습니다.',
       };
     }
   }
