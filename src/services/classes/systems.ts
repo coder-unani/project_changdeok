@@ -121,26 +121,10 @@ export class SystemService implements ISystemService {
 
   public async restart(): Promise<IServiceResponse<void>> {
     try {
-      // 현재 프로세스의 PID 저장
-      const currentPid = pid;
+      // PM2로 프로세스 재시작
+      const { stdout } = await execAsync('pm2 restart all');
 
-      // 새로운 Node.js 프로세스 시작
-      const appPath = join(process.cwd(), 'dist', 'app.js');
-      const newProcess = spawn('node', [appPath], {
-        detached: true,
-        stdio: 'ignore',
-      });
-
-      // 새 프로세스의 PID 저장
-      const newPid = newProcess.pid;
-
-      // 새 프로세스가 시작되면 현재 프로세스 종료
-      if (newPid) {
-        // 1초 후 현재 프로세스 종료
-        setTimeout(() => {
-          process.kill(currentPid);
-        }, 1000);
-
+      if (stdout.includes('restarted')) {
         return {
           result: true,
           code: 200,
@@ -148,7 +132,7 @@ export class SystemService implements ISystemService {
           data: undefined,
         };
       } else {
-        throw new Error('새 프로세스 시작 실패');
+        throw new Error('PM2 재시작 실패');
       }
     } catch (error) {
       return {
