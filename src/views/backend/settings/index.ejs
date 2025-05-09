@@ -172,22 +172,22 @@
           <p>* 콤마(,)로 구분하여 여러 개의 키워드를 입력할 수 있습니다.</p>
         </li>
         <li>
-          <label for="og-title">Open Graph 타이틀</label>
-          <input id="og-title" value="" placeholder="Open Graph 타이틀" />
+          <label for="og-title">오픈그래프 사이트명</label>
+          <input id="og-title" value="" placeholder="오픈그래프 사이트명" />
         </li>
         <li>
-          <label for="og-description">Open Graph 설명</label>
-          <input id="og-description" value="" placeholder="Open Graph 설명" />
+          <label for="og-description">오픈그래프 설명</label>
+          <input id="og-description" value="" placeholder="오픈그래프 설명" />
         </li>
         <li>
-          <label for="og-image">Open Graph 이미지</label>
+          <label for="og-image">오픈그래프 이미지</label>
           <input
             type="file"
             id="og-image"
             name="ogImage"
             class="hidden"
             accept="image/*"
-            placeholder="Open Graph 이미지"
+            placeholder="오픈그래프 이미지"
           />
           <div class="relative aspect-3/2 w-full lg:w-[250px]">
             <button
@@ -230,59 +230,65 @@
         </li>
       </ul>
       <div class="flex justify-end">
-        <button type="submit" id="btn-site-save">저장</button>
+        <button type="submit">저장</button>
       </div>
     </form>
   </div>
   <!-- 회사 설정 -->
   <div id="company-settings-container" class="hidden">
-    <ul>
-      <li>
-        <label for="company-name">회사명</label>
-        <input type="text" id="company-name" name="company-name" placeholder="회사명" />
-      </li>
-      <li>
-        <label for="company-ceo">대표자</label>
-        <input type="text" id="company-ceo" name="company-ceo" placeholder="대표자" />
-      </li>
-      <li>
-        <label for="company-fax">사업자 번호</label>
-        <input type="text" id="company-fax" name="company-fax" placeholder="사업자 번호" />
-      </li>
-      <li>
-        <label for="company-phone">대표번호</label>
-        <input type="text" id="company-phone" name="company-phone" placeholder="대표번호" />
-      </li>
-      <li>
-        <label for="company-fax">팩스</label>
-        <input type="text" id="company-fax" name="company-fax" placeholder="팩스" />
-      </li>
-      <li>
-        <label for="company-address">주소</label>
-        <input type="text" id="company-address" name="company-address" placeholder="주소" />
-      </li>
-      <li>
-        <label for="company-zip-code">우편번호</label>
-        <input type="text" id="company-zip-code" name="company-zip-code" placeholder="우편번호" />
-      </li>
-      <li>
-        <label for="company-email">이메일</label>
-        <input type="text" id="company-email" name="company-email" placeholder="이메일" />
-      </li>
-      <li>
-        <label for="company-latitude">위도</label>
-        <input type="text" id="company-latitude" name="company-latitude" placeholder="위도" />
-      </li>
-      <li>
-        <label for="company-longitude">경도</label>
-        <input type="text" id="company-longitude" name="company-longitude" placeholder="경도" />
-      </li>
-      <li>
-        <label for="company-lunchtime-start">점심시간</label>
-        <input type="text" id="company-lunchtime-start" name="company-lunchtime-start" placeholder="점심시간" /> ~
-        <input type="text" id="company-lunchtime-end" name="company-lunchtime-end" placeholder="점심시간" />
-      </li>
-    </ul>
+    <form id="company-settings-form">
+      <input type="hidden" id="company-json" name="companyJson" value="<%=data.company%>" />
+      <ul>
+        <li>
+          <label for="company-name">회사명</label>
+          <input type="text" id="company-name" placeholder="회사명" />
+        </li>
+        <li>
+          <label for="company-ceo">대표자</label>
+          <input type="text" id="company-ceo" placeholder="대표자" />
+        </li>
+        <li>
+          <label for="company-fax">사업자 번호</label>
+          <input type="text" id="company-business-number" placeholder="사업자 번호" />
+        </li>
+        <li>
+          <label for="company-phone">대표번호</label>
+          <input type="text" id="company-tel" placeholder="대표번호" />
+        </li>
+        <li>
+          <label for="company-fax">팩스</label>
+          <input type="text" id="company-fax" placeholder="팩스" />
+        </li>
+        <li>
+          <label for="company-address">주소</label>
+          <input type="text" id="company-address" placeholder="주소" />
+        </li>
+        <li>
+          <label for="company-zip-code">우편번호</label>
+          <input type="text" id="company-zip-code" placeholder="우편번호" />
+        </li>
+        <li>
+          <label for="company-email">이메일</label>
+          <input type="text" id="company-email" placeholder="이메일" />
+        </li>
+        <li>
+          <label for="company-latitude">위도</label>
+          <input type="text" id="company-latitude" placeholder="위도" />
+        </li>
+        <li>
+          <label for="company-longitude">경도</label>
+          <input type="text" id="company-longitude" placeholder="경도" />
+        </li>
+        <li>
+          <label for="company-lunchtime-start">점심시간</label>
+          <input type="text" id="company-lunchtime-start" placeholder="점심시간" /> ~
+          <input type="text" id="company-lunchtime-end" placeholder="점심시간" />
+        </li>
+      </ul>
+      <div class="flex justify-end">
+        <button type="submit">저장</button>
+      </div>
+    </form>
   </div>
   <!-- 접속 제한 -->
   <div id="access-settings-container" class="hidden">
@@ -374,15 +380,29 @@
       const ogTagJson = document.getElementById('og-tag-json').value;
       const ogTag = JSON.parse(ogTagJson);
 
-      console.log('ogTag = ', ogTag.image);
-
-      document.getElementById('og-title').value = ogTag.title ? ogTag.title : '';
-      document.getElementById('og-description').value = ogTag.description ? ogTag.description : '';
-      document.getElementById('og-image-preview').src = ogTag.image ? ogTag.image : '';
-      document.getElementById('og-image-orig').value = ogTag.image ? ogTag.image : '';
-      if (ogTag.image) {
+      document.getElementById('og-title').value = ogTag['og:title'] ? ogTag['og:title'] : '';
+      document.getElementById('og-description').value = ogTag['og:description'] ? ogTag['og:description'] : '';
+      document.getElementById('og-image-preview').src = ogTag['og:image'] ? ogTag['og:image'] : '';
+      document.getElementById('og-image-orig').value = ogTag['og:image'] ? ogTag['og:image'] : '';
+      if (ogTag['og:image']) {
         document.getElementById('og-image-preview-container').classList.remove('hidden');
       }
+
+      const companyJson = document.getElementById('company-json').value;
+      const company = JSON.parse(companyJson);
+
+      document.getElementById('company-name').value = company.name ? company.name : '';
+      document.getElementById('company-ceo').value = company.ceo ? company.ceo : '';
+      document.getElementById('company-business-number').value = company.businessNumber ? company.businessNumber : '';
+      document.getElementById('company-tel').value = company.tel ? company.tel : '';
+      document.getElementById('company-fax').value = company.fax ? company.fax : '';
+      document.getElementById('company-address').value = company.address ? company.address : '';
+      document.getElementById('company-zip-code').value = company.zipCode ? company.zipCode : '';
+      document.getElementById('company-email').value = company.email ? company.email : '';
+      document.getElementById('company-latitude').value = company.latitude ? company.latitude : '';
+      document.getElementById('company-longitude').value = company.longitude ? company.longitude : '';
+      document.getElementById('company-lunchtime-start').value = company.lunchtimeStart ? company.lunchtimeStart : '';
+      document.getElementById('company-lunchtime-end').value = company.lunchtimeEnd ? company.lunchtimeEnd : '';
     };
 
     init();
@@ -478,9 +498,9 @@
         const ogTitle = document.getElementById('og-title').value;
         const ogDescription = document.getElementById('og-description').value;
         const ogTag = {
-          title: ogTitle,
-          description: ogDescription,
-          image: '',
+          'og:title': ogTitle,
+          'og:description': ogDescription,
+          'og:image': '',
         };
 
         document.getElementById('og-tag-json').value = JSON.stringify(ogTag);
@@ -497,6 +517,56 @@
         }
 
         alert('사이트 설정이 저장되었습니다.');
+        window.location.reload();
+      } catch (error) {
+        alert(error.message || '설정 저장 중 오류가 발생했습니다.');
+      }
+    });
+
+    // 회사 설정 저장
+    document.getElementById('company-settings-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      try {
+        const companyName = document.getElementById('company-name').value;
+        const ceo = document.getElementById('company-ceo').value;
+        const businessNumber = document.getElementById('company-business-number').value;
+        const tel = document.getElementById('company-tel').value;
+        const fax = document.getElementById('company-fax').value;
+        const address = document.getElementById('company-address').value;
+        const zipCode = document.getElementById('company-zip-code').value;
+        const email = document.getElementById('company-email').value;
+        const latitude = document.getElementById('company-latitude').value;
+        const longitude = document.getElementById('company-longitude').value;
+        const lunchtimeStart = document.getElementById('company-lunchtime-start').value;
+        const lunchtimeEnd = document.getElementById('company-lunchtime-end').value;
+
+        const company = {
+          name: companyName,
+          ceo: ceo,
+          businessNumber: businessNumber,
+          tel: tel,
+          fax: fax,
+          address: address,
+          zipCode: zipCode,
+          email: email,
+          latitude: latitude,
+          longitude: longitude,
+          lunchtimeStart: lunchtimeStart,
+          lunchtimeEnd: lunchtimeEnd,
+        };
+
+        const response = await fetch('<%=apiRoutes.companySettings.update.url%>', {
+          method: '<%=apiRoutes.companySettings.update.method%>',
+          body: {
+            companyJson: JSON.stringify(company),
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('설정 저장 중 오류가 발생했습니다.');
+        }
+
+        alert('회사 설정이 저장되었습니다.');
         window.location.reload();
       } catch (error) {
         alert(error.message || '설정 저장 중 오류가 발생했습니다.');

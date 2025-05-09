@@ -1327,8 +1327,8 @@ export class ApiController {
   }
 
   // 기본 설정 조회
-  public async getSiteSettings(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.siteSettings.read;
+  public async getSettings(req: Request, res: Response): Promise<void> {
+    const { permissions } = apiRoutes.settings.read;
 
     try {
       // 접근 권한 체크
@@ -1336,7 +1336,7 @@ export class ApiController {
 
       // 사이트 설정 조회
       const settingsService: ISettingsService = new SettingsService(prisma);
-      const result = await settingsService.getSiteSettings();
+      const result = await settingsService.getSettings();
 
       // 조회 실패 처리
       if (!result.result) {
@@ -1356,9 +1356,9 @@ export class ApiController {
     }
   }
 
-  // 기본 설정 수정
+  // 사이트 설정 수정
   public async setSiteSettings(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.siteSettings.update;
+    const { permissions } = apiRoutes.settings.updateSite;
 
     try {
       // 접근 권한 체크
@@ -1414,7 +1414,7 @@ export class ApiController {
 
       // OG태그 이미지 파일 경로 삽입
       const ogTag = req.body.ogTagJson ? JSON.parse(req.body.ogTagJson) : {};
-      ogTag.image = ogImagePath || req.body.ogImageOrig || '';
+      ogTag['og:image'] = ogImagePath || req.body.ogImageOrig || '';
 
       // 요청 데이터
       const requestData: IRequestSiteSettings = {
@@ -1448,34 +1448,42 @@ export class ApiController {
     }
   }
 
-  // 회사 설정 조회
-  public async getCompanySettings(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.companySettings.read;
-  }
-
   // 회사 설정 수정
   public async setCompanySettings(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.companySettings.update;
+    const { permissions } = apiRoutes.settings.updateCompany;
+
+    try {
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+
+      // 회사 설정 수정
+      const settingsService: ISettingsService = new SettingsService(prisma);
+      const result = await settingsService.updateCompanySettings(req.body.companyJson);
+
+      // 수정 실패 처리
+      if (!result.result) {
+        throw new AppError(result.code, result.message);
+      }
+
+      // 응답 성공
+      res.status(httpStatus.NO_CONTENT).send(null);
+    } catch (error) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      } else {
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+      }
+    }
   }
 
-  // 접속 제한 조회
-  public async getAccessSettings(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.accessSettings.read;
-  }
-
-  // 접속 제한 수정
+  // 접속 설정 수정
   public async setAccessSettings(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.accessSettings.update;
-  }
-
-  // 시스템 설정 조회
-  public async getSystemSettings(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.systemSettings.read;
+    const { permissions } = apiRoutes.settings.updateAccess;
   }
 
   // 시스템 설정 수정
   public async setSystemSettings(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.systemSettings.update;
+    const { permissions } = apiRoutes.settings.updateSystem;
   }
 
   public verifyPermission(req: Request, permissions: number[] = []): void {}

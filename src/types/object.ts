@@ -144,3 +144,29 @@ export interface ISiteSettings {
   logo?: string;
   ogTagJson?: string;
 }
+
+export interface ICompanySettings {
+  name: string;
+  ceo: string;
+  businessNumber: string;
+  tel: string;
+  fax: string;
+  address: string;
+  zipCode: string;
+  email: string;
+  latitude: string;
+  longitude: string;
+  lunchtimeStart: string;
+  lunchtimeEnd: string;
+}
+
+export interface IAccessSettings {
+  blockIp: string[];
+}
+export interface ISystemSettings {
+  uploadMaxSize: number;
+}
+
+export interface ISettings extends ISiteSettings {
+  companyJson: string;
+}

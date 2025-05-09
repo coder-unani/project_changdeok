@@ -1,5 +1,5 @@
 import { IServiceResponse } from './config';
-import { IBanner, IBannerGroup, IContent, IContentGroup, IEmployee, IPermission } from './object';
+import { IBanner, IBannerGroup, IContent, IContentGroup, IEmployee, IPermission, ISettings } from './object';
 import {
   IRequestAccessSettings,
   IRequestBannerUpdate,
@@ -71,12 +71,9 @@ export interface IStatsService {
 }
 
 export interface ISettingsService {
-  getSiteSettings(): Promise<IServiceResponse<any>>;
-  updateSiteSettings(data: IRequestSiteSettings): Promise<IServiceResponse<any>>;
-  getCompanySettings(): Promise<IServiceResponse<any>>;
-  updateCompanySettings(data: IRequestCompanySettings): Promise<IServiceResponse<any>>;
-  getAccessSettings(): Promise<IServiceResponse<any>>;
-  updateAccessSettings(data: IRequestAccessSettings): Promise<IServiceResponse<any>>;
-  getSystemSettings(): Promise<IServiceResponse<any>>;
-  updateSystemSettings(data: IRequestSystemSettings): Promise<IServiceResponse<any>>;
+  getSettings(): Promise<IServiceResponse<ISettings>>;
+  updateSiteSettings(data: IRequestSiteSettings): Promise<IServiceResponse<void>>;
+  updateCompanySettings(data: string): Promise<IServiceResponse<void>>;
+  updateAccessSettings(data: IRequestAccessSettings): Promise<IServiceResponse<void>>;
+  updateSystemSettings(data: IRequestSystemSettings): Promise<IServiceResponse<void>>;
 }

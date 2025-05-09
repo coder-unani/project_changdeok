@@ -253,13 +253,13 @@ router.get(apiRoutes.stats.accessLogs.url, (req: Request, res: Response) => {
 });
 
 // 기본 설정
-router.get(apiRoutes.siteSettings.read.url, (req: Request, res: Response) => {
-  apiController.getSiteSettings(req, res);
+router.get(apiRoutes.settings.read.url, (req: Request, res: Response) => {
+  apiController.getSettings(req, res);
 });
 
 // 기본 설정 수정
 router.patch(
-  apiRoutes.siteSettings.update.url,
+  apiRoutes.settings.updateSite.url,
   (req: Request, res: Response, next: NextFunction) => siteSettingsUploadMiddleware.handle(req, res, next),
   (req: Request, res: Response) => {
     apiController.setSiteSettings(req, res);
@@ -267,29 +267,17 @@ router.patch(
 );
 
 // 회사 설정
-router.get(apiRoutes.companySettings.read.url, (req: Request, res: Response) => {
-  apiController.getCompanySettings(req, res);
-});
-
-router.post(apiRoutes.companySettings.update.url, (req: Request, res: Response) => {
+router.patch(apiRoutes.settings.updateCompany.url, (req: Request, res: Response) => {
   apiController.setCompanySettings(req, res);
 });
 
-// 접속 제한
-router.get(apiRoutes.accessSettings.read.url, (req: Request, res: Response) => {
-  apiController.getAccessSettings(req, res);
-});
-
-router.post(apiRoutes.accessSettings.update.url, (req: Request, res: Response) => {
+// 접속 설정
+router.patch(apiRoutes.settings.updateAccess.url, (req: Request, res: Response) => {
   apiController.setAccessSettings(req, res);
 });
 
 // 시스템 설정
-router.get(apiRoutes.systemSettings.read.url, (req: Request, res: Response) => {
-  apiController.getSystemSettings(req, res);
-});
-
-router.post(apiRoutes.systemSettings.update.url, (req: Request, res: Response) => {
+router.patch(apiRoutes.settings.updateSystem.url, (req: Request, res: Response) => {
   apiController.setSystemSettings(req, res);
 });
 

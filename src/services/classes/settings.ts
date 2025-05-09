@@ -1,7 +1,7 @@
 import { NotFoundError } from '../../common/error';
 import { ExtendedPrismaClient } from '../../library/database';
 import { IServiceResponse } from '../../types/config';
-import { ISiteSettings } from '../../types/object';
+import { ISettings, ISiteSettings } from '../../types/object';
 import {
   IRequestAccessSettings,
   IRequestCompanySettings,
@@ -16,7 +16,7 @@ export class SettingsService extends BaseService implements ISettingsService {
     super(prisma);
   }
 
-  public async getSiteSettings(): Promise<IServiceResponse<ISiteSettings>> {
+  public async getSettings(): Promise<IServiceResponse<ISettings>> {
     try {
       // 사이트 셋팅 조회
       const prismaData = await this.prisma.settings.findUnique({
@@ -31,7 +31,7 @@ export class SettingsService extends BaseService implements ISettingsService {
       }
 
       // 사이트 셋팅 데이터 반환
-      const siteSettings: ISiteSettings = {
+      const settings: ISettings = {
         title: prismaData?.title || '',
         introduction: prismaData?.introduction || '',
         description: prismaData?.description || '',
@@ -39,10 +39,11 @@ export class SettingsService extends BaseService implements ISettingsService {
         favicon: prismaData?.favicon || '',
         logo: prismaData?.logo || '',
         ogTagJson: prismaData?.ogTagJson || '',
+        companyJson: prismaData?.companyJson || '',
       };
 
       // 응답 성공
-      return { result: true, data: siteSettings };
+      return { result: true, data: settings };
     } catch (error) {
       return this.handleError(error);
     }
@@ -76,22 +77,31 @@ export class SettingsService extends BaseService implements ISettingsService {
       return this.handleError(error);
     }
   }
-  public async getCompanySettings(): Promise<IServiceResponse<any>> {
-    return { result: true, data: {} };
+
+  public async updateCompanySettings(data: string): Promise<IServiceResponse<void>> {
+    try {
+      // 회사 셋팅 업데이트
+      await this.prisma.settings.update({
+        where: {
+          id: 1,
+        },
+        data: {
+          companyJson: data,
+        },
+      });
+
+      // 응답 성공
+      return { result: true };
+    } catch (error) {
+      return this.handleError(error);
+    }
   }
-  public async updateCompanySettings(data: IRequestCompanySettings): Promise<IServiceResponse<any>> {
-    return { result: true, data: {} };
+
+  public async updateAccessSettings(data: IRequestAccessSettings): Promise<IServiceResponse<void>> {
+    return { result: true };
   }
-  public async getAccessSettings(): Promise<IServiceResponse<any>> {
-    return { result: true, data: {} };
-  }
-  public async updateAccessSettings(data: IRequestAccessSettings): Promise<IServiceResponse<any>> {
-    return { result: true, data: {} };
-  }
-  public async getSystemSettings(): Promise<IServiceResponse<any>> {
-    return { result: true, data: {} };
-  }
-  public async updateSystemSettings(data: IRequestSystemSettings): Promise<IServiceResponse<any>> {
-    return { result: true, data: {} };
+
+  public async updateSystemSettings(data: IRequestSystemSettings): Promise<IServiceResponse<void>> {
+    return { result: true };
   }
 }
