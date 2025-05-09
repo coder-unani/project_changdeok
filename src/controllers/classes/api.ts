@@ -1500,10 +1500,7 @@ export class ApiController {
         throw new AppError(result.code, result.message);
       }
 
-      res.status(200).json({
-        success: true,
-        message: result.message,
-      });
+      res.status(httpStatus.NO_CONTENT).send(null);
     } catch (error) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });

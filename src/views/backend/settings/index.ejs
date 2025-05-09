@@ -464,6 +464,10 @@
           method: '<%=apiRoutes.systems.restart.method%>',
         });
 
+        if (!response.ok) {
+          throw new Error('서버 재시작 중 오류가 발생했습니다.');
+        }
+
         setTimeout(() => {
           const result = getSystemStatus();
           if (result) {
