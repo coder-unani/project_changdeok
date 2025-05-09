@@ -16,7 +16,6 @@ router.use((req, res, next) => corsMiddleware.handle(req, res, next));
 
 // reCAPTCHA 미들웨어
 const recaptchaMiddleware: IMiddleware = new RecaptchaMiddleware();
-router.use((req: Request, res: Response, next: NextFunction) => recaptchaMiddleware.handle(req, res, next));
 
 // AUTH 미들웨어
 // const authMiddleware: IMiddleware = new AuthMiddleware();
@@ -198,9 +197,13 @@ router.get(apiRoutes.employees.list.url, (req: Request, res: Response) => {
 });
 
 // 직원 로그인
-router.post(apiRoutes.employees.login.url, (req: Request, res: Response) => {
-  apiController.employeeLogin(req, res);
-});
+router.post(
+  apiRoutes.employees.login.url,
+  (req, res, next) => recaptchaMiddleware.handle(req, res, next),
+  (req: Request, res: Response) => {
+    apiController.employeeLogin(req, res);
+  }
+);
 
 // 직원 로그아웃
 router.post(apiRoutes.employees.logout.url, (req: Request, res: Response) => {

@@ -50,10 +50,8 @@ export const CONFIG = {
   /**
    * Google reCAPTCHA 설정
    */
-  RECAPTCHA: {
-    SITE_KEY: process.env.RECAPTCHA_SITE_KEY || '',
-    SECRET_KEY: process.env.RECAPTCHA_SECRET_KEY || '',
-  },
+  RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY || '',
+  RECAPTCHA_SECRET_KEY: process.env.RECAPTCHA_SECRET_KEY || '',
 };
 
 export const CORS_API_OPTIONS = {

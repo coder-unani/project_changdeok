@@ -103,7 +103,6 @@ router.get(backendRoutes.contents.update.url, function (req, res) {
 
 // 직원: 로그인
 router.get(backendRoutes.employees.login.url, function (req, res) {
-  res.locals.recaptchaSiteKey = CONFIG.RECAPTCHA.SITE_KEY;
   backendController.employeeLogin(backendRoutes.employees.login, req, res);
 });
 

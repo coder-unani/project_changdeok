@@ -737,8 +737,12 @@ export class BackendController extends BaseWebController {
   // 직원 로그인
   public employeeLogin = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
+      const metadata = {
+        recaptchaSiteKey: CONFIG.RECAPTCHA_SITE_KEY,
+      };
+
       // 페이지 데이터 생성
-      const data = this.createPageData(route);
+      const data = this.createPageData(route, '', metadata);
 
       // 로그인 페이지 렌더링
       res.render(route.view, data);
