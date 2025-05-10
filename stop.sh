@@ -8,17 +8,17 @@ if ! sudo systemctl stop nginx.service; then
 fi
 
 # Check if the process exists in PM2
-if npx pm2 list | grep -q "cms_express"; then
+if pm2 list | grep -q "cms_express"; then
     # Stop the application using PM2
     echo "** 애플리케이션 PM2로 중지 **"
-    if ! npx pm2 stop cms_express; then
+    if ! pm2 stop cms_express; then
         echo "** 애플리케이션 중지 실패 **"
         exit 1
     fi
 
     # Delete the process from PM2
     echo "** PM2에서 프로세스 제거 **"
-    if ! npx pm2 delete cms_express; then
+    if ! pm2 delete cms_express; then
         echo "** PM2에서 프로세스 제거 실패 **"
         exit 1
     fi
