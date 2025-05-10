@@ -24,3 +24,7 @@ if ! npx pm2 save; then
 fi
 
 echo "** 모든 서비스가 성공적으로 시작되었습니다. **" 
+
+# Show PM2 logs
+echo "** PM2 로그를 표시합니다. **"
+npx pm2 logs cms_express 
