@@ -128,7 +128,7 @@ export const getApiPermissionList = async (page: number, pageSize: number): Prom
   });
 };
 
-export const getApiSiteSettings = async (): Promise<IApiResponse<ISiteSettings>> => {
+export const getApiSettings = async (): Promise<IApiResponse<ISiteSettings>> => {
   const apiUrl = `${API_BASE_URL}${apiRoutes.settings.read.url}`;
 
   return fetchApi<ISiteSettings>(apiUrl, {

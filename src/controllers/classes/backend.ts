@@ -9,7 +9,7 @@ import {
   getApiContents,
   getApiEmployeeDetail,
   getApiPermissionList,
-  getApiSiteSettings,
+  getApiSettings,
 } from '../../common/api';
 import { AppError, AuthError, NotFoundError, ValidationError } from '../../common/error';
 import { getCookie } from '../../common/utils/cookie';
@@ -780,7 +780,7 @@ export class BackendController extends BaseWebController {
   public settings = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 사이트 설정 조회
-      const { result, data: siteSettings } = await getApiSiteSettings();
+      const { result, data: siteSettings } = await getApiSettings();
 
       // 결과가 없는 경우 에러 페이지로 이동
       if (!result || !siteSettings) {
