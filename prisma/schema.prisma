@@ -13,6 +13,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/*
+1	
+123	
+/favicon.ico		
+123	
+123		
+오르빗코드	
+{"og:title":"233","og:description":"333","og:image":"/uploads/og-images/1746795358317-726053994.webp"}	
+{"name":"Orbitcode1","ceo":"오르빗코드","businessNumber":"12345","tel":"1234","fax":"1234","address":"와부읍 덕소로 206","zipCode":"12274","email":"123145","latitude":"","longitude":"","lunchtimeStart":"12","lunchtimeEnd":"13"}						
+*/
 /**
   * Settings (설정)
   * - id: ID (자동 증가)
@@ -23,7 +33,7 @@ datasource db {
   * - favicon: 파비콘
   * - logo: 로고
   * - icon: 아이콘
-  * - ogTagJson: OG 태그 (JSON 형식)
+  * - ogTagJson: 오픈그래프 태그 (JSON 형식)
   * - createdAt: 생성일
   * - updatedAt: 수정일
   **/
@@ -38,7 +48,15 @@ model Settings {
   icon String?
   ogTagJson String?
   companyJson String? @db.Text
-  
+  serviceDomain String? 
+  servicePort Int @default(80)
+  expressDomain String @default("localhost")
+  expressPort Int @default(3000)
+  maxUploadSize Int @default(20) // MB
+  jwtExpireSecond Int @default(3600) // 1시간
+  enabledTagsJson String? @db.Text
+  enabledCorsJson String? @db.Text
+
   @@map("orb_setting")
 }
 
