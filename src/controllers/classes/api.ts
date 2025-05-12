@@ -58,11 +58,7 @@ export class ApiController {
       const response = formatApiResponse(true, null, null, null, companyInfo);
       res.status(httpStatus.OK).json(response);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -135,11 +131,7 @@ export class ApiController {
       // 등록 성공
       res.status(httpStatus.CREATED).send(null);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -170,11 +162,7 @@ export class ApiController {
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
       res.status(httpStatus.OK).json(response);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -237,11 +225,7 @@ export class ApiController {
       // 수정 성공
       res.status(httpStatus.NO_CONTENT).send(null);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -271,11 +255,7 @@ export class ApiController {
       // 삭제 성공
       res.status(httpStatus.NO_CONTENT).send(null);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -321,11 +301,7 @@ export class ApiController {
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
       res.status(httpStatus.OK).json(response);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -357,11 +333,7 @@ export class ApiController {
       // 응답 성공
       res.status(httpStatus.OK).json(response);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -402,11 +374,7 @@ export class ApiController {
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
       res.status(httpStatus.OK).json(response);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -450,11 +418,7 @@ export class ApiController {
       // 등록 성공
       res.status(httpStatus.CREATED).send(null);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -490,11 +454,7 @@ export class ApiController {
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
       res.status(httpStatus.OK).json(response);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -532,11 +492,7 @@ export class ApiController {
       // 수정 성공
       res.status(httpStatus.NO_CONTENT).send(null);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -575,11 +531,7 @@ export class ApiController {
       // 삭제 성공
       res.status(httpStatus.NO_CONTENT).send(null);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -592,8 +544,7 @@ export class ApiController {
     try {
       // 파일이 없는 경우
       if (!req.files) {
-        res.status(400).json({ message: '업로드할 파일이 없습니다.' });
-        return;
+        throw new ValidationError('업로드할 파일이 없습니다.');
       }
 
       // req.files는 이제 { [fieldname: string]: Express.Multer.File[] } 형태
@@ -602,15 +553,13 @@ export class ApiController {
       // 첫 번째 필드의 첫 번째 파일을 가져옴
       const firstFieldName = Object.keys(files)[0];
       if (!firstFieldName || !files[firstFieldName] || files[firstFieldName].length === 0) {
-        res.status(400).json({ message: '업로드할 파일이 없습니다.' });
-        return;
+        throw new ValidationError('업로드할 파일이 없습니다.');
       }
 
       // 파일 정보
       const file = files[firstFieldName][0];
       if (!file.path || typeof file.path !== 'string') {
-        res.status(400).json({ message: '업로드할 파일이 없습니다.' });
-        return;
+        throw new ValidationError('업로드할 파일이 없습니다.');
       }
 
       // 파일 경로
@@ -622,8 +571,7 @@ export class ApiController {
         message: '이미지 업로드 성공',
       });
     } catch (error) {
-      console.error('컨텐츠 이미지 업로드 오류:', error);
-      res.status(500).json({ message: '이미지 업로드 중 오류가 발생했습니다.' });
+      this.handleError(error, res);
     }
   }
 
@@ -656,11 +604,7 @@ export class ApiController {
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
       res.status(httpStatus.OK).json(response);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -698,11 +642,7 @@ export class ApiController {
       // 등록 성공
       res.status(httpStatus.CREATED).send(null);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -735,11 +675,7 @@ export class ApiController {
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
       res.status(httpStatus.OK).json(response);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -787,11 +723,7 @@ export class ApiController {
       // 수정 성공
       res.status(httpStatus.NO_CONTENT).send(null);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -875,11 +807,7 @@ export class ApiController {
       // 변경 성공
       res.status(httpStatus.NO_CONTENT).send(null);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -919,11 +847,7 @@ export class ApiController {
       // 탈퇴 성공
       res.status(httpStatus.NO_CONTENT).send(null);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -981,11 +905,7 @@ export class ApiController {
       // 수정 성공
       res.status(httpStatus.NO_CONTENT).send(null);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -1018,11 +938,7 @@ export class ApiController {
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
       res.status(httpStatus.OK).json(response);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -1063,11 +979,7 @@ export class ApiController {
       // 로그인 성공
       res.status(httpStatus.OK).json(response);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -1081,11 +993,7 @@ export class ApiController {
       // 로그아웃 성공
       res.status(httpStatus.NO_CONTENT).send(null);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -1117,11 +1025,7 @@ export class ApiController {
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
       res.status(httpStatus.OK).json(response);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -1143,11 +1047,7 @@ export class ApiController {
       const response = formatApiResponse(true, null, null, metadata, data);
       res.status(httpStatus.OK).json(response);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -1169,11 +1069,7 @@ export class ApiController {
       const response = formatApiResponse(true, null, null, metadata, data);
       res.status(httpStatus.OK).json(response);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -1195,11 +1091,7 @@ export class ApiController {
       const response = formatApiResponse(true, null, null, metadata, data);
       res.status(httpStatus.OK).json(response);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -1221,11 +1113,7 @@ export class ApiController {
       const response = formatApiResponse(true, null, null, metadata, data);
       res.status(httpStatus.OK).json(response);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -1247,11 +1135,7 @@ export class ApiController {
       const response = formatApiResponse(true, null, null, metadata, data);
       res.status(httpStatus.OK).json(response);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -1273,11 +1157,7 @@ export class ApiController {
       const response = formatApiResponse(true, null, null, metadata, data);
       res.status(httpStatus.OK).json(response);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -1299,11 +1179,7 @@ export class ApiController {
       const response = formatApiResponse(true, null, null, metadata, data);
       res.status(httpStatus.OK).json(response);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -1322,11 +1198,7 @@ export class ApiController {
       const response = formatApiResponse(true, null, null, metadata, data);
       res.status(httpStatus.OK).json(response);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -1352,11 +1224,7 @@ export class ApiController {
 
       res.status(httpStatus.OK).json(response);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -1443,12 +1311,7 @@ export class ApiController {
       // 응답 성공
       res.status(httpStatus.NO_CONTENT).send(null);
     } catch (error) {
-      // 오류 처리
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -1472,11 +1335,7 @@ export class ApiController {
       // 응답 성공
       res.status(httpStatus.NO_CONTENT).send(null);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -1502,11 +1361,7 @@ export class ApiController {
 
       res.status(httpStatus.NO_CONTENT).send(null);
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '서버 재시작 중 오류가 발생했습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
 
@@ -1525,13 +1380,17 @@ export class ApiController {
         data: result.data,
       });
     } catch (error) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-      } else {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '서버 상태 확인 중 오류가 발생했습니다.' });
-      }
+      this.handleError(error, res);
     }
   }
+
+  private handleError = (error: any, res: Response) => {
+    if (error instanceof AppError) {
+      res.status(error.statusCode).json({ message: error.message });
+    } else {
+      res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
+    }
+  };
 
   public verifyPermission(req: Request, permissions: number[] = []): void {}
 }
