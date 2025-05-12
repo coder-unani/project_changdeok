@@ -9,13 +9,13 @@
   <div class="flex justify-between gap-2">
     <h3 class="text-base font-medium text-gray-600">시스템 상태</h3>
     <div class="flex items-center gap-2">
-      <button id="refresh-system-status" class="orb-btn-primary flex-none flex items-center gap-1">
+      <button id="refresh-system-status" class="orb-btn-primary flex-none flex items-center gap-2">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" class="h-[13px] w-[13px]">
           <path d="M105.1 202.6c7.7-21.8 20.2-42.3 37.8-59.8c62.5-62.5 163.8-62.5 226.3 0L386.3 160 352 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l111.5 0c0 0 0 0 0 0l.4 0c17.7 0 32-14.3 32-32l0-112c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 35.2L414.4 97.6c-87.5-87.5-229.3-87.5-316.8 0C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5zM39 289.3c-5 1.5-9.8 4.2-13.7 8.2c-4 4-6.7 8.8-8.1 14c-.3 1.2-.6 2.5-.8 3.8c-.3 1.7-.4 3.4-.4 5.1L16 432c0 17.7 14.3 32 32 32s32-14.3 32-32l0-35.1 17.6 17.5c0 0 0 0 0 0c87.5 87.4 229.3 87.4 316.7 0c24.4-24.4 42.1-53.1 52.9-83.8c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.5 62.5-163.8 62.5-226.3 0l-.1-.1L125.6 352l34.4 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L48.4 288c-1.6 0-3.2 .1-4.8 .3s-3.1 .5-4.6 1z"/>
         </svg>
         새로고침
       </button>
-      <button id="restart-server" class="orb-btn-delete flex-none flex items-center gap-1">
+      <button id="restart-server" class="orb-btn-delete flex-none flex items-center gap-2">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" class="h-[13px] w-[13px]">
           <path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 224c0 17.7 14.3 32 32 32s32-14.3 32-32l0-224zM143.5 120.6c13.6-11.3 15.4-31.5 4.1-45.1s-31.5-15.4-45.1-4.1C49.7 115.4 16 181.8 16 256c0 132.5 107.5 240 240 240s240-107.5 240-240c0-74.2-33.8-140.6-86.6-184.6c-13.6-11.3-33.8-9.4-45.1 4.1s-9.4 33.8 4.1 45.1c38.9 32.3 63.5 81 63.5 135.4c0 97.2-78.8 176-176 176s-176-78.8-176-176c0-54.4 24.7-103.1 63.5-135.4z"/>
         </svg>
@@ -27,16 +27,16 @@
     <table class="table-auto min-w-full">
       <thead>
         <tr>
-          <th class="table-cell text-center w-32 min-w-32 px-4 py-3 bg-gray-100 border-t border-b border-gray-200">
+          <th class="table-cell text-center w-40 min-w-40 px-4 py-3 bg-gray-100 border-t border-b border-gray-200">
             <p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500">프로세스</p>
           </th>
-          <th class="table-cell text-center w-32 min-w-32 px-4 py-3 bg-gray-100 border-t border-b border-gray-200">
+          <th class="table-cell text-center w-40 min-w-40 px-4 py-3 bg-gray-100 border-t border-b border-gray-200">
             <p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500">CPU</p>
           </th>
-          <th class="table-cell text-center w-32 min-w-32 px-4 py-3 bg-gray-100 border-t border-b border-gray-200">
+          <th class="table-cell text-center w-40 min-w-40 px-4 py-3 bg-gray-100 border-t border-b border-gray-200">
             <p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500">메모리</p>
           </th>
-          <th class="table-cell text-center w-32 min-w-32 px-4 py-3 bg-gray-100 border-t border-b border-gray-200">
+          <th class="table-cell text-center w-40 min-w-40 px-4 py-3 bg-gray-100 border-t border-b border-gray-200">
             <p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500">가동시간</p>
           </th>
         </tr>
@@ -59,7 +59,12 @@
         </tbody>
     </table>
   </div>
-  <p id="system-status-message" class="hidden text-sm text-red-500"></p>
+  <div id="system-status-message-container" class="hidden flex items-center gap-2 bg-red-50 rounded-lg px-4 py-2 mt-3 text-[13px] text-red-500">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" class="h-[13px] w-[13px]">
+      <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24l0 112c0 13.3-10.7 24-24 24s-24-10.7-24-24l0-112c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/>
+    </svg>
+    <p id="system-status-message"></p>
+  </div>
 </div>
 
 <div class="mb-4 space-y-4 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:space-y-6 lg:p-6">
@@ -136,7 +141,7 @@
             </div>
           </div>
           <div>
-            <button type="button" id="favicon-add-2" class="orb-btn-common flex flex-none items-center gap-1">
+            <button type="button" id="favicon-add-2" class="orb-btn-common flex flex-none items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 448 512"
@@ -173,7 +178,7 @@
             </div>
           </div>
           <div>
-            <button type="button" id="logo-add-2" class="orb-btn-common flex flex-none items-center gap-1">
+            <button type="button" id="logo-add-2" class="orb-btn-common flex flex-none items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 448 512"
@@ -284,14 +289,14 @@
               </div>
               <!-- 오픈그래프 텍스트 영역 -->
               <div class="flex flex-col w-full p-2.5 rounded-b-lg border-b border-r border-l border-gray-200"> 
-                <p class="font-semibold">오픈그래프 타이틀</p>
-                <p class="text-[13px] text-gray-500">오픈그래프 설명</p>
-                <p class="mt-2 text-[12px] text-gray-400">오픈그래프 URL</p>
+                <p id="og-title-preview" class="font-semibold">오픈그래프 타이틀</p>
+                <p id="og-description-preview" class="text-[13px] text-gray-500">오픈그래프 설명</p>
+                <p class="mt-2 text-[12px] text-gray-400">https://<%=data.serviceDomain%></p>
               </div>
             </div>
           </div>
           <div>
-            <button type="button" id="og-image-add-2" class="orb-btn-common flex flex-none items-center gap-1">
+            <button type="button" id="og-image-add-2" class="orb-btn-common flex flex-none items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 448 512"
@@ -310,9 +315,10 @@
         <li class="flex flex-col lg:flex-row gap-2">
           <label for="service-domain" class="mt-3 w-60 flex-none text-[13px] text-gray-500">서비스 도메인</label>
           <input
-            type="text"
+            type="url"
             id="service-domain"
             name="serviceDomain"
+            pattern="^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$"
             class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             value="<%=data.serviceDomain%>"
             placeholder="서비스 도메인"
@@ -322,7 +328,7 @@
         <li class="flex flex-col lg:flex-row gap-2">
           <label for="service-port" class="mt-3 w-60 flex-none text-[13px] text-gray-500">서비스 포트</label>
           <input
-            type="text"
+            type="number"
             id="service-port"
             name="servicePort"
             class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
@@ -342,55 +348,58 @@
   <div id="company-settings-container" class="hidden">
     <form id="company-settings-form">
       <input type="hidden" id="company-json" name="companyJson" value="<%=data.companyJson%>" />
-      <ul>
-        <li>
-          <label for="company-name">회사명</label>
-          <input type="text" id="company-name" placeholder="회사명" />
+      <ul class="mb-4 space-y-4">
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="company-name" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">회사명</label>
+          <input type="text" id="company-name" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="회사명" />
         </li>
-        <li>
-          <label for="company-ceo">대표자</label>
-          <input type="text" id="company-ceo" placeholder="대표자" />
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="company-ceo" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">대표자</label>
+          <input type="text" id="company-ceo" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="대표자" />
         </li>
-        <li>
-          <label for="company-fax">사업자 번호</label>
-          <input type="text" id="company-business-number" placeholder="사업자 번호" />
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="company-fax" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">사업자 번호</label>
+          <input type="tel" id="company-business-number" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="사업자 번호" />
         </li>
-        <li>
-          <label for="company-phone">대표번호</label>
-          <input type="text" id="company-tel" placeholder="대표번호" />
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="company-phone" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">대표번호</label>
+          <input type="tel" id="company-tel" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="대표번호" />
         </li>
-        <li>
-          <label for="company-fax">팩스</label>
-          <input type="text" id="company-fax" placeholder="팩스" />
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="company-fax" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">팩스</label>
+          <input type="tel" id="company-fax" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="팩스" />
         </li>
-        <li>
-          <label for="company-address">주소</label>
-          <input type="text" id="company-address" placeholder="주소" />
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="company-address" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">주소</label>
+          <input type="text" id="company-address" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="주소" />
         </li>
-        <li>
-          <label for="company-zip-code">우편번호</label>
-          <input type="text" id="company-zip-code" placeholder="우편번호" />
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="company-zip-code" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">우편번호</label>
+          <input type="number" id="company-zip-code" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="우편번호" />
         </li>
-        <li>
-          <label for="company-email">이메일</label>
-          <input type="text" id="company-email" placeholder="이메일" />
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="company-email" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">이메일</label>
+          <input type="email" id="company-email" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="이메일" />
         </li>
-        <li>
-          <label for="company-latitude">위도</label>
-          <input type="text" id="company-latitude" placeholder="위도" />
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="company-latitude" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">위도</label>
+          <input type="text" id="company-latitude" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="위도" />
         </li>
-        <li>
-          <label for="company-longitude">경도</label>
-          <input type="text" id="company-longitude" placeholder="경도" />
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="company-longitude" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">경도</label>
+          <input type="text" id="company-longitude" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="경도" />
         </li>
-        <li>
-          <label for="company-lunchtime-start">점심시간</label>
-          <input type="text" id="company-lunchtime-start" placeholder="점심시간" /> ~
-          <input type="text" id="company-lunchtime-end" placeholder="점심시간" />
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="company-lunchtime-start" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">점심시간</label>
+          <div class="flex items-center">
+            <input type="text" id="company-lunchtime-start" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="점심시간" /> ~
+            <input type="text" id="company-lunchtime-end" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="점심시간" />
+          </div>
         </li>
       </ul>
+      
       <div class="flex justify-end">
-        <button type="submit">저장</button>
+        <button type="submit" class="orb-btn-primary">저장</button>
       </div>
     </form>
   </div>
@@ -400,58 +409,58 @@
     <form id="system-settings-form">
       <input type="hidden" id="enabled-tags-json" name="enabledTagsJson" value="<%=data.enabledTagsJson%>" />
       <input type="hidden" id="enabled-cors-json" name="enabledCorsJson" value="<%=data.enabledCorsJson%>" />
-      <ul>
-        <li>
-          <label for="max-upload-size">파일 최대 업로드 사이즈</label>
+      <ul class="mb-4 space-y-4">
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="max-upload-size" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">파일 최대 업로드 사이즈</label>
           <input
             type="text"
             id="max-upload-size"
-            name="maxUploadSize"
+            name="maxUploadSize" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             value="<%=data.maxUploadSize%>"
             placeholder="파일 최대 업로드 사이즈"
           />
         </li>
-        <li>
-          <label for="jwt-expire-second">관리자 로그인 유지 시간</label>
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="jwt-expire-second" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">관리자 로그인 유지 시간</label>
           <input
             type="text"
             id="jwt-expire-second"
-            name="jwtExpireSecond"
+            name="jwtExpireSecond" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             value="<%=data.jwtExpireSecond%>"
             placeholder="시간"
           />
         </li>
-        <li>
-          <label for="express-domain">시스템 도메인</label>
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="express-domain" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">시스템 도메인</label>
           <input
             type="text"
             id="express-domain"
-            name="expressDomain"
+            name="expressDomain" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             value="<%=data.expressDomain%>"
             placeholder="시스템 도메인"
           />
         </li>
-        <li>
-          <label for="express-port">시스템 포트</label>
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="express-port" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">시스템 포트</label>
           <input
             type="text"
             id="express-port"
-            name="expressPort"
+            name="expressPort" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             value="<%=data.expressPort%>"
             placeholder="시스템 포트"
           />
         </li>
-        <li>
-          <label for="enabled-tags-json">시스템 허용 태그</label>
-          <textarea id="enabled-tags" placeholder="시스템 허용 태그"> </textarea>
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="enabled-tags-json" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">시스템 허용 태그</label>
+          <textarea id="enabled-tags" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="시스템 허용 태그"> </textarea>
         </li>
-        <li>
-          <label for="enabled-cors-json">시스템 허용 CORS</label>
-          <textarea id="enabled-cors" placeholder="시스템 허용 CORS"> </textarea>
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="enabled-cors-json" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">시스템 허용 CORS</label>
+          <textarea id="enabled-cors" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="시스템 허용 CORS"> </textarea>
         </li>
       </ul>
       <div class="flex justify-end">
-        <button type="submit">저장</button>
+        <button type="submit" class="orb-btn-primary">저장</button>
       </div>
     </form>
   </div>
@@ -532,8 +541,8 @@
         document.getElementById('cpu-status').textContent = cpuStatus;
         document.getElementById('uptime').textContent = uptime;
         
-        document.getElementById('system-status-message').classList.remove('hidden');
-        document.getElementById('system-status-message').textContent = '';
+        document.getElementById('system-status-message-container').classList.remove('hidden');
+        document.getElementById('system-status-message').textContent = '시스템 메세지 테스트';
 
         return true;
       } catch (error) {
@@ -579,11 +588,19 @@
         const ogTagJson = document.getElementById('og-tag-json').value;
         const ogTag = JSON.parse(ogTagJson);
 
-        document.getElementById('og-title').value = ogTag['og:title'] ? ogTag['og:title'] : '';
-        document.getElementById('og-description').value = ogTag['og:description'] ? ogTag['og:description'] : '';
-        document.getElementById('og-image-preview').src = ogTag['og:image'] ? ogTag['og:image'] : '';
-        document.getElementById('og-image-orig').value = ogTag['og:image'] ? ogTag['og:image'] : '';
-        if (ogTag['og:image']) {
+        const ogTitle = ogTag['og:title'] ? ogTag['og:title'] : '';
+        const ogDescription = ogTag['og:description'] ? ogTag['og:description'] : '';
+        const ogImage = ogTag['og:image'] ? ogTag['og:image'] : '';
+
+        document.getElementById('og-title').value = ogTitle;
+        document.getElementById('og-description').value = ogDescription;
+        document.getElementById('og-image-preview').src = ogImage;
+        document.getElementById('og-image-orig').value = ogImage;
+
+        document.getElementById('og-title-preview').textContent = ogTitle;
+        document.getElementById('og-description-preview').textContent = ogDescription;
+
+        if (ogImage) {
           document.getElementById('og-image-preview-container').classList.remove('hidden');
         }
       } catch (error) {
@@ -628,8 +645,6 @@
 
       await getSystemStatus();
     };
-
-    init();
 
     // 탭 버튼에 이벤트 리스너 추가
     document.querySelectorAll('[data-tab]').forEach((button) => {
@@ -836,5 +851,8 @@
 
     // 재시작 버튼 이벤트 리스너 추가
     document.getElementById('restart-server').addEventListener('click', restartServer);
+
+    // 초기화
+    init();
   });
 </script>
