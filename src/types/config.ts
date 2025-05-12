@@ -82,32 +82,30 @@ export interface ISiteSettings {
   favicon?: string;
   logo?: string;
   ogTagJson?: string;
+  serviceDomain?: string;
+  servicePort?: number;
 }
 
 export interface ICompanySettings {
-  name: string;
-  ceo: string;
-  businessNumber: string;
-  tel: string;
-  fax: string;
-  address: string;
-  zipCode: string;
-  email: string;
-  latitude: string;
-  longitude: string;
-  lunchtimeStart: string;
-  lunchtimeEnd: string;
+  companyJson?: string;
+}
+
+export interface ISystemSettings {
+  expressDomain: string;
+  expressPort: number;
+  maxUploadSize: number;
+  jwtExpireSecond: number;
+  enabledTagsJson?: string;
+  enabledCorsJson?: string;
 }
 
 export interface IAccessSettings {
   blockIp: string[];
 }
-export interface ISystemSettings {
-  uploadMaxSize: number;
-}
 
-export interface ISettings extends ISiteSettings {
-  companyJson: string;
+export interface ISettings extends ISiteSettings, ICompanySettings, ISystemSettings {
+  createdAt: Date;
+  updatedAt: Date | null;
 }
 
 export interface IProcessInfo {

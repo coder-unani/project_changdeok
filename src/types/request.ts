@@ -117,6 +117,8 @@ export interface IRequestSiteSettings {
   favicon?: string;
   logo?: string;
   ogTagJson?: string;
+  serviceDomain?: string;
+  servicePort?: number;
 }
 
 export interface IRequestCompanySettings {
@@ -137,5 +139,10 @@ export interface IRequestAccessSettings {
 }
 
 export interface IRequestSystemSettings {
-  gaPropertyId: string;
+  maxUploadSize: number;
+  jwtExpireSecond: number;
+  expressDomain: string;
+  expressPort: number;
+  enabledTagsJson: string;
+  enabledCorsJson: string;
 }

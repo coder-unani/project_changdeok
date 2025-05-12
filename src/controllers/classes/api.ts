@@ -37,6 +37,7 @@ import {
   IRequestEmployeeUpdatePassword,
   IRequestEmployees,
   IRequestSiteSettings,
+  IRequestSystemSettings,
   typeListSort,
 } from '../../types/request';
 import {
@@ -1297,6 +1298,8 @@ export class ApiController {
         favicon: favicon,
         logo: logo,
         ogTagJson: ogTag ? JSON.stringify(ogTag) : '',
+        serviceDomain: req.body.serviceDomain,
+        servicePort: Number(req.body.servicePort),
       };
 
       // 사이트 설정 수정
@@ -1347,6 +1350,39 @@ export class ApiController {
   // 시스템 설정 수정
   public async setSystemSettings(req: Request, res: Response): Promise<void> {
     const { permissions } = apiRoutes.settings.updateSystem;
+
+    try {
+      // 접근 권한 체크
+      this.verifyPermission(req, permissions);
+
+      console.log('start setSystemSettings');
+
+      // 요청 데이터
+      const requestData: IRequestSystemSettings = {
+        maxUploadSize: Number(req.body.maxUploadSize),
+        jwtExpireSecond: Number(req.body.jwtExpireSecond),
+        expressDomain: req.body.expressDomain,
+        expressPort: Number(req.body.expressPort),
+        enabledTagsJson: req.body.enabledTagsJson,
+        enabledCorsJson: req.body.enabledCorsJson,
+      };
+
+      console.log('req = ', requestData);
+
+      // 시스템 설정 수정
+      const settingsService: ISettingsService = new SettingsService(prisma);
+      const result = await settingsService.updateSystemSettings(requestData);
+
+      // 수정 실패 처리
+      if (!result.result) {
+        throw new AppError(result.code, result.message);
+      }
+
+      // 응답 성공
+      res.status(httpStatus.NO_CONTENT).send(null);
+    } catch (error) {
+      this.handleError(error, res);
+    }
   }
 
   // 서버 재시작

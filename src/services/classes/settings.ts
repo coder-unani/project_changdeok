@@ -1,6 +1,6 @@
 import { NotFoundError } from '../../common/error';
 import { ExtendedPrismaClient } from '../../library/database';
-import { IServiceResponse } from '../../types/config';
+import { IServiceResponse, ISystemSettings } from '../../types/config';
 import { ISettings, ISiteSettings } from '../../types/config';
 import { IRequestAccessSettings, IRequestSiteSettings, IRequestSystemSettings } from '../../types/request';
 import { ISettingsService } from '../../types/service';
@@ -35,6 +35,16 @@ export class SettingsService extends BaseService implements ISettingsService {
         logo: prismaData?.logo || '',
         ogTagJson: prismaData?.ogTagJson || '',
         companyJson: prismaData?.companyJson || '',
+        serviceDomain: prismaData?.serviceDomain || '',
+        servicePort: prismaData?.servicePort || 80,
+        expressDomain: prismaData?.expressDomain || '',
+        expressPort: prismaData?.expressPort || 80,
+        maxUploadSize: prismaData?.maxUploadSize || 20,
+        jwtExpireSecond: prismaData?.jwtExpireSecond || 3600,
+        enabledTagsJson: prismaData?.enabledTagsJson || '',
+        enabledCorsJson: prismaData?.enabledCorsJson || '',
+        createdAt: prismaData?.createdAt || new Date(),
+        updatedAt: prismaData?.updatedAt || null,
       };
 
       // 응답 성공
@@ -55,6 +65,8 @@ export class SettingsService extends BaseService implements ISettingsService {
       if (data.description) updateData.description = data.description;
       if (data.keywords) updateData.keywords = data.keywords;
       if (data.ogTagJson) updateData.ogTagJson = data.ogTagJson;
+      if (data.serviceDomain) updateData.serviceDomain = data.serviceDomain;
+      if (data.servicePort) updateData.servicePort = data.servicePort;
       updateData.favicon = data.favicon;
       updateData.logo = data.logo;
 
@@ -97,6 +109,35 @@ export class SettingsService extends BaseService implements ISettingsService {
   }
 
   public async updateSystemSettings(data: IRequestSystemSettings): Promise<IServiceResponse<void>> {
-    return { result: true };
+    try {
+      // 사이트 셋팅 업데이트 데이터
+      const updateData: Partial<ISystemSettings> = {};
+
+      // 사이트 셋팅 업데이트 데이터 설정
+      if (data.maxUploadSize) updateData.maxUploadSize = data.maxUploadSize;
+      if (data.jwtExpireSecond) updateData.jwtExpireSecond = data.jwtExpireSecond;
+      if (data.expressDomain) updateData.expressDomain = data.expressDomain;
+      if (data.expressPort) updateData.expressPort = data.expressPort;
+      if (data.enabledTagsJson) updateData.enabledTagsJson = data.enabledTagsJson;
+      if (data.enabledCorsJson) updateData.enabledCorsJson = data.enabledCorsJson;
+
+      console.log(updateData);
+
+      // 사이트 셋팅 업데이트
+      await this.prisma.settings.update({
+        where: {
+          id: 1,
+        },
+        data: {
+          ...updateData,
+          updatedAt: new Date(),
+        },
+      });
+
+      // 응답 성공
+      return { result: true };
+    } catch (error) {
+      return this.handleError(error);
+    }
   }
 }

@@ -34,6 +34,13 @@ datasource db {
   * - logo: 로고
   * - icon: 아이콘
   * - ogTagJson: 오픈그래프 태그 (JSON 형식)
+  * - companyJson: 회사 정보 (JSON 형식)
+  * - serviceDomain: 서비스 도메인
+  * - servicePort: 서비스 포트
+  * - expressDomain: 익스프레스 도메인
+  * - expressPort: 익스프레스 포트
+  * - maxUploadSize: 최대 업로드 크기
+  * - jwtExpireSecond: JWT 만료 시간
   * - createdAt: 생성일
   * - updatedAt: 수정일
   **/
@@ -56,6 +63,8 @@ model Settings {
   jwtExpireSecond Int @default(3600) // 1시간
   enabledTagsJson String? @db.Text
   enabledCorsJson String? @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
 
   @@map("orb_setting")
 }

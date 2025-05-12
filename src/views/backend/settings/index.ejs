@@ -28,14 +28,6 @@
       <li class="me-2">
         <button
           class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
-          data-tab="access-settings"
-        >
-          접속 설정
-        </button>
-      </li>
-      <li class="me-2">
-        <button
-          class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
           data-tab="system-settings"
         >
           시스템 설정
@@ -269,6 +261,27 @@
             </div>
           </div>
         </li>
+        <li>
+          <label for="service-domain">서비스 도메인</label>
+          <input
+            type="text"
+            id="service-domain"
+            name="serviceDomain"
+            value="<%=data.serviceDomain%>"
+            placeholder="서비스 도메인"
+          />
+        </li>
+        <li>
+          <label for="service-port">서비스 포트</label>
+          <input
+            type="text"
+            id="service-port"
+            name="servicePort"
+            value="<%=data.servicePort%>"
+            placeholder="서비스 포트"
+            readonly
+          />
+        </li>
       </ul>
       <div class="flex justify-end">
         <button type="submit">저장</button>
@@ -331,27 +344,65 @@
       </div>
     </form>
   </div>
-  <!-- 접속 제한 -->
-  <div id="access-settings-container" class="hidden">
-    <ul>
-      <li>
-        <label for="access-block">접속 차단 IP</label>
-        <textarea id="access-block" name="access-block" placeholder="접속 차단 IP"></textarea>
-      </li>
-    </ul>
-  </div>
   <!-- 시스템 설정 -->
   <div id="system-settings-container" class="hidden">
-    <ul>
-      <li>
-        <label for="system-admin-login-time">관리자 로그인 유지 시간</label>
-        <input type="text" id="system-admin-login-time" name="system-admin-login-time" placeholder="시간" />
-      </li>
-      <li>
-        <label for="system-admin-login-time">관리자 로그인 유지 시간</label>
-        <input type="text" id="system-admin-login-time" name="system-admin-login-time" placeholder="시간" />
-      </li>
-    </ul>
+    <form id="system-settings-form">
+      <input type="hidden" id="enabled-tags-json" name="enabledTagsJson" value="<%=data.enabledTagsJson%>" />
+      <input type="hidden" id="enabled-cors-json" name="enabledCorsJson" value="<%=data.enabledCorsJson%>" />
+      <ul>
+        <li>
+          <label for="max-upload-size">파일 최대 업로드 사이즈</label>
+          <input
+            type="text"
+            id="max-upload-size"
+            name="maxUploadSize"
+            value="<%=data.maxUploadSize%>"
+            placeholder="파일 최대 업로드 사이즈"
+          />
+        </li>
+        <li>
+          <label for="jwt-expire-second">관리자 로그인 유지 시간</label>
+          <input
+            type="text"
+            id="jwt-expire-second"
+            name="jwtExpireSecond"
+            value="<%=data.jwtExpireSecond%>"
+            placeholder="시간"
+          />
+        </li>
+        <li>
+          <label for="express-domain">시스템 도메인</label>
+          <input
+            type="text"
+            id="express-domain"
+            name="expressDomain"
+            value="<%=data.expressDomain%>"
+            placeholder="시스템 도메인"
+          />
+        </li>
+        <li>
+          <label for="express-port">시스템 포트</label>
+          <input
+            type="text"
+            id="express-port"
+            name="expressPort"
+            value="<%=data.expressPort%>"
+            placeholder="시스템 포트"
+          />
+        </li>
+        <li>
+          <label for="enabled-tags-json">시스템 허용 태그</label>
+          <textarea id="enabled-tags" placeholder="시스템 허용 태그"> </textarea>
+        </li>
+        <li>
+          <label for="enabled-cors-json">시스템 허용 CORS</label>
+          <textarea id="enabled-cors" placeholder="시스템 허용 CORS"> </textarea>
+        </li>
+      </ul>
+      <div class="flex justify-end">
+        <button type="submit">저장</button>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -359,7 +410,6 @@
   document.addEventListener('DOMContentLoaded', () => {
     const siteSettingsContainer = document.getElementById('site-settings-container');
     const companySettingsContainer = document.getElementById('company-settings-container');
-    const accessSettingsContainer = document.getElementById('access-settings-container');
     const systemSettingsContainer = document.getElementById('system-settings-container');
 
     let currentTab = null;
@@ -393,22 +443,14 @@
       if (activeTab === 'site-settings') {
         siteSettingsContainer.classList.remove('hidden');
         companySettingsContainer.classList.add('hidden');
-        accessSettingsContainer.classList.add('hidden');
         systemSettingsContainer.classList.add('hidden');
       } else if (activeTab === 'company-settings') {
         siteSettingsContainer.classList.add('hidden');
         companySettingsContainer.classList.remove('hidden');
-        accessSettingsContainer.classList.add('hidden');
-        systemSettingsContainer.classList.add('hidden');
-      } else if (activeTab === 'access-settings') {
-        siteSettingsContainer.classList.add('hidden');
-        companySettingsContainer.classList.add('hidden');
-        accessSettingsContainer.classList.remove('hidden');
         systemSettingsContainer.classList.add('hidden');
       } else if (activeTab === 'system-settings') {
         siteSettingsContainer.classList.add('hidden');
         companySettingsContainer.classList.add('hidden');
-        accessSettingsContainer.classList.add('hidden');
         systemSettingsContainer.classList.remove('hidden');
       }
 
@@ -513,6 +555,20 @@
         document.getElementById('company-longitude').value = company.longitude ? company.longitude : '';
         document.getElementById('company-lunchtime-start').value = company.lunchtimeStart ? company.lunchtimeStart : '';
         document.getElementById('company-lunchtime-end').value = company.lunchtimeEnd ? company.lunchtimeEnd : '';
+      } catch (error) {
+        console.error(error);
+      }
+
+      try {
+        const enabledTagsJson = document.getElementById('enabled-tags-json').value;
+        const enabledCorsJson = document.getElementById('enabled-cors-json').value;
+
+        // Convert JSON array to comma-separated string
+        const enabledTagsArray = JSON.parse(enabledTagsJson || '[]');
+        const enabledCorsArray = JSON.parse(enabledCorsJson || '[]');
+
+        document.getElementById('enabled-tags').value = enabledTagsArray.join(',');
+        document.getElementById('enabled-cors').value = enabledCorsArray.join(',');
       } catch (error) {
         console.error(error);
       }
@@ -672,8 +728,6 @@
           lunchtimeEnd: lunchtimeEnd,
         };
 
-        console.log(company);
-
         const response = await fetch('<%=apiRoutes.settings.updateCompany.url%>', {
           method: '<%=apiRoutes.settings.updateCompany.method%>',
           headers: {
@@ -689,6 +743,56 @@
         }
 
         alert('회사 설정이 저장되었습니다.');
+        // window.location.reload();
+      } catch (error) {
+        alert(error.message || '설정 저장 중 오류가 발생했습니다.');
+      }
+    });
+
+    // 시스템 설정 저장
+    document.getElementById('system-settings-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      try {
+        const enabledTags = document.getElementById('enabled-tags').value;
+        const enabledCors = document.getElementById('enabled-cors').value;
+
+        // Transform enabledTags into array format
+        const enabledTagsArray = enabledTags
+          .split(',')
+          .map((tag) => tag.trim())
+          .filter((tag) => tag.length > 0);
+
+        const enabledCorsArray = enabledCors
+          .split(',')
+          .map((tag) => tag.trim())
+          .filter((tag) => tag.length > 0);
+
+        // Create request data object
+        const requestData = {
+          maxUploadSize: document.getElementById('max-upload-size').value,
+          jwtExpireSecond: document.getElementById('jwt-expire-second').value,
+          expressDomain: document.getElementById('express-domain').value,
+          expressPort: document.getElementById('express-port').value,
+          enabledTagsJson: JSON.stringify(enabledTagsArray),
+          enabledCorsJson: JSON.stringify(enabledCorsArray),
+        };
+
+        console.log('Sending data:', requestData);
+
+        const response = await fetch('<%=apiRoutes.settings.updateSystem.url%>', {
+          method: '<%=apiRoutes.settings.updateSystem.method%>',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestData),
+        });
+
+        if (!response.ok) {
+          throw new Error('설정 저장 중 오류가 발생했습니다.');
+        }
+
+        alert('시스템 설정이 저장되었습니다.');
         // window.location.reload();
       } catch (error) {
         alert(error.message || '설정 저장 중 오류가 발생했습니다.');
