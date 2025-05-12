@@ -95,6 +95,10 @@
     @apply block w-full cursor-pointer rounded-lg bg-gradient-to-tr from-red-600 to-red-500 px-4 py-2 text-center text-sm text-white transition-all hover:bg-red-500 focus:bg-red-500 active:bg-red-500 disabled:pointer-events-none disabled:opacity-50 lg:w-auto;
   }
 
+  .orb-btn-common {
+    @apply block w-full cursor-pointer rounded-lg border border-gray-300 bg-transparent px-4 py-2 text-center text-sm text-gray-500 disabled:pointer-events-none disabled:opacity-50 lg:w-auto;
+  }
+
   .orb-list {
     @apply relative flex flex-col text-gray-700;
   }

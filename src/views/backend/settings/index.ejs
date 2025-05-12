@@ -4,56 +4,14 @@
   </h1>
 </div>
 
-<div class="mb-4 space-y-3 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
-  <div
-    class="border-b border-gray-200 text-center text-sm font-medium text-gray-500 dark:border-gray-700 dark:text-gray-400"
-  >
-    <ul class="-mb-px flex flex-wrap">
-      <li class="me-2">
-        <button
-          class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
-          data-tab="site-settings"
-        >
-          사이트 설정
-        </button>
-      </li>
-      <li class="me-2">
-        <button
-          class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
-          data-tab="company-settings"
-        >
-          회사 설정
-        </button>
-      </li>
-      <li class="me-2">
-        <button
-          class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
-          data-tab="system-settings"
-        >
-          시스템 설정
-        </button>
-      </li>
-    </ul>
-  </div>
-</div>
-
-<div class="mb-4 space-y-3 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
+<!-- 시스템 상태 -->
+<div class="mb-4 space-y-4 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:space-y-6 lg:p-6">
   <div id="system-status-container">
     <div class="mb-2 flex items-center justify-between">
       <h3 class="text-lg font-semibold">시스템 상태</h3>
       <div class="flex gap-2">
-        <button
-          id="refresh-system-status"
-          class="rounded bg-blue-500 px-3 py-1 text-sm text-white transition-colors hover:bg-blue-600"
-        >
-          새로고침
-        </button>
-        <button
-          id="restart-server"
-          class="rounded bg-red-500 px-3 py-1 text-sm text-white transition-colors hover:bg-red-600"
-        >
-          재시작
-        </button>
+        <button id="refresh-system-status" class="orb-btn-primary">새로고침</button>
+        <button id="restart-server" class="orb-btn-delete">재시작</button>
       </div>
     </div>
     <div class="grid grid-cols-2 gap-2 text-sm">
@@ -78,7 +36,36 @@
   </div>
 </div>
 
-<div class="mb-4 space-y-3 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
+<div class="mb-4 space-y-4 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:space-y-6 lg:p-6">
+  <ul
+    class="flex flex-wrap border-b border-slate-200 text-center text-sm font-medium text-gray-500 dark:border-gray-700 dark:text-gray-400"
+  >
+    <li class="me-2">
+      <button
+        class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300"
+        data-tab="site-settings"
+      >
+        사이트 설정
+      </button>
+    </li>
+    <li class="me-2">
+      <button
+        class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300"
+        data-tab="company-settings"
+      >
+        회사 설정
+      </button>
+    </li>
+    <li class="me-2">
+      <button
+        class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300"
+        data-tab="system-settings"
+      >
+        시스템 설정
+      </button>
+    </li>
+  </ul>
+
   <!-- 사이트 설정 -->
   <div id="site-settings-container" class="hidden">
     <form id="site-settings-form" enctype="multipart/form-data">
@@ -86,134 +73,172 @@
       <input type="hidden" id="logo-orig" name="logoOrig" value="<%=data.logo%>" />
       <input type="hidden" id="og-image-orig" name="ogImageOrig" value="" />
       <input type="hidden" id="og-tag-json" name="ogTagJson" value="<%=data.ogTagJson%>" />
-      <ul>
-        <li>
-          <label for="title">사이트명</label>
-          <input type="text" id="title" name="title" placeholder="사이트명" value="<%=data.title%>" />
-        </li>
-        <li>
-          <label for="favicon">파비콘</label>
+      <ul class="mb-4 space-y-4">
+        <li class="flex">
+          <label for="favicon" class="mt-3 w-42 flex-none text-[13px] font-medium text-gray-400">파비콘</label>
           <input type="file" id="favicon" name="favicon" class="hidden" accept="image/x-icon" />
-          <div class="relative aspect-3/2 w-full lg:w-[250px]">
-            <button
-              type="button"
-              id="favicon-add"
-              class="absolute top-0 left-0 h-full w-full cursor-pointer rounded-lg border border-dashed border-gray-200 bg-gray-100"
-            >
-              <span class="absolute inset-0 flex flex-col items-center justify-center">
-                <img class="block w-[50px] opacity-50" src="/images/add-image-512x512.png" alt="이미지 추가" />
-                <p class="mt-1 text-xs text-gray-400">(512x512)</p>
-              </span>
-            </button>
+          <div class="flex-1 flex items-center">
             <div
               id="favicon-preview-container"
-              class="<% if (!data.favicon) { %>hidden<% } %> relative z-10 h-full w-full overflow-hidden rounded-lg"
+              class="flex items-center gap-2 h-[36px] rounded-t-xl border-t border-r border-l border-gray-200 pr-[15px] pl-[10px]"
             >
-              <button
-                type="button"
-                id="favicon-delete"
-                class="absolute top-2 right-2 z-20 h-[24px] w-[24px] cursor-pointer rounded-full bg-white opacity-80"
-              >
-                <span class="absolute inset-0 flex items-center justify-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 384 512"
-                    fill="currentColor"
-                    class="h-[16px] w-[16px] text-gray-400"
-                  >
-                    <path
-                      d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
-                    />
+              <!-- 파비콘 미리보기 -->
+              <div class="rounded-full h-[16px] w-[16px] bg-gray-100 overflow-hidden">
+                <% if (!data.favicon) { %>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" class="h-[16px] w-[16px] text-gray-500">
+                    <path d="M57.7 193l9.4 16.4c8.3 14.5 21.9 25.2 38 29.8L163 255.7c17.2 4.9 29 20.6 29 38.5l0 39.9c0 11 6.2 21 16 25.9s16 14.9 16 25.9l0 39c0 15.6 14.9 26.9 29.9 22.6c16.1-4.6 28.6-17.5 32.7-33.8l2.8-11.2c4.2-16.9 15.2-31.4 30.3-40l8.1-4.6c15-8.5 24.2-24.5 24.2-41.7l0-8.3c0-12.7-5.1-24.9-14.1-33.9l-3.9-3.9c-9-9-21.2-14.1-33.9-14.1L257 256c-11.1 0-22.1-2.9-31.8-8.4l-34.5-19.7c-4.3-2.5-7.6-6.5-9.2-11.2c-3.2-9.6 1.1-20 10.2-24.5l5.9-3c6.6-3.3 14.3-3.9 21.3-1.5l23.2 7.7c8.2 2.7 17.2-.4 21.9-7.5c4.7-7 4.2-16.3-1.2-22.8l-13.6-16.3c-10-12-9.9-29.5 .3-41.3l15.7-18.3c8.8-10.3 10.2-25 3.5-36.7l-2.4-4.2c-3.5-.2-6.9-.3-10.4-.3C163.1 48 84.4 108.9 57.7 193zM464 256c0-36.8-9.6-71.4-26.4-101.5L412 164.8c-15.7 6.3-23.8 23.8-18.5 39.8l16.9 50.7c3.5 10.4 12 18.3 22.6 20.9l29.1 7.3c1.2-9 1.8-18.2 1.8-27.5zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256z"/>
                   </svg>
-                </span>
-              </button>
-              <div class="relative z-10 h-full w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
-                <img
-                  id="favicon-preview"
-                  class="h-full w-full object-contain"
-                  src="<%=data.favicon%>"
-                  alt="이미지 미리보기"
-                />
+                <% } else { %>
+                  <img
+                    id="favicon-preview"
+                    class="h-full w-full object-cover object-center"
+                    src="<%=data.favicon%>"
+                    alt="이미지 미리보기"
+                    />
+                <% } %>
+              </div>
+              <!-- 사이트명 -->
+              <p class="flex-1 text-[13px] min-w-[148px]"><%=data.title%></p>
+              <!-- 닫기 아이콘 -->
+              <div class="flex-none">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" fill="currentColor" class="h-[14px] w-[14px] text-gray-500">
+                  <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+                </svg>
               </div>
             </div>
           </div>
+          <button type="button" id="favicon-add" class="orb-btn-common flex flex-none items-center gap-1">
+            <span>변경</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 448 512"
+              fill="currentColor"
+              class="h-[13px] w-[13px] text-gray-500"
+            >
+              <path
+                d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"
+              />
+            </svg>
+          </button>
         </li>
-        <li>
-          <label for="logo">로고</label>
+        <li class="flex">
+          <label for="logo" class="mt-3 w-42 flex-none text-[13px] font-medium text-gray-400">로고</label>
           <input type="file" id="logo" name="logo" class="hidden" accept="image/*" placeholder="로고 주소" />
-          <div class="relative aspect-3/2 w-full lg:w-[250px]">
-            <button
-              type="button"
-              id="logo-add"
-              class="absolute top-0 left-0 h-full w-full cursor-pointer rounded-lg border border-dashed border-gray-200 bg-gray-100"
-            >
-              <span class="absolute inset-0 flex flex-col items-center justify-center">
-                <img class="block w-[50px] opacity-50" src="/images/add-image-512x512.png" alt="이미지 추가" />
-                <p class="mt-1 text-xs text-gray-400">(512x512)</p>
-              </span>
-            </button>
-            <div
-              id="logo-preview-container"
-              class="<% if (!data.logo) { %>hidden<% } %> relative z-10 h-full w-full overflow-hidden rounded-lg"
-            >
-              <button
-                type="button"
-                id="logo-delete"
-                class="absolute top-2 right-2 z-20 h-[24px] w-[24px] cursor-pointer rounded-full bg-white opacity-80"
-              >
-                <span class="absolute inset-0 flex items-center justify-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 384 512"
-                    fill="currentColor"
-                    class="h-[16px] w-[16px] text-gray-400"
-                  >
-                    <path
-                      d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
-                    />
-                  </svg>
+          <div class="flex-1 flex items-center">
+            <div class="relative w-[220px] aspect-3/2">
+              <button type="button" id="logo-add-1" class="absolute top-0 left-0 h-full w-full rounded-lg border border-dashed border-gray-200 bg-gray-100 cursor-pointer">
+                <span class="absolute inset-0 flex flex-col items-center justify-center">
+                  <img class="block w-[50px] opacity-50" src="/images/add-image-512x512.png" alt="이미지 추가" />
+                  <p class="mt-1 text-xs text-gray-400">(512x512)</p>
                 </span>
               </button>
-              <div class="relative z-10 h-full w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
-                <img
-                  id="logo-preview"
-                  class="h-full w-full object-contain"
-                  src="<%=data.logo%>"
-                  alt="이미지 미리보기"
-                />
+              <div
+                id="logo-preview-container"
+                class="<% if (!data.logo) { %>hidden<% } %> relative z-10 h-full w-full overflow-hidden rounded-lg"
+              >
+                <div class="relative z-10 h-full w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
+                  <img
+                    id="logo-preview"
+                    class="h-full w-full object-contain"
+                    src="<%=data.logo%>"
+                    alt="이미지 미리보기"
+                  />
+                </div>
               </div>
             </div>
           </div>
+          <div>
+            <button type="button" id="logo-add-2" class="orb-btn-common flex flex-none items-center gap-1">
+              <span>변경</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 448 512"
+                fill="currentColor"
+                class="h-[13px] w-[13px] text-gray-500"
+              >
+                <path
+                  d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"
+                />
+              </svg>
+            </button>
+          </div>
         </li>
-        <li>
-          <label for="introduction">사이트 소개</label>
+        <li class="flex">
+          <label for="title" class="mt-3 w-42 flex-none text-[13px] font-medium text-gray-400">사이트명</label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            placeholder="사이트명"
+            value="<%=data.title%>"
+          />
+        </li>
+        <li class="flex">
+          <label for="introduction" class="mt-3 w-42 flex-none text-[13px] font-medium text-gray-400"
+            >사이트 소개</label
+          >
           <input
             type="text"
             id="introduction"
             name="introduction"
+            class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             value="<%=data.introduction%>"
             placeholder="사이트 소개"
           />
         </li>
-        <li>
-          <label for="description">사이트 설명</label>
-          <textarea id="description" name="description" placeholder="사이트 설명"><%=data.description%></textarea>
+        <li class="flex">
+          <label for="description" class="mt-3 w-42 flex-none text-[13px] font-medium text-gray-400">사이트 설명</label>
+          <textarea
+            id="description"
+            name="description"
+            class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            placeholder="사이트 설명"
+          >
+<%=data.description%></textarea
+          >
         </li>
-        <li>
-          <label for="keyword">사이트 키워드</label>
-          <input id="keyword" name="keywords" value="<%=data.keywords%>" placeholder="사이트 키워드" />
-          <p>* 콤마(,)로 구분하여 여러 개의 키워드를 입력할 수 있습니다.</p>
+        <li class="flex">
+          <label for="keyword" class="mt-3 w-42 flex-none text-[13px] font-medium text-gray-400">사이트 키워드</label>
+          <div class="flex w-full flex-col">
+            <input
+              id="keyword"
+              name="keywords"
+              class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              value="<%=data.keywords%>"
+              placeholder="사이트 키워드"
+            />
+            <p class="px-3 pt-2 text-[12px] font-medium text-gray-400">
+              * 콤마(,)로 구분하여 여러 개의 키워드를 입력할 수 있습니다.
+            </p>
+          </div>
         </li>
-        <li>
-          <label for="og-title">오픈그래프 사이트명</label>
-          <input id="og-title" value="" placeholder="오픈그래프 사이트명" />
+        <li class="flex">
+          <label for="og-title" class="mt-3 w-42 flex-none text-[13px] font-medium text-gray-400"
+            >오픈그래프 사이트명</label
+          >
+          <input
+            id="og-title"
+            class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            value=""
+            placeholder="오픈그래프 사이트명"
+          />
         </li>
-        <li>
-          <label for="og-description">오픈그래프 설명</label>
-          <input id="og-description" value="" placeholder="오픈그래프 설명" />
+        <li class="flex">
+          <label for="og-description" class="mt-3 w-42 flex-none text-[13px] font-medium text-gray-400"
+            >오픈그래프 설명</label
+          >
+          <input
+            id="og-description"
+            class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            value=""
+            placeholder="오픈그래프 설명"
+          />
         </li>
-        <li>
-          <label for="og-image">오픈그래프 이미지</label>
+        <li class="flex">
+          <label for="og-image" class="mt-3 w-42 flex-none text-[13px] font-medium text-gray-400"
+            >오픈그래프 이미지</label
+          >
           <input
             type="file"
             id="og-image"
@@ -261,22 +286,28 @@
             </div>
           </div>
         </li>
-        <li>
-          <label for="service-domain">서비스 도메인</label>
+        <li class="flex">
+          <label for="service-domain" class="mt-3 w-42 flex-none text-[13px] font-medium text-gray-400"
+            >서비스 도메인</label
+          >
           <input
             type="text"
             id="service-domain"
             name="serviceDomain"
+            class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             value="<%=data.serviceDomain%>"
             placeholder="서비스 도메인"
           />
         </li>
-        <li>
-          <label for="service-port">서비스 포트</label>
+        <li class="flex">
+          <label for="service-port" class="mt-3 w-42 flex-none text-[13px] font-medium text-gray-400"
+            >서비스 포트</label
+          >
           <input
             type="text"
             id="service-port"
             name="servicePort"
+            class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             value="<%=data.servicePort%>"
             placeholder="서비스 포트"
             readonly
@@ -284,7 +315,7 @@
         </li>
       </ul>
       <div class="flex justify-end">
-        <button type="submit">저장</button>
+        <button type="submit" class="orb-btn-primary">저장</button>
       </div>
     </form>
   </div>
@@ -417,27 +448,25 @@
     const switchTab = (activeTab) => {
       // 모든 탭 버튼에서 active 클래스 제거
       document.querySelectorAll('[data-tab]').forEach((button) => {
-        button.classList.remove(
-          'active',
-          'border-blue-600',
-          'text-blue-600',
-          'dark:border-blue-500',
-          'dark:text-blue-500'
+        button.classList.remove('active', 'bg-blue-50', 'text-blue-500');
+        button.classList.add(
+          'hover:bg-gray-50',
+          'hover:text-gray-600',
+          'dark:hover:bg-gray-800',
+          'dark:hover:text-gray-300'
         );
-        button.classList.add('border-transparent');
       });
 
       // 클릭된 탭 버튼에 active 클래스 추가
       const activeButton = document.querySelector(`[data-tab="${activeTab}"]`);
       if (activeButton) {
-        activeButton.classList.remove('border-transparent');
-        activeButton.classList.add(
-          'active',
-          'border-blue-600',
-          'text-blue-600',
-          'dark:border-blue-500',
-          'dark:text-blue-500'
+        activeButton.classList.remove(
+          'hover:bg-gray-50',
+          'hover:text-gray-600',
+          'dark:hover:bg-gray-800',
+          'dark:hover:text-gray-300'
         );
+        activeButton.classList.add('active', 'bg-blue-50', 'text-blue-500');
       }
 
       if (activeTab === 'site-settings') {
@@ -600,23 +629,16 @@
       const reader = new FileReader();
       reader.onload = (e) => {
         document.getElementById('favicon-preview').src = e.target.result;
-        document.getElementById('favicon-preview-container').classList.remove('hidden');
       };
       reader.readAsDataURL(file);
     });
 
-    // 파비콘 삭제
-    document.getElementById('favicon-delete').addEventListener('click', (e) => {
-      document.getElementById('favicon').value = '';
-      document.getElementById('favicon-orig').value = '';
-      document.getElementById('favicon-preview').src = '';
-      document.getElementById('favicon-preview-container').classList.add('hidden');
-    });
-
     // 로고 등록
-    document.getElementById('logo-add').addEventListener('click', (e) => {
-      e.preventDefault();
-      document.getElementById('logo').click();
+    document.querySelectorAll('[id^="logo-add"]').forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('logo').click();
+      });
     });
 
     // 로고 미리보기
@@ -628,14 +650,6 @@
         document.getElementById('logo-preview-container').classList.remove('hidden');
       };
       reader.readAsDataURL(file);
-    });
-
-    // 로고 삭제
-    document.getElementById('logo-delete').addEventListener('click', (e) => {
-      document.getElementById('logo').value = '';
-      document.getElementById('logo-orig').value = '';
-      document.getElementById('logo-preview').src = '';
-      document.getElementById('logo-preview-container').classList.add('hidden');
     });
 
     // Open Graph 이미지 등록

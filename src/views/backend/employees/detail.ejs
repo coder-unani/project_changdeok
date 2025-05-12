@@ -6,32 +6,32 @@
 <div id="adminDetails">
   <div class="space-y-3 text-sm bg-white p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_0_rgba(0,0,0,.06)]">
     <!-- Email -->
-    <div class="flex">
-      <label class="block w-28 text-gray-500 font-semibold">이메일</label>
-      <p class="text-gray-800 font-semibold"><%=data.email%></p>
+    <div class="flex items-center">
+      <label class="block w-28 text-[13px] font-medium text-gray-400">이메일</label>
+      <p class="text-gray-800"><%=data.email%></p>
     </div>
 
     <!-- Name -->
-    <div class="flex">
-      <label class="block w-28 text-gray-500 font-semibold">이름</label>
-      <p class="text-gray-800 font-semibold"><%=data.name%></p>
+    <div class="flex items-center">
+      <label class="block w-28 text-[13px] font-medium text-gray-400">이름</label>
+      <p class="text-gray-800"><%=data.name%></p>
     </div>
 
     <!-- Position -->
-    <div class="flex">
-      <label class="block w-28 text-gray-500 font-semibold">직급</label>
+    <div class="flex items-center">
+      <label class="block w-28 text-[13px] font-medium text-gray-400">직급</label>
       <p class="text-gray-800"><%=data.position || '없음'%></p>
     </div>
 
     <!-- Phone -->
-    <div class="flex">
-      <label class="block w-28 text-gray-500 font-semibold">전화번호</label>
+    <div class="flex" items-center>
+      <label class="block w-28 text-[13px] font-medium text-gray-400">전화번호</label>
       <p class="text-gray-800"><%=data.phone%></p>
     </div>
 
     <!-- Address -->
-    <div class="flex">
-      <label class="block w-28 text-gray-500 font-semibold">주소</label>
+    <div class="flex items-center">
+      <label class="block w-28 text-[13px] font-medium text-gray-400">주소</label>
       <p class="text-gay-800"><%=data.address%></p>
     </div>
   </div>
@@ -47,7 +47,7 @@
         <tr>
           <% metadata.permissions.forEach((permission, index) => { %>
             <th class="hidden lg:table-cell text-center w-32 min-w-32 px-4 py-3 bg-gray-100 border-t border-b border-gray-200">
-              <p class="text-xs lg:text-[13px] font-semibold leading-none text-gray-500"><%=permission.title%></p>
+              <p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500"><%=permission.title%></p>
             </th>
           <% }); %>
         </tr>
