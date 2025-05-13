@@ -1,5 +1,5 @@
+import { ValidationError } from '../../common/error';
 import { IApiResponse } from '../../types/config';
-import { typeFormattedResult } from '../../types/format';
 
 export const REG_DATE_PATTERN =
   /^(\d{4}[-/](0[1-9]|1[0-2])[-/](0[1-9]|[12]\d|3[01]))(?:[T\s](?:((?:[01]\d|2[0-3]):[0-5]\d)(?::(?:[0-5]\d)(?:\.\d{3})?)?)(Z)?)?$/;
@@ -9,176 +9,146 @@ export const REG_DATE_PATTERN =
  */
 export const REG_EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-export const formatDate = (date: string | Date | undefined | null): typeFormattedResult => {
-  try {
-    // Date가 없으면 현재 날짜로 설정
-    if (date === null || date === undefined) {
-      return {
-        result: false,
-        message: '날짜가 없습니다.',
-      };
-    }
-
-    // Date가 이미 Date 타입이면 그대로 반환
-    if (date instanceof Date) {
-      return {
-        result: true,
-        message: '',
-        data: date,
-      };
-    }
-
-    // 양 옆 공백 제거
-    date = date.trim();
-
-    if (!REG_DATE_PATTERN.test(date)) {
-      return {
-        result: false,
-        message: '날짜 형식이 올바르지 않습니다.',
-      };
-    }
-
-    // 날짜 형식 변환
-    return {
-      result: true,
-      message: '',
-      data: new Date(date),
-    };
-  } catch (error) {
-    console.error(error);
-    return {
-      result: false,
-      message: '날짜 형식이 올바르지 않습니다.',
-    };
+/**
+ * 날짜를 한국 시간대로 변환
+ * @param date 날짜
+ * @param toString 문자열로 변환 여부
+ * @param timezoneOffset 시간대 오프셋
+ * @returns 변환된 날짜
+ */
+export const convertDateToKST = (date: Date, timezoneOffset: number = 0): Date => {
+  if (!date) {
+    // 현재 시간을 KST로 변환하여 반환
+    return new Date(new Date().getTime() + (9 - timezoneOffset) * 60 * 60 * 1000);
   }
+
+  if (!(date instanceof Date)) {
+    throw new ValidationError('날짜 형식이 올바르지 않습니다.');
+  }
+
+  if (isNaN(date.getTime())) {
+    throw new ValidationError('유효하지 않은 날짜입니다.');
+  }
+
+  // 주어진 시간대에서 KST로 변환
+  return new Date(date.getTime() + (9 - timezoneOffset) * 60 * 60 * 1000);
 };
 
 /**
- *
- * @param date 날짜 형식의 문자열 또는 Date 객체
- * @param isIncludeTime 시간 포함 여부
- * @returns typeFormattedResult 변환 결과
+ * 날짜를 UTC로 변환
+ * @param date 날짜
+ * @param timezoneOffset 시간대 오프셋
+ * @returns 변환된 날짜
  */
-export const formatDateToString = (
-  date: string | Date | undefined | null,
-  isIncludeTime: boolean = true,
-  onlyData = false,
-  isUTC = false
-): typeFormattedResult | string | null => {
-  try {
-    let dateObject: Date;
-
-    // Date가 없으면 현재 날짜로 설정
-    if (date === null || date === undefined) {
-      throw new Error('날짜가 없습니다.');
-    }
-
-    // Date가 이미 Date 타입이면 그대로 사용
-    if (date instanceof Date) {
-      dateObject = date;
-    } else {
-      // 문자열인 경우 처리
-      date = date.trim();
-
-      if (!REG_DATE_PATTERN.test(date)) {
-        throw new Error('날짜 형식이 올바르지 않습니다.');
-      }
-
-      dateObject = new Date(date);
-    }
-
-    /*
-    // UTC 시간을 KST로 변환
-    const kstDateString = dateObject.toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
-    const kstDateObject = new Date(kstDateString);
-    */
-    if (isUTC) {
-      dateObject = new Date(dateObject.getTime() + 9 * 60 * 60 * 1000);
-    }
-
-    // 날짜 부분 포맷팅
-    let formattedDate =
-      dateObject.getFullYear() +
-      '-' +
-      String(dateObject.getMonth() + 1).padStart(2, '0') +
-      '-' +
-      String(dateObject.getDate()).padStart(2, '0');
-
-    // 시간 포함 여부에 따라 포맷팅
-    if (isIncludeTime) {
-      formattedDate +=
-        ' ' +
-        String(dateObject.getHours()).padStart(2, '0') +
-        ':' +
-        String(dateObject.getMinutes()).padStart(2, '0') +
-        ':' +
-        String(dateObject.getSeconds()).padStart(2, '0');
-    }
-
-    if (onlyData) {
-      return formattedDate;
-    }
-
-    // 날짜 형식 변환
-    return {
-      result: true,
-      message: '',
-      data: formattedDate,
-    };
-  } catch (error) {
-    if (onlyData) {
-      return null;
-    }
-    return {
-      result: false,
-      message: error instanceof Error ? error.message : '변환에 실패하였습니다.',
-    };
+export const convertDateToUTC = (date: Date, timezoneOffset: number = 9): Date => {
+  if (!date) {
+    // 현재 시간을 UTC로 변환하여 반환
+    return new Date(new Date().getTime() - timezoneOffset * 60 * 60 * 1000);
   }
+
+  if (!(date instanceof Date)) {
+    throw new ValidationError('날짜 형식이 올바르지 않습니다.');
+  }
+
+  if (isNaN(date.getTime())) {
+    throw new ValidationError('유효하지 않은 날짜입니다.');
+  }
+
+  // 주어진 시간대에서 UTC로 변환
+  return new Date(date.getTime() - timezoneOffset * 60 * 60 * 1000);
 };
 
-// email 마스킹 처리
-export const formatEmailMasking = (email: string | undefined | null): typeFormattedResult => {
-  try {
-    // email이 없으면 에러
-    if (email === null || email === undefined) {
-      return {
-        result: false,
-        message: '이메일이 없습니다.',
-      };
-    }
-
-    // email이 email 형식이 아니면 에러
-    if (!REG_EMAIL_PATTERN.test(email)) {
-      return {
-        result: false,
-        message: '이메일 형식이 올바르지 않습니다.',
-      };
-    }
-
-    // email 마스킹 처리
-    const emailArray = email.split('@');
-    const emailId = emailArray[0];
-    const emailDomain = emailArray[1];
-    const emailIdLength = emailId.length;
-    const emailIdMasking =
-      emailIdLength <= 3
-        ? emailId.charAt(0) + '*'.repeat(emailIdLength - 1)
-        : emailId.substr(0, 3) + '*'.repeat(emailIdLength - 3);
-
-    return {
-      result: true,
-      message: '',
-      data: emailIdMasking + '@' + emailDomain,
-    };
-  } catch (error) {
-    return {
-      result: false,
-      message: '이메일 형식이 올바르지 않습니다.',
-    };
+/**
+ * Date 객체를 YYYY-MM-DD HH:mm:ss 형식의 문자열로 변환
+ * @param date 변환할 Date 객체
+ * @param isIncludeTime 시간 포함 여부
+ * @returns YYYY-MM-DD HH:mm:ss 형식의 문자열
+ */
+export const convertDateToString = (date: Date, isIncludeTime: boolean = true): string => {
+  if (!(date instanceof Date) || isNaN(date.getTime())) {
+    throw new ValidationError('유효하지 않은 날짜입니다.');
   }
+
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(date.getUTCDate()).padStart(2, '0');
+  const hours = String(date.getUTCHours()).padStart(2, '0');
+  const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+  const seconds = String(date.getUTCSeconds()).padStart(2, '0');
+
+  if (isIncludeTime) {
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  }
+
+  return `${year}-${month}-${day}`;
 };
 
-// API 응답을 JSON 형식으로 변환하는 함수
+/**
+ * YYYY-MM-DD HH:mm:ss 형식의 문자열을 Date 객체로 변환
+ * @param date 변환할 날짜 문자열
+ * @param isIncludeTime 시간 포함 여부
+ * @returns Date 객체
+ */
+export const convertStringToDate = (date: string, isIncludeTime: boolean = true): Date => {
+  if (!date || typeof date !== 'string') {
+    throw new ValidationError('날짜 문자열이 필요합니다.');
+  }
+
+  // YYYY-MM-DD HH:mm:ss 형식 검사
+  if (!REG_DATE_PATTERN.test(date.trim())) {
+    throw new ValidationError('날짜 형식이 올바르지 않습니다.');
+  }
+
+  const result = new Date(date);
+  if (isNaN(result.getTime())) {
+    throw new ValidationError('유효하지 않은 날짜입니다.');
+  }
+
+  if (isIncludeTime) {
+    return result;
+  }
+
+  return new Date(result.getFullYear(), result.getMonth(), result.getDate());
+};
+
+/**
+ * 이메일 마스킹 처리
+ * @param email 이메일
+ * @returns 마스킹 처리된 이메일
+ */
+export const formatEmailMasking = (email: string): string => {
+  // email이 없으면 에러
+  if (email === null || email === undefined) {
+    throw new ValidationError('이메일이 없습니다.');
+  }
+
+  // email이 email 형식이 아니면 에러
+  if (!REG_EMAIL_PATTERN.test(email)) {
+    throw new ValidationError('이메일 형식이 올바르지 않습니다.');
+  }
+
+  // email 마스킹 처리
+  const emailArray = email.split('@');
+  const emailId = emailArray[0];
+  const emailDomain = emailArray[1];
+  const emailIdLength = emailId.length;
+  const emailIdMasking =
+    emailIdLength <= 3
+      ? emailId.charAt(0) + '*'.repeat(emailIdLength - 1)
+      : emailId.substr(0, 3) + '*'.repeat(emailIdLength - 3);
+
+  return emailIdMasking + '@' + emailDomain;
+};
+
+/**
+ * API 응답을 JSON 형식으로 변환
+ * @param result 결과
+ * @param code 코드
+ * @param message 메시지
+ * @param metadata 메타데이터
+ * @param data 데이터
+ * @returns API 응답
+ */
 export const formatApiResponse = (
   result: boolean,
   code: number | undefined | null = null,
