@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response, Router } from 'express';
 
-import { CORS_API_OPTIONS } from '../config/config';
+import { Config } from '../config/config';
 import { apiRoutes } from '../config/routes';
 import { ApiController } from '../controllers';
 import { CorsMiddleware } from '../middlewares/api/cors';
@@ -8,295 +8,272 @@ import { FileUploadMiddleware } from '../middlewares/api/file';
 import { RecaptchaMiddleware } from '../middlewares/api/recaptcha';
 import { IMiddleware } from '../types/middleware';
 
-const router: Router = Router();
+class ApiRouter {
+  private config: Config;
+  private router: Router;
+  private apiController: ApiController;
+  private corsMiddleware: IMiddleware;
+  private recaptchaMiddleware: IMiddleware;
+  private bannerUploadMiddleware: FileUploadMiddleware;
+  private contentImageUploadMiddleware: FileUploadMiddleware;
+  private siteSettingsUploadMiddleware: FileUploadMiddleware;
 
-// CORS 설정
-const corsMiddleware: IMiddleware = new CorsMiddleware(CORS_API_OPTIONS);
-router.use((req, res, next) => corsMiddleware.handle(req, res, next));
+  constructor(config: Config) {
+    this.config = config;
 
-// reCAPTCHA 미들웨어
-const recaptchaMiddleware: IMiddleware = new RecaptchaMiddleware();
+    this.router = Router();
+    this.apiController = new ApiController();
+    this.corsMiddleware = new CorsMiddleware(config.getCORSApiOptions());
+    this.recaptchaMiddleware = new RecaptchaMiddleware(config.getRecaptchaSecretKey());
+    this.bannerUploadMiddleware = new FileUploadMiddleware({
+      fields: [
+        {
+          filter: 'image',
+          name: 'image',
+          maxCount: 1,
+          uploadPath: 'public/uploads/banners/',
+          useDateFolder: true,
+          convertToWebP: true,
+          webpQuality: 90,
+        },
+      ],
+    });
+    this.contentImageUploadMiddleware = new FileUploadMiddleware({
+      fields: [
+        {
+          filter: 'image',
+          name: 'image',
+          maxCount: 1,
+          uploadPath: 'public/uploads/contents/',
+          useDateFolder: true,
+          convertToWebP: true,
+          webpQuality: 90,
+        },
+      ],
+    });
+    this.siteSettingsUploadMiddleware = new FileUploadMiddleware({
+      fields: [
+        {
+          filter: 'image',
+          name: 'favicon',
+          maxCount: 1,
+          filename: 'favicon',
+          uploadPath: 'public/',
+          useDateFolder: false,
+        },
+        {
+          filter: 'image',
+          name: 'logo',
+          maxCount: 1,
+          uploadPath: 'public/uploads/logos/',
+          useDateFolder: false,
+          convertToWebP: true,
+          webpQuality: 90,
+        },
+        {
+          filter: 'image',
+          name: 'ogImage',
+          maxCount: 1,
+          uploadPath: 'public/uploads/og-images/',
+          useDateFolder: false,
+          convertToWebP: true,
+          webpQuality: 90,
+        },
+      ],
+    });
 
-// AUTH 미들웨어
-// const authMiddleware: IMiddleware = new AuthMiddleware();
-// router.use((req, res, next) => authMiddleware.handle(req, res, next));
-
-// 배너 이미지 업로드 미들웨어
-const bannerUploadMiddleware = new FileUploadMiddleware({
-  fields: [
-    {
-      filter: 'image',
-      name: 'image',
-      maxCount: 1,
-      uploadPath: 'public/uploads/banners/',
-      useDateFolder: true,
-      convertToWebP: true,
-      webpQuality: 90,
-    },
-  ],
-});
-
-// 컨텐츠 이미지 업로드 미들웨어
-const contentImageUploadMiddleware = new FileUploadMiddleware({
-  fields: [
-    {
-      filter: 'image',
-      name: 'image',
-      maxCount: 1,
-      uploadPath: 'public/uploads/contents/',
-      useDateFolder: true,
-      convertToWebP: true,
-      webpQuality: 90,
-    },
-  ],
-});
-
-const siteSettingsUploadMiddleware = new FileUploadMiddleware({
-  fields: [
-    {
-      filter: 'image',
-      name: 'favicon',
-      maxCount: 1,
-      filename: 'favicon',
-      uploadPath: 'public/',
-      useDateFolder: false,
-    },
-    {
-      filter: 'image',
-      name: 'logo',
-      maxCount: 1,
-      uploadPath: 'public/uploads/logos/',
-      useDateFolder: false,
-      convertToWebP: true,
-      webpQuality: 90,
-    },
-    {
-      filter: 'image',
-      name: 'ogImage',
-      maxCount: 1,
-      uploadPath: 'public/uploads/og-images/',
-      useDateFolder: false,
-      convertToWebP: true,
-      webpQuality: 90,
-    },
-  ],
-});
-
-// 컨트롤러
-const apiController = new ApiController();
-
-// 웹사이트 정보
-router.get(apiRoutes.info.url, (req: Request, res: Response) => {
-  apiController.info(req, res);
-});
-
-// 배너 등록
-router.post(
-  apiRoutes.banners.write.url,
-  (req: Request, res: Response, next: NextFunction) => bannerUploadMiddleware.handle(req, res, next),
-  (req: Request, res: Response) => {
-    apiController.bannerWrite(req, res);
+    this.initializeMiddlewares();
+    this.initializeRoutes();
   }
-);
 
-// 배너 상세 정보
-router.get(apiRoutes.banners.detail.url, (req: Request, res: Response) => {
-  apiController.bannerDetail(req, res);
-});
-
-// 배너 수정
-router.put(
-  apiRoutes.banners.update.url,
-  (req: Request, res: Response, next: NextFunction) => bannerUploadMiddleware.handle(req, res, next),
-  (req: Request, res: Response) => {
-    apiController.bannerUpdate(req, res);
+  private initializeMiddlewares(): void {
+    this.router.use((req, res, next) => this.corsMiddleware.handle(req, res, next));
   }
-);
 
-// 배너 삭제
-router.delete(apiRoutes.banners.delete.url, (req: Request, res: Response) => {
-  apiController.bannerDelete(req, res);
-});
+  private initializeRoutes(): void {
+    // 배너 관련 라우트
+    this.router.post(
+      apiRoutes.banners.write.url,
+      (req: Request, res: Response, next: NextFunction) => this.bannerUploadMiddleware.handle(req, res, next),
+      (req: Request, res: Response) => {
+        this.apiController.bannerWrite(req, res);
+      }
+    );
 
-// 배너 목록
-router.get(apiRoutes.banners.list.url, (req: Request, res: Response) => {
-  apiController.banners(req, res);
-});
+    this.router.get(apiRoutes.banners.detail.url, (req: Request, res: Response) => {
+      this.apiController.bannerDetail(req, res);
+    });
 
-// 배너 그룹 정보
-router.get(apiRoutes.banners.group.url, (req: Request, res: Response) => {
-  apiController.bannerGroup(req, res);
-});
+    this.router.put(
+      apiRoutes.banners.update.url,
+      (req: Request, res: Response, next: NextFunction) => this.bannerUploadMiddleware.handle(req, res, next),
+      (req: Request, res: Response) => {
+        this.apiController.bannerUpdate(req, res);
+      }
+    );
 
-// 컨텐츠 목록
-router.get(apiRoutes.contents.list.url, (req: Request, res: Response) => {
-  apiController.contents(req, res);
-});
+    this.router.delete(apiRoutes.banners.delete.url, (req: Request, res: Response) => {
+      this.apiController.bannerDelete(req, res);
+    });
 
-// 컨텐츠 그룹 정보
-router.get(apiRoutes.contents.group.url, (req: Request, res: Response) => {
-  apiController.contentGroupInfo(req, res);
-});
+    this.router.get(apiRoutes.banners.list.url, (req: Request, res: Response) => {
+      this.apiController.banners(req, res);
+    });
 
-// 컨텐츠 등록
-router.post(apiRoutes.contents.write.url, (req: Request, res: Response) => {
-  apiController.contentWrite(req, res);
-});
+    this.router.get(apiRoutes.banners.group.url, (req: Request, res: Response) => {
+      this.apiController.bannerGroup(req, res);
+    });
 
-// 컨텐츠 상세 정보
-router.get(apiRoutes.contents.detail.url, (req: Request, res: Response) => {
-  apiController.contentDetail(req, res);
-});
+    // 컨텐츠 관련 라우트
+    this.router.get(apiRoutes.contents.list.url, (req: Request, res: Response) => {
+      this.apiController.contents(req, res);
+    });
 
-// 컨텐츠 수정
-router.put(apiRoutes.contents.update.url, (req: Request, res: Response) => {
-  apiController.contentUpdate(req, res);
-});
+    this.router.get(apiRoutes.contents.group.url, (req: Request, res: Response) => {
+      this.apiController.contentGroupInfo(req, res);
+    });
 
-// 컨텐츠 삭제
-router.delete(apiRoutes.contents.delete.url, (req: Request, res: Response) => {
-  apiController.contentDelete(req, res);
-});
+    this.router.post(apiRoutes.contents.write.url, (req: Request, res: Response) => {
+      this.apiController.contentWrite(req, res);
+    });
 
-// 컨텐츠 이미지 업로드
-router.post(
-  apiRoutes.contents.uploadImage.url,
-  (req: Request, res: Response, next: NextFunction) => contentImageUploadMiddleware.handle(req, res, next),
-  (req: Request, res: Response) => {
-    apiController.uploadContentImage(req, res);
+    this.router.get(apiRoutes.contents.detail.url, (req: Request, res: Response) => {
+      this.apiController.contentDetail(req, res);
+    });
+
+    this.router.put(apiRoutes.contents.update.url, (req: Request, res: Response) => {
+      this.apiController.contentUpdate(req, res);
+    });
+
+    this.router.delete(apiRoutes.contents.delete.url, (req: Request, res: Response) => {
+      this.apiController.contentDelete(req, res);
+    });
+
+    this.router.post(
+      apiRoutes.contents.uploadImage.url,
+      (req: Request, res: Response, next: NextFunction) => this.contentImageUploadMiddleware.handle(req, res, next),
+      (req: Request, res: Response) => {
+        this.apiController.uploadContentImage(req, res);
+      }
+    );
+
+    // 직원 관련 라우트
+    this.router.post(apiRoutes.employees.regist.url, (req: Request, res: Response) => {
+      this.apiController.employeeRegist(req, res);
+    });
+
+    this.router.put(apiRoutes.employees.update.url, (req: Request, res: Response) => {
+      this.apiController.employeeUpdate(req, res);
+    });
+
+    this.router.patch(apiRoutes.employees.updatePassword.url, (req: Request, res: Response) => {
+      this.apiController.employeeUpdatePassword(req, res);
+    });
+
+    this.router.delete(apiRoutes.employees.delete.url, (req: Request, res: Response) => {
+      this.apiController.employeeDelete(req, res);
+    });
+
+    this.router.patch(apiRoutes.employees.permissions.url, (req: Request, res: Response) => {
+      this.apiController.employeePermissions(req, res);
+    });
+
+    this.router.get(apiRoutes.employees.list.url, (req: Request, res: Response) => {
+      this.apiController.employees(req, res);
+    });
+
+    this.router.post(
+      apiRoutes.employees.login.url,
+      (req, res, next) => this.recaptchaMiddleware.handle(req, res, next),
+      (req: Request, res: Response) => {
+        this.apiController.employeeLogin(req, res);
+      }
+    );
+
+    this.router.post(apiRoutes.employees.logout.url, (req: Request, res: Response) => {
+      this.apiController.employeeLogout(req, res);
+    });
+
+    this.router.get(apiRoutes.employees.detail.url, (req: Request, res: Response) => {
+      this.apiController.employeeDetail(req, res);
+    });
+
+    // 권한 관련 라우트
+    this.router.get(apiRoutes.permissions.url, (req: Request, res: Response) => {
+      this.apiController.permissions(req, res);
+    });
+
+    // 통계 관련 라우트
+    this.router.get(apiRoutes.stats.visitor.url, (req: Request, res: Response) => {
+      this.apiController.statsVisitor(req, res);
+    });
+
+    this.router.get(apiRoutes.stats.dailyVisitor.url, (req: Request, res: Response) => {
+      this.apiController.statsDailyVisitor(req, res);
+    });
+
+    this.router.get(apiRoutes.stats.pageView.url, (req: Request, res: Response) => {
+      this.apiController.statsPageView(req, res);
+    });
+
+    this.router.get(apiRoutes.stats.country.url, (req: Request, res: Response) => {
+      this.apiController.statsCountry(req, res);
+    });
+
+    this.router.get(apiRoutes.stats.referrer.url, (req: Request, res: Response) => {
+      this.apiController.statsReferrer(req, res);
+    });
+
+    this.router.get(apiRoutes.stats.hourly.url, (req: Request, res: Response) => {
+      this.apiController.statsHourly(req, res);
+    });
+
+    this.router.get(apiRoutes.stats.browser.url, (req: Request, res: Response) => {
+      this.apiController.statsBrowser(req, res);
+    });
+
+    this.router.get(apiRoutes.stats.accessLogs.url, (req: Request, res: Response) => {
+      this.apiController.statsAccessLogs(req, res);
+    });
+
+    // 설정 관련 라우트
+    this.router.get(apiRoutes.settings.read.url, (req: Request, res: Response) => {
+      this.apiController.getSettings(req, res);
+    });
+
+    this.router.patch(
+      apiRoutes.settings.updateSite.url,
+      (req: Request, res: Response, next: NextFunction) => this.siteSettingsUploadMiddleware.handle(req, res, next),
+      (req: Request, res: Response) => {
+        this.apiController.setSiteSettings(req, res);
+      }
+    );
+
+    this.router.patch(apiRoutes.settings.updateCompany.url, (req: Request, res: Response) => {
+      this.apiController.setCompanySettings(req, res);
+    });
+
+    this.router.patch(apiRoutes.settings.updateAccess.url, (req: Request, res: Response) => {
+      this.apiController.setAccessSettings(req, res);
+    });
+
+    this.router.patch(apiRoutes.settings.updateSystem.url, (req: Request, res: Response) => {
+      this.apiController.setSystemSettings(req, res);
+    });
+
+    // 시스템 관련 라우트
+    this.router.post(apiRoutes.systems.restart.url, (req: Request, res: Response) => {
+      this.apiController.systemRestart(req, res);
+    });
+
+    this.router.get(apiRoutes.systems.status.url, (req: Request, res: Response) => {
+      this.apiController.systemStatus(req, res);
+    });
   }
-);
 
-// 직원 등록
-router.post(apiRoutes.employees.regist.url, (req: Request, res: Response) => {
-  apiController.employeeRegist(req, res);
-});
-
-// 직원 정보 수정
-router.put(apiRoutes.employees.update.url, (req: Request, res: Response) => {
-  apiController.employeeUpdate(req, res);
-});
-
-// 직원 비밀번호 수정
-router.patch(apiRoutes.employees.updatePassword.url, (req: Request, res: Response) => {
-  apiController.employeeUpdatePassword(req, res);
-});
-
-// 직원 탈퇴
-router.delete(apiRoutes.employees.delete.url, (req: Request, res: Response) => {
-  apiController.employeeDelete(req, res);
-});
-
-router.patch(apiRoutes.employees.permissions.url, (req: Request, res: Response) => {
-  apiController.employeePermissions(req, res);
-});
-
-// 직원 목록
-router.get(apiRoutes.employees.list.url, (req: Request, res: Response) => {
-  apiController.employees(req, res);
-});
-
-// 직원 로그인
-router.post(
-  apiRoutes.employees.login.url,
-  (req, res, next) => recaptchaMiddleware.handle(req, res, next),
-  (req: Request, res: Response) => {
-    apiController.employeeLogin(req, res);
+  public getRouter(): Router {
+    return this.router;
   }
-);
+}
 
-// 직원 로그아웃
-router.post(apiRoutes.employees.logout.url, (req: Request, res: Response) => {
-  apiController.employeeLogout(req, res);
-});
-
-// 직원 상세 정보
-router.get(apiRoutes.employees.detail.url, (req: Request, res: Response) => {
-  apiController.employeeDetail(req, res);
-});
-
-// 권한 목록
-router.get(apiRoutes.permissions.url, (req: Request, res: Response) => {
-  apiController.permissions(req, res);
-});
-
-// 방문자 통계
-router.get(apiRoutes.stats.visitor.url, (req: Request, res: Response) => {
-  apiController.statsVisitor(req, res);
-});
-
-// 일간 방문자 통계
-router.get(apiRoutes.stats.dailyVisitor.url, (req: Request, res: Response) => {
-  apiController.statsDailyVisitor(req, res);
-});
-
-// 페이지 뷰 통계
-router.get(apiRoutes.stats.pageView.url, (req: Request, res: Response) => {
-  apiController.statsPageView(req, res);
-});
-
-// 국가 통계
-router.get(apiRoutes.stats.country.url, (req: Request, res: Response) => {
-  apiController.statsCountry(req, res);
-});
-
-// 참조 통계
-router.get(apiRoutes.stats.referrer.url, (req: Request, res: Response) => {
-  apiController.statsReferrer(req, res);
-});
-
-// 시간대별 통계
-router.get(apiRoutes.stats.hourly.url, (req: Request, res: Response) => {
-  apiController.statsHourly(req, res);
-});
-
-// 브라우저 통계
-router.get(apiRoutes.stats.browser.url, (req: Request, res: Response) => {
-  apiController.statsBrowser(req, res);
-});
-
-// 접속 로그 통계
-router.get(apiRoutes.stats.accessLogs.url, (req: Request, res: Response) => {
-  apiController.statsAccessLogs(req, res);
-});
-
-// 기본 설정
-router.get(apiRoutes.settings.read.url, (req: Request, res: Response) => {
-  apiController.getSettings(req, res);
-});
-
-// 기본 설정 수정
-router.patch(
-  apiRoutes.settings.updateSite.url,
-  (req: Request, res: Response, next: NextFunction) => siteSettingsUploadMiddleware.handle(req, res, next),
-  (req: Request, res: Response) => {
-    apiController.setSiteSettings(req, res);
-  }
-);
-
-// 회사 설정
-router.patch(apiRoutes.settings.updateCompany.url, (req: Request, res: Response) => {
-  apiController.setCompanySettings(req, res);
-});
-
-// 접속 설정
-router.patch(apiRoutes.settings.updateAccess.url, (req: Request, res: Response) => {
-  apiController.setAccessSettings(req, res);
-});
-
-// 시스템 설정
-router.patch(apiRoutes.settings.updateSystem.url, (req: Request, res: Response) => {
-  apiController.setSystemSettings(req, res);
-});
-
-// 서비스 재시작
-router.post(apiRoutes.systems.restart.url, (req: Request, res: Response) => {
-  apiController.systemRestart(req, res);
-});
-
-// 서버 상태 확인
-router.get(apiRoutes.systems.status.url, (req: Request, res: Response) => {
-  apiController.systemStatus(req, res);
-});
-
-export default router;
+export const apiRouter = (config: Config) => new ApiRouter(config).getRouter();

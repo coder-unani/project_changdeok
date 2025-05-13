@@ -1,61 +1,62 @@
-import { NextFunction, Request, Response, Router } from 'express';
+import { Router } from "express";
 
-import { CONFIG } from '../config/config';
-import { apiRoutes, frontendRoutes } from '../config/routes';
-import { FrontendController } from '../controllers';
+import { apiRoutes, frontendRoutes } from "../config/routes";
+import { FrontendController } from "../controllers";
+import { Config } from "../config/config";
 
-const router: Router = Router();
+class FrontendRouter {
+  private config: Config;
+  private router: Router;
+  private frontendController: FrontendController;
 
-router.use((req: Request, res: Response, next: NextFunction) => {
-  res.locals.serviceUrl = CONFIG.SERVICE_URL;
-  res.locals.routes = frontendRoutes;
-  res.locals.apiRoutes = apiRoutes;
-  next();
-});
+  constructor(config: Config) {
+    this.config = config;
 
-/**
- * 미들웨어 설정
- */
-// ...
+    this.router = Router();
+    this.frontendController = new FrontendController();
 
-// 컨트롤러
-const frontendController = new FrontendController();
+    this.initializeMiddlewares();
+    this.initializeRoutes();
+  }
 
-// 홈
-router.get('/', function (req: Request, res: Response) {
-  frontendController.index(frontendRoutes.index, req, res);
-});
+  private initializeMiddlewares(): void {}
 
-// 소개
-router.get('/about', function (req: Request, res: Response) {
-  frontendController.about(frontendRoutes.about, req, res);
-});
+  private initializeRoutes(): void {
+    // 홈
+    this.router.get("/", (req, res) => {
+      this.frontendController.index(frontendRoutes.index, req, res);
+    });
 
-// 업무분야
-router.get('/services', function (req: Request, res: Response) {
-  frontendController.services(frontendRoutes.services, req, res);
-});
+    // 소개
+    this.router.get("/about", (req, res) => {
+      this.frontendController.about(frontendRoutes.about, req, res);
+    });
 
-// 성공사례
-router.get('/results', function (req: Request, res: Response) {
-  frontendController.results(frontendRoutes.results, req, res);
-});
+    // 업무분야
+    this.router.get("/services", (req, res) => {
+      this.frontendController.services(frontendRoutes.services, req, res);
+    });
 
-// Q&A
-router.get('/qna', function (req: Request, res: Response) {
-  frontendController.qna(frontendRoutes.qna, req, res);
-});
+    // 성공사례
+    this.router.get("/results", (req, res) => {
+      this.frontendController.results(frontendRoutes.results, req, res);
+    });
 
-// 상담 및 의뢰
-router.get('/contact', function (req: Request, res: Response) {
-  frontendController.contact(frontendRoutes.contact, req, res);
-});
+    // Q&A
+    this.router.get("/qna", (req, res) => {
+      this.frontendController.qna(frontendRoutes.qna, req, res);
+    });
 
-/**
- * 에러 핸들러 설정
- */
-// const logger = new ExpressLogger(LOG_PATH, LOG_LEVEL);
-// const errorMiddleware: IErrorMiddleware = new ErrorMiddleware(logger, 'frontend/error');
-// router.use((err: any, req: Request, res: Response, next: NextFunction) => errorMiddleware.handleError(err, req, res, next));
+    // 상담 및 의뢰
+    this.router.get("/contact", (req, res) => {
+      this.frontendController.contact(frontendRoutes.contact, req, res);
+    });
+  }
 
-export default router;
+  public getRouter(): Router {
+    return this.router;
+  }
+}
+
+export const frontendRouter = (config: Config) =>
+  new FrontendRouter(config).getRouter();
