@@ -17,9 +17,25 @@
     <!-- End Google Tag Manager -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- 회사 이름 -->
-    <title><%=settings.companyInfo.name%></title>
-    <!-- 폰트 -->
+    <!-- title -->
+    <title><%=settings.title%> | <%=settings.introduction%></title>
+    <!-- favicon -->
+    <link rel="icon" type="image/x-icon" href="<%=settings.favicon%>" />
+    <link rel="icon" type="image/png" sizes="32x32" href="<%=settings.favicon%>" />
+    <link rel="icon" type="image/png" sizes="16x16" href="<%=settings.favicon%>" />
+    <link rel="apple-touch-icon" sizes="180x180" href="<%=settings.favicon%>" />
+    <!-- <link rel="manifest" href="/site.webmanifest" /> -->
+    <!-- <meta name="theme-color" content="#ffffff" /> -->
+    <!-- meta -->
+    <meta name="description" content="<%=settings.description%>" />
+    <meta name="keywords" content="<%=settings.keywords%>" />
+    <!-- og -->
+    <meta property="og:title" content="<%=settings.ogTag['og:title']%>" />
+    <meta property="og:description" content="<%=settings.ogTag['og:description']%>" />
+    <meta property="og:image" content="<%=settings.ogTag['og:image']%>" />
+    <meta property="og:url" content="<%=settings.ogTag['og:url']%>" />
+    <meta property="og:type" content="<%=settings.ogTag['og:type']%>" />
+    <!-- font -->
     <link rel="preload" href="/fonts/Pretendard-Variable.woff2" as="font" type="font/woff2" crossorigin />
     <!-- css -->
     <link rel="stylesheet" href="/css/styles.css" />
