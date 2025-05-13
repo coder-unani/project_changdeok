@@ -679,7 +679,7 @@ export class BackendController extends BaseWebController {
       };
 
       // 페이지 데이터 생성
-      const data = this.createPageData(route, '', metadata);
+      const data = this.createPageData(route, '', { ...metadata });
 
       // 로그인 페이지 렌더링
       res.render(route.view, data);
