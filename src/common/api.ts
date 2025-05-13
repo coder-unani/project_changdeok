@@ -1,12 +1,10 @@
-import { CONFIG } from '../config/config';
 import { apiRoutes } from '../config/routes';
 import { IApiResponse } from '../types/config';
-import { IPermission, ISiteSettings, ISystemStatus } from '../types/config';
+import { IPermission, ISettings, ISystemStatus } from '../types/config';
 import { IBanner, IBannerGroup, IContent, IContentGroup, IEmployee } from '../types/object';
 import { IRequestBanners, IRequestContents } from '../types/request';
 
-let API_BASE_URL = CONFIG.SERVICE_URL;
-API_BASE_URL = CONFIG.SERVICE_PORT ? `${API_BASE_URL}:${CONFIG.SERVICE_PORT}` : API_BASE_URL;
+const API_BASE_URL = 'http://localhost:3000';
 
 interface FetchOptions {
   method: string;
@@ -24,7 +22,7 @@ const fetchApi = async <T>(url: string, options: FetchOptions): Promise<IApiResp
       headers['Authorization'] = `Bearer ${options.accessToken}`;
     }
 
-    const finalUrl = options.params ? `${url}?${options.params.toString()}` : url;
+    const finalUrl = options.params ? `${API_BASE_URL}${url}?${options.params.toString()}` : `${API_BASE_URL}${url}`;
 
     const apiResponse = await fetch(finalUrl, {
       method: options.method,
@@ -59,7 +57,7 @@ const fetchApi = async <T>(url: string, options: FetchOptions): Promise<IApiResp
 
 export const getApiBannerGroup = async (groupIds: number[] = []): Promise<IApiResponse<IBannerGroup[]>> => {
   const groupIdsString = groupIds.length > 0 ? groupIds.join(',') : 'all';
-  const apiUrl = `${API_BASE_URL}${apiRoutes.banners.group.url}`.replace(':groupIds', groupIdsString);
+  const apiUrl = `${apiRoutes.banners.group.url}`.replace(':groupIds', groupIdsString);
 
   return fetchApi<IBannerGroup[]>(apiUrl, {
     method: apiRoutes.banners.group.method,
@@ -68,7 +66,7 @@ export const getApiBannerGroup = async (groupIds: number[] = []): Promise<IApiRe
 
 export const getApiBanners = async (data: IRequestBanners): Promise<IApiResponse<IBanner[] | []>> => {
   const params = new URLSearchParams(data as any);
-  const apiUrl = `${API_BASE_URL}${apiRoutes.banners.list.url}`;
+  const apiUrl = `${apiRoutes.banners.list.url}`;
 
   return fetchApi<IBanner[]>(apiUrl, {
     method: apiRoutes.banners.list.method,
@@ -77,7 +75,7 @@ export const getApiBanners = async (data: IRequestBanners): Promise<IApiResponse
 };
 
 export const getApiBannerDetail = async (bannerId: number): Promise<IApiResponse<IContent>> => {
-  const apiUrl = `${API_BASE_URL}${apiRoutes.banners.detail.url}`.replace(':bannerId', bannerId.toString());
+  const apiUrl = `${apiRoutes.banners.detail.url}`.replace(':bannerId', bannerId.toString());
 
   return fetchApi<IContent>(apiUrl, {
     method: apiRoutes.banners.detail.method,
@@ -86,7 +84,7 @@ export const getApiBannerDetail = async (bannerId: number): Promise<IApiResponse
 
 export const getApiContents = async (groupId: number, data: IRequestContents): Promise<IApiResponse<IContent[]>> => {
   const params = new URLSearchParams(data as any);
-  let apiUrl = `${API_BASE_URL}${apiRoutes.contents.list.url}`.replace(':groupId', groupId.toString());
+  let apiUrl = `${apiRoutes.contents.list.url}`.replace(':groupId', groupId.toString());
 
   return fetchApi<IContent[]>(apiUrl, {
     method: apiRoutes.contents.list.method,
@@ -95,7 +93,7 @@ export const getApiContents = async (groupId: number, data: IRequestContents): P
 };
 
 export const getApiContentDetail = async (groupId: number, contentId: number): Promise<IApiResponse<IContent>> => {
-  const apiUrl = `${API_BASE_URL}${apiRoutes.contents.detail.url}`
+  const apiUrl = `${apiRoutes.contents.detail.url}`
     .replace(':groupId', groupId.toString())
     .replace(':contentId', contentId.toString());
 
@@ -105,15 +103,25 @@ export const getApiContentDetail = async (groupId: number, contentId: number): P
 };
 
 export const getApiContentGroup = async (groupId: number): Promise<IApiResponse<IContentGroup>> => {
-  const apiUrl = `${API_BASE_URL}${apiRoutes.contents.group.url}`.replace(':groupId', groupId.toString());
+  const apiUrl = `${apiRoutes.contents.group.url}`.replace(':groupId', groupId.toString());
 
   return fetchApi<IContentGroup>(apiUrl, {
     method: apiRoutes.contents.group.method,
   });
 };
 
+export const getApiEmployees = async (page: number, pageSize: number): Promise<IApiResponse<IEmployee[]>> => {
+  const params = new URLSearchParams({ page: page.toString(), pageSize: pageSize.toString() });
+  const apiUrl = `${apiRoutes.employees.list.url}`;
+
+  return fetchApi<IEmployee[]>(apiUrl, {
+    method: apiRoutes.employees.list.method,
+    params,
+  });
+};
+
 export const getApiEmployeeDetail = async (employeeId: number): Promise<IApiResponse<IEmployee>> => {
-  const apiUrl = `${API_BASE_URL}${apiRoutes.employees.detail.url}`.replace(':employeeId', employeeId.toString());
+  const apiUrl = `${apiRoutes.employees.detail.url}`.replace(':employeeId', employeeId.toString());
 
   return fetchApi<IEmployee>(apiUrl, {
     method: apiRoutes.employees.detail.method,
@@ -121,23 +129,23 @@ export const getApiEmployeeDetail = async (employeeId: number): Promise<IApiResp
 };
 
 export const getApiPermissionList = async (page: number, pageSize: number): Promise<IApiResponse<IPermission[]>> => {
-  const apiUrl = `${API_BASE_URL}${apiRoutes.permissions.url}`;
+  const apiUrl = `${apiRoutes.permissions.url}`;
 
   return fetchApi<IPermission[]>(apiUrl, {
     method: apiRoutes.permissions.method,
   });
 };
 
-export const getApiSettings = async (): Promise<IApiResponse<ISiteSettings>> => {
-  const apiUrl = `${API_BASE_URL}${apiRoutes.settings.read.url}`;
+export const getApiSettings = async (): Promise<IApiResponse<ISettings>> => {
+  const apiUrl = `${apiRoutes.settings.read.url}`;
 
-  return fetchApi<ISiteSettings>(apiUrl, {
+  return fetchApi<ISettings>(apiUrl, {
     method: apiRoutes.settings.read.method,
   });
 };
 
 export const getApiSystemStatus = async (): Promise<IApiResponse<ISystemStatus>> => {
-  const apiUrl = `${API_BASE_URL}${apiRoutes.systems.status.url}`;
+  const apiUrl = `${apiRoutes.systems.status.url}`;
 
   return fetchApi<ISystemStatus>(apiUrl, {
     method: apiRoutes.systems.status.method,
