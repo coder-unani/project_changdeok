@@ -88,6 +88,21 @@ class BackendRouter {
       this.backendController.contents(backendRoutes.contents.list, req, res);
     });
 
+    // 직원: 로그인
+    this.router.get(backendRoutes.employees.login.url, (req, res) => {
+      this.backendController.employeeLogin(backendRoutes.employees.login, req, res);
+    });
+
+    // 직원 권한 변경
+    this.router.get(backendRoutes.employees.permissions.url, (req, res) => {
+      this.backendController.employeePermissions(backendRoutes.employees.permissions, req, res);
+    });
+
+    // 직원 비밀번호 변경
+    this.router.get(backendRoutes.employees.updatePassword.url, (req, res) => {
+      this.backendController.employeeUpdatePassword(backendRoutes.employees.updatePassword, req, res);
+    });
+
     // 직원 등록
     this.router.get(backendRoutes.employees.regist.url, (req, res) => {
       this.backendController.employeeRegist(backendRoutes.employees.regist, req, res);
@@ -106,21 +121,6 @@ class BackendRouter {
     // 직원 목록
     this.router.get(backendRoutes.employees.list.url, (req, res) => {
       this.backendController.employees(backendRoutes.employees.list, req, res);
-    });
-
-    // 직원 비밀번호 변경
-    this.router.get(backendRoutes.employees.updatePassword.url, (req, res) => {
-      this.backendController.employeeUpdatePassword(backendRoutes.employees.updatePassword, req, res);
-    });
-
-    // 직원 권한 변경
-    this.router.get(backendRoutes.employees.permissions.url, (req, res) => {
-      this.backendController.employeePermissions(backendRoutes.employees.permissions, req, res);
-    });
-
-    // 직원: 로그인
-    this.router.get(backendRoutes.employees.login.url, (req, res) => {
-      this.backendController.employeeLogin(backendRoutes.employees.login, req, res);
     });
 
     // 통계 관리
