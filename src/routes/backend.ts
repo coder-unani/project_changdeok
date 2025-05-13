@@ -47,6 +47,11 @@ class BackendRouter {
       this.backendController.screenBanners(backendRoutes.banners.screens, req, res);
     });
 
+    // 화면 관리: 팝업 관리
+    this.router.get(backendRoutes.banners.popups.url, (req, res) => {
+      this.backendController.popupBanners(backendRoutes.banners.popups, req, res);
+    });
+
     // 화면관리: 배너 등록
     this.router.get(backendRoutes.banners.write.url, (req, res) => {
       this.backendController.bannerWrite(backendRoutes.banners.write, req, res);

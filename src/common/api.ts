@@ -2,7 +2,7 @@ import { apiRoutes } from '../config/routes';
 import { IApiResponse } from '../types/config';
 import { IPermission, ISettings, ISystemStatus } from '../types/config';
 import { IBanner, IBannerGroup, IContent, IContentGroup, IEmployee } from '../types/object';
-import { IRequestBanners, IRequestContents } from '../types/request';
+import { IRequestBanners, IRequestContents, IRequestDefaultList } from '../types/request';
 
 const API_BASE_URL = 'http://localhost:3000';
 
@@ -110,8 +110,8 @@ export const getApiContentGroup = async (groupId: number): Promise<IApiResponse<
   });
 };
 
-export const getApiEmployees = async (page: number, pageSize: number): Promise<IApiResponse<IEmployee[]>> => {
-  const params = new URLSearchParams({ page: page.toString(), pageSize: pageSize.toString() });
+export const getApiEmployees = async (data: IRequestDefaultList): Promise<IApiResponse<IEmployee[]>> => {
+  const params = new URLSearchParams(data as any);
   const apiUrl = `${apiRoutes.employees.list.url}`;
 
   return fetchApi<IEmployee[]>(apiUrl, {

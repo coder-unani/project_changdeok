@@ -12,65 +12,18 @@ import {
   getApiPermissionList,
   getApiSettings,
 } from '../../common/api';
-import { httpStatus } from '../../common/constants';
 import { AppError, AuthError, NotFoundError, ValidationError } from '../../common/error';
 import { getCookie } from '../../common/utils/cookie';
-import { getAccessToken } from '../../common/utils/verify';
-import { apiRoutes, backendRoutes } from '../../config/routes';
-import { prisma } from '../../library/database';
+import { backendRoutes } from '../../config/routes';
 import { decryptDataAES } from '../../library/encrypt';
 import { verifyJWT } from '../../library/jwt';
-import { EmployeeService } from '../../services';
-import { IPageData, IPermission, IRoute } from '../../types/config';
+import { IPermission, IRoute } from '../../types/config';
 import { IEmployeeToken } from '../../types/object';
-import { IRequestBanners, IRequestContents, typeListSort } from '../../types/request';
+import { IRequestBanners, IRequestContents, IRequestDefaultList, typeListSort } from '../../types/request';
 import { BaseWebController } from './controller';
 
 // TODO: 권한을 체크해서 다른 계정도 수정하게 할 것인지 확인 필요
 export class BackendController extends BaseWebController {
-  // 직원 인증 및 정보 조회 메서드
-  private async getLoggedInEmployee(req: Request, employeeId?: number): Promise<IEmployeeToken> {
-    // Cookie에서 직원 정보 추출
-    const cookieEmployee = getCookie(req, 'employee');
-    if (!cookieEmployee) {
-      throw new AuthError('로그인이 필요합니다.');
-    }
-
-    // Cookie 직원 정보 파싱
-    const loggedInEmployee: IEmployeeToken = JSON.parse(cookieEmployee);
-
-    return loggedInEmployee;
-  }
-
-  // 권한 검증 메서드
-  public verifyPermission = async (
-    req: Request,
-    accessPermissions: number[] = [],
-    accessEmployeeId?: number
-  ): Promise<void> => {
-    const loggedInEmployee = await this.getLoggedInEmployee(req, accessEmployeeId);
-
-    // 권한이 필요없는 페이지이면 접근 가능
-    if (accessPermissions.length === 0 && !accessEmployeeId) {
-      return;
-    }
-
-    // 특정 직원 ID가 허용되어 있으면 해당 직원은 접근 가능
-    if (accessEmployeeId && loggedInEmployee.id === accessEmployeeId) {
-      return;
-    }
-
-    // 특정 권한이 허용되어 있으면 해당 직원은 접근 가능
-    if (
-      accessPermissions.length > 0 &&
-      loggedInEmployee.permissions?.some((permission) => accessPermissions.includes(permission))
-    ) {
-      return;
-    }
-
-    throw new AuthError('권한이 없습니다.');
-  };
-
   // 관리자 홈
   public index = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
@@ -132,12 +85,6 @@ export class BackendController extends BaseWebController {
       // 접근 권한 체크
       await this.verifyPermission(req, route.permissions);
 
-      // 접속 토큰
-      const accessToken = getAccessToken(req);
-      if (!accessToken) {
-        throw new AuthError('로그인이 필요합니다.');
-      }
-
       // 배너 그룹 ID
       const groupId = this.validateInteger(req.query.gp, '배너 그룹 ID');
 
@@ -177,19 +124,13 @@ export class BackendController extends BaseWebController {
       // 접근 권한 체크
       await this.verifyPermission(req, route.permissions);
 
-      // 접속 토큰
-      const accessToken = getAccessToken(req);
-      if (!accessToken) {
-        throw new AuthError('로그인이 필요합니다.');
-      }
-
       // 배너 ID
       const bannerId = this.validateInteger(req.params.bannerId, '배너 ID');
 
       const { result, message, metadata, data: banner } = await getApiBannerDetail(bannerId);
 
       // 배너 상세 정보 조회 실패
-      if (!result) {
+      if (!result || !banner) {
         throw new NotFoundError((message as string) || '배너 상세 정보를 조회할 수 없습니다.');
       }
 
@@ -209,19 +150,14 @@ export class BackendController extends BaseWebController {
       // 접근 권한 체크
       await this.verifyPermission(req, route.permissions);
 
-      // 접속 토큰
-      const accessToken = getAccessToken(req);
-      if (!accessToken) {
-        throw new AuthError('로그인이 필요합니다.');
-      }
-
       // 배너 ID
       const bannerId = this.validateInteger(req.params.bannerId, '배너 ID');
 
+      // 배너 상세 정보 조회
       const { result, message, metadata, data: banner } = await getApiBannerDetail(bannerId);
 
       // 배너 상세 정보 조회 실패
-      if (!result) {
+      if (!result || !banner) {
         throw new NotFoundError((message as string) || '배너 상세 정보를 조회할 수 없습니다.');
       }
 
@@ -240,12 +176,6 @@ export class BackendController extends BaseWebController {
     try {
       // 접근 권한 체크
       await this.verifyPermission(req, route.permissions);
-
-      // 접속 토큰
-      const accessToken = getAccessToken(req);
-      if (!accessToken) {
-        throw new AuthError('로그인이 필요합니다.');
-      }
 
       // 배너 그룹 ID
       const groupId = this.validateInteger(req.query.gp, '배너 그룹 ID');
@@ -273,7 +203,7 @@ export class BackendController extends BaseWebController {
       const { result, message, metadata, data: banners } = await getApiBanners(params);
 
       // 호출 실패
-      if (!result) {
+      if (!result || !banners) {
         throw new NotFoundError((message as string) || '배너 목록을 조회할 수 없습니다.');
       }
 
@@ -337,23 +267,18 @@ export class BackendController extends BaseWebController {
       };
 
       // API 호출
-      const accessToken = getAccessToken(req);
-      if (!accessToken) {
-        throw new AuthError('로그인이 필요합니다.');
-      }
-
       const { result, code, message, metadata, data: contents } = await getApiContents(groupId, params);
 
-      if (!result) {
+      // 호출 실패
+      if (!result || !contents) {
         throw new NotFoundError((message as string) || '게시판 목록을 조회할 수 없습니다.');
       }
 
       // 게시판 그룹 정보
       const { data: group } = await getApiContentGroup(groupId);
 
-      const groupTitle = group?.title ?? '게시판';
-
       // 페이지 데이터 생성
+      const groupTitle = group?.title ?? '게시판';
       const data = this.createPageData(route, `${groupTitle} 목록`, metadata, contents);
 
       // 게시판 관리 페이지 렌더링
@@ -373,11 +298,15 @@ export class BackendController extends BaseWebController {
       const groupId = this.validateInteger(req.params.groupId, '게시판 ID');
 
       // 게시판 그룹 정보
-      const { data: group } = await getApiContentGroup(groupId);
+      const { result, message, metadata, data: group } = await getApiContentGroup(groupId);
 
-      const groupTitle = group?.title ?? '게시판';
+      // 호출 실패
+      if (!result || !group) {
+        throw new NotFoundError((message as string) || '게시판 그룹 정보를 조회할 수 없습니다.');
+      }
 
       // 페이지 데이터 생성
+      const groupTitle = group?.title ?? '게시판';
       const data = this.createPageData(route, `${groupTitle} 작성`, {
         group: {
           id: groupId,
@@ -451,15 +380,24 @@ export class BackendController extends BaseWebController {
       const contentId = this.validateInteger(req.params.contentId, '게시글 ID');
 
       // API 호출
-      const { metadata, data: content } = await getApiContentDetail(groupId, contentId);
+      const getContentDetail = await getApiContentDetail(groupId, contentId);
+
+      // 호출 실패
+      if (!getContentDetail.result || !getContentDetail.data) {
+        throw new NotFoundError((getContentDetail.message as string) || '게시글 상세 정보를 조회할 수 없습니다.');
+      }
 
       // 게시판 그룹 정보
-      const { data: group } = await getApiContentGroup(groupId);
+      const getContentGroup = await getApiContentGroup(groupId);
 
-      const groupTitle = group?.title ?? '게시판';
+      // 호출 실패
+      if (!getContentGroup.result || !getContentGroup.data) {
+        throw new NotFoundError((getContentGroup.message as string) || '게시판 그룹 정보를 조회할 수 없습니다.');
+      }
 
       // 페이지 데이터 생성
-      const data = this.createPageData(route, `${groupTitle} 수정`, metadata, content);
+      const groupTitle = getContentGroup.data?.title ?? '게시판';
+      const data = this.createPageData(route, `${groupTitle} 수정`, getContentDetail.metadata, getContentDetail.data);
 
       // 게시글 상세 정보 페이지 렌더링
       res.render(route.view, data);
@@ -515,25 +453,30 @@ export class BackendController extends BaseWebController {
       await this.verifyPermission(req, route.permissions, employeeId);
 
       // 관리자 상세 정보 조회
-      const { metadata, data: employee } = await getApiEmployeeDetail(employeeId);
+      const getEmployeeDetail = await getApiEmployeeDetail(employeeId);
 
-      // 결과가 없는 경우 에러 페이지 이동
-      if (!employee) {
-        throw new NotFoundError('존재하지 않는 직원 ID입니다.');
+      // 호출 실패
+      if (!getEmployeeDetail.result || !getEmployeeDetail.data) {
+        throw new NotFoundError((getEmployeeDetail.message as string) || '직원 상세 정보를 조회할 수 없습니다.');
       }
 
       // 전체 권한 목록
-      const { data: permissions } = await getApiPermissionList(1, 10);
+      const getPermissions = await getApiPermissionList(1, 10);
+
+      // 호출 실패
+      if (!getPermissions.result || !getPermissions.data) {
+        throw new NotFoundError((getPermissions.message as string) || '권한 목록을 조회할 수 없습니다.');
+      }
 
       // 페이지 데이터 생성
       const data = this.createPageData(
         route,
         route.title,
         {
-          ...metadata,
-          permissions,
+          ...getEmployeeDetail.metadata,
+          permissions: getPermissions.data,
         },
-        employee
+        getEmployeeDetail.data
       );
 
       // 상세 정보 페이지 렌더링
@@ -553,11 +496,11 @@ export class BackendController extends BaseWebController {
       await this.verifyPermission(req, route.permissions, employeeId);
 
       // 관리자 정보 조회
-      const { data: employee } = await getApiEmployeeDetail(employeeId);
+      const { result, message, data: employee } = await getApiEmployeeDetail(employeeId);
 
       // 결과가 없는 경우 에러 페이지 이동
-      if (!employee) {
-        throw new NotFoundError('존재하지 않는 직원 ID입니다.');
+      if (!result || !employee) {
+        throw new NotFoundError((message as string) || '직원 상세 정보를 조회할 수 없습니다.');
       }
 
       // 페이지 데이터 생성
@@ -609,16 +552,15 @@ export class BackendController extends BaseWebController {
       await this.verifyPermission(req, route.permissions, employeeId);
 
       // 직원 정보 조회
-      const employeeService = new EmployeeService(prisma);
-      const employee = await employeeService.read(employeeId);
+      const { result, message, data: employee } = await getApiEmployeeDetail(employeeId);
 
-      // 직원 정보가 없는 경우 에러 페이지로 이동
-      if (!employee.result) {
-        throw new NotFoundError('존재하지 않는 직원 ID입니다.');
+      // 호출 실패
+      if (!result || !employee) {
+        throw new NotFoundError((message as string) || '직원 상세 정보를 조회할 수 없습니다.');
       }
 
       // 페이지 데이터 생성
-      const data = this.createPageData(route, route.title, {}, employee.data);
+      const data = this.createPageData(route, route.title, {}, employee);
 
       // 직원 삭제 페이지 렌더링
       res.render(route.view, data);
@@ -654,27 +596,31 @@ export class BackendController extends BaseWebController {
       }
 
       // 권한을 수정하려는 직원 정보 조회
-      const { data: employee } = await getApiEmployeeDetail(employeeId);
+      const getEmployeeDetail = await getApiEmployeeDetail(employeeId);
 
       // 직원 정보가 없는 경우 에러 페이지로 이동
-      if (!employee) {
-        throw new NotFoundError('존재하지 않는 직원 ID입니다.');
+      if (!getEmployeeDetail.result || !getEmployeeDetail.data) {
+        throw new NotFoundError((getEmployeeDetail.message as string) || '직원 상세 정보를 조회할 수 없습니다.');
       }
 
       // 전체 권한 목록
-      const { data: permissions } = await getApiPermissionList(1, 10);
+      const getPermissions = await getApiPermissionList(1, 10);
+
+      // 호출 실패
+      if (!getPermissions.result || !getPermissions.data) {
+        throw new NotFoundError((getPermissions.message as string) || '권한 목록을 조회할 수 없습니다.');
+      }
 
       // 페이지 데이터 생성
       const data = this.createPageData(
         route,
         route.title,
         {
-          permissions,
+          ...getEmployeeDetail.metadata,
+          permissions: getPermissions.data,
           grantedByEmployee,
         },
-        {
-          ...employee,
-        }
+        getEmployeeDetail.data
       );
 
       // 직원 권한 수정 페이지 렌더링
@@ -693,15 +639,19 @@ export class BackendController extends BaseWebController {
       // 쿼리 파라미터 생성
       const queryParams = new URLSearchParams(req.body).toString();
 
+      // params 생성
+      const params: IRequestDefaultList = {
+        page: req.query.page ? parseInt(req.query.page as string) : 1,
+        pageSize: req.query.pageSize ? parseInt(req.query.pageSize as string) : 10,
+        query: req.query.query ? (req.query.query as string) : '',
+      };
+
       // 관리자 목록 조회
-      const { result, message, metadata, data: employees } = await getApiEmployees(1, 10);
+      const { result, message, metadata, data: employees } = await getApiEmployees(params);
 
-      if (!result) {
-        throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, message || '관리자 목록 조회 실패');
-      }
-
-      if (!employees) {
-        throw new NotFoundError('관리자 목록이 없습니다.');
+      // 호출 실패
+      if (!result || !employees) {
+        throw new NotFoundError((message as string) || '관리자 목록을 조회할 수 없습니다.');
       }
 
       // 페이지 데이터 생성
@@ -783,6 +733,49 @@ export class BackendController extends BaseWebController {
     } catch (error) {
       this.renderError(res, error);
     }
+  };
+
+  // 직원 인증 및 정보 조회 메서드
+  private async getLoggedInEmployee(req: Request, employeeId?: number): Promise<IEmployeeToken> {
+    // Cookie에서 직원 정보 추출
+    const cookieEmployee = getCookie(req, 'employee');
+    if (!cookieEmployee) {
+      throw new AuthError('로그인이 필요합니다.');
+    }
+
+    // Cookie 직원 정보 파싱
+    const loggedInEmployee: IEmployeeToken = JSON.parse(cookieEmployee);
+
+    return loggedInEmployee;
+  }
+
+  // 권한 검증 메서드
+  public verifyPermission = async (
+    req: Request,
+    accessPermissions: number[] = [],
+    accessEmployeeId?: number
+  ): Promise<void> => {
+    const loggedInEmployee = await this.getLoggedInEmployee(req, accessEmployeeId);
+
+    // 권한이 필요없는 페이지이면 접근 가능
+    if (accessPermissions.length === 0 && !accessEmployeeId) {
+      return;
+    }
+
+    // 특정 직원 ID가 허용되어 있으면 해당 직원은 접근 가능
+    if (accessEmployeeId && loggedInEmployee.id === accessEmployeeId) {
+      return;
+    }
+
+    // 특정 권한이 허용되어 있으면 해당 직원은 접근 가능
+    if (
+      accessPermissions.length > 0 &&
+      loggedInEmployee.permissions?.some((permission) => accessPermissions.includes(permission))
+    ) {
+      return;
+    }
+
+    throw new AuthError('권한이 없습니다.');
   };
 
   // 에러 페이지
