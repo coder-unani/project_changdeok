@@ -1,8 +1,17 @@
-import { httpStatus } from '../common/variables';
+import { httpStatus } from '../common/constants';
 
 // CODE_ERROR, CODE_FAIL_SERVER, CODE_FAIL_VALIDATION 상수를 사용하여 typeCode를 정의
 export type typeCode = (typeof httpStatus)[keyof typeof httpStatus];
 export type typeMessage = string | undefined;
+
+export interface ICORSOptions {
+  origin: string;
+  methods?: string[];
+  allowedHeaders?: string[];
+  credentials?: boolean;
+  maxAge?: number;
+  optionsSuccessStatus?: number;
+}
 
 export interface IApiRoute {
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';

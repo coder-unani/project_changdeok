@@ -1,10 +1,15 @@
+import { httpStatus } from '../../common/constants';
 import { AppError } from '../../common/error';
 import { validateBoolean, validateInteger, validateString } from '../../common/utils/validate';
-import { httpStatus } from '../../common/variables';
+import { Config } from '../../config/config';
 import { IPageData, IRoute } from '../../types/config';
 
 export class BaseController {
-  constructor() {}
+  protected config: Config;
+
+  constructor(config: Config) {
+    this.config = config;
+  }
 
   protected validateInteger(_value: any | number, _fieldName: string): number {
     return validateInteger(_value, _fieldName);
