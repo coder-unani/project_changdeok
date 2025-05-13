@@ -21,8 +21,8 @@ export interface IRequestBannerUpdate {
   linkType?: string;
   linkUrl?: string;
   isPublished: boolean;
-  publishedAt?: Date;
-  unpublishedAt?: Date;
+  publishedAt?: string;
+  unpublishedAt?: string;
   updatedBy: number;
 }
 

@@ -104,8 +104,8 @@ export interface IEmployee {
   fireDate?: typeOptionalString;
   isActivated?: boolean;
   permissions?: number[];
-  createdAt?: string;
-  updatedAt?: string;
+  createdAt?: typeOptionalString;
+  updatedAt?: typeOptionalString;
 }
 
 export interface IEmployeeToken {

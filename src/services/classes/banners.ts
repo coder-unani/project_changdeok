@@ -2,7 +2,12 @@ import { IBannerService } from 'types/service';
 
 import { NotFoundError, ValidationError } from '../../common/error';
 import { deleteFile } from '../../common/utils/file';
-import { formatDateToString } from '../../common/utils/format';
+import {
+  convertDateToKST,
+  convertDateToString,
+  convertDateToUTC,
+  convertStringToDate,
+} from '../../common/utils/format';
 import { validateStringLength } from '../../common/utils/validate';
 import { ExtendedPrismaClient } from '../../library/database';
 import { IServiceResponse } from '../../types/config';
@@ -43,15 +48,16 @@ export class BannerService extends BaseService implements IBannerService {
       }
 
       // 발행 마감일이 발행일보다 빠르면 등록 불가
-      const publishedAt = new Date(data.publishedAt);
-      const unpublishedAt = new Date(data.unpublishedAt);
+      const publishedAt = convertStringToDate(data.publishedAt);
+      const unpublishedAt = convertStringToDate(data.unpublishedAt);
 
       if (unpublishedAt && publishedAt > unpublishedAt) {
         throw new ValidationError('발행 마감일은 발행일보다 빠를 수 없습니다.');
       }
 
       // 발행 마감일이 현재 시간보다 이전이면 등록 불가
-      if (unpublishedAt && unpublishedAt < new Date()) {
+      const currentDate = convertDateToKST(new Date());
+      if (unpublishedAt && unpublishedAt < currentDate) {
         throw new ValidationError('발행 마감일은 현재 시간보다 이전일 수 없습니다.');
       }
 
@@ -115,9 +121,9 @@ export class BannerService extends BaseService implements IBannerService {
           linkType: data.linkType || null,
           linkUrl: data.linkUrl || null,
           isPublished: data.isPublished || false,
+          createdBy: data.createdBy,
           publishedAt: publishedAt,
           unpublishedAt: unpublishedAt,
-          createdBy: data.createdBy,
         },
       });
 
@@ -199,8 +205,8 @@ export class BannerService extends BaseService implements IBannerService {
       if (data.imagePath) updateData.imagePath = data.imagePath;
       if (data.linkType) updateData.linkType = data.linkType;
       if (data.linkUrl) updateData.linkUrl = data.linkUrl;
-      if (data.publishedAt) updateData.publishedAt = new Date(data.publishedAt);
-      if (data.unpublishedAt) updateData.unpublishedAt = new Date(data.unpublishedAt);
+      if (data.publishedAt) updateData.publishedAt = data.publishedAt;
+      if (data.unpublishedAt) updateData.unpublishedAt = data.unpublishedAt;
       if (data.updatedBy) updateData.updatedBy = data.updatedBy;
       updateData.isPublished = data.isPublished;
 
@@ -231,55 +237,60 @@ export class BannerService extends BaseService implements IBannerService {
       }
 
       // 발행 기간 검증
-      if (updateData.publishedAt && updateData.unpublishedAt) {
-        if (updateData.unpublishedAt && updateData.publishedAt > updateData.unpublishedAt) {
-          throw new ValidationError('발행 마감일은 발행일보다 빠를 수 없습니다.');
-        }
+      const currentDate = new Date();
+      const publishedAt = updateData.publishedAt ? convertDateToUTC(convertStringToDate(updateData.publishedAt)) : null;
+      const unpublishedAt = updateData.unpublishedAt
+        ? convertDateToUTC(convertStringToDate(updateData.unpublishedAt))
+        : null;
 
-        // 발행 마감일이 현재 시간보다 이전이면 등록 불가
-        if (updateData.unpublishedAt < new Date()) {
-          throw new ValidationError('발행 마감일은 현재 시간보다 이전일 수 없습니다.');
-        }
+      if (!publishedAt || !unpublishedAt) {
+        throw new ValidationError('발행 기간을 입력해주세요.');
+      }
 
-        // 발행 기간이 중복되는 배너가 있을 시 배너 등록 불가
-        const prismaPeriodCheck = await this.prisma.banner.findFirst({
-          where: {
-            groupId: bannerInfo.data.groupId,
-            seq: bannerInfo.data.seq,
-            isDeleted: false,
-            isPublished: true,
-            NOT: { id: bannerId },
-            OR: [
-              // 기존 발행일이 새로운 발행일보다 적고, 마감일이 없거나 새로운 발행일보다 큰 경우
-              {
-                AND: [
-                  { publishedAt: { lt: updateData.publishedAt } },
-                  { unpublishedAt: { gte: updateData.publishedAt } },
-                ],
-              },
-              // 기존 발행일이 새로운 발행일보다 크고, 새로운 마감일보다 작고, 기존 마감일이 새로운 마감일보다 큰 경우
-              {
-                AND: [
-                  { publishedAt: { gte: updateData.publishedAt } },
-                  { publishedAt: { lte: updateData.unpublishedAt } },
-                  { unpublishedAt: { gt: updateData.unpublishedAt } },
-                ],
-              },
-              // 기존 발행일이 새로운 발행일보다 크고, 새로운 마감일보다 작고, 기존 마감일이 새로운 마감일보다 작은 경우
-              {
-                AND: [
-                  { publishedAt: { gte: updateData.publishedAt } },
-                  { publishedAt: { lte: updateData.unpublishedAt } },
-                  { unpublishedAt: { lte: updateData.unpublishedAt } },
-                ],
-              },
-            ],
-          },
-        });
+      if (unpublishedAt && publishedAt > unpublishedAt) {
+        throw new ValidationError('발행 마감일은 발행일보다 빠를 수 없습니다.');
+      }
 
-        if (prismaPeriodCheck) {
-          throw new ValidationError('발행 기간이 중복되는 배너가 있습니다.');
-        }
+      // 발행 마감일이 현재 시간보다 이전이면 등록 불가
+      if (unpublishedAt && unpublishedAt < currentDate) {
+        throw new ValidationError('발행 마감일은 현재 시간보다 이전일 수 없습니다.');
+      }
+
+      // 발행 기간이 중복되는 배너가 있을 시 배너 등록 불가
+      const prismaPeriodCheck = await this.prisma.banner.findFirst({
+        where: {
+          groupId: bannerInfo.data.groupId,
+          seq: bannerInfo.data.seq,
+          isDeleted: false,
+          isPublished: true,
+          NOT: { id: bannerId },
+          OR: [
+            // 기존 발행일이 새로운 발행일보다 적고, 마감일이 없거나 새로운 발행일보다 큰 경우
+            {
+              AND: [{ publishedAt: { lt: publishedAt } }, { unpublishedAt: { gte: publishedAt } }],
+            },
+            // 기존 발행일이 새로운 발행일보다 크고, 새로운 마감일보다 작고, 기존 마감일이 새로운 마감일보다 큰 경우
+            {
+              AND: [
+                { publishedAt: { gte: publishedAt } },
+                { publishedAt: { lte: unpublishedAt } },
+                { unpublishedAt: { gt: unpublishedAt } },
+              ],
+            },
+            // 기존 발행일이 새로운 발행일보다 크고, 새로운 마감일보다 작고, 기존 마감일이 새로운 마감일보다 작은 경우
+            {
+              AND: [
+                { publishedAt: { gte: publishedAt } },
+                { publishedAt: { lte: unpublishedAt } },
+                { unpublishedAt: { lte: unpublishedAt } },
+              ],
+            },
+          ],
+        },
+      });
+
+      if (prismaPeriodCheck) {
+        throw new ValidationError('발행 기간이 중복되는 배너가 있습니다.');
       }
 
       // 배너 업데이트
@@ -287,7 +298,7 @@ export class BannerService extends BaseService implements IBannerService {
         where: { id: bannerId },
         data: {
           ...updateData,
-          updatedAt: new Date(),
+          updatedAt: currentDate,
         },
       });
 
@@ -329,6 +340,7 @@ export class BannerService extends BaseService implements IBannerService {
         where: { id },
         data: {
           isDeleted: true,
+          updatedAt: new Date(),
         },
       });
 
@@ -449,6 +461,9 @@ export class BannerService extends BaseService implements IBannerService {
 
       // 배너 그룹 정보 변환
       const bannerGroups: IBannerGroup[] = prismaBannerGroups.map((prismaGroup) => {
+        const createdAt = convertDateToString(convertDateToKST(prismaGroup.createdAt));
+        const updatedAt = prismaGroup.updatedAt ? convertDateToString(convertDateToKST(prismaGroup.updatedAt)) : null;
+
         const group: IBannerGroup = {
           id: prismaGroup.id,
           kind: prismaGroup.kind,
@@ -456,8 +471,8 @@ export class BannerService extends BaseService implements IBannerService {
           description: prismaGroup.description || null,
           imageWidth: prismaGroup.imageWidth || 0,
           imageHeight: prismaGroup.imageHeight || 0,
-          createdAt: prismaGroup.createdAt.toISOString(),
-          updatedAt: prismaGroup.updatedAt?.toISOString() || null,
+          createdAt,
+          updatedAt,
         };
 
         if (includeBanners && 'banners' in prismaGroup) {
@@ -493,6 +508,12 @@ export class BannerService extends BaseService implements IBannerService {
    * @returns IBanner 타입으로 변환된 배너 객체
    */
   private convertToBanner(banner: any): IBanner {
+    // 발행일, 마감일, 생성일, 수정일을 KST로 변환
+    const createdAt = convertDateToString(convertDateToKST(banner.createdAt));
+    const updatedAt = banner.updatedAt ? convertDateToString(convertDateToKST(banner.updatedAt)) : null;
+    const publishedAt = banner.publishedAt ? convertDateToString(convertDateToKST(banner.publishedAt)) : null;
+    const unpublishedAt = banner.unpublishedAt ? convertDateToString(convertDateToKST(banner.unpublishedAt)) : null;
+
     return {
       id: banner.id,
       groupId: banner.groupId,
@@ -503,12 +524,12 @@ export class BannerService extends BaseService implements IBannerService {
       linkType: banner.linkType || null,
       linkUrl: banner.linkUrl || null,
       isPublished: banner.isPublished,
-      publishedAt: (formatDateToString(banner.publishedAt?.toISOString(), true, true) as string) || null,
-      unpublishedAt: (formatDateToString(banner.unpublishedAt?.toISOString(), true, true) as string) || null,
       createdBy: banner.createdBy,
-      createdAt: formatDateToString(banner.createdAt.toISOString(), true, true) as string,
       updatedBy: banner.updatedBy || null,
-      updatedAt: (formatDateToString(banner.updatedAt?.toISOString(), true, true) as string) || null,
+      publishedAt,
+      unpublishedAt,
+      createdAt,
+      updatedAt,
     };
   }
 }

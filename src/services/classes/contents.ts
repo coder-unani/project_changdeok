@@ -1,5 +1,5 @@
 import { AppError, NotFoundError, ValidationError } from '../../common/error';
-import { formatDateToString } from '../../common/utils/format';
+import { convertDateToKST, convertDateToString } from '../../common/utils/format';
 import { validateStringLength } from '../../common/utils/validate';
 import { ExtendedPrismaClient } from '../../library/database';
 import { encryptDataAES } from '../../library/encrypt';
@@ -83,6 +83,8 @@ export class ContentService extends BaseService implements IContentService {
       }
 
       // 컨텐츠 생성
+      const createdAt = convertDateToString(convertDateToKST(prismaContent.createdAt));
+      const updatedAt = prismaContent.updatedAt ? convertDateToString(convertDateToKST(prismaContent.updatedAt)) : null;
       const content: IContent = {
         id: prismaContent.id,
         groupId: prismaContent.groupId,
@@ -100,10 +102,8 @@ export class ContentService extends BaseService implements IContentService {
         isActivated: prismaContent.isActivated,
         ip: prismaContent.ip || null,
         userAgent: prismaContent.userAgent || null,
-        createdAt: formatDateToString(prismaContent.createdAt.toISOString(), true, true, true) as string,
-        updatedAt: prismaContent.updatedAt
-          ? (formatDateToString(prismaContent.updatedAt.toISOString(), true, true, true) as string)
-          : null,
+        createdAt,
+        updatedAt,
       };
 
       // 응답 성공
@@ -248,28 +248,30 @@ export class ContentService extends BaseService implements IContentService {
       ]);
 
       // 컨텐츠 목록 생성
-      const contents: IContent[] = prismaContents.map((content) => ({
-        id: content.id,
-        groupId: content.groupId,
-        title: content.title,
-        content: content.content ?? null,
-        writerId: content.writerId ?? null,
-        writerName: content.writerName ?? null,
-        writerEmail: content.writerEmail ?? null,
-        writerPhone: content.writerPhone ?? null,
-        viewCount: content.viewCount ?? 0,
-        likeCount: content.likeCount ?? 0,
-        commentCount: content.commentCount ?? 0,
-        isAnonymous: content.isAnonymous,
-        isNotice: content.isNotice ?? false,
-        isActivated: content.isActivated,
-        ip: content.ip ?? null,
-        userAgent: content.userAgent ?? null,
-        createdAt: formatDateToString(content.createdAt.toISOString(), true, true, true) as string,
-        updatedAt: content.updatedAt
-          ? (formatDateToString(content.updatedAt.toISOString(), true, true, true) as string)
-          : null,
-      }));
+      const contents: IContent[] = prismaContents.map((content) => {
+        const createdAt = convertDateToString(convertDateToKST(content.createdAt));
+        const updatedAt = content.updatedAt ? convertDateToString(convertDateToKST(content.updatedAt)) : null;
+        return {
+          id: content.id,
+          groupId: content.groupId,
+          title: content.title,
+          content: content.content ?? null,
+          writerId: content.writerId ?? null,
+          writerName: content.writerName ?? null,
+          writerEmail: content.writerEmail ?? null,
+          writerPhone: content.writerPhone ?? null,
+          viewCount: content.viewCount ?? 0,
+          likeCount: content.likeCount ?? 0,
+          commentCount: content.commentCount ?? 0,
+          isAnonymous: content.isAnonymous,
+          isNotice: content.isNotice ?? false,
+          isActivated: content.isActivated,
+          ip: content.ip ?? null,
+          userAgent: content.userAgent ?? null,
+          createdAt,
+          updatedAt,
+        };
+      });
 
       // 응답 성공
       return {

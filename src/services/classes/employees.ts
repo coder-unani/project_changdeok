@@ -1,5 +1,11 @@
 import { AuthError, NotFoundError, ValidationError } from '../../common/error';
-import { formatDate, formatDateToString, formatEmailMasking } from '../../common/utils/format';
+import {
+  convertDateToKST,
+  convertDateToString,
+  convertDateToUTC,
+  convertStringToDate,
+  formatEmailMasking,
+} from '../../common/utils/format';
 import { validateEmail, validatePassword, validatePhone } from '../../common/utils/validate';
 import { ExtendedPrismaClient } from '../../library/database';
 import { hashPassword, verifyPassword } from '../../library/encrypt';
@@ -32,38 +38,39 @@ export class EmployeeService extends BaseService implements IEmployeeService {
     }
   }
 
-  private validateDateField(date: string | undefined): Date | null {
-    if (!date) return null;
-    const formattedDate = formatDate(date);
-    if (!formattedDate.result) {
-      throw new ValidationError(formattedDate.message);
+  private validateDateField(date: string | undefined): Date {
+    if (!date) {
+      throw new ValidationError('날짜를 입력해주세요.');
     }
-    return formattedDate.data;
+    return convertStringToDate(date);
   }
 
   // 직원 정보 변환 메서드
   private convertToEmployee(employee: any): IEmployee {
-    const employeeEmail = formatEmailMasking(employee.email);
-    if (!employeeEmail.result) {
-      throw new ValidationError(employeeEmail.message);
-    }
+    const employeeMaskedEmail = formatEmailMasking(employee.email);
+
+    const hireDate = employee.hireDate ? convertDateToString(convertDateToKST(employee.hireDate)) : null;
+    const fireDate = employee.fireDate ? convertDateToString(convertDateToKST(employee.fireDate)) : null;
+    const birthDate = employee.birthDate ? convertDateToString(convertDateToKST(employee.birthDate)) : null;
+    const createdAt = employee.createdAt ? convertDateToString(convertDateToKST(employee.createdAt)) : null;
+    const updatedAt = employee.updatedAt ? convertDateToString(convertDateToKST(employee.updatedAt)) : null;
 
     return {
       id: employee.id,
-      email: employeeEmail.data || employee.email,
+      email: employeeMaskedEmail,
       name: employee.name,
       position: employee.position,
       description: employee.description,
       phone: employee.phone,
       mobile: employee.mobile,
       address: employee.address,
-      hireDate: formatDateToString(employee.hireDate?.toISOString(), false, true, true) as string,
-      fireDate: formatDateToString(employee.fireDate?.toISOString(), false, true, true) as string,
-      birthDate: formatDateToString(employee.birthDate?.toISOString(), false, true, true) as string,
+      hireDate: hireDate,
+      fireDate,
+      birthDate,
       isActivated: employee.isActivated,
       permissions: employee.permissions?.map((p: any) => p.permissionId),
-      createdAt: formatDateToString(employee.createdAt, false, true, true) as string,
-      updatedAt: formatDateToString(employee.updatedAt, false, true, true) as string,
+      createdAt,
+      updatedAt,
     };
   }
 
@@ -425,9 +432,21 @@ export class EmployeeService extends BaseService implements IEmployeeService {
         throw new AuthError('이메일 또는 패스워드가 일치하지 않습니다.');
       }
 
+      // 마지막 로그인 시간 설정
+      const lastLoginAt = employee.lastLoginAt || new Date();
+
+      // 마지막 로그인 시간 업데이트
+      await this.prisma.employee.update({
+        where: { id: employee.id },
+        data: { lastLoginAt: new Date(new Date().getTime() + 9 * 60 * 60 * 1000) },
+      });
+
       // 성공
       return {
         result: true,
+        metadata: {
+          lastLoginAt,
+        },
         data: this.convertToEmployee(employee),
       };
     } catch (error) {
