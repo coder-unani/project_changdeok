@@ -5,8 +5,8 @@
     <a href="<%=backendRoutes.index.url%>">
       <div class="flex gap-1.5 items-center justify-center pt-2">
         <span class="text-gray-700">
-          <% if (settings.companyInfo.logo) { %>
-            <img src="<%=settings.companyInfo.logo%>" alt="<%=settings.companyInfo.name%>" class="w-6 h-6">
+          <% if (settings.logo) { %>
+            <img src="<%=settings.logo%>" alt="<%=settings.companyInfo.name%>" class="w-6 h-6">
           <% } %>
         </span>
         <span class="text-2xl font-bold text-gray-700"><%=settings.companyInfo.name.toUpperCase()%></span>
@@ -15,7 +15,7 @@
     <!-- 메뉴 -->
     <nav class="mt-6">
       <%- include('menu-section', { 
-        title: settings.companyInfo.name,
+      title: settings.companyInfo.name,
         items: [{
           title: backendRoutes.dashboard.title,
           url: backendRoutes.dashboard.url,

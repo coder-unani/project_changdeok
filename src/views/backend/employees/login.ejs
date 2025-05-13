@@ -2,8 +2,8 @@
   <div class="w-[500px] rounded-2xl bg-white p-6 lg:p-10 shadow-[0_2px_30px_0_rgba(0,0,0,.06)]">
     <div class="mb-2 flex items-center justify-center gap-1.5 py-4">
       <span class="text-slate-700">
-        <% if (settings.companyInfo.logo) { %>
-          <img src="<%=settings.companyInfo.logo%>" alt="<%=settings.companyInfo.name%>" class="h-6 w-6" />
+        <% if (settings.logo) { %>
+          <img src="<%=settings.logo%>" alt="<%=settings.companyInfo.name%>" class="h-8 w-8" />
         <% } %>
       </span>
       <span class="text-3xl font-bold text-slate-700"><%=settings.companyInfo.name.toUpperCase()%></span>
@@ -38,7 +38,7 @@
       <% } %>
       <button
         type="submit"
-        class="orb-btn orb-btn-primary w-full h-[56px] font-bold text-base"
+        class="orb-btn orb-btn-primary w-full h-[56px] text-base"
         <% if (!metadata.recaptchaSiteKey) { %>
           disabled
         <% } %>

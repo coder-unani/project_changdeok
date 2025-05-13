@@ -15,12 +15,13 @@ const COOKIE_NAMES = {
 
 export class AuthMiddleware implements IMiddleware {
   private loginPath: string;
+  private forgotPasswordPath: string;
   private exceptAuth: string[];
 
   constructor(exceptPath: string[] = []) {
     this.loginPath = backendRoutes.employees.login.url;
-    this.exceptAuth = exceptPath;
-    this.exceptAuth.push(this.loginPath);
+    this.forgotPasswordPath = backendRoutes.employees.forgotPassword.url;
+    this.exceptAuth = [...exceptPath, this.loginPath, this.forgotPasswordPath];
   }
 
   // 인증 쿠키 삭제

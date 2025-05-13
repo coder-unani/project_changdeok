@@ -1,23 +1,30 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
-import { IMiddleware } from '../../types/middleware';
-import { IEmployeeToken } from '../../types/object';
+import { removeCookie } from '../../common/utils/cookie';
 import { backendRoutes } from '../../config/routes';
 import { verifyJWT } from '../../library/jwt';
-import { removeCookie } from '../../common/utils/cookie';
+import { IMiddleware } from '../../types/middleware';
+import { IEmployeeToken } from '../../types/object';
 
 export class AuthMiddleware implements IMiddleware {
   private loginPath: string;
+  private forgotPasswordPath: string;
   private exceptAuth: string[];
 
   // 생성자
   constructor(exceptPath: string[] = []) {
     this.loginPath = backendRoutes.employees.login.url;
-    this.exceptAuth = exceptPath;
-    this.exceptAuth.push(this.loginPath);
+    this.forgotPasswordPath = backendRoutes.employees.forgotPassword.url;
+    this.exceptAuth = [...exceptPath, this.loginPath, this.forgotPasswordPath];
   }
 
   public handle(req: Request, res: Response, next: NextFunction): void {
+    // 인증 제외된 경로는 미들웨어 실행하지 않음
+    if (this.exceptAuth.includes(req.path)) {
+      next();
+      return;
+    }
+
     // 인증헤더 확인
     const authHeader = req.headers.authorization;
     if (!authHeader) {

@@ -4,21 +4,21 @@
       <div class="flex flex-1 flex-col break-keep text-zinc-500">
         <h5 class="font-oswald my-2.5 text-2xl font-medium">Office Location</h5>
         <p class="flex flex-col text-sm">
-          <span><%=company.address%></span>
+          <span><%=settings.companyInfo.address%></span>
         </p>
       </div>
       <div class="flex flex-1 flex-col text-right break-keep text-zinc-500">
         <h5 class="font-oswald my-2.5 text-2xl font-medium">Contact Us</h5>
         <p class="flex flex-col text-sm">
-          <span>대표전화 | <em class="font-oswald font-medium not-italic"><%=company.tel%></em></span>
-          <span>팩스번호 | <em class="font-oswald font-medium not-italic"><%=company.fax%></em></span>
-          <span>이메일 | <em class="font-oswald font-medium not-italic"><%=company.email%></em></span>
+          <span>대표전화 | <em class="font-oswald font-medium not-italic"><%=settings.companyInfo.tel%></em></span>
+          <span>팩스번호 | <em class="font-oswald font-medium not-italic"><%=settings.companyInfo.fax%></em></span>
+          <span>이메일 | <em class="font-oswald font-medium not-italic"><%=settings.companyInfo.email%></em></span>
         </p>
       </div>
     </div>
     <div class="mt-6 lg:mt-0">
       <p class="font-oswald py-4 text-center text-[13px] text-zinc-500">
-        &copy; <span class="font-pretendard"><%=company.name%></span> All rights reserved.
+        &copy; <span class="font-pretendard"><%=settings.companyInfo.name%></span> All rights reserved.
       </p>
     </div>
   </div>

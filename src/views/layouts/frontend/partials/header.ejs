@@ -5,8 +5,8 @@
     <!-- 로고 -->
     <a href="<%=routes.index.url%>" class="flex items-center">
       <h1 class="flex items-center gap-2 text-lg font-semibold lg:text-xl">
-        <img id="logo" src="<%=company.logo%>" alt="<%=company.name%>" class="h-5 w-5 invert lg:h-6 lg:w-6" />
-        <span class="flex-none"><%=company.name%></span>
+        <img id="logo" src="<%=settings.logo%>" alt="<%=settings.companyInfo.name%>" class="h-5 w-5 lg:h-6 lg:w-6" />
+        <span class="flex-none"><%=settings.companyInfo.name%></span>
       </h1>
     </a>
     <!-- 메뉴 -->
@@ -21,11 +21,9 @@
     if (window.scrollY > 56) {
       header.classList.remove('bg-transparent', 'text-white');
       header.classList.add('bg-white', 'text-black');
-      document.querySelector('#logo').classList.remove('invert');
     } else {
       header.classList.remove('bg-white', 'text-black');
       header.classList.add('bg-transparent', 'text-white');
-      document.querySelector('#logo').classList.add('invert');
     }
   });
 </script>

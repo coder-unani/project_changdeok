@@ -97,6 +97,11 @@ class BackendRouter {
       this.backendController.employeeLogin(backendRoutes.employees.login, req, res);
     });
 
+    // 직원: 비밀번호 찾기
+    this.router.get(backendRoutes.employees.forgotPassword.url, (req, res) => {
+      this.backendController.employeeForgotPassword(backendRoutes.employees.forgotPassword, req, res);
+    });
+
     // 직원 권한 변경
     this.router.get(backendRoutes.employees.permissions.url, (req, res) => {
       this.backendController.employeePermissions(backendRoutes.employees.permissions, req, res);
