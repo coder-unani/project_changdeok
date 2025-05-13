@@ -7,8 +7,8 @@ import { join } from 'path';
 import { pid } from 'process';
 import { promisify } from 'util';
 
+import { httpStatus } from '../../common/constants';
 import { AppError } from '../../common/error';
-import { httpStatus } from '../../common/variables';
 import { ICpuInfo, IMemoryInfo, IProcessInfo, IServiceResponse, ISystemStatus } from '../../types/config';
 import { ISystemService } from '../../types/service';
 

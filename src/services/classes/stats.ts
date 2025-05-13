@@ -1,7 +1,7 @@
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
 
+import { httpStatus } from '../../common/constants';
 import { AppError, ForbiddenError, NotFoundError, TooManyRequestsError } from '../../common/error';
-import { httpStatus } from '../../common/variables';
 import { ExtendedPrismaClient } from '../../library/database';
 import { IServiceResponse } from '../../types/config';
 import { BaseService } from './service';

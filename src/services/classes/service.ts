@@ -1,5 +1,5 @@
+import { httpStatus } from '../../common/constants';
 import { AppError } from '../../common/error';
-import { httpStatus } from '../../common/variables';
 import { ExtendedPrismaClient } from '../../library/database';
 import { IServiceResponse } from '../../types/config';
 
