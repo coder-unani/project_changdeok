@@ -1,7 +1,7 @@
 <div class="block pt-2 mb-2">
   <h1 class='flex justify-between items-baseline gap-1.5 py-2 text-center text-slate-700 transition-all'>
     <span class="text-2xl font-semibold"><%=title%></span>
-    <p class="text-right font-medium text-[13px] text-gray-400"><span class="pr-0.5 text-red-500">*</span>필수입력사항</p>
+    <p class="text-right text-[13px] text-gray-500"><span class="pr-0.5 text-red-500">*</span>필수입력사항</p>
   </h1>
 </div>
 
@@ -11,7 +11,7 @@
   <div class="space-y-4 text-sm bg-white p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
     <div>
       <div class="flex justify-between items-baseline">
-        <label for="image" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">
+        <label for="image" class="block flex-none mb-2 text-[13px] text-gray-500">
           이미지<% if (metadata.groupInfo.kind === 'image') { %><span class="pl-0.5 text-red-500">*</span><% } %>
         </label>
       </div>
@@ -46,33 +46,33 @@
     </div>
 
     <div>
-      <label for="title" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">제목<span class="pl-0.5 text-red-500">*</span></label>
-      <input type="text" id="title" name="title" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="<%=data.title%>" placeholder="제목을 입력해주세요." required>
+      <label for="title" class="block flex-none mb-2 text-[13px] text-gray-500">제목<span class="pl-0.5 text-red-500">*</span></label>
+      <input type="text" id="title" name="title" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200" value="<%=data.title%>" placeholder="제목을 입력해주세요." required>
     </div>
 
     <div>
-      <label for="description" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">설명</label>
-      <input type="text" id="description" name="description" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="<%=data.description%>" placeholder="설명을 입력해주세요.">
+      <label for="description" class="block flex-none mb-2 text-[13px] text-gray-500">설명</label>
+      <input type="text" id="description" name="description" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200" value="<%=data.description%>" placeholder="설명을 입력해주세요.">
     </div>
 
     <div class="flex flex-col lg:flex-row gap-4">
       <div class="flex-1">
-        <label for="linkType" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">링크 타입</label>
-        <select id="linkType" name="linkType" class="w-full p-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-r-12 border-gray-100">
+        <label for="linkType" class="block flex-none mb-2 text-[13px] text-gray-500">링크 타입</label>
+        <select id="linkType" name="linkType" class="w-full p-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 border-r-12 border-gray-100">
           <option value="">선택</option>
           <option value="self" <%if (data.linkType === 'self') {%>selected<%}%>>내부 링크</option>
           <option value="outer" <%if (data.linkType === 'outer') {%>selected<%}%>>외부 링크</option>
         </select>
       </div>
       <div class="flex-3">
-        <label for="linkUrl" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">링크</label>
-        <input type="text" id="linkUrl" name="linkUrl" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="<%=data.linkUrl%>" placeholder="링크 주소를 입력해주세요.">
+        <label for="linkUrl" class="block flex-none mb-2 text-[13px] text-gray-500">링크</label>
+        <input type="text" id="linkUrl" name="linkUrl" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200" value="<%=data.linkUrl%>" placeholder="링크 주소를 입력해주세요.">
       </div>
     </div>
 
     <div>
-      <label for="isPublished" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">발행 여부</label>
-      <select id="isPublished" name="isPublished" class="w-full p-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-r-12 border-gray-100">
+      <label for="isPublished" class="block flex-none mb-2 text-[13px] text-gray-500">발행 여부</label>
+      <select id="isPublished" name="isPublished" class="w-full p-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 border-r-12 border-gray-100">
         <option value="N" <%if (!data.isPublished) {%>selected<%}%>>미발행</option>
         <option value="Y" <%if (data.isPublished) {%>selected<%}%>>발행</option>
       </select>
@@ -80,18 +80,18 @@
 
     <div class="flex flex-col lg:flex-row gap-4">
       <div class="flex-1">
-        <label for="publishedAt" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">발행 일시<span class="pl-0.5 text-red-500">*</span></label>
-        <input type="datetime-local" id="publishedAt" name="publishedAt" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="<%=data.publishedAt%>" required>
+        <label for="publishedAt" class="block flex-none mb-2 text-[13px] text-gray-500">발행 일시<span class="pl-0.5 text-red-500">*</span></label>
+        <input type="datetime-local" id="publishedAt" name="publishedAt" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200" value="<%=data.publishedAt%>" required>
       </div>
       <div class="flex-1">
-        <label for="unpublishedAt" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">발행 마감 일시<span class="pl-0.5 text-red-500">*</span></label>
-        <input type="datetime-local" id="unpublishedAt" name="unpublishedAt" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="<%=data.unpublishedAt%>" required>
+        <label for="unpublishedAt" class="block flex-none mb-2 text-[13px] text-gray-500">발행 마감 일시<span class="pl-0.5 text-red-500">*</span></label>
+        <input type="datetime-local" id="unpublishedAt" name="unpublishedAt" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200" value="<%=data.unpublishedAt%>" required>
       </div>
     </div>
   </div>
       
   <div class="text-right">
-    <button type="submit" class="orb-btn-primary">
+    <button type="submit" class="orb-btn orb-btn-primary">
       수정
     </button>
   </div>

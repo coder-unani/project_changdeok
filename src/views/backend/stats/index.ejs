@@ -1,16 +1,17 @@
-<div class="mb-2 block pt-2">
+<div class="my-2 block">
   <h1 class="flex items-center gap-1.5 justify-self-start py-2 text-center text-slate-700 transition-all">
     <span class="text-2xl font-semibold"><%=title%></span>
   </h1>
 </div>
-<div class="mb-4 space-y-3 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
-  <div
-    class="border-b border-gray-200 text-center text-sm font-medium text-gray-500 dark:border-gray-700 dark:text-gray-400"
-  >
-    <ul class="-mb-px flex flex-wrap">
+<div class="space-y-4">
+  <div class="rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
+    <!-- 탭메뉴 -->
+    <ul
+      class="mb-4 flex flex-wrap border-b border-slate-200 text-center text-sm font-medium text-gray-500 dark:border-gray-700 dark:text-gray-400"
+    >
       <li class="me-2">
         <button
-          class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+          class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-400"
           data-tab="access-logs"
         >
           접속 로그
@@ -18,7 +19,7 @@
       </li>
       <li class="me-2">
         <button
-          class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+          class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-400"
           data-tab="all-stats"
         >
           사용자
@@ -26,15 +27,16 @@
       </li>
       <li class="me-2">
         <button
-          class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+          class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-400"
           data-tab="daily-stats"
         >
           일별 사용자
         </button>
       </li>
+
       <li class="me-2">
         <button
-          class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+          class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-400"
           data-tab="page-stats"
         >
           페이지 뷰
@@ -42,7 +44,7 @@
       </li>
       <li class="me-2">
         <button
-          class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+          class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-400"
           data-tab="referrer-stats"
         >
           출처
@@ -50,7 +52,7 @@
       </li>
       <li class="me-2">
         <button
-          class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+          class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-400"
           data-tab="hourly-stats"
         >
           시간대
@@ -58,7 +60,7 @@
       </li>
       <li class="me-2">
         <button
-          class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+          class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-400"
           data-tab="browser-stats"
         >
           브라우저
@@ -66,76 +68,84 @@
       </li>
       <li class="me-2">
         <button
-          class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+          class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-400"
           data-tab="country-stats"
         >
           국가
         </button>
       </li>
     </ul>
-  </div>
 
-  <div id="date-container" class="hidden">
-    <div class="flex items-center justify-start gap-2">
-      <div>
-        <label class="block w-28 font-semibold text-gray-500">날짜</label>
+    <!-- 날짜 선택 -->
+    <div id="date-container" class="hidden space-y-2">
+      <div class="flex flex-col gap-2 lg:flex-row">
+        <label class="w-12 flex-none text-[13px] text-gray-500 lg:leading-11">날짜</label>
         <input
           type="date"
           id="date"
           name="date"
-          class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-          value="<%= new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0] %>"
+          class="w-[200px] rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          value="<%=new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0]%>"
         />
+        <div class="flex flex-1 justify-end">
+          <button id="btn-logs-view" class="orb-btn orb-btn-primary">조회</button>
+        </div>
       </div>
-      <button
-        id="btn-logs-view"
-        class="cursor-pointer rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
-      >
-        조회
-      </button>
     </div>
-  </div>
-  <div id="date-range-container" class="hidden">
-    <div class="flex items-center justify-start gap-2">
-      <div>
-        <label class="block w-28 font-semibold text-gray-500">시작일</label>
-        <input
-          type="date"
-          id="startDate"
-          name="startDate"
-          class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-          value="<%= new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0] %>"
-        />
+
+    <!-- 날짜 범위 선택 -->
+    <div id="date-range-container" class="hidden space-y-2">
+      <div class="flex flex-col gap-2 lg:flex-row">
+        <label class="w-12 flex-none text-[13px] text-gray-500 lg:leading-11">날짜</label>
+        <div class="flex items-center gap-2">
+          <input
+            type="date"
+            id="startDate"
+            name="startDate"
+            class="w-[200px] rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+            value="<%=new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0]%>"
+          />
+          ~
+          <input
+            type="date"
+            id="endDate"
+            name="endDate"
+            class="w-[200px] rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+            value="<%=new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0]%>"
+          />
+        </div>
+        <div class="flex flex-1 justify-end">
+          <button id="btn-stats-search" class="orb-btn orb-btn-primary">조회</button>
+        </div>
       </div>
-      <div>
-        <label class="block w-28 font-semibold text-gray-500">종료일</label>
+      <!-- <div class="flex flex-col gap-2 lg:flex-row">
+        <label class="w-12 flex-none text-[13px] text-gray-500 lg:leading-11">종료일</label>
         <input
           type="date"
           id="endDate"
           name="endDate"
-          class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-          value="<%= new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0] %>"
+          class="w-[200px] rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          value="<%=new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0]%>"
         />
+      </div> -->
+      <div class="text-[12px] leading-5 text-gray-400">
+        <p>* 접속 통계는 Google Analytics 데이터를 기반으로 합니다.</p>
+        <p>* 접속 통계는 최근 2년간의 데이터만 조회 가능합니다.</p>
+        <p>* 접속 통계에 표시되는 날짜는 UTC 기준입니다.</p>
       </div>
-      <button
-        id="btn-stats-search"
-        class="cursor-pointer rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
-      >
-        조회
-      </button>
     </div>
-    <p class="text-sm text-gray-500">* 접속 통계는 Google Analytics 데이터를 기반으로 합니다.</p>
-    <p class="text-sm text-gray-500">* 접속 통계는 최근 2년간의 데이터만 조회 가능합니다.</p>
-    <p class="text-sm text-gray-500">* 접속 통계에 표시되는 날짜는 UTC 기준입니다.</p>
   </div>
-</div>
-<div class="mb-4 space-y-3 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
-  <div id="chart-container" class="hidden h-[400px] w-full items-center justify-center">
-    <canvas id="stats-chart"></canvas>
-  </div>
-  <div id="stats-metadata"></div>
-  <div class="flex items-center justify-start">
-    <div id="stats-container"></div>
+
+  <div class="rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
+    <div id="chart-container" class="hidden h-[400px] w-full items-center justify-center">
+      <canvas id="stats-chart"></canvas>
+    </div>
+
+    <div id="stats-metadata"></div>
+
+    <div class="flex items-center justify-start">
+      <div id="stats-container"></div>
+    </div>
   </div>
 </div>
 
@@ -164,27 +174,25 @@
     const switchTab = (activeTab) => {
       // 모든 탭 버튼에서 active 클래스 제거
       document.querySelectorAll('[data-tab]').forEach((button) => {
-        button.classList.remove(
-          'active',
-          'border-blue-600',
-          'text-blue-600',
-          'dark:border-blue-500',
-          'dark:text-blue-500'
+        button.classList.remove('active', 'bg-blue-50', 'text-blue-500');
+        button.classList.add(
+          'hover:bg-gray-50',
+          'hover:text-gray-600',
+          'dark:hover:bg-gray-800',
+          'dark:hover:text-gray-400'
         );
-        button.classList.add('border-transparent');
       });
 
       // 클릭된 탭 버튼에 active 클래스 추가
       const activeButton = document.querySelector(`[data-tab="${activeTab}"]`);
       if (activeButton) {
-        activeButton.classList.remove('border-transparent');
-        activeButton.classList.add(
-          'active',
-          'border-blue-600',
-          'text-blue-600',
-          'dark:border-blue-500',
-          'dark:text-blue-500'
+        activeButton.classList.remove(
+          'hover:bg-gray-50',
+          'hover:text-gray-600',
+          'dark:hover:bg-gray-800',
+          'dark:hover:text-gray-400'
         );
+        activeButton.classList.add('active', 'bg-blue-50', 'text-blue-500');
       }
 
       if (activeTab === 'access-logs') {
@@ -590,7 +598,6 @@
     });
 
     buttonStatsSearch.addEventListener('click', () => {
-      console.log(currentTab);
       if (currentTab === null) return;
       if (currentTab === 'all-stats') {
         handleStatsClick(
