@@ -1,4 +1,4 @@
-const STATUS = {
+const httpStatus = {
   OK: 200,
   CREATED: 201,
   NO_CONTENT: 204,
@@ -10,4 +10,4 @@ const STATUS = {
   INTERNAL_SERVER_ERROR: 500,
 };
 
-export default STATUS;
+export default httpStatus;
