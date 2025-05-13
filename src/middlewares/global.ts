@@ -27,8 +27,15 @@ export class GlobalMiddleware implements IMiddleware {
       servicePort: settings.servicePort,
     };
 
+    // 서비스 URL
+    const serviceDomain = settings.serviceDomain;
+    const servicePort = settings.servicePort && settings.servicePort !== 80 ? `:${settings.servicePort}` : '';
+    const serviceUrl = `${req.protocol}://${serviceDomain}${servicePort}${req.originalUrl}`;
+
     // 오픈그래프 태그
     const ogTag = settings.ogTagJson ? JSON.parse(settings.ogTagJson) : null;
+    ogTag['og:type'] = 'website';
+    ogTag['og:url'] = serviceUrl;
 
     // 회사 정보
     const companyInfo = settings.companyJson ? JSON.parse(settings.companyJson) : null;
