@@ -1,3 +1,4 @@
+import { IApiResponse } from '../../types/config';
 import { typeFormattedResult } from '../../types/format';
 
 export const REG_DATE_PATTERN =
