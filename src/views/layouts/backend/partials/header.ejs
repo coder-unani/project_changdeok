@@ -4,9 +4,11 @@
   <!-- 로고 -->
   <a href="<%=backendRoutes.index.url%>">
     <div class="flex items-center justify-center gap-1.5">
-      <span class="text-slate-700">
-        <img src="<%=settings.companyInfo.logo%>" alt="<%=settings.companyInfo.name%>" class="h-6 w-6" />
-      </span>
+      <% if (settings.companyInfo.logo) { %>
+        <span class="text-slate-700">
+          <img src="<%=settings.companyInfo.logo%>" alt="<%=settings.companyInfo.name%>" class="h-6 w-6" />
+        </span>
+      <% } %>
       <span class="text-2xl font-bold text-slate-700"><%=settings.companyInfo.name.toUpperCase()%></span>
     </div>
   </a>
