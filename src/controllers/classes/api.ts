@@ -1,13 +1,10 @@
-import { exec } from 'child_process';
 import { Request, Response } from 'express';
-import { promisify } from 'util';
 
+import { httpStatus } from '../../common/constants';
 import { AppError, AuthError, ForbiddenError, ValidationError } from '../../common/error';
 import { getCookie, removeCookie, setCookie } from '../../common/utils/cookie';
 import { formatApiResponse } from '../../common/utils/format';
 import { getAccessedEmployee } from '../../common/utils/verify';
-import { httpStatus } from '../../common/variables';
-import { companyInfo } from '../../config/info';
 import { apiRoutes } from '../../config/routes';
 import { prisma } from '../../library/database';
 import { createJWT, verifyJWT } from '../../library/jwt';
@@ -51,18 +48,6 @@ import {
 } from '../../types/service';
 
 export class ApiController {
-  // 웹사이트 정보
-  public async info(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.info;
-
-    try {
-      const response = formatApiResponse(true, null, null, null, companyInfo);
-      res.status(httpStatus.OK).json(response);
-    } catch (error) {
-      this.handleError(error, res);
-    }
-  }
-
   // 배너 등록
   public async bannerWrite(req: Request, res: Response): Promise<void> {
     const { permissions } = apiRoutes.banners.write;
@@ -622,7 +607,7 @@ export class ApiController {
 
       // 로그인 확인
       const accessToken = getCookie(req, 'accessToken');
-      const tokenEmployee = accessToken ? verifyJWT(accessToken) : null;
+      const tokenEmployee = accessToken ? await verifyJWT(accessToken) : null;
       if (!tokenEmployee) {
         throw new AuthError('로그인 정보가 없습니다.');
       }
@@ -746,7 +731,7 @@ export class ApiController {
 
       // 로그인 확인
       const accessToken = getCookie(req, 'accessToken');
-      const tokenEmployee = accessToken ? verifyJWT(accessToken) : null;
+      const tokenEmployee = accessToken ? await verifyJWT(accessToken) : null;
       if (!tokenEmployee) {
         throw new AuthError('로그인 정보가 없습니다.');
       }
@@ -873,7 +858,7 @@ export class ApiController {
       const requestPermissions = requestData.permissions.map((permission: any) => parseInt(permission));
 
       // 로그인 유저 정보
-      const decodedToken = verifyJWT(req.cookies.accessToken);
+      const decodedToken = await verifyJWT(req.cookies.accessToken);
       const grantedById = decodedToken ? parseInt(decodedToken.id) : null;
 
       // 로그인 확인
@@ -966,7 +951,7 @@ export class ApiController {
           name: result.data.name,
           permissions: result.data.permissions,
         };
-        const token = createJWT(tokenData);
+        const token = await createJWT(tokenData);
 
         if (token) {
           setCookie(res, 'accessToken', token);

@@ -8,19 +8,19 @@ import {
   getApiContentGroup,
   getApiContents,
   getApiEmployeeDetail,
+  getApiEmployees,
   getApiPermissionList,
   getApiSettings,
 } from '../../common/api';
+import { httpStatus } from '../../common/constants';
 import { AppError, AuthError, NotFoundError, ValidationError } from '../../common/error';
 import { getCookie } from '../../common/utils/cookie';
 import { getAccessToken } from '../../common/utils/verify';
-import { httpStatus } from '../../common/variables';
-import { CONFIG } from '../../config/config';
 import { apiRoutes, backendRoutes } from '../../config/routes';
 import { prisma } from '../../library/database';
 import { decryptDataAES } from '../../library/encrypt';
 import { verifyJWT } from '../../library/jwt';
-import { EmployeeService, StatsService } from '../../services';
+import { EmployeeService } from '../../services';
 import { IPageData, IPermission, IRoute } from '../../types/config';
 import { IEmployeeToken } from '../../types/object';
 import { IRequestBanners, IRequestContents, typeListSort } from '../../types/request';
@@ -420,7 +420,7 @@ export class BackendController extends BaseWebController {
       // 게시글 상세 content가 있을 경우
       if (getContentGroup.data?.isEncrypt && getContentDetail.data?.content) {
         // AES 복호화
-        getContentDetail.data.content = decryptDataAES(getContentDetail.data?.content);
+        getContentDetail.data.content = await decryptDataAES(getContentDetail.data?.content);
       }
 
       // 페이지 데이터 생성
@@ -477,7 +477,7 @@ export class BackendController extends BaseWebController {
 
       // 직원 정보 조회
       const accessToken = req.cookies.accessToken;
-      const decodedToken = accessToken ? verifyJWT(accessToken) : null;
+      const decodedToken = accessToken ? await verifyJWT(accessToken) : null;
 
       // 현재 로그인한 직원 정보 조회
       const { data: grantedByEmployee } = await getApiEmployeeDetail(decodedToken.id);
@@ -639,7 +639,7 @@ export class BackendController extends BaseWebController {
 
       // 직원 정보 조회
       const accessToken = req.cookies.accessToken;
-      const decodedToken = accessToken ? verifyJWT(accessToken) : null;
+      const decodedToken = accessToken ? await verifyJWT(accessToken) : null;
 
       // Access Token이 없는 경우 에러 페이지로 이동
       if (!decodedToken) {
@@ -695,35 +695,24 @@ export class BackendController extends BaseWebController {
       const queryParams = new URLSearchParams(req.body).toString();
 
       // 관리자 목록 조회
-      let apiUrl = CONFIG.SERVICE_URL;
-      apiUrl = CONFIG.SERVICE_PORT ? `${apiUrl}:${CONFIG.SERVICE_PORT}` : apiUrl;
-      apiUrl = `${apiUrl}${apiRoutes.employees.list.url}?${queryParams}`;
-      const apiResponse = await fetch(apiUrl, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const { result, message, metadata, data: employees } = await getApiEmployees(1, 10);
 
-      // 응답 오류
-      if (!apiResponse.ok) {
-        throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, apiResponse.statusText);
+      if (!result) {
+        throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, message || '관리자 목록 조회 실패');
       }
 
-      // JSON 파싱
-      const result = await apiResponse.json();
+      if (!employees) {
+        throw new NotFoundError('관리자 목록이 없습니다.');
+      }
 
       // 페이지 데이터 생성
       const data = this.createPageData(
         route,
         route.title,
         {
-          result: result.result,
-          code: result.code,
-          message: result.message,
-          ...result.metadata,
+          ...metadata,
         },
-        result.data
+        employees
       );
 
       // 직원 목록 페이지 렌더링
@@ -736,12 +725,12 @@ export class BackendController extends BaseWebController {
   // 직원 로그인
   public employeeLogin = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
-      const metadata = {
-        recaptchaSiteKey: CONFIG.RECAPTCHA_SITE_KEY,
-      };
+      // const metadata = {
+      //   recaptchaSiteKey: config.getRecaptchaSiteKey(),
+      // };
 
       // 페이지 데이터 생성
-      const data = this.createPageData(route, '', metadata);
+      const data = this.createPageData(route, '');
 
       // 로그인 페이지 렌더링
       res.render(route.view, data);
