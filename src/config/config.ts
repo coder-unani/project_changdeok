@@ -153,7 +153,7 @@ export class Config {
 
   public getCORSApiOptions = (): ICORSOptions => {
     return {
-      origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+      origin: this.settings?.enabledCorsJson || '',
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization'],
       credentials: true,
@@ -164,14 +164,14 @@ export class Config {
 
   public getCORSBackendOptions = (): ICORSOptions => {
     return {
-      origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+      origin: this.settings?.enabledCorsJson || '',
       optionsSuccessStatus: 200,
     };
   };
 
   public getCORSFrontendOptions = (): ICORSOptions => {
     return {
-      origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+      origin: this.settings?.enabledCorsJson || '',
       optionsSuccessStatus: 200,
     };
   };
