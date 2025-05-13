@@ -100,10 +100,12 @@ class ApiRouter {
       }
     );
 
+    // 배너 상세 조회
     this.router.get(apiRoutes.banners.detail.url, (req: Request, res: Response) => {
       this.apiController.bannerDetail(req, res);
     });
 
+    // 배너 수정
     this.router.put(
       apiRoutes.banners.update.url,
       (req: Request, res: Response, next: NextFunction) => this.bannerUploadMiddleware.handle(req, res, next),
@@ -112,14 +114,17 @@ class ApiRouter {
       }
     );
 
+    // 배너 삭제
     this.router.delete(apiRoutes.banners.delete.url, (req: Request, res: Response) => {
       this.apiController.bannerDelete(req, res);
     });
 
+    // 배너 목록 조회
     this.router.get(apiRoutes.banners.list.url, (req: Request, res: Response) => {
       this.apiController.banners(req, res);
     });
 
+    // 배너 그룹 조회
     this.router.get(apiRoutes.banners.group.url, (req: Request, res: Response) => {
       this.apiController.bannerGroup(req, res);
     });
@@ -129,26 +134,32 @@ class ApiRouter {
       this.apiController.contents(req, res);
     });
 
+    // 컨텐츠 그룹 조회
     this.router.get(apiRoutes.contents.group.url, (req: Request, res: Response) => {
       this.apiController.contentGroupInfo(req, res);
     });
 
+    // 컨텐츠 등록
     this.router.post(apiRoutes.contents.write.url, (req: Request, res: Response) => {
       this.apiController.contentWrite(req, res);
     });
 
+    // 컨텐츠 상세 조회
     this.router.get(apiRoutes.contents.detail.url, (req: Request, res: Response) => {
       this.apiController.contentDetail(req, res);
     });
 
+    // 컨텐츠 수정
     this.router.put(apiRoutes.contents.update.url, (req: Request, res: Response) => {
       this.apiController.contentUpdate(req, res);
     });
 
+    // 컨텐츠 삭제
     this.router.delete(apiRoutes.contents.delete.url, (req: Request, res: Response) => {
       this.apiController.contentDelete(req, res);
     });
 
+    // 컨텐츠 이미지 업로드
     this.router.post(
       apiRoutes.contents.uploadImage.url,
       (req: Request, res: Response, next: NextFunction) => this.contentImageUploadMiddleware.handle(req, res, next),
@@ -157,31 +168,37 @@ class ApiRouter {
       }
     );
 
-    // 직원 관련 라우트
+    // 직원 등록
     this.router.post(apiRoutes.employees.regist.url, (req: Request, res: Response) => {
       this.apiController.employeeRegist(req, res);
     });
 
+    // 직원 수정
     this.router.put(apiRoutes.employees.update.url, (req: Request, res: Response) => {
       this.apiController.employeeUpdate(req, res);
     });
 
+    // 직원 비밀번호 변경
     this.router.patch(apiRoutes.employees.updatePassword.url, (req: Request, res: Response) => {
       this.apiController.employeeUpdatePassword(req, res);
     });
 
+    // 직원 삭제
     this.router.delete(apiRoutes.employees.delete.url, (req: Request, res: Response) => {
       this.apiController.employeeDelete(req, res);
     });
 
+    // 직원 권한 수정
     this.router.patch(apiRoutes.employees.permissions.url, (req: Request, res: Response) => {
       this.apiController.employeePermissions(req, res);
     });
 
+    // 직원 목록 조회
     this.router.get(apiRoutes.employees.list.url, (req: Request, res: Response) => {
       this.apiController.employees(req, res);
     });
 
+    // 직원 로그인
     this.router.post(
       apiRoutes.employees.login.url,
       (req, res, next) => this.recaptchaMiddleware.handle(req, res, next),
@@ -190,6 +207,7 @@ class ApiRouter {
       }
     );
 
+    // 직원 로그아웃
     this.router.post(apiRoutes.employees.logout.url, (req: Request, res: Response) => {
       this.apiController.employeeLogout(req, res);
     });
@@ -198,40 +216,47 @@ class ApiRouter {
       this.apiController.employeeDetail(req, res);
     });
 
-    // 권한 관련 라우트
+    // 권한 목록 조회
     this.router.get(apiRoutes.permissions.url, (req: Request, res: Response) => {
       this.apiController.permissions(req, res);
     });
 
-    // 통계 관련 라우트
+    // 방문자 통계 조회
     this.router.get(apiRoutes.stats.visitor.url, (req: Request, res: Response) => {
       this.apiController.statsVisitor(req, res);
     });
 
+    // 일일 방문자 통계 조회
     this.router.get(apiRoutes.stats.dailyVisitor.url, (req: Request, res: Response) => {
       this.apiController.statsDailyVisitor(req, res);
     });
 
+    // 페이지 뷰 통계 조회
     this.router.get(apiRoutes.stats.pageView.url, (req: Request, res: Response) => {
       this.apiController.statsPageView(req, res);
     });
 
+    // 국가 통계 조회
     this.router.get(apiRoutes.stats.country.url, (req: Request, res: Response) => {
       this.apiController.statsCountry(req, res);
     });
 
+    // 참조 통계 조회
     this.router.get(apiRoutes.stats.referrer.url, (req: Request, res: Response) => {
       this.apiController.statsReferrer(req, res);
     });
 
+    // 시간대 통계 조회
     this.router.get(apiRoutes.stats.hourly.url, (req: Request, res: Response) => {
       this.apiController.statsHourly(req, res);
     });
 
+    // 브라우저 통계 조회
     this.router.get(apiRoutes.stats.browser.url, (req: Request, res: Response) => {
       this.apiController.statsBrowser(req, res);
     });
 
+    // 접속 로그 조회
     this.router.get(apiRoutes.stats.accessLogs.url, (req: Request, res: Response) => {
       this.apiController.statsAccessLogs(req, res);
     });
