@@ -13,7 +13,7 @@
   <div class="space-y-4 text-sm bg-white p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
     <div>
       <div class="flex justify-between items-baseline">
-        <label for="image" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">
+        <label for="image" class="block flex-none mb-2 text-[13px] text-gray-500">
           이미지<% if (metadata.groupInfo.kind === 'image') { %><span class="pl-0.5 text-red-500">*</span><% } %>
         </label>
       </div>
@@ -47,33 +47,33 @@
       </div>
     </div>
     <div>
-      <label for="title" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">제목<span class="pl-0.5 text-red-500">*</span></label>
-      <input type="text" id="title" name="title" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="제목을 입력해주세요." required>
+      <label for="title" class="block flex-none mb-2 text-[13px] text-gray-500">제목<span class="pl-0.5 text-red-500">*</span></label>
+      <input type="text" id="title" name="title" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200" placeholder="제목을 입력해주세요." required>
     </div>
     
     <div>
-      <label for="description" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">설명</label>
-      <input type="text" id="description" name="description" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="설명을 입력해주세요.">
+      <label for="description" class="block flex-none mb-2 text-[13px] text-gray-500">설명</label>
+      <input type="text" id="description" name="description" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200" placeholder="설명을 입력해주세요.">
     </div>
 
     <div class="flex flex-col lg:flex-row gap-4">
       <div class="flex-1">
-        <label for="linkType" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">링크 타입</label>
-        <select id="linkType" name="linkType" class="w-full p-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-r-12 border-gray-100">
+        <label for="linkType" class="block flex-none mb-2 text-[13px] text-gray-500">링크 타입</label>
+        <select id="linkType" name="linkType" class="w-full p-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 border-r-12 border-gray-100">
           <option value="">선택</option>
           <option value="self">내부 링크</option>
           <option value="outer">외부 링크</option>
         </select>
       </div>
       <div class="flex-3">
-        <label for="linkUrl" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">링크</label>
-        <input type="text" id="linkUrl" name="linkUrl" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="링크 주소를 입력해주세요.">
+        <label for="linkUrl" class="block flex-none mb-2 text-[13px] text-gray-500">링크</label>
+        <input type="text" id="linkUrl" name="linkUrl" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200" placeholder="링크 주소를 입력해주세요.">
       </div>
     </div>
 
     <div>
-      <label for="isPublished" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">발행 여부</label>
-      <select id="isPublished" name="isPublished" class="w-full p-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-r-12 border-gray-100">
+      <label for="isPublished" class="block flex-none mb-2 text-[13px] text-gray-500">발행 여부</label>
+      <select id="isPublished" name="isPublished" class="w-full p-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 border-r-12 border-gray-100">
         <option value="N">미발행</option>
         <option value="Y">발행</option>
       </select>
@@ -81,18 +81,18 @@
 
     <div class="flex flex-col lg:flex-row gap-4">
       <div class="flex-1">
-        <label for="publishedAt" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">발행 일시<span class="pl-0.5 text-red-500">*</span></label>
-        <input type="datetime-local" id="publishedAt" name="publishedAt" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+        <label for="publishedAt" class="block flex-none mb-2 text-[13px] text-gray-500">발행 일시<span class="pl-0.5 text-red-500">*</span></label>
+        <input type="datetime-local" id="publishedAt" name="publishedAt" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200" required>
       </div>
       <div class="flex-1">
-        <label for="unpublishedAt" class="block flex-none mb-2 font-medium text-[13px] text-gray-400">발행 마감 일시<span class="pl-0.5 text-red-500">*</span></label>
-        <input type="datetime-local" id="unpublishedAt" name="unpublishedAt" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+        <label for="unpublishedAt" class="block flex-none mb-2 text-[13px] text-gray-500">발행 마감 일시<span class="pl-0.5 text-red-500">*</span></label>
+        <input type="datetime-local" id="unpublishedAt" name="unpublishedAt" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200" required>
       </div>
     </div>
   </div>
       
   <div class="text-right">
-    <button type="submit" class="orb-btn-primary">
+    <button type="submit" class="orb-btn orb-btn-primary">
       등록
     </button>
   </div>

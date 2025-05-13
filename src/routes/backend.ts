@@ -59,7 +59,6 @@ class BackendRouter {
 
     // 화면관리: 배너 상세
     this.router.get(backendRoutes.banners.detail.url, (req, res) => {
-      console.log(backendRoutes.banners.detail);
       this.backendController.bannerDetail(backendRoutes.banners.detail, req, res);
     });
 

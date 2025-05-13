@@ -121,8 +121,6 @@ export class SettingsService extends BaseService implements ISettingsService {
       if (data.enabledTagsJson) updateData.enabledTagsJson = data.enabledTagsJson;
       if (data.enabledCorsJson) updateData.enabledCorsJson = data.enabledCorsJson;
 
-      console.log(updateData);
-
       // 사이트 셋팅 업데이트
       await this.prisma.settings.update({
         where: {

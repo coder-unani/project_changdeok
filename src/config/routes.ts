@@ -192,7 +192,7 @@ export const backendRoutes = {
   employees: {
     list: createRoute(
       'GET',
-      '관리자',
+      '관리자 목록',
       `${backendRoutesPrefix}/employees`,
       'backend/employees/list',
       backendRoutesLayout,
@@ -224,7 +224,7 @@ export const backendRoutes = {
     ),
     updatePassword: createRoute(
       'GET',
-      '관리자 비밀번호 수정',
+      '관리자 비밀번호 변경',
       `${backendRoutesPrefix}/employees/:employeeId/update-password`,
       'backend/employees/update-password',
       backendRoutesLayout,

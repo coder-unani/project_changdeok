@@ -3,19 +3,19 @@
     <span class="text-2xl font-semibold"><%=title%></span>
   </h1>
 </div>
-<div class="py-2 mb-2 rounded-xl">
+<div class="py-2 mb-2">
   <div class="flex justify-between items-center">
     <div>
-      <a href="<%=backendRoutes.contents.write.url.replace(':groupId', metadata.group.id)%>" class="orb-btn-primary">게시글 등록</a>
+      <a href="<%=backendRoutes.contents.write.url.replace(':groupId', metadata.group.id)%>" class="orb-btn orb-btn-primary">게시글 등록</a>
     </div>
     <div class="flex-1 flex justify-end">
       <div class="relative w-full lg:max-w-[200px] ml-4">
         <input
-        class="w-full pr-11 h-10 pl-3 py-2 bg-gray-200 placeholder:text-gray-400 text-gray-700 text-sm rounded-lg transition duration-200 ease focus:outline-none focus:bg-gray-300 hover:bg-gray-300"
+        class="w-full pr-11 pl-4 py-3 bg-gray-200 text-gray-700 text-sm placeholder:text-gray-400 rounded-lg transition duration-200 ease focus:outline-none focus:ring-2 focus:ring-blue-200"
         placeholder="게시물 검색"
         />
         <button
-        class="absolute h-8 w-8 right-1 top-1 my-auto px-2 flex items-center bg-transparent rounded"
+        class="absolute h-8 w-8 inset-y-0 right-2 my-auto px-2 flex items-center bg-transparent rounded"
         type="button"
         >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-8 h-8 text-gray-600">
@@ -32,10 +32,10 @@
     <table>
       <thead>
       <tr>
-        <th class="text-center w-24 min-w-24"><p>글번호</p></th>
-        <th class="text-center w-auto min-w-[280px]"><p>제목</p></th>
-        <th class="text-center w-32 min-w-32"><p>작성자</p></th>
-        <th class="hidden lg:table-cell text-center w-32 min-w-32"><p>작성일</p></th>
+        <th class="w-24 min-w-24 text-center"><p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500">글번호</p></th>
+        <th class="w-auto min-w-[280px] text-center"><p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500">제목</p></th>
+        <th class="w-32 min-w-32 text-center"><p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500">작성자</p></th>
+        <th class="hidden w-32 min-w-32 text-center lg:table-cell"><p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500">작성일</p></th>
       </tr>
       </thead>
       <tbody>
