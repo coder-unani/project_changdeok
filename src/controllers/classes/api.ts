@@ -50,12 +50,7 @@ import {
 export class ApiController {
   // 배너 등록
   public async bannerWrite(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.banners.write;
-
     try {
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-
       // 로그인 직원 정보
       const accessedEmployee = getAccessedEmployee(req);
       if (!accessedEmployee) {
@@ -123,12 +118,7 @@ export class ApiController {
 
   // 배너 상세 정보
   public async bannerDetail(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.banners.detail;
-
     try {
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-
       // 배너 ID
       const bannerId = parseInt(req.params.bannerId);
       if (isNaN(bannerId)) {
@@ -154,12 +144,7 @@ export class ApiController {
 
   // 배너 수정
   public async bannerUpdate(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.banners.update;
-
     try {
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-
       // 로그인 직원 정보
       const accessedEmployee = getAccessedEmployee(req);
       if (!accessedEmployee) {
@@ -217,12 +202,7 @@ export class ApiController {
 
   // 배너 삭제
   public async bannerDelete(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.banners.delete;
-
     try {
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-
       // 배너 ID
       const bannerId = parseInt(req.params.bannerId);
       if (isNaN(bannerId)) {
@@ -247,12 +227,7 @@ export class ApiController {
 
   // 배너 목록
   public async banners(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.banners.list;
-
     try {
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-
       // 배너 그룹 ID
       const groupId = parseInt(req.query.groupId as string);
       if (!groupId || isNaN(groupId)) {
@@ -293,11 +268,7 @@ export class ApiController {
 
   // 배너 그룹
   public async bannerGroup(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.banners.group;
     try {
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-
       // 배너 그룹 ID
       let groupIds: number[] = [];
       if (req.params.groupIds != 'all') {
@@ -325,12 +296,7 @@ export class ApiController {
 
   // 컨텐츠 목록
   public async contents(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.contents.list;
-
     try {
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-
       // 컨텐츠 그룹 ID 추출
       const groupId = parseInt(req.params.groupId);
 
@@ -366,12 +332,7 @@ export class ApiController {
 
   // 컨텐츠 등록
   public async contentWrite(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.contents.write;
-
     try {
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-
       // 컨텐츠 그룹 ID 추출
       const groupId = parseInt(req.params.groupId);
 
@@ -410,12 +371,7 @@ export class ApiController {
 
   // 컨텐츠 상세 정보
   public async contentDetail(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.contents.detail;
-
     try {
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-
       // 컨텐츠 그룹 ID 추출
       const groupId = parseInt(req.params.groupId);
 
@@ -446,12 +402,7 @@ export class ApiController {
 
   // 컨텐츠 수정
   public async contentUpdate(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.contents.update;
-
     try {
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-
       // 컨텐츠 그룹 ID 추출
       const groupId = parseInt(req.params.groupId);
 
@@ -488,12 +439,7 @@ export class ApiController {
    * @param res Response
    */
   public async contentDelete(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.contents.delete;
-
     try {
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-
       // 컨텐츠 그룹 ID 추출
       const groupId = parseInt(req.params.groupId);
 
@@ -563,12 +509,7 @@ export class ApiController {
 
   // 컨텐츠 그룹 정보
   public async contentGroupInfo(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.contents.group;
-
     try {
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-
       // 컨텐츠 그룹 ID 추출
       const groupId = parseInt(req.params.groupId);
 
@@ -596,12 +537,7 @@ export class ApiController {
 
   // 직원 등록
   public async employeeRegist(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.employees.regist;
-
     try {
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-
       // 요청 데이터
       const requestData: IRequestEmployeeRegister = req.body;
 
@@ -634,12 +570,7 @@ export class ApiController {
 
   // 직원 상세
   public async employeeDetail(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.employees.detail;
-
     try {
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-
       // 직원 ID 추출
       const employeeId = parseInt(req.params.employeeId);
 
@@ -667,12 +598,7 @@ export class ApiController {
 
   // 직원 정보 수정
   public async employeeUpdate(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.employees.update;
-
     try {
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-
       // 직원 ID 추출
       const employeeId = parseInt(req.params.employeeId);
 
@@ -715,12 +641,7 @@ export class ApiController {
 
   // 직원 비밀번호 변경
   public async employeeUpdatePassword(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.employees.updatePassword;
-
     try {
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-
       // 직원 ID 추출
       const employeeId = parseInt(req.params.employeeId);
 
@@ -799,12 +720,7 @@ export class ApiController {
 
   // 직원 삭제
   public async employeeDelete(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.employees.delete;
-
     try {
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-
       // 직원 ID 추출
       const employeeId = parseInt(req.params.employeeId);
 
@@ -839,12 +755,7 @@ export class ApiController {
 
   // 직원 권한 수정/변경
   public async employeePermissions(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.employees.permissions;
-
     try {
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-
       // 직원 ID 추출
       const employeeId = parseInt(req.params.employeeId);
 
@@ -897,12 +808,7 @@ export class ApiController {
 
   // 직원 목록
   public async employees(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.employees.list;
-
     try {
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-
       // 요청 데이터
       const requestData: IRequestEmployees = {
         page: parseInt(req.query.page as string) || 1,
@@ -985,12 +891,7 @@ export class ApiController {
 
   // 권한 목록
   public async permissions(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.permissions;
-
     try {
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-
       // 요청 데이터
       const requestData: IRequestDefaultList = {
         page: parseInt(req.query.page as string) || 1,
@@ -1017,8 +918,6 @@ export class ApiController {
 
   // 방문자 통계
   public async statsVisitor(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.stats.visitor;
-
     try {
       const statsService: IStatsService = new StatsService(prisma);
       const { result, code, message, metadata, data } = await statsService.getVisitorStats(
@@ -1039,8 +938,6 @@ export class ApiController {
 
   // 일간 방문자 통계
   public async statsDailyVisitor(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.stats.dailyVisitor;
-
     try {
       const statsService: IStatsService = new StatsService(prisma);
       const { result, code, message, metadata, data } = await statsService.getDailyVisitorStats(
@@ -1061,8 +958,6 @@ export class ApiController {
 
   // 페이지 뷰 통계
   public async statsPageView(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.stats.pageView;
-
     try {
       const statsService: IStatsService = new StatsService(prisma);
       const { result, code, message, metadata, data } = await statsService.getPageViews(
@@ -1083,8 +978,6 @@ export class ApiController {
 
   // 국가 통계
   public async statsCountry(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.stats.country;
-
     try {
       const statsService: IStatsService = new StatsService(prisma);
       const { result, code, message, metadata, data } = await statsService.getCountryStats(
@@ -1105,8 +998,6 @@ export class ApiController {
 
   // 참조 통계
   public async statsReferrer(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.stats.referrer;
-
     try {
       const statsService: IStatsService = new StatsService(prisma);
       const { result, code, message, metadata, data } = await statsService.getReferrerStats(
@@ -1127,8 +1018,6 @@ export class ApiController {
 
   // 시간대별 통계
   public async statsHourly(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.stats.hourly;
-
     try {
       const statsService: IStatsService = new StatsService(prisma);
       const { result, code, message, metadata, data } = await statsService.getHourlyStats(
@@ -1149,8 +1038,6 @@ export class ApiController {
 
   // 브라우저 통계
   public async statsBrowser(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.stats.browser;
-
     try {
       const statsService: IStatsService = new StatsService(prisma);
       const { result, code, message, metadata, data } = await statsService.getBrowserStats(
@@ -1171,8 +1058,6 @@ export class ApiController {
 
   // 접속 로그 통계
   public async statsAccessLogs(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.stats.accessLogs;
-
     try {
       const statsService: IStatsService = new StatsService(prisma);
       const { result, code, message, metadata, data } = await statsService.getAccessLogs(req.query.date as string);
@@ -1190,12 +1075,7 @@ export class ApiController {
 
   // 기본 설정 조회
   public async getSettings(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.settings.read;
-
     try {
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-
       // 사이트 설정 조회
       const settingsService: ISettingsService = new SettingsService(prisma);
       const result = await settingsService.getSettings();
@@ -1216,12 +1096,7 @@ export class ApiController {
 
   // 사이트 설정 수정
   public async setSiteSettings(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.settings.updateSite;
-
     try {
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-
       // 로그인 직원 정보
       const accessedEmployee = getAccessedEmployee(req);
       if (!accessedEmployee) {
@@ -1305,12 +1180,7 @@ export class ApiController {
 
   // 회사 설정 수정
   public async setCompanySettings(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.settings.updateCompany;
-
     try {
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-
       // 회사 설정 수정
       const settingsService: ISettingsService = new SettingsService(prisma);
       const result = await settingsService.updateCompanySettings(req.body.companyJson);
@@ -1327,21 +1197,9 @@ export class ApiController {
     }
   }
 
-  // 접속 설정 수정
-  public async setAccessSettings(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.settings.updateAccess;
-  }
-
   // 시스템 설정 수정
   public async setSystemSettings(req: Request, res: Response): Promise<void> {
-    const { permissions } = apiRoutes.settings.updateSystem;
-
     try {
-      // 접근 권한 체크
-      this.verifyPermission(req, permissions);
-
-      console.log('start setSystemSettings');
-
       // 요청 데이터
       const requestData: IRequestSystemSettings = {
         maxUploadSize: Number(req.body.maxUploadSize),
@@ -1351,8 +1209,6 @@ export class ApiController {
         enabledTagsJson: req.body.enabledTagsJson,
         enabledCorsJson: req.body.enabledCorsJson,
       };
-
-      console.log('req = ', requestData);
 
       // 시스템 설정 수정
       const settingsService: ISettingsService = new SettingsService(prisma);
@@ -1412,6 +1268,4 @@ export class ApiController {
       res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: '알 수 없는 오류가 발생하였습니다.' });
     }
   };
-
-  public verifyPermission(req: Request, permissions: number[] = []): void {}
 }

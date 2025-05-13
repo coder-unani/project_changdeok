@@ -241,6 +241,7 @@ class ApiRouter {
       this.apiController.getSettings(req, res);
     });
 
+    // 사이트 설정 수정
     this.router.patch(
       apiRoutes.settings.updateSite.url,
       (req: Request, res: Response, next: NextFunction) => this.siteSettingsUploadMiddleware.handle(req, res, next),
@@ -249,23 +250,22 @@ class ApiRouter {
       }
     );
 
+    // 회사 설정 수정
     this.router.patch(apiRoutes.settings.updateCompany.url, (req: Request, res: Response) => {
       this.apiController.setCompanySettings(req, res);
     });
 
-    this.router.patch(apiRoutes.settings.updateAccess.url, (req: Request, res: Response) => {
-      this.apiController.setAccessSettings(req, res);
-    });
-
+    // 시스템 설정 수정
     this.router.patch(apiRoutes.settings.updateSystem.url, (req: Request, res: Response) => {
       this.apiController.setSystemSettings(req, res);
     });
 
-    // 시스템 관련 라우트
+    // 시스템 재시작
     this.router.post(apiRoutes.systems.restart.url, (req: Request, res: Response) => {
       this.apiController.systemRestart(req, res);
     });
 
+    // 시스템 상태 확인
     this.router.get(apiRoutes.systems.status.url, (req: Request, res: Response) => {
       this.apiController.systemStatus(req, res);
     });
