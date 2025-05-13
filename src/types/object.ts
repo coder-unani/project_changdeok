@@ -104,6 +104,7 @@ export interface IEmployee {
   fireDate?: typeOptionalString;
   isActivated?: boolean;
   permissions?: number[];
+  lastLoginAt?: typeOptionalString;
   createdAt?: typeOptionalString;
   updatedAt?: typeOptionalString;
 }

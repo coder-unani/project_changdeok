@@ -34,6 +34,19 @@
       <label class="block w-28 text-[13px] text-gray-500">주소</label>
       <p class="text-gay-800"><%=data.address%></p>
     </div>
+
+    <!-- Last Login -->
+    <div class="flex items-center">
+      <label class="block w-28 text-[13px] text-gray-500">마지막 로그인</label>
+      <p class="text-gray-800"><%=data.lastLoginAt ?? '-' %></p>
+    </div>
+
+    <!-- Created At -->
+    <div class="flex items-center">
+      <label class="block w-28 text-[13px] text-gray-500">생성일</label>
+      <p class="text-gray-800"><%=data.createdAt%></p>
+    </div>
+    
   </div>
   <div class="mb-2">
     <h1 class='flex justify-self-start items-center gap-1.5 py-2 text-center text-slate-700 transition-all'>

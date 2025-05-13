@@ -52,6 +52,7 @@ export class EmployeeService extends BaseService implements IEmployeeService {
     const hireDate = employee.hireDate ? convertDateToString(convertDateToKST(employee.hireDate)) : null;
     const fireDate = employee.fireDate ? convertDateToString(convertDateToKST(employee.fireDate)) : null;
     const birthDate = employee.birthDate ? convertDateToString(convertDateToKST(employee.birthDate)) : null;
+    const lastLoginAt = employee.lastLoginAt ? convertDateToString(convertDateToKST(employee.lastLoginAt)) : null;
     const createdAt = employee.createdAt ? convertDateToString(convertDateToKST(employee.createdAt)) : null;
     const updatedAt = employee.updatedAt ? convertDateToString(convertDateToKST(employee.updatedAt)) : null;
 
@@ -69,6 +70,7 @@ export class EmployeeService extends BaseService implements IEmployeeService {
       birthDate,
       isActivated: employee.isActivated,
       permissions: employee.permissions?.map((p: any) => p.permissionId),
+      lastLoginAt,
       createdAt,
       updatedAt,
     };

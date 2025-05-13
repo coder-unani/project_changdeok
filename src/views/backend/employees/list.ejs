@@ -39,8 +39,8 @@
           <th class="w-24 min-w-24 text-center"><p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500">번호</p></th>
           <th class="w-auto text-center"><p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500">이메일</p></th>
           <th class="w-32 min-w-32 text-center"><p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500">이름</p></th>
-          <th class="hidden w-32 min-w-32 text-center lg:table-cell"><p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500">직급</p></th>
           <th class="hidden w-32 min-w-32 text-center lg:table-cell"><p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500">생성일</p></th>
+          <th class="hidden w-32 min-w-32 text-center lg:table-cell"><p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500">마지막 로그인</p></th>
       </tr>
       </thead>
       <tbody>
@@ -61,10 +61,10 @@
               <a href="/admin/employees/<%=employee.id%>" class="hover:underline decoration-gray-800"><p><%=employee.name%></p></a>
             </td>
             <td class="hidden lg:table-cell text-center">
-              <p><%=employee.position ?? '-'%></p>
+              <p><%=employee.createdAt%></p>
             </td>
             <td class="hidden lg:table-cell text-center">
-              <p><%=employee.createdAt%></p>
+              <p><%=employee.lastLoginAt ?? '-' %></p>
             </td>
           </tr>
         <% }); } %>
