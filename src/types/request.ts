@@ -79,6 +79,10 @@ export interface IRequestEmployeeDelete {
 export interface IRequestEmployeeLogin {
   email: string;
   password: string;
+  origin?: string;
+  referer?: string;
+  clientIp?: string;
+  userAgent?: string;
 }
 
 export interface IRequestDefaultList {

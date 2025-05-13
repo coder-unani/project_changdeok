@@ -838,7 +838,14 @@ export class ApiController {
   public async employeeLogin(req: Request, res: Response): Promise<void> {
     try {
       // 요청 데이터
-      const requestData: IRequestEmployeeLogin = req.body;
+      const requestData: IRequestEmployeeLogin = {
+        email: req.body.email,
+        password: req.body.password,
+        clientIp: (req.headers['x-forwarded-for'] as string) || (req.ip as string),
+        userAgent: req.headers['user-agent'] as string,
+        origin: req.headers['origin'] as string,
+        referer: req.headers['referer'] as string,
+      };
 
       // 직원 로그인 처리
       const employeeService: IEmployeeService = new EmployeeService(prisma);

@@ -438,7 +438,22 @@ export class EmployeeService extends BaseService implements IEmployeeService {
       // 마지막 로그인 시간 업데이트
       await this.prisma.employee.update({
         where: { id: employee.id },
-        data: { lastLoginAt: new Date(new Date().getTime() + 9 * 60 * 60 * 1000) },
+        data: { lastLoginAt: new Date() },
+      });
+
+      // 로그인 이력 기록
+      await this.prisma.employeeLoginHistory.create({
+        data: {
+          employeeId: employee.id,
+          employeeEmail: data.email,
+          loginAt: new Date(),
+          status: 'SUCCESS',
+          message: '로그인 성공',
+          origin: data.origin,
+          referer: data.referer,
+          clientIp: data.clientIp,
+          userAgent: data.userAgent,
+        },
       });
 
       // 성공
@@ -450,6 +465,20 @@ export class EmployeeService extends BaseService implements IEmployeeService {
         data: this.convertToEmployee(employee),
       };
     } catch (error) {
+      // 로그인 이력 기록
+      await this.prisma.employeeLoginHistory.create({
+        data: {
+          employeeEmail: data.email,
+          loginAt: new Date(),
+          status: 'FAIL',
+          message: error instanceof Error ? error.message : 'Unknown error',
+          origin: data.origin,
+          referer: data.referer,
+          clientIp: data.clientIp,
+          userAgent: data.userAgent,
+        },
+      });
+
       return this.handleError<IEmployee>(error);
     }
   }
