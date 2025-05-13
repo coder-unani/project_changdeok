@@ -119,6 +119,46 @@ model Employee {
 }
 
 /**
+  * EmployeeLoginHistory (직원 로그인 이력)
+  * - id: ID (자동 증가)
+  * - employeeId: 직원 ID
+  * - employeeEmail: 직원 이메일
+  * - status: 상태
+  * - message: 메시지
+  * - loginAt: 로그인 시간
+  * - logoutAt: 로그아웃 시간
+  * - origin: 원본 도메인
+  * - referer: 참조 도메인
+  * - clientIp: 클라이언트 IP
+  * - userAgent: 사용자 에이전트
+  * - createdAt: 생성시간 (자동 기록)
+  * - updatedAt: 업데이트시간 (자동 기록)
+*/
+model EmployeeLoginHistory {
+  id Int @id @default(autoincrement())
+  employeeId Int?
+  employeeEmail String
+  status String
+  message String? @db.Text
+  loginAt DateTime
+  logoutAt DateTime?
+  origin String?
+  referer String?
+  clientIp String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
+
+  // 인덱스 설정
+  @@index(employeeId, name: "idx_employee_login_history_employee_id")
+  @@index(employeeEmail, name: "idx_employee_login_history_employee_email")
+  @@index(status, name: "idx_employee_login_history_status")
+  @@index(clientIp, name: "idx_employee_login_history_client_ip")
+
+  @@map("orb_employee_login_history")
+}
+
+/**
   * Permission (권한)
   * - id: ID (자동 증가)
   * - title: 권한 명칭
