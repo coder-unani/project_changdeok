@@ -46,7 +46,7 @@
 
         // 응답 성공
         alert('<%=apiRoutes.employees.delete.title%> 성공');
-        window.location.href = '<%=routes.employees.url%>';
+        window.location.href = '<%=backendRoutes.employees.url%>';
       } catch (err) {
         alert(error.message || '서버 오류가 발생했습니다.');
       }

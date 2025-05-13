@@ -145,7 +145,7 @@
 
       // 응답 성공
       alert('<%=apiRoutes.banners.update.title%> 성공');
-      window.location.href = "<%=routes.banners.list.url%>?gp=<%=metadata.groupInfo.id%>&sq=<%=data.seq%>";
+      window.location.href = "<%=backendRoutes.banners.list.url%>?gp=<%=metadata.groupInfo.id%>&sq=<%=data.seq%>";
 
     } catch (error) {
       alert(error.message || '서버 오류가 발생했습니다.');

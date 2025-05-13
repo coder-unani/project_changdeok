@@ -76,18 +76,18 @@
 <!-- Action Buttons -->
 <div class="flex flex-col lg:flex-row flex-wrap items-center justify-between gap-1">
   <div class="flex flex-col lg:flex-row items-center gap-1 w-full lg:w-auto">
-    <a href="<%=routes.employees.update.url.replace(':employeeId', data.id)%>" class="block orb-btn-secondary">
+    <a href="<%=backendRoutes.employees.update.url.replace(':employeeId', data.id)%>" class="block orb-btn-secondary">
       정보 수정
     </a>
-    <a href="<%=routes.employees.updatePassword.url.replace(':employeeId', data.id)%>" class="orb-btn-secondary">
+    <a href="<%=backendRoutes.employees.updatePassword.url.replace(':employeeId', data.id)%>" class="orb-btn-secondary">
       비밀번호 변경
     </a>
-    <a href="<%=routes.employees.permissions.url.replace(':employeeId', data.id)%>" class="orb-btn-secondary">
+    <a href="<%=backendRoutes.employees.permissions.url.replace(':employeeId', data.id)%>" class="orb-btn-secondary">
       권한 수정
     </a>
   </div>
   <div class="flex w-full lg:w-auto">
-    <a href="<%=routes.employees.delete.url.replace(':employeeId', data.id)%>" class="orb-btn-delete">
+    <a href="<%=backendRoutes.employees.delete.url.replace(':employeeId', data.id)%>" class="orb-btn-delete">
       삭제
     </a>
   </div>

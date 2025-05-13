@@ -2,9 +2,9 @@
   <div class="w-96 rounded-lg bg-white p-4 shadow-md">
     <div class="mb-2 flex items-center justify-center gap-1.5 py-4">
       <span class="text-slate-700">
-        <img src="<%=company.logo%>" alt="<%=company.name%>" class="h-6 w-6" />
+        <img src="<%=settings.companyInfo.logo%>" alt="<%=settings.companyInfo.name%>" class="h-6 w-6" />
       </span>
-      <span class="text-2xl font-bold text-slate-700"><%=company.nameEn.toUpperCase()%></span>
+      <span class="text-2xl font-bold text-slate-700"><%=settings.companyInfo.nameEn.toUpperCase()%></span>
     </div>
     <form id="formAdminLogin">
       <div class="mb-4">
@@ -45,7 +45,7 @@
       </button>
     </form>
     <div class="mt-4 text-center">
-      <a href="<%=routes.employees.forgotPassword.url%>" class="text-sm text-blue-500 hover:underline"
+      <a href="<%=backendRoutes.employees.forgotPassword.url%>" class="text-sm text-blue-500 hover:underline"
         >비밀번호를 잊으셨나요?</a
       >
     </div>
@@ -94,7 +94,7 @@
 
           // 응답 성공
           alert('로그인 성공');
-          window.location.href = '<%=routes.index.url%>';
+          window.location.href = '<%=backendRoutes.index.url%>';
         } catch (error) {
           alert(error.message || '서버 오류가 발생했습니다.');
           grecaptcha.reset();

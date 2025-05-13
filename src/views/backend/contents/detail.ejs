@@ -47,7 +47,7 @@
 <div class="flex flex-col flex-wrap items-center justify-between gap-1 lg:flex-row">
   <div class="flex w-full lg:w-auto">
     <a
-      href="<%=routes.contents.update.url.replace(':groupId', metadata.group.id).replace(':contentId', data.id)%>"
+      href="<%=backendRoutes.contents.update.url.replace(':groupId', metadata.group.id).replace(':contentId', data.id)%>"
       class="orb-btn-secondary"
       >수정</a
     >
@@ -85,7 +85,7 @@
 
       // 응답 성공
       alert('<%=apiRoutes.contents.delete.title%> 성공');
-      window.location.href = '<%=routes.contents.list.url%>'.replace(':groupId', '<%=metadata.group.id%>');
+      window.location.href = '<%=backendRoutes.contents.list.url%>'.replace(':groupId', '<%=metadata.group.id%>');
     } catch (error) {
       alert(error.message || '서버 오류가 발생했습니다.');
     }

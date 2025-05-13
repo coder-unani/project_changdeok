@@ -142,7 +142,7 @@
 
       // 응답 성공
       alert('<%=apiRoutes.contents.write.title%> 성공');
-      window.location.href = '<%=routes.contents.list.url%>'.replace(':groupId', '<%=metadata.group.id%>');
+      window.location.href = '<%=backendRoutes.contents.list.url%>'.replace(':groupId', '<%=metadata.group.id%>');
     } catch (error) {
       alert(error.message || '서버 오류가 발생했습니다.');
     }
@@ -150,6 +150,6 @@
 
   // 취소 버튼 이벤트
   document.getElementById('btnCancel').addEventListener('click', () => {
-    window.location.href = '<%=routes.contents.list.url%>'.replace(':groupId', '<%=metadata.group.id%>');
+    window.location.href = '<%=backendRoutes.contents.list.url%>'.replace(':groupId', '<%=metadata.group.id%>');
   });
 </script>

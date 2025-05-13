@@ -145,7 +145,7 @@
 
       // 응답 성공
       alert('<%=apiRoutes.contents.update.title%> 성공');
-      window.location.href = '<%=routes.contents.detail.url%>'
+      window.location.href = '<%=backendRoutes.contents.detail.url%>'
         .replace(':groupId', '<%=metadata.group.id%>')
         .replace(':contentId', '<%=data.id%>');
     } catch (error) {
