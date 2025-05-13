@@ -428,8 +428,7 @@ export class BackendController extends BaseWebController {
         route,
         `${groupTitle} 상세`,
         {
-          group: getContentGroup.metadata,
-          content: getContentDetail.metadata,
+          ...getContentDetail.metadata,
         },
         getContentDetail.data
       );
