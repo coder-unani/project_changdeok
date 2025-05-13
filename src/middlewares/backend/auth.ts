@@ -1,11 +1,11 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
-import { IMiddleware } from '../../types/middleware';
-import { IEmployeeToken } from '../../types/object';
-import { backendRoutes } from '../../config/routes';
-import { verifyJWT } from '../../library/jwt';
 import { removeCookie } from '../../common/utils/cookie';
 import { ExpressLogger } from '../../common/utils/log';
+import { backendRoutes } from '../../config/routes';
+import { verifyJWT } from '../../library/jwt';
+import { IMiddleware } from '../../types/middleware';
+import { IEmployeeToken } from '../../types/object';
 
 // Constants
 const COOKIE_NAMES = {
@@ -39,9 +39,9 @@ export class AuthMiddleware implements IMiddleware {
   }
 
   // 토큰 검증
-  private validateToken(token: string): IEmployeeToken | null {
+  private async validateToken(token: string): Promise<IEmployeeToken | null> {
     try {
-      return verifyJWT(token);
+      return await verifyJWT(token);
     } catch (error) {
       new ExpressLogger().error(`토큰 검증 실패: ${error}`);
       return null;

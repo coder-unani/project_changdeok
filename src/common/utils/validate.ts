@@ -1,6 +1,35 @@
 import type { typeValidatedResult } from '../../types/validate';
-import { REG_DATE_PATTERN, REG_EMAIL_PATTERN, REG_PASSWORD_PATTERN, REG_PHONE_PATTERN } from '../../config/config';
 import { ValidationError } from '../error';
+
+/**
+ * 허용하는 날짜 형식
+ * 2023-10-15
+ * 2023/10/15
+ * 2023-10-15 14:30
+ * 2023/10/15 14:30
+ * 2023-10-15T14:30
+ * 2023-10-15 14:30:00
+ * 2023/10/15 14:30:00
+ * 2023-10-15T14:30:00
+ * 1981-01-12T00:00:00.000Z
+ */
+export const REG_DATE_PATTERN =
+  /^(\d{4}[-/](0[1-9]|1[0-2])[-/](0[1-9]|[12]\d|3[01]))(?:[T\s](?:((?:[01]\d|2[0-3]):[0-5]\d)(?::(?:[0-5]\d)(?:\.\d{3})?)?)(Z)?)?$/;
+
+/**
+ * 이메일 형식 체크
+ */
+export const REG_EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+/**
+ * 비밀번호 8자리 이상, 숫자, 문자, 특수문자 포함 체크
+ */
+export const REG_PASSWORD_PATTERN = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/;
+
+/**
+ * 전화번호 형식 체크
+ */
+export const REG_PHONE_PATTERN = /^\d{9,11}$/;
 
 // Integer 형식 체크 함수
 export const validateInteger = (_value: any, _fieldName: string = ''): number => {

@@ -1,6 +1,4 @@
-import { Request, Response } from 'express';
-
-import { CONFIG } from '../../config/config';
+import { Request, Response } from "express";
 
 /**
  *
@@ -24,14 +22,20 @@ export const getCookie = (req: Request, name: string): string | null => {
  * @param value 쿠키 값
  * @param options 추가 옵션
  */
-export const setCookie = (res: Response, name: string, value: string, options: any = {}): void => {
+export const setCookie = (
+  res: Response,
+  name: string,
+  value: string,
+  options: any = {},
+): void => {
   try {
     let cookieOptions = {
       httpOnly: true,
       secure: true,
-      maxAge: CONFIG.JWT_EXPIRE_SECOND * 1000,
       ...options,
     };
+
+    cookieOptions.maxAge = cookieOptions.maxAge || 3600 * 1000;
     res.cookie(name, value, cookieOptions);
   } catch (error) {
     throw error;

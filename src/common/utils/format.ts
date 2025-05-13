@@ -1,6 +1,12 @@
-import { REG_DATE_PATTERN, REG_EMAIL_PATTERN } from '../../config/config';
-import { IApiResponse } from '../../types/config';
 import { typeFormattedResult } from '../../types/format';
+
+export const REG_DATE_PATTERN =
+  /^(\d{4}[-/](0[1-9]|1[0-2])[-/](0[1-9]|[12]\d|3[01]))(?:[T\s](?:((?:[01]\d|2[0-3]):[0-5]\d)(?::(?:[0-5]\d)(?:\.\d{3})?)?)(Z)?)?$/;
+
+/**
+ * 이메일 형식 체크
+ */
+export const REG_EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 export const formatDate = (date: string | Date | undefined | null): typeFormattedResult => {
   try {

@@ -1,11 +1,16 @@
 import { NextFunction, Request, Response } from 'express';
 
+import { httpStatus } from '../../common/constants';
 import { AppError } from '../../common/error';
-import { httpStatus } from '../../common/variables';
-import { CONFIG } from '../../config/config';
 import { IMiddleware } from '../../types/middleware';
 
 export class RecaptchaMiddleware implements IMiddleware {
+  private readonly recaptchaSecretKey: string;
+
+  constructor(recaptchaSecretKey: string) {
+    this.recaptchaSecretKey = recaptchaSecretKey;
+  }
+
   public async handle(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const recaptchaToken = req.body.recaptchaToken;
@@ -19,7 +24,7 @@ export class RecaptchaMiddleware implements IMiddleware {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: `secret=${CONFIG.RECAPTCHA_SECRET_KEY}&response=${recaptchaToken}`,
+        body: `secret=${this.recaptchaSecretKey}&response=${recaptchaToken}`,
       });
 
       if (!response.ok) {

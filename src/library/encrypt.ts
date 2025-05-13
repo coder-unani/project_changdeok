@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import CryptoJS from 'crypto-js';
 
-import { CONFIG } from '../config/config';
+import { Config, asyncConfig } from '../config/config';
 
 /**
  * 비밀번호를 해싱하는 함수
@@ -31,8 +31,9 @@ export const verifyPassword = async (plainPassword: string, hashedPassword: stri
  * @param plainData - 평문 데이터
  * @returns string - 암호화된 데이터
  */
-export const encryptDataAES = (plainData: string): string => {
-  return CryptoJS.AES.encrypt(plainData, CONFIG.CRYPTO_SECRET_KEY).toString();
+export const encryptDataAES = async (plainData: string): Promise<string> => {
+  const config = await asyncConfig();
+  return CryptoJS.AES.encrypt(plainData, config.getCryptoSecretKey()).toString();
 };
 
 /**
@@ -40,8 +41,9 @@ export const encryptDataAES = (plainData: string): string => {
  * @param encryptedData - 암호화된 데이터
  * @returns string - 복호화된 데이터
  */
-export const decryptDataAES = (encryptedData: string): string => {
-  const bytes = CryptoJS.AES.decrypt(encryptedData, CONFIG.CRYPTO_SECRET_KEY);
+export const decryptDataAES = async (encryptedData: string): Promise<string> => {
+  const config = await asyncConfig();
+  const bytes = CryptoJS.AES.decrypt(encryptedData, config.getCryptoSecretKey());
   return bytes.toString(CryptoJS.enc.Utf8);
 };
 

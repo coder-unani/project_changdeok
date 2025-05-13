@@ -39,7 +39,7 @@ export class ContentService extends BaseService implements IContentService {
         data: {
           groupId,
           title: data.title.trim(),
-          content: groupInfo.data?.isEncrypt ? encryptDataAES(data.content) : data.content?.trim(),
+          content: groupInfo.data?.isEncrypt ? await encryptDataAES(data.content) : data.content?.trim(),
           ip: data.ip || '',
           userAgent: data.userAgent || '',
         },

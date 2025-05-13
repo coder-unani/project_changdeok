@@ -1,16 +1,18 @@
 import jwt from 'jsonwebtoken';
 
-import { CONFIG } from '../config/config';
+import { Config, asyncConfig } from '../config/config';
 
 // JWT 토큰 생성
-export const createJWT = (data: any): string => {
-  return jwt.sign(data, CONFIG.JWT_SECRET_KEY, { expiresIn: CONFIG.JWT_EXPIRE_SECOND });
+export const createJWT = async (data: any): Promise<string> => {
+  const config = await asyncConfig();
+  return jwt.sign(data, config.getJwtSecretKey(), { expiresIn: config.getSettings().jwtExpireSecond });
 };
 
 // JWT 토큰 검증
-export const verifyJWT = (token: string): any => {
+export const verifyJWT = async (token: string): Promise<any> => {
   try {
-    return jwt.verify(token, CONFIG.JWT_SECRET_KEY, (err, decoded) => {
+    const config = await asyncConfig();
+    return jwt.verify(token, config.getJwtSecretKey(), (err, decoded) => {
       if (err) {
         return null;
       }
