@@ -9,5 +9,5 @@ export const companyInfo: ICompanyInfo = {
   tel: '000-000-0000',
   fax: '000-000-0000',
   email: 'info@orbitcode.kr',
-  logo: '/images/logo.svg',
+  logo: '/images/logo.png',
 };
