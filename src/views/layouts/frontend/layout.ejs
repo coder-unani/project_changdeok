@@ -30,11 +30,11 @@
     <meta name="description" content="<%=settings.description%>" />
     <meta name="keywords" content="<%=settings.keywords%>" />
     <!-- og -->
-    <meta property="og:title" content="<%=settings.ogTag['og:title']%>" />
-    <meta property="og:description" content="<%=settings.ogTag['og:description']%>" />
-    <meta property="og:image" content="<%=settings.ogTag['og:image']%>" />
-    <meta property="og:url" content="<%=settings.ogTag['og:url']%>" />
-    <meta property="og:type" content="<%=settings.ogTag['og:type']%>" />
+    <% if (settings.ogTag) { %>
+      <% Object.keys(settings.ogTag).forEach(key => { %>
+        <meta property="<%=key%>" content="<%=settings.ogTag[key]%>" />
+      <% }); %>
+    <% } %>
     <!-- font -->
     <link rel="preload" href="/fonts/Pretendard-Variable.woff2" as="font" type="font/woff2" crossorigin />
     <!-- css -->
