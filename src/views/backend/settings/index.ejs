@@ -1,84 +1,102 @@
 <div class="mb-2 block pt-2">
   <h1 class="flex items-center gap-1.5 justify-self-start py-2 text-center text-slate-700 transition-all">
-    <span class="text-xl font-bold"><%=title%></span>
+    <span class="text-2xl font-semibold"><%=title%></span>
   </h1>
 </div>
 
-<div class="mb-4 space-y-3 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
-  <div
-    class="border-b border-gray-200 text-center text-sm font-medium text-gray-500 dark:border-gray-700 dark:text-gray-400"
+<!-- 시스템 상태 -->
+<div id="system-status-container" class="mb-4 space-y-4 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:space-y-6 lg:p-6">
+  <div class="flex justify-between gap-2">
+    <h3 class="text-base font-medium text-gray-600">시스템 상태</h3>
+    <div class="flex items-center gap-2">
+      <button id="refresh-system-status" class="orb-btn-primary flex-none flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" class="h-[13px] w-[13px]">
+          <path d="M105.1 202.6c7.7-21.8 20.2-42.3 37.8-59.8c62.5-62.5 163.8-62.5 226.3 0L386.3 160 352 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l111.5 0c0 0 0 0 0 0l.4 0c17.7 0 32-14.3 32-32l0-112c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 35.2L414.4 97.6c-87.5-87.5-229.3-87.5-316.8 0C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5zM39 289.3c-5 1.5-9.8 4.2-13.7 8.2c-4 4-6.7 8.8-8.1 14c-.3 1.2-.6 2.5-.8 3.8c-.3 1.7-.4 3.4-.4 5.1L16 432c0 17.7 14.3 32 32 32s32-14.3 32-32l0-35.1 17.6 17.5c0 0 0 0 0 0c87.5 87.4 229.3 87.4 316.7 0c24.4-24.4 42.1-53.1 52.9-83.8c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.5 62.5-163.8 62.5-226.3 0l-.1-.1L125.6 352l34.4 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L48.4 288c-1.6 0-3.2 .1-4.8 .3s-3.1 .5-4.6 1z"/>
+        </svg>
+        새로고침
+      </button>
+      <button id="restart-server" class="orb-btn-delete flex-none flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" class="h-[13px] w-[13px]">
+          <path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 224c0 17.7 14.3 32 32 32s32-14.3 32-32l0-224zM143.5 120.6c13.6-11.3 15.4-31.5 4.1-45.1s-31.5-15.4-45.1-4.1C49.7 115.4 16 181.8 16 256c0 132.5 107.5 240 240 240s240-107.5 240-240c0-74.2-33.8-140.6-86.6-184.6c-13.6-11.3-33.8-9.4-45.1 4.1s-9.4 33.8 4.1 45.1c38.9 32.3 63.5 81 63.5 135.4c0 97.2-78.8 176-176 176s-176-78.8-176-176c0-54.4 24.7-103.1 63.5-135.4z"/>
+        </svg>
+        재시작
+      </button>
+    </div>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="table-auto min-w-full">
+      <thead>
+        <tr>
+          <th class="table-cell text-center w-40 min-w-40 px-4 py-3 bg-gray-100 border-t border-b border-gray-200">
+            <p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500">프로세스</p>
+          </th>
+          <th class="table-cell text-center w-40 min-w-40 px-4 py-3 bg-gray-100 border-t border-b border-gray-200">
+            <p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500">CPU</p>
+          </th>
+          <th class="table-cell text-center w-40 min-w-40 px-4 py-3 bg-gray-100 border-t border-b border-gray-200">
+            <p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500">메모리</p>
+          </th>
+          <th class="table-cell text-center w-40 min-w-40 px-4 py-3 bg-gray-100 border-t border-b border-gray-200">
+            <p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500">가동시간</p>
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b border-gray-200">
+            <td class="px-4 py-3 text-center">
+              <span id="process-status" class="text-gray-600">-</span>
+            </td>
+            <td class="px-4 py-3 text-center">
+              <span id="cpu-status" class="text-gray-600">-</span>
+            </td>
+            <td class="px-4 py-3 text-center">
+              <span id="memory-status" class="text-gray-600">-</span>
+            </td>
+            <td class="px-4 py-3 text-center">
+              <span id="uptime" class="text-gray-600">-</span>
+            </td>
+          </tr>
+        </tbody>
+    </table>
+  </div>
+  <div id="system-status-message-container" class="hidden flex items-center gap-2 bg-red-50 rounded-lg px-4 py-2 mt-3 text-[13px] text-red-500">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" class="h-[13px] w-[13px]">
+      <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24l0 112c0 13.3-10.7 24-24 24s-24-10.7-24-24l0-112c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/>
+    </svg>
+    <p id="system-status-message"></p>
+  </div>
+</div>
+
+<div class="mb-4 space-y-4 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:space-y-6 lg:p-6">
+  <ul
+    class="flex flex-wrap border-b border-slate-200 text-center text-sm font-medium text-gray-500 dark:border-gray-700 dark:text-gray-400"
   >
-    <ul class="-mb-px flex flex-wrap">
-      <li class="me-2">
-        <button
-          class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
-          data-tab="site-settings"
-        >
-          사이트 설정
-        </button>
-      </li>
-      <li class="me-2">
-        <button
-          class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
-          data-tab="company-settings"
-        >
-          회사 설정
-        </button>
-      </li>
-      <li class="me-2">
-        <button
-          class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
-          data-tab="system-settings"
-        >
-          시스템 설정
-        </button>
-      </li>
-    </ul>
-  </div>
-</div>
+    <li class="me-2">
+      <button
+        class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-400"
+        data-tab="site-settings"
+      >
+        사이트 설정
+      </button>
+    </li>
+    <li class="me-2">
+      <button
+        class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-400"
+        data-tab="company-settings"
+      >
+        회사 설정
+      </button>
+    </li>
+    <li class="me-2">
+      <button
+        class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-400"
+        data-tab="system-settings"
+      >
+        시스템 설정
+      </button>
+    </li>
+  </ul>
 
-<div class="mb-4 space-y-3 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
-  <div id="system-status-container">
-    <div class="mb-2 flex items-center justify-between">
-      <h3 class="text-lg font-semibold">시스템 상태</h3>
-      <div class="flex gap-2">
-        <button
-          id="refresh-system-status"
-          class="rounded bg-blue-500 px-3 py-1 text-sm text-white transition-colors hover:bg-blue-600"
-        >
-          새로고침
-        </button>
-        <button
-          id="restart-server"
-          class="rounded bg-red-500 px-3 py-1 text-sm text-white transition-colors hover:bg-red-600"
-        >
-          재시작
-        </button>
-      </div>
-    </div>
-    <div class="grid grid-cols-2 gap-2 text-sm">
-      <div class="flex items-center gap-2">
-        <span class="font-medium">프로세스:</span>
-        <span id="process-status" class="text-gray-600">-</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <span class="font-medium">CPU:</span>
-        <span id="cpu-status" class="text-gray-600">-</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <span class="font-medium">메모리:</span>
-        <span id="memory-status" class="text-gray-600">-</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <span class="font-medium">가동시간:</span>
-        <span id="uptime" class="text-gray-600">-</span>
-      </div>
-    </div>
-    <p id="system-status-message" class="mt-2 text-sm text-red-500"></p>
-  </div>
-</div>
-
-<div class="mb-4 space-y-3 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
   <!-- 사이트 설정 -->
   <div id="site-settings-container" class="hidden">
     <form id="site-settings-form" enctype="multipart/form-data">
@@ -86,197 +104,234 @@
       <input type="hidden" id="logo-orig" name="logoOrig" value="<%=data.logo%>" />
       <input type="hidden" id="og-image-orig" name="ogImageOrig" value="" />
       <input type="hidden" id="og-tag-json" name="ogTagJson" value="<%=data.ogTagJson%>" />
-      <ul>
-        <li>
-          <label for="title">사이트명</label>
-          <input type="text" id="title" name="title" placeholder="사이트명" value="<%=data.title%>" />
-        </li>
-        <li>
-          <label for="favicon">파비콘</label>
+      <ul class="mb-4 space-y-4">
+        <!-- 파비콘 -->
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="favicon" class="mt-3 w-60 flex-none text-[13px] text-gray-500">파비콘</label>
           <input type="file" id="favicon" name="favicon" class="hidden" accept="image/x-icon" />
-          <div class="relative aspect-3/2 w-full lg:w-[250px]">
-            <button
-              type="button"
-              id="favicon-add"
-              class="absolute top-0 left-0 h-full w-full cursor-pointer rounded-lg border border-dashed border-gray-200 bg-gray-100"
-            >
-              <span class="absolute inset-0 flex flex-col items-center justify-center">
-                <img class="block w-[50px] opacity-50" src="/images/add-image-512x512.png" alt="이미지 추가" />
-                <p class="mt-1 text-xs text-gray-400">(512x512)</p>
-              </span>
-            </button>
+          <div class="flex-1">
             <div
               id="favicon-preview-container"
-              class="<% if (!data.favicon) { %>hidden<% } %> relative z-10 h-full w-full overflow-hidden rounded-lg"
+              class="flex items-center gap-2 h-[36px] w-[230px] rounded-t-xl border-t border-r border-l border-gray-200 pr-[15px] pl-[10px]"
             >
-              <button
-                type="button"
-                id="favicon-delete"
-                class="absolute top-2 right-2 z-20 h-[24px] w-[24px] cursor-pointer rounded-full bg-white opacity-80"
-              >
-                <span class="absolute inset-0 flex items-center justify-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 384 512"
-                    fill="currentColor"
-                    class="h-[16px] w-[16px] text-gray-400"
-                  >
-                    <path
-                      d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
-                    />
+              <!-- 파비콘 미리보기 -->
+              <div class="relative rounded-full h-[16px] w-[16px] bg-gray-100 overflow-hidden">
+                <button type="button" id="favicon-add-1" class="z-20 absolute inset-0 h-full w-full cursor-pointer"></button>
+                <% if (!data.favicon) { %>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" class="h-[16px] w-[16px] text-gray-500">
+                    <path d="M57.7 193l9.4 16.4c8.3 14.5 21.9 25.2 38 29.8L163 255.7c17.2 4.9 29 20.6 29 38.5l0 39.9c0 11 6.2 21 16 25.9s16 14.9 16 25.9l0 39c0 15.6 14.9 26.9 29.9 22.6c16.1-4.6 28.6-17.5 32.7-33.8l2.8-11.2c4.2-16.9 15.2-31.4 30.3-40l8.1-4.6c15-8.5 24.2-24.5 24.2-41.7l0-8.3c0-12.7-5.1-24.9-14.1-33.9l-3.9-3.9c-9-9-21.2-14.1-33.9-14.1L257 256c-11.1 0-22.1-2.9-31.8-8.4l-34.5-19.7c-4.3-2.5-7.6-6.5-9.2-11.2c-3.2-9.6 1.1-20 10.2-24.5l5.9-3c6.6-3.3 14.3-3.9 21.3-1.5l23.2 7.7c8.2 2.7 17.2-.4 21.9-7.5c4.7-7 4.2-16.3-1.2-22.8l-13.6-16.3c-10-12-9.9-29.5 .3-41.3l15.7-18.3c8.8-10.3 10.2-25 3.5-36.7l-2.4-4.2c-3.5-.2-6.9-.3-10.4-.3C163.1 48 84.4 108.9 57.7 193zM464 256c0-36.8-9.6-71.4-26.4-101.5L412 164.8c-15.7 6.3-23.8 23.8-18.5 39.8l16.9 50.7c3.5 10.4 12 18.3 22.6 20.9l29.1 7.3c1.2-9 1.8-18.2 1.8-27.5zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256z"/>
                   </svg>
-                </span>
-              </button>
-              <div class="relative z-10 h-full w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
-                <img
-                  id="favicon-preview"
-                  class="h-full w-full object-contain"
-                  src="<%=data.favicon%>"
-                  alt="이미지 미리보기"
-                />
+                <% } else { %>
+                  <img
+                    id="favicon-preview"
+                    class="h-full w-full object-cover object-center"
+                    src="<%=data.favicon%>"
+                    alt="이미지 미리보기"
+                    />
+                <% } %>
+              </div>
+              <!-- 사이트 타이틀 -->
+              <p class="flex-1 text-[13px] w-full truncate"><%=data.title%></p>
+              <!-- 닫기 아이콘 -->
+              <div class="flex-none ml-1">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" fill="currentColor" class="h-[14px] w-[14px] text-gray-500">
+                  <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+                </svg>
               </div>
             </div>
           </div>
+          <div>
+            <button type="button" id="favicon-add-2" class="orb-btn-common flex flex-none items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 448 512"
+                fill="currentColor"
+                class="h-[13px] w-[13px] text-gray-500"
+              >
+                <path
+                  d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"
+                />
+              </svg>
+              변경
+            </button>
+          </div>
         </li>
-        <li>
-          <label for="logo">로고</label>
+        <!-- 로고 -->
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="logo" class="mt-3 w-60 flex-none text-[13px] text-gray-500">로고</label>
           <input type="file" id="logo" name="logo" class="hidden" accept="image/*" placeholder="로고 주소" />
-          <div class="relative aspect-3/2 w-full lg:w-[250px]">
-            <button
-              type="button"
-              id="logo-add"
-              class="absolute top-0 left-0 h-full w-full cursor-pointer rounded-lg border border-dashed border-gray-200 bg-gray-100"
-            >
-              <span class="absolute inset-0 flex flex-col items-center justify-center">
+          <div class="flex-1 flex items-center">
+            <div class="relative w-[230px] aspect-3/2 rounded-lg border border-gray-200 overflow-hidden">
+              <button type="button" id="logo-add-1" class="z-20 absolute inset-0 h-full w-full cursor-pointer"></button>
+              <!-- 이미지 미리보기 (이미지 있을 경우) -->
+              <div
+                id="logo-preview-container"
+                class="<% if (!data.logo) { %>hidden<% } %> z-10 absolute inset-0 h-full w-full bg-gray-100"
+              >
+                <img id="logo-preview" class="h-full w-full object-contain" src="<%=data.logo%>" alt="이미지 미리보기" />
+              </div>
+              <!-- 이미지 미리보기 (이미지 없을 경우) -->
+              <div class="relative h-full w-full flex flex-col items-center justify-center bg-gray-100">
                 <img class="block w-[50px] opacity-50" src="/images/add-image-512x512.png" alt="이미지 추가" />
                 <p class="mt-1 text-xs text-gray-400">(512x512)</p>
-              </span>
-            </button>
-            <div
-              id="logo-preview-container"
-              class="<% if (!data.logo) { %>hidden<% } %> relative z-10 h-full w-full overflow-hidden rounded-lg"
-            >
-              <button
-                type="button"
-                id="logo-delete"
-                class="absolute top-2 right-2 z-20 h-[24px] w-[24px] cursor-pointer rounded-full bg-white opacity-80"
-              >
-                <span class="absolute inset-0 flex items-center justify-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 384 512"
-                    fill="currentColor"
-                    class="h-[16px] w-[16px] text-gray-400"
-                  >
-                    <path
-                      d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
-                    />
-                  </svg>
-                </span>
-              </button>
-              <div class="relative z-10 h-full w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
-                <img
-                  id="logo-preview"
-                  class="h-full w-full object-contain"
-                  src="<%=data.logo%>"
-                  alt="이미지 미리보기"
-                />
               </div>
             </div>
           </div>
+          <div>
+            <button type="button" id="logo-add-2" class="orb-btn-common flex flex-none items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 448 512"
+                fill="currentColor"
+                class="h-[13px] w-[13px] text-gray-500"
+              >
+                <path
+                  d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"
+                />
+              </svg>
+              변경
+            </button>
+          </div>
         </li>
-        <li>
-          <label for="introduction">사이트 소개</label>
+        <!-- 사이트 타이틀 -->
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="title" class="mt-3 w-60 flex-none flex gap-1 text-[13px] text-gray-500">사이트 타이틀<span class="text-gray-400">(title)</span></label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            placeholder="사이트 타이틀"
+            value="<%=data.title%>"
+          />
+        </li>
+        <!-- 사이트 소개 -->
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="introduction" class="mt-3 w-60 flex-none flex gap-1 text-[13px] text-gray-500">사이트 소개</label>
           <input
             type="text"
             id="introduction"
             name="introduction"
+            class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             value="<%=data.introduction%>"
             placeholder="사이트 소개"
           />
         </li>
-        <li>
-          <label for="description">사이트 설명</label>
-          <textarea id="description" name="description" placeholder="사이트 설명"><%=data.description%></textarea>
+        <!-- 사이트 설명 -->
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="description" class="mt-3 w-60 flex-none flex gap-1 text-[13px] text-gray-500">사이트 설명<span class="text-gray-400">(meta description)</span></label>
+          <textarea
+            id="description"
+            name="description"
+            class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            placeholder="사이트 설명"
+          >
+<%=data.description%></textarea
+          >
         </li>
-        <li>
-          <label for="keyword">사이트 키워드</label>
-          <input id="keyword" name="keywords" value="<%=data.keywords%>" placeholder="사이트 키워드" />
-          <p>* 콤마(,)로 구분하여 여러 개의 키워드를 입력할 수 있습니다.</p>
+        <!-- 사이트 키워드 -->
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="keyword" class="mt-3 w-60 flex-none flex gap-1 text-[13px] text-gray-500">사이트 키워드<span class="text-gray-400">(meta keywords)</span></label>
+          <div class="flex w-full flex-col">
+            <input
+              id="keyword"
+              name="keywords"
+              class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              value="<%=data.keywords%>"
+              placeholder="사이트 키워드"
+            />
+            <p class="px-3 pt-2 text-[12px] text-gray-400">
+              * 콤마(,)로 구분하여 여러 개의 키워드를 입력할 수 있습니다.
+            </p>
+          </div>
         </li>
-        <li>
-          <label for="og-title">오픈그래프 사이트명</label>
-          <input id="og-title" value="" placeholder="오픈그래프 사이트명" />
-        </li>
-        <li>
-          <label for="og-description">오픈그래프 설명</label>
-          <input id="og-description" value="" placeholder="오픈그래프 설명" />
-        </li>
-        <li>
-          <label for="og-image">오픈그래프 이미지</label>
+        <!-- 오픈그래프 타이틀 -->
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="og-title" class="mt-3 w-60 flex-none flex gap-1 text-[13px] text-gray-500">오픈그래프 타이틀<span class="text-gray-400">(og:title)</span></label>
           <input
-            type="file"
-            id="og-image"
-            name="ogImage"
-            class="hidden"
-            accept="image/*"
-            placeholder="오픈그래프 이미지"
+            id="og-title"
+            class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            value=""
+            placeholder="오픈그래프 타이틀"
           />
-          <div class="relative aspect-3/2 w-full lg:w-[250px]">
-            <button
-              type="button"
-              id="og-image-add"
-              class="absolute top-0 left-0 h-full w-full cursor-pointer rounded-lg border border-dashed border-gray-200 bg-gray-100"
-            >
-              <span class="absolute inset-0 flex flex-col items-center justify-center">
-                <img class="block w-[50px] opacity-50" src="/images/add-image-512x512.png" alt="이미지 추가" />
-                <p class="mt-1 text-xs text-gray-400">(512x512)</p>
-              </span>
-            </button>
-            <div
-              id="og-image-preview-container"
-              class="<% if (!data.logo) { %>hidden<% } %> relative z-10 h-full w-full overflow-hidden rounded-lg"
-            >
-              <button
-                type="button"
-                id="og-image-delete"
-                class="absolute top-2 right-2 z-20 h-[24px] w-[24px] cursor-pointer rounded-full bg-white opacity-80"
-              >
-                <span class="absolute inset-0 flex items-center justify-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 384 512"
-                    fill="currentColor"
-                    class="h-[16px] w-[16px] text-gray-400"
-                  >
-                    <path
-                      d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
-                    />
-                  </svg>
-                </span>
-              </button>
-              <div class="relative z-10 h-full w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
-                <img id="og-image-preview" class="h-full w-full object-contain" src="" alt="이미지 미리보기" />
+        </li>
+        <!-- 오픈그래프 설명 -->
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="og-description" class="mt-3 w-60 flex-none flex gap-1 text-[13px] text-gray-500">오픈그래프 설명<span class="text-gray-400">(og:description)</span></label>
+          <input
+            id="og-description"
+            class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            value=""
+            placeholder="오픈그래프 설명"
+          />
+        </li>
+        <!-- 오픈그래프 이미지 -->
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="og-image" class="mt-3 w-60 flex-none flex gap-1 text-[13px] text-gray-500">오픈그래프 이미지<span class="text-gray-400">(og:image)</span></label>
+          <input type="file" id="og-image" name="ogImage" class="hidden" accept="image/*" placeholder="오픈그래프 이미지" />
+          <div class="flex-1 flex items-center">
+            <div class="flex flex-col w-[300px]">
+              <!-- 오픈그래프 이미지 영역 -->
+              <div class="relative w-full h-[158px] rounded-t-lg border-t border-r border-l border-gray-200 overflow-hidden">
+                <button type="button" id="og-image-add-1" class="z-20 absolute inset-0 h-full w-full cursor-pointer"></button>
+                <!-- 이미지 미리보기 (이미지 있을 경우) -->
+                <div
+                  id="og-image-preview-container"
+                  class="<% if (!data.ogTagJson) { %>hidden<% } %> z-10 absolute inset-0 h-full w-full bg-gray-100"
+                >
+                  <img id="og-image-preview" class="h-full w-full object-cover object-center" src="" alt="이미지 미리보기" />
+                </div>
+                <!-- 이미지 미리보기 (이미지 없을 경우) -->
+                <div class="relative h-full w-full flex flex-col items-center justify-center bg-gray-100">
+                  <img class="block w-[50px] opacity-50" src="/images/add-image-512x512.png" alt="이미지 추가" />
+                  <p class="mt-1 text-xs text-gray-400">(512x512)</p>
+                </div>
+              </div>
+              <!-- 오픈그래프 텍스트 영역 -->
+              <div class="flex flex-col w-full p-2.5 rounded-b-lg border-b border-r border-l border-gray-200"> 
+                <p id="og-title-preview" class="font-semibold">오픈그래프 타이틀</p>
+                <p id="og-description-preview" class="text-[13px] text-gray-500">오픈그래프 설명</p>
+                <p class="mt-2 text-[12px] text-gray-400">https://<%=data.serviceDomain%></p>
               </div>
             </div>
           </div>
+          <div>
+            <button type="button" id="og-image-add-2" class="orb-btn-common flex flex-none items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 448 512"
+                fill="currentColor"
+                class="h-[13px] w-[13px] text-gray-500"
+              >
+                <path
+                  d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"
+                />
+              </svg>
+              변경
+            </button>
+          </div>
         </li>
-        <li>
-          <label for="service-domain">서비스 도메인</label>
+        <!-- 서비스 도메인 -->
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="service-domain" class="mt-3 w-60 flex-none text-[13px] text-gray-500">서비스 도메인</label>
           <input
-            type="text"
+            type="url"
             id="service-domain"
             name="serviceDomain"
+            pattern="^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$"
+            class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             value="<%=data.serviceDomain%>"
             placeholder="서비스 도메인"
           />
         </li>
-        <li>
-          <label for="service-port">서비스 포트</label>
+        <!-- 서비스 포트 -->
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="service-port" class="mt-3 w-60 flex-none text-[13px] text-gray-500">서비스 포트</label>
           <input
-            type="text"
+            type="number"
             id="service-port"
             name="servicePort"
+            class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             value="<%=data.servicePort%>"
             placeholder="서비스 포트"
             readonly
@@ -284,123 +339,128 @@
         </li>
       </ul>
       <div class="flex justify-end">
-        <button type="submit">저장</button>
+        <button type="submit" class="orb-btn-primary">저장</button>
       </div>
     </form>
   </div>
+
   <!-- 회사 설정 -->
   <div id="company-settings-container" class="hidden">
     <form id="company-settings-form">
       <input type="hidden" id="company-json" name="companyJson" value="<%=data.companyJson%>" />
-      <ul>
-        <li>
-          <label for="company-name">회사명</label>
-          <input type="text" id="company-name" placeholder="회사명" />
+      <ul class="mb-4 space-y-4">
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="company-name" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">회사명</label>
+          <input type="text" id="company-name" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="회사명" />
         </li>
-        <li>
-          <label for="company-ceo">대표자</label>
-          <input type="text" id="company-ceo" placeholder="대표자" />
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="company-ceo" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">대표자</label>
+          <input type="text" id="company-ceo" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="대표자" />
         </li>
-        <li>
-          <label for="company-fax">사업자 번호</label>
-          <input type="text" id="company-business-number" placeholder="사업자 번호" />
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="company-fax" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">사업자 번호</label>
+          <input type="tel" id="company-business-number" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="사업자 번호" />
         </li>
-        <li>
-          <label for="company-phone">대표번호</label>
-          <input type="text" id="company-tel" placeholder="대표번호" />
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="company-phone" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">대표번호</label>
+          <input type="tel" id="company-tel" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="대표번호" />
         </li>
-        <li>
-          <label for="company-fax">팩스</label>
-          <input type="text" id="company-fax" placeholder="팩스" />
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="company-fax" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">팩스</label>
+          <input type="tel" id="company-fax" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="팩스" />
         </li>
-        <li>
-          <label for="company-address">주소</label>
-          <input type="text" id="company-address" placeholder="주소" />
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="company-address" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">주소</label>
+          <input type="text" id="company-address" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="주소" />
         </li>
-        <li>
-          <label for="company-zip-code">우편번호</label>
-          <input type="text" id="company-zip-code" placeholder="우편번호" />
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="company-zip-code" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">우편번호</label>
+          <input type="number" id="company-zip-code" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="우편번호" />
         </li>
-        <li>
-          <label for="company-email">이메일</label>
-          <input type="text" id="company-email" placeholder="이메일" />
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="company-email" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">이메일</label>
+          <input type="email" id="company-email" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="이메일" />
         </li>
-        <li>
-          <label for="company-latitude">위도</label>
-          <input type="text" id="company-latitude" placeholder="위도" />
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="company-latitude" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">위도</label>
+          <input type="text" id="company-latitude" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="위도" />
         </li>
-        <li>
-          <label for="company-longitude">경도</label>
-          <input type="text" id="company-longitude" placeholder="경도" />
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="company-longitude" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">경도</label>
+          <input type="text" id="company-longitude" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="경도" />
         </li>
-        <li>
-          <label for="company-lunchtime-start">점심시간</label>
-          <input type="text" id="company-lunchtime-start" placeholder="점심시간" /> ~
-          <input type="text" id="company-lunchtime-end" placeholder="점심시간" />
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="company-lunchtime-start" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">점심시간</label>
+          <div class="flex items-center">
+            <input type="text" id="company-lunchtime-start" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="점심시간" /> ~
+            <input type="text" id="company-lunchtime-end" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="점심시간" />
+          </div>
         </li>
       </ul>
+      
       <div class="flex justify-end">
-        <button type="submit">저장</button>
+        <button type="submit" class="orb-btn-primary">저장</button>
       </div>
     </form>
   </div>
+
   <!-- 시스템 설정 -->
   <div id="system-settings-container" class="hidden">
     <form id="system-settings-form">
       <input type="hidden" id="enabled-tags-json" name="enabledTagsJson" value="<%=data.enabledTagsJson%>" />
       <input type="hidden" id="enabled-cors-json" name="enabledCorsJson" value="<%=data.enabledCorsJson%>" />
-      <ul>
-        <li>
-          <label for="max-upload-size">파일 최대 업로드 사이즈</label>
+      <ul class="mb-4 space-y-4">
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="max-upload-size" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">파일 최대 업로드 사이즈</label>
           <input
             type="text"
             id="max-upload-size"
-            name="maxUploadSize"
+            name="maxUploadSize" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             value="<%=data.maxUploadSize%>"
             placeholder="파일 최대 업로드 사이즈"
           />
         </li>
-        <li>
-          <label for="jwt-expire-second">관리자 로그인 유지 시간</label>
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="jwt-expire-second" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">관리자 로그인 유지 시간</label>
           <input
             type="text"
             id="jwt-expire-second"
-            name="jwtExpireSecond"
+            name="jwtExpireSecond" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             value="<%=data.jwtExpireSecond%>"
             placeholder="시간"
           />
         </li>
-        <li>
-          <label for="express-domain">시스템 도메인</label>
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="express-domain" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">시스템 도메인</label>
           <input
             type="text"
             id="express-domain"
-            name="expressDomain"
+            name="expressDomain" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             value="<%=data.expressDomain%>"
             placeholder="시스템 도메인"
           />
         </li>
-        <li>
-          <label for="express-port">시스템 포트</label>
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="express-port" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">시스템 포트</label>
           <input
             type="text"
             id="express-port"
-            name="expressPort"
+            name="expressPort" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             value="<%=data.expressPort%>"
             placeholder="시스템 포트"
           />
         </li>
-        <li>
-          <label for="enabled-tags-json">시스템 허용 태그</label>
-          <textarea id="enabled-tags" placeholder="시스템 허용 태그"> </textarea>
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="enabled-tags-json" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">시스템 허용 태그</label>
+          <textarea id="enabled-tags" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="시스템 허용 태그"> </textarea>
         </li>
-        <li>
-          <label for="enabled-cors-json">시스템 허용 CORS</label>
-          <textarea id="enabled-cors" placeholder="시스템 허용 CORS"> </textarea>
+        <li class="flex flex-col lg:flex-row gap-2">
+          <label for="enabled-cors-json" class="mt-3 w-40 flex-none flex gap-1 text-[13px] text-gray-500">시스템 허용 CORS</label>
+          <textarea id="enabled-cors" class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="시스템 허용 CORS"> </textarea>
         </li>
       </ul>
       <div class="flex justify-end">
-        <button type="submit">저장</button>
+        <button type="submit" class="orb-btn-primary">저장</button>
       </div>
     </form>
   </div>
@@ -417,27 +477,25 @@
     const switchTab = (activeTab) => {
       // 모든 탭 버튼에서 active 클래스 제거
       document.querySelectorAll('[data-tab]').forEach((button) => {
-        button.classList.remove(
-          'active',
-          'border-blue-600',
-          'text-blue-600',
-          'dark:border-blue-500',
-          'dark:text-blue-500'
+        button.classList.remove('active', 'bg-blue-50', 'text-blue-500');
+        button.classList.add(
+          'hover:bg-gray-50',
+          'hover:text-gray-600',
+          'dark:hover:bg-gray-800',
+          'dark:hover:text-gray-400'
         );
-        button.classList.add('border-transparent');
       });
 
       // 클릭된 탭 버튼에 active 클래스 추가
       const activeButton = document.querySelector(`[data-tab="${activeTab}"]`);
       if (activeButton) {
-        activeButton.classList.remove('border-transparent');
-        activeButton.classList.add(
-          'active',
-          'border-blue-600',
-          'text-blue-600',
-          'dark:border-blue-500',
-          'dark:text-blue-500'
+        activeButton.classList.remove(
+          'hover:bg-gray-50',
+          'hover:text-gray-600',
+          'dark:hover:bg-gray-800',
+          'dark:hover:text-gray-400'
         );
+        activeButton.classList.add('active', 'bg-blue-50', 'text-blue-500');
       }
 
       if (activeTab === 'site-settings') {
@@ -482,7 +540,9 @@
         document.getElementById('memory-status').textContent = memoryStatus;
         document.getElementById('cpu-status').textContent = cpuStatus;
         document.getElementById('uptime').textContent = uptime;
-        document.getElementById('system-status-message').textContent = '';
+        
+        document.getElementById('system-status-message-container').classList.remove('hidden');
+        document.getElementById('system-status-message').textContent = '시스템 메세지 테스트';
 
         return true;
       } catch (error) {
@@ -528,11 +588,19 @@
         const ogTagJson = document.getElementById('og-tag-json').value;
         const ogTag = JSON.parse(ogTagJson);
 
-        document.getElementById('og-title').value = ogTag['og:title'] ? ogTag['og:title'] : '';
-        document.getElementById('og-description').value = ogTag['og:description'] ? ogTag['og:description'] : '';
-        document.getElementById('og-image-preview').src = ogTag['og:image'] ? ogTag['og:image'] : '';
-        document.getElementById('og-image-orig').value = ogTag['og:image'] ? ogTag['og:image'] : '';
-        if (ogTag['og:image']) {
+        const ogTitle = ogTag['og:title'] ? ogTag['og:title'] : '';
+        const ogDescription = ogTag['og:description'] ? ogTag['og:description'] : '';
+        const ogImage = ogTag['og:image'] ? ogTag['og:image'] : '';
+
+        document.getElementById('og-title').value = ogTitle;
+        document.getElementById('og-description').value = ogDescription;
+        document.getElementById('og-image-preview').src = ogImage;
+        document.getElementById('og-image-orig').value = ogImage;
+
+        document.getElementById('og-title-preview').textContent = ogTitle;
+        document.getElementById('og-description-preview').textContent = ogDescription;
+
+        if (ogImage) {
           document.getElementById('og-image-preview-container').classList.remove('hidden');
         }
       } catch (error) {
@@ -578,8 +646,6 @@
       await getSystemStatus();
     };
 
-    init();
-
     // 탭 버튼에 이벤트 리스너 추가
     document.querySelectorAll('[data-tab]').forEach((button) => {
       button.addEventListener('click', () => {
@@ -589,9 +655,11 @@
     });
 
     // 파비콘 등록
-    document.getElementById('favicon-add').addEventListener('click', (e) => {
-      e.preventDefault();
-      document.getElementById('favicon').click();
+    document.querySelectorAll('[id^="favicon-add"]').forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('favicon').click();
+      });
     });
 
     // 파비콘 미리보기
@@ -600,23 +668,16 @@
       const reader = new FileReader();
       reader.onload = (e) => {
         document.getElementById('favicon-preview').src = e.target.result;
-        document.getElementById('favicon-preview-container').classList.remove('hidden');
       };
       reader.readAsDataURL(file);
     });
 
-    // 파비콘 삭제
-    document.getElementById('favicon-delete').addEventListener('click', (e) => {
-      document.getElementById('favicon').value = '';
-      document.getElementById('favicon-orig').value = '';
-      document.getElementById('favicon-preview').src = '';
-      document.getElementById('favicon-preview-container').classList.add('hidden');
-    });
-
     // 로고 등록
-    document.getElementById('logo-add').addEventListener('click', (e) => {
-      e.preventDefault();
-      document.getElementById('logo').click();
+    document.querySelectorAll('[id^="logo-add"]').forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('logo').click();
+      });
     });
 
     // 로고 미리보기
@@ -630,18 +691,12 @@
       reader.readAsDataURL(file);
     });
 
-    // 로고 삭제
-    document.getElementById('logo-delete').addEventListener('click', (e) => {
-      document.getElementById('logo').value = '';
-      document.getElementById('logo-orig').value = '';
-      document.getElementById('logo-preview').src = '';
-      document.getElementById('logo-preview-container').classList.add('hidden');
-    });
-
     // Open Graph 이미지 등록
-    document.getElementById('og-image-add').addEventListener('click', (e) => {
-      e.preventDefault();
-      document.getElementById('og-image').click();
+    document.querySelectorAll('[id^="og-image-add"]').forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('og-image').click();
+      });
     });
 
     // Open Graph 이미지 미리보기
@@ -653,14 +708,6 @@
         document.getElementById('og-image-preview-container').classList.remove('hidden');
       };
       reader.readAsDataURL(file);
-    });
-
-    // Open Graph 이미지 삭제
-    document.getElementById('og-image-delete').addEventListener('click', (e) => {
-      document.getElementById('og-image').value = '';
-      document.getElementById('og-image-orig').value = '';
-      document.getElementById('og-image-preview').src = '';
-      document.getElementById('og-image-preview-container').classList.add('hidden');
     });
 
     // 사이트 설정 저장
@@ -804,5 +851,8 @@
 
     // 재시작 버튼 이벤트 리스너 추가
     document.getElementById('restart-server').addEventListener('click', restartServer);
+
+    // 초기화
+    init();
   });
 </script>

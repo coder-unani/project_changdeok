@@ -1,6 +1,6 @@
 <div class="block pt-2 mb-2">
   <h1 class='flex justify-self-start items-center gap-1.5 py-2 text-center text-slate-700 transition-all'>
-    <span class="font-bold text-xl"><%=title%></span>
+    <span class="text-2xl font-semibold"><%=title%></span>
   </h1>
 </div>
 <form id="formEmployeePermissions">
@@ -10,7 +10,7 @@
         <tr>
           <% metadata.permissions.forEach((permission, index) => { %>
             <th class="hidden lg:table-cell text-center w-32 min-w-32 px-4 py-3 bg-gray-100 border-t border-b border-gray-200">
-              <p class="text-xs lg:text-[13px] font-semibold leading-none text-gray-500"><%=permission.title%></p>
+              <p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500"><%=permission.title%></p>
             </th>
           <% }); %>
         </tr>
