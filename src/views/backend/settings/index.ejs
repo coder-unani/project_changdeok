@@ -36,20 +36,6 @@
 
     let currentTab = null;
 
-    // 탭 버튼에 이벤트 리스너 추가
-    document.querySelectorAll('[data-tab]').forEach((button) => {
-      button.addEventListener('click', () => {
-        const tabName = button.getAttribute('data-tab');
-        switchTab(tabName);
-      });
-    });
-
-    // 새로고침 버튼 이벤트 리스너 추가
-    document.getElementById('refresh-system-status').addEventListener('click', getSystemStatus);
-
-    // 재시작 버튼 이벤트 리스너 추가
-    document.getElementById('restart-server').addEventListener('click', restartServer);
-
     // 시스템 상태 확인 함수
     const getSystemStatus = async () => {
       try {
@@ -175,6 +161,20 @@
       switchTab('site-settings');
       await getSystemStatus();
     };
+
+    // 탭 버튼에 이벤트 리스너 추가
+    document.querySelectorAll('[data-tab]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const tabName = button.getAttribute('data-tab');
+        switchTab(tabName);
+      });
+    });
+
+    // 새로고침 버튼 이벤트 리스너 추가
+    document.getElementById('refresh-system-status').addEventListener('click', getSystemStatus);
+
+    // 재시작 버튼 이벤트 리스너 추가
+    document.getElementById('restart-server').addEventListener('click', restartServer);
 
     // 초기화
     init();
