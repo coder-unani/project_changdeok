@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 
 /**
  *
@@ -22,12 +22,7 @@ export const getCookie = (req: Request, name: string): string | null => {
  * @param value 쿠키 값
  * @param options 추가 옵션
  */
-export const setCookie = (
-  res: Response,
-  name: string,
-  value: string,
-  options: any = {},
-): void => {
+export const setCookie = (res: Response, name: string, value: string, options: any = {}): void => {
   try {
     let cookieOptions = {
       httpOnly: true,
@@ -35,7 +30,7 @@ export const setCookie = (
       ...options,
     };
 
-    cookieOptions.maxAge = cookieOptions.maxAge || 3600 * 1000;
+    cookieOptions.maxAge = cookieOptions.maxAge ? cookieOptions.maxAge * 1000 : 3600 * 1000;
     res.cookie(name, value, cookieOptions);
   } catch (error) {
     throw error;

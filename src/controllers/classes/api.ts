@@ -5,6 +5,7 @@ import { AppError, AuthError, ForbiddenError, ValidationError } from '../../comm
 import { getCookie, removeCookie, setCookie } from '../../common/utils/cookie';
 import { formatApiResponse } from '../../common/utils/format';
 import { getAccessedEmployee } from '../../common/utils/verify';
+import { Config } from '../../config/config';
 import { apiRoutes } from '../../config/routes';
 import { prisma } from '../../library/database';
 import { createJWT, verifyJWT } from '../../library/jwt';
@@ -49,6 +50,12 @@ import {
 } from '../../types/service';
 
 export class ApiController {
+  private config: Config;
+
+  constructor(config: Config) {
+    this.config = config;
+  }
+
   // 배너 등록
   public async bannerWrite(req: Request, res: Response): Promise<void> {
     try {
@@ -629,7 +636,10 @@ export class ApiController {
             id: result.data.id,
             name: result.data.name,
             permissions: result.data.permissions,
-          })
+          }),
+          {
+            maxAge: this.config.getSettings().jwtExpireSecond,
+          }
         );
       }
 

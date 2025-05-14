@@ -22,7 +22,7 @@ class ApiRouter {
     this.config = config;
 
     this.router = Router();
-    this.apiController = new ApiController();
+    this.apiController = new ApiController(config);
     this.corsMiddleware = new CorsMiddleware(config.getCORSApiOptions());
     this.recaptchaMiddleware = new RecaptchaMiddleware(config.getRecaptchaSecretKey());
     this.bannerUploadMiddleware = new FileUploadMiddleware({
