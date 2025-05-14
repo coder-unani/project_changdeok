@@ -24,12 +24,15 @@ export class AccessMiddleware implements IMiddleware {
     const ip = req.headers['x-forwarded-for'] || req.ip;
     const userAgent = req.headers['user-agent'] as string;
 
-    console.log('ip => ', ip);
-    console.log('userAgent => ', userAgent);
-    console.log('blockedIps => ', this.blockedIps);
-    console.log('this.isBlockedIp => ', this.isBlockedIp(ip as string));
+    if (this.isBlockedIp(ip as string)) {
+      res.status(403).json({
+        error: 'IP blocked',
+        message: 'Access denied for blocked IP',
+      });
+      return;
+    }
 
-    if (this.isBlockedIp(ip as string) || this.isBot(userAgent)) {
+    if (this.isBot(userAgent)) {
       res.status(403).json({
         error: 'Bot traffic detected',
         message: 'Access denied for bot traffic',
