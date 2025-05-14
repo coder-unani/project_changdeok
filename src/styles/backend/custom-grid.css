@@ -33,7 +33,7 @@
 .gridjs-container {
   @apply text-gray-800;
 
-  overflow: hidden;
+  /* overflow: hidden; */
   display: inline-block;
   /* padding: 2px; */
   /* color: #000; */
@@ -313,6 +313,8 @@ th.gridjs-th:last-child {
 }
 
 .gridjs-search {
+  @apply p-[2px];
+
   float: left;
 }
 .gridjs-search-input {
