@@ -13,16 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/*
-1	
-123	
-/favicon.ico		
-123	
-123		
-오르빗코드	
-{"og:title":"233","og:description":"333","og:image":"/uploads/og-images/1746795358317-726053994.webp"}	
-{"name":"Orbitcode1","ceo":"오르빗코드","businessNumber":"12345","tel":"1234","fax":"1234","address":"와부읍 덕소로 206","zipCode":"12274","email":"123145","latitude":"","longitude":"","lunchtimeStart":"12","lunchtimeEnd":"13"}						
-*/
 /**
   * Settings (설정)
   * - id: ID (자동 증가)
@@ -63,6 +53,8 @@ model Settings {
   jwtExpireSecond Int @default(3600) // 1시간
   enabledTagsJson String? @db.Text
   enabledCorsJson String? @db.Text
+  enabledBotJson String? @db.Text
+  blockedIpJson String? @db.Text
   createdAt DateTime @default(now())
   updatedAt DateTime? @updatedAt
 
