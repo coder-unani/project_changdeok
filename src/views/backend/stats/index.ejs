@@ -1,9 +1,10 @@
-<div class="my-2 block">
+<div class="my-2">
   <h1 class="flex items-center gap-1.5 justify-self-start py-2 text-center text-slate-700 transition-all">
     <span class="text-2xl font-semibold"><%=title%></span>
   </h1>
 </div>
-<div class="space-y-4">
+
+<div class="flex flex-1 flex-col space-y-4">
   <div class="rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
     <!-- 탭메뉴 -->
     <ul
@@ -84,7 +85,7 @@
           type="date"
           id="date"
           name="date"
-          class="w-[200px] rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          class="w-[160px] rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
           value="<%=new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0]%>"
         />
         <div class="flex flex-1 justify-end">
@@ -102,7 +103,7 @@
             type="date"
             id="startDate"
             name="startDate"
-            class="w-[200px] rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+            class="w-[160px] rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
             value="<%=new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0]%>"
           />
           ~
@@ -110,7 +111,7 @@
             type="date"
             id="endDate"
             name="endDate"
-            class="w-[200px] rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+            class="w-[160px] rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
             value="<%=new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0]%>"
           />
         </div>
@@ -119,15 +120,15 @@
         </div>
       </div>
       <!-- <div class="flex flex-col gap-2 lg:flex-row">
-        <label class="w-12 flex-none text-[13px] text-gray-500 lg:leading-11">종료일</label>
-        <input
-          type="date"
-          id="endDate"
-          name="endDate"
-          class="w-[200px] rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
-          value="<%=new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0]%>"
-        />
-      </div> -->
+          <label class="w-12 flex-none text-[13px] text-gray-500 lg:leading-11">종료일</label>
+          <input
+            type="date"
+            id="endDate"
+            name="endDate"
+            class="w-[200px] rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+            value="<%=new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0]%>"
+          />
+        </div> -->
       <div class="text-[12px] leading-5 text-gray-400">
         <p>* 접속 통계는 Google Analytics 데이터를 기반으로 합니다.</p>
         <p>* 접속 통계는 최근 2년간의 데이터만 조회 가능합니다.</p>
@@ -136,7 +137,7 @@
     </div>
   </div>
 
-  <div class="rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
+  <div class="max-h-full rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
     <div id="chart-container" class="hidden h-[400px] w-full items-center justify-center">
       <canvas id="stats-chart"></canvas>
     </div>
@@ -144,7 +145,7 @@
     <div id="stats-metadata"></div>
 
     <div class="flex items-center justify-start">
-      <div id="stats-container"></div>
+      <div id="stats-container" class="overflow-x-auto"></div>
     </div>
   </div>
 </div>
@@ -261,6 +262,48 @@
     };
 
     // HTML 생성 함수들
+    // 접속 로그
+    const createAccessLogsHtml = (data) => {
+      // 메타데이터와 데이터 분리
+      const metadata = data.metadata;
+      const stats = data.data;
+
+      // Grid 인스턴스 정리
+      cleanupGrid();
+
+      // 메타데이터 생성
+      statsMetadata.innerHTML = `조회 날짜: ${metadata.date} / 총 요청 수: ${metadata.totalRequests}`;
+
+      // 데이터 배열 생성
+      const statsArray = Array.isArray(stats) ? stats : [stats];
+      const gridData = statsArray.map((item) => [
+        item.timestamp,
+        item.method,
+        item.status,
+        item.path,
+        item.ip,
+        item.origin,
+        item.referer,
+        item.userAgent,
+      ]);
+
+      // Grid 인스턴스 생성
+      currentGrid = new gridjs.Grid({
+        data: gridData,
+        columns: ['타임스탬프', '메소드', '상태 코드', '경로', '사용자 IP', '원본', '출처', '사용자 에이전트'],
+        fixedHeader: true,
+        sort: true,
+        search: true,
+        pagination: {
+          enabled: true,
+          limit: 20,
+        },
+      });
+      currentGrid.render(statsContainer);
+      return '';
+    };
+
+    // 사용자
     const createAllStatsHtml = (data) => {
       // 메타데이터와 데이터 분리
       const metadata = data.metadata;
@@ -287,6 +330,7 @@
       return '';
     };
 
+    // 일별 사용자
     const createDailyStatsHtml = (data) => {
       // 메타데이터와 데이터 분리
       const metadata = data.metadata;
@@ -320,6 +364,7 @@
       return '';
     };
 
+    // 페이지 뷰
     const createPageStatsHtml = (data) => {
       // 메타데이터와 데이터 분리
       const metadata = data.metadata;
@@ -346,30 +391,7 @@
       return '';
     };
 
-    const createCountryStatsHtml = (data) => {
-      // 메타데이터와 데이터 분리
-      const metadata = data.metadata;
-      const stats = data.data;
-
-      // Grid 인스턴스 정리
-      cleanupGrid();
-
-      // 메타데이터 생성
-      statsMetadata.innerHTML = `조회 기간: ${metadata.startDate} ~ ${metadata.endDate} / 결과 행 수: ${metadata.rowCount}`;
-
-      // 데이터 배열 생성
-      const statsArray = Array.isArray(stats) ? stats : [stats];
-      const gridData = statsArray.map((item) => [item.country, item.activeUsers, item.sessions, item.pageViews]);
-      currentGrid = new gridjs.Grid({
-        data: gridData,
-        columns: ['국가', '활성 사용자 수', '세션 수', '페이지 뷰 수'],
-        fixedHeader: true,
-        sort: true,
-      });
-      currentGrid.render(statsContainer);
-      return '';
-    };
-
+    // 출처
     const createReferrerStatsHtml = (data) => {
       // 메타데이터와 데이터 분리
       const metadata = data.metadata;
@@ -402,6 +424,7 @@
       return '';
     };
 
+    // 시간대
     const createHourlyStatsHtml = (data) => {
       // 메타데이터와 데이터 분리
       const metadata = data.metadata;
@@ -428,6 +451,7 @@
       return '';
     };
 
+    // 브라우저
     const createBrowserStatsHtml = (data) => {
       // 메타데이터와 데이터 분리
       const metadata = data.metadata;
@@ -506,7 +530,8 @@
       return '';
     };
 
-    const createAccessLogsHtml = (data) => {
+    // 국가
+    const createCountryStatsHtml = (data) => {
       // 메타데이터와 데이터 분리
       const metadata = data.metadata;
       const stats = data.data;
@@ -515,32 +540,16 @@
       cleanupGrid();
 
       // 메타데이터 생성
-      statsMetadata.innerHTML = `조회 날짜: ${metadata.date} / 총 요청 수: ${metadata.totalRequests}`;
+      statsMetadata.innerHTML = `조회 기간: ${metadata.startDate} ~ ${metadata.endDate} / 결과 행 수: ${metadata.rowCount}`;
 
       // 데이터 배열 생성
       const statsArray = Array.isArray(stats) ? stats : [stats];
-      const gridData = statsArray.map((item) => [
-        item.timestamp,
-        item.method,
-        item.status,
-        item.path,
-        item.ip,
-        item.origin,
-        item.referer,
-        item.userAgent,
-      ]);
-
-      // Grid 인스턴스 생성
+      const gridData = statsArray.map((item) => [item.country, item.activeUsers, item.sessions, item.pageViews]);
       currentGrid = new gridjs.Grid({
         data: gridData,
-        columns: ['타임스탬프', '메소드', '상태 코드', '경로', '사용자 IP', '원본', '출처', '사용자 에이전트'],
+        columns: ['국가', '활성 사용자 수', '세션 수', '페이지 뷰 수'],
         fixedHeader: true,
         sort: true,
-        search: true,
-        pagination: {
-          enabled: true,
-          limit: 20,
-        },
       });
       currentGrid.render(statsContainer);
       return '';
