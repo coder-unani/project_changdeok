@@ -12,7 +12,7 @@
     >
       <li class="me-2">
         <button
-          class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-400"
+          class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-400"
           data-tab="access-logs"
         >
           접속 로그
@@ -20,7 +20,7 @@
       </li>
       <li class="me-2">
         <button
-          class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-400"
+          class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-400"
           data-tab="all-stats"
         >
           사용자
@@ -28,7 +28,7 @@
       </li>
       <li class="me-2">
         <button
-          class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-400"
+          class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-400"
           data-tab="daily-stats"
         >
           일별 사용자
@@ -37,7 +37,7 @@
 
       <li class="me-2">
         <button
-          class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-400"
+          class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-400"
           data-tab="page-stats"
         >
           페이지 뷰
@@ -45,7 +45,7 @@
       </li>
       <li class="me-2">
         <button
-          class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-400"
+          class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-400"
           data-tab="referrer-stats"
         >
           출처
@@ -53,7 +53,7 @@
       </li>
       <li class="me-2">
         <button
-          class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-400"
+          class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-400"
           data-tab="hourly-stats"
         >
           시간대
@@ -61,7 +61,7 @@
       </li>
       <li class="me-2">
         <button
-          class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-400"
+          class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-400"
           data-tab="browser-stats"
         >
           브라우저
@@ -69,7 +69,7 @@
       </li>
       <li class="me-2">
         <button
-          class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-400"
+          class="inline-block cursor-pointer rounded-t-lg px-4 py-3 hover:bg-gray-50 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-400"
           data-tab="country-stats"
         >
           국가
@@ -103,7 +103,7 @@
             type="date"
             id="startDate"
             name="startDate"
-            class="w-[160px] rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+            class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none lg:w-[160px]"
             value="<%=new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0]%>"
           />
           ~
@@ -111,7 +111,7 @@
             type="date"
             id="endDate"
             name="endDate"
-            class="w-[160px] rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+            class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none lg:w-[160px]"
             value="<%=new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0]%>"
           />
         </div>
@@ -138,19 +138,22 @@
   </div>
 
   <div class="rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
-    <div id="chart-container" class="hidden h-[400px] w-full items-center justify-center">
-      <canvas id="stats-chart"></canvas>
-    </div>
+    <div class="space-y-4">
+      <div id="chart-container" class="hidden h-[400px] w-full items-center justify-center">
+        <canvas id="stats-chart"></canvas>
+      </div>
 
-    <div id="stats-metadata"></div>
+      <div id="stats-metadata"></div>
 
-    <div class="flex items-center justify-start">
-      <div id="stats-container" class="overflow-x-auto"></div>
+      <div class="flex items-center justify-start">
+        <div id="stats-container" class="overflow-x-auto"></div>
+      </div>
     </div>
   </div>
 </div>
 
-<link rel="stylesheet" href="/js/gridjs@6.2.0/mermaid.min.css" />
+<!-- <link rel="stylesheet" href="/js/gridjs@6.2.0/mermaid.min.css" /> -->
+<link rel="stylesheet" href="/css/backend/custom-grid.css" />
 <script src="/js/gridjs@6.2.0/gridjs.umd.js"></script>
 <script src="/js/chart.js@4.4.9/chart.umd.js"></script>
 
@@ -171,6 +174,25 @@
     let currentGrid = null; // 현재 Grid 인스턴스를 저장할 변수
     let currentTab = null; // 현재 탭을 저장할 변수
 
+    // gridjs 한국어 설정
+    const koKR = {
+      search: { placeholder: '검색어 입력...' },
+      sort: { sortAsc: '내림차순 정렬', sortDesc: '오름차순 정렬' },
+      pagination: {
+        previous: '이전',
+        next: '다음',
+        navigate: (page) => `${page} 페이지로 이동`,
+        page: (page) => `${page} 페이지`,
+        showing: '결과보기:',
+        of: '까지 총',
+        to: '에서',
+        results: '개',
+      },
+      loading: '로딩중...',
+      noRecordsFound: '일치하는 레코드 없음',
+      error: '데이터 조회 오류',
+    };
+
     // 탭 전환 함수
     const switchTab = (activeTab) => {
       // 모든 탭 버튼에서 active 클래스 제거
@@ -178,7 +200,7 @@
         button.classList.remove('active', 'bg-blue-50', 'text-blue-500');
         button.classList.add(
           'hover:bg-gray-50',
-          'hover:text-gray-600',
+          'hover:text-gray-700',
           'dark:hover:bg-gray-800',
           'dark:hover:text-gray-400'
         );
@@ -189,7 +211,7 @@
       if (activeButton) {
         activeButton.classList.remove(
           'hover:bg-gray-50',
-          'hover:text-gray-600',
+          'hover:text-gray-700',
           'dark:hover:bg-gray-800',
           'dark:hover:text-gray-400'
         );
@@ -289,22 +311,22 @@
 
       // Grid 인스턴스 생성
       currentGrid = new gridjs.Grid({
-        data: gridData,
         columns: ['타임스탬프', '메소드', '상태 코드', '경로', '사용자 IP', '원본', '출처', '사용자 에이전트'],
+        language: koKR,
+        search: true,
+        data: gridData,
+        resizable: true,
         style: {
           table: {
             'white-space': 'nowrap',
           },
         },
-        resizable: true,
         sort: true,
         pagination: {
           enabled: true,
           limit: 20,
         },
         fixedHeader: true,
-        height: '600px', // fixedHeader 사용 시 필수
-        search: true,
       });
       currentGrid.render(statsContainer);
       return '';
@@ -328,9 +350,15 @@
 
       // Grid 인스턴스 생성
       currentGrid = new gridjs.Grid({
-        data: gridData,
         columns: ['총 활성 사용자 수', '총 신규 사용자 수', '총 세션 수', '총 페이지 뷰 수'],
+        language: koKR,
+        data: gridData,
         resizable: true,
+        style: {
+          table: {
+            'white-space': 'nowrap',
+          },
+        },
         sort: true,
         fixedHeader: true,
       });
@@ -363,10 +391,17 @@
 
       // Grid 인스턴스 생성
       currentGrid = new gridjs.Grid({
-        data: gridData,
         columns: ['날짜', '활성 사용자 수', '신규 사용자 수', '세션 수', '페이지 뷰 수', '평균 세션 시간'],
-        fixedHeader: true,
+        language: koKR,
+        data: gridData,
+        resizable: true,
+        style: {
+          table: {
+            'white-space': 'nowrap',
+          },
+        },
         sort: true,
+        fixedHeader: true,
       });
       currentGrid.render(statsContainer);
       return '';
@@ -390,10 +425,17 @@
 
       // Grid 인스턴스 생성
       currentGrid = new gridjs.Grid({
-        data: gridData,
         columns: ['페이지 경로', '페이지 뷰 수'],
-        fixedHeader: true,
+        language: koKR,
+        data: gridData,
+        resizable: true,
+        style: {
+          table: {
+            'white-space': 'nowrap',
+          },
+        },
         sort: true,
+        fixedHeader: true,
       });
       currentGrid.render(statsContainer);
       return '';
@@ -423,10 +465,17 @@
 
       // Grid 인스턴스 생성
       currentGrid = new gridjs.Grid({
-        data: gridData,
         columns: ['출처', '매체', '신규 사용자 수', '세션 수', '페이지 뷰 수'],
-        fixedHeader: true,
+        language: koKR,
+        data: gridData,
+        resizable: true,
+        style: {
+          table: {
+            'white-space': 'nowrap',
+          },
+        },
         sort: true,
+        fixedHeader: true,
       });
       currentGrid.render(statsContainer);
       return '';
@@ -450,10 +499,17 @@
 
       // Grid 인스턴스 생성
       currentGrid = new gridjs.Grid({
-        data: gridData,
         columns: ['시간대', '활성 사용자 수', '세션 수', '페이지 뷰 수'],
-        fixedHeader: true,
+        language: koKR,
+        data: gridData,
+        resizable: true,
+        style: {
+          table: {
+            'white-space': 'nowrap',
+          },
+        },
         sort: true,
+        fixedHeader: true,
       });
       currentGrid.render(statsContainer);
       return '';
@@ -483,10 +539,17 @@
 
       // Grid 인스턴스 생성
       currentGrid = new gridjs.Grid({
-        data: gridData,
         columns: ['브라우저', '활성 사용자 수', '세션 수', '페이지 뷰 수', '평균 세션 시간'],
-        fixedHeader: true,
+        language: koKR,
+        data: gridData,
+        resizable: true,
+        style: {
+          table: {
+            'white-space': 'nowrap',
+          },
+        },
         sort: true,
+        fixedHeader: true,
       });
       currentGrid.render(statsContainer);
 
@@ -554,10 +617,17 @@
       const statsArray = Array.isArray(stats) ? stats : [stats];
       const gridData = statsArray.map((item) => [item.country, item.activeUsers, item.sessions, item.pageViews]);
       currentGrid = new gridjs.Grid({
-        data: gridData,
         columns: ['국가', '활성 사용자 수', '세션 수', '페이지 뷰 수'],
-        fixedHeader: true,
+        language: koKR,
+        data: gridData,
+        resizable: true,
+        style: {
+          table: {
+            'white-space': 'nowrap',
+          },
+        },
         sort: true,
+        fixedHeader: true,
       });
       currentGrid.render(statsContainer);
       return '';
