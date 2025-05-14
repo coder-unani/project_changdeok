@@ -101,32 +101,40 @@ input.gridjs-input {
   /* float: right; */
 }
 .gridjs-pagination .gridjs-pages button {
+  @apply border border-r-0 border-gray-200 bg-white outline-none;
+
   padding: 5px 14px;
-  border: 1px solid #d2d6dc;
-  background-color: #fff;
-  border-right: none;
-  outline: none;
+  /* border: 1px solid #d2d6dc; */
+  /* background-color: #fff; */
+  /* border-right: none; */
+  /* outline: none; */
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
 }
 .gridjs-pagination .gridjs-pages button:focus {
-  box-shadow: 0 0 0 2px rgba(149, 189, 243, 0.5);
-  position: relative;
-  margin-right: -1px;
-  border-right: 1px solid #d2d6dc;
+  @apply relative mr-[-1px] border-r shadow-[0_0_0_2px_var(--color-blue-200)];
+
+  /* box-shadow: 0 0 0 2px rgba(149, 189, 243, 0.5); */
+  /* position: relative; */
+  /* margin-right: -1px; */
+  /* border-right: 1px solid #d2d6dc; */
 }
 .gridjs-pagination .gridjs-pages button:hover {
-  background-color: #f7f7f7;
-  color: rgb(60, 66, 87);
-  outline: none;
+  @apply bg-gray-100 text-gray-800 outline-none;
+
+  /* background-color: #f7f7f7; */
+  /* color: rgb(60, 66, 87); */
+  /* outline: none; */
 }
 .gridjs-pagination .gridjs-pages button:disabled,
 .gridjs-pagination .gridjs-pages button[disabled],
 .gridjs-pagination .gridjs-pages button:hover:disabled {
-  cursor: default;
-  background-color: #fff;
-  color: #6b7280;
+  @apply cursor-default bg-white text-gray-400;
+
+  /* cursor: default; */
+  /* background-color: #fff; */
+  /* color: #6b7280; */
 }
 .gridjs-pagination .gridjs-pages button.gridjs-spread {
   cursor: default;
@@ -134,17 +142,23 @@ input.gridjs-input {
   background-color: #fff;
 }
 .gridjs-pagination .gridjs-pages button.gridjs-currentPage {
-  background-color: #f7f7f7;
-  font-weight: bold;
+  @apply bg-gray-100 font-bold text-gray-800;
+
+  /* background-color: #f7f7f7; */
+  /* font-weight: bold; */
 }
 .gridjs-pagination .gridjs-pages button:last-child {
-  border-bottom-right-radius: 6px;
-  border-top-right-radius: 6px;
-  border-right: 1px solid #d2d6dc;
+  @apply rounded-tr-lg rounded-br-lg border-r;
+
+  /* border-bottom-right-radius: 6px; */
+  /* border-top-right-radius: 6px; */
+  /* border-right: 1px solid #d2d6dc; */
 }
 .gridjs-pagination .gridjs-pages button:first-child {
-  border-bottom-left-radius: 6px;
-  border-top-left-radius: 6px;
+  @apply rounded-tl-lg rounded-bl-lg border-l;
+
+  /* border-bottom-left-radius: 6px; */
+  /* border-top-left-radius: 6px; */
 }
 .gridjs-pagination .gridjs-pages button:last-child:focus {
   margin-right: 0;
