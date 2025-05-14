@@ -205,10 +205,12 @@ export class BannerService extends BaseService implements IBannerService {
       if (data.imagePath) updateData.imagePath = data.imagePath;
       if (data.linkType) updateData.linkType = data.linkType;
       if (data.linkUrl) updateData.linkUrl = data.linkUrl;
-      if (data.publishedAt) updateData.publishedAt = data.publishedAt;
-      if (data.unpublishedAt) updateData.unpublishedAt = data.unpublishedAt;
       if (data.updatedBy) updateData.updatedBy = data.updatedBy;
       updateData.isPublished = data.isPublished;
+
+      const currentDate = new Date();
+      const publishedAt = data.publishedAt ? convertStringToDate(data.publishedAt) : null;
+      const unpublishedAt = data.unpublishedAt ? convertStringToDate(data.unpublishedAt) : null;
 
       // imagePath가 있으면 기존 이미지 삭제
       if (updateData.imagePath) {
@@ -237,12 +239,6 @@ export class BannerService extends BaseService implements IBannerService {
       }
 
       // 발행 기간 검증
-      const currentDate = new Date();
-      const publishedAt = updateData.publishedAt ? convertDateToUTC(convertStringToDate(updateData.publishedAt)) : null;
-      const unpublishedAt = updateData.unpublishedAt
-        ? convertDateToUTC(convertStringToDate(updateData.unpublishedAt))
-        : null;
-
       if (!publishedAt || !unpublishedAt) {
         throw new ValidationError('발행 기간을 입력해주세요.');
       }
@@ -298,6 +294,8 @@ export class BannerService extends BaseService implements IBannerService {
         where: { id: bannerId },
         data: {
           ...updateData,
+          publishedAt,
+          unpublishedAt,
           updatedAt: currentDate,
         },
       });
