@@ -43,9 +43,12 @@
               pattern="[0-9]*"
               inputmode="numeric"
             />
-            <button type="button" id="add-blocked-ip" class="orb-btn orb-btn-primary w-[50px]">추가</button>
+            <button type="button" id="btn-add-blocked-ip" class="orb-btn orb-btn-primary w-[50px]">추가</button>
           </div>
-          <div id="blocked-ip-container" class="mt-2 flex flex-col gap-2"></div>
+          <div
+            id="blocked-ip-container"
+            class="mt-2 flex h-[400px] flex-col gap-2 overflow-y-auto bg-gray-300 pr-2"
+          ></div>
         </div>
       </li>
 
@@ -54,18 +57,50 @@
         <label for="enabled-bot" class="flex w-32 flex-none gap-1 text-[13px] text-gray-500 lg:leading-11">
           허용 봇
         </label>
+        <div class="flex flex-col gap-2">
+          <div
+            id="enabled-bot-container"
+            class="mt-2 flex h-[400px] flex-col gap-2 overflow-y-auto bg-gray-300 pr-2"
+          ></div>
+        </div>
       </li>
     </ul>
+    <div class="flex justify-end">
+      <button type="submit" class="orb-btn orb-btn-primary">저장</button>
+    </div>
   </form>
 </div>
 
 <script nonce="<%=nonce%>">
   document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('access-settings-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const blockedIpJson = document.getElementById('blocked-ip-json').value;
+      const enabledBotJson = document.getElementById('enabled-bot-json').value;
+
+      const response = await fetch('<%=apiRoutes.settings.updateAccess.url%>', {
+        method: '<%=apiRoutes.settings.updateAccess.method%>',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          blockedIpJson,
+          enabledBotJson,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('저장 중 오류가 발생했습니다.');
+      }
+
+      alert('접속 관리 설정이 저장되었습니다.');
+    });
+
     // IP 입력 필드 숫자만 입력 가능하도록 설정
     const ipInputs = ['blocked-ip-a', 'blocked-ip-b', 'blocked-ip-c', 'blocked-ip-d'];
     ipInputs.forEach((id) => {
-      const input = document.getElementById(id);
-      input.addEventListener('input', (e) => {
+      document.getElementById(id).addEventListener('input', (e) => {
         e.target.value = e.target.value.replace(/[^0-9]/g, '');
         if (parseInt(e.target.value) > 255) {
           e.target.value = '255';
@@ -74,7 +109,7 @@
     });
 
     // IP 추가 버튼 클릭 이벤트
-    document.getElementById('add-blocked-ip').addEventListener('click', () => {
+    document.getElementById('btn-add-blocked-ip').addEventListener('click', () => {
       const ipParts = ipInputs.map((id) => document.getElementById(id).value);
 
       // 모든 필드가 채워져 있는지 확인
@@ -118,7 +153,12 @@
         updateBlockedIpJson();
       });
 
-      ipContainer.appendChild(ipItem);
+      // 첫 번째 자식 요소로 추가
+      if (ipContainer.firstChild) {
+        ipContainer.insertBefore(ipItem, ipContainer.firstChild);
+      } else {
+        ipContainer.appendChild(ipItem);
+      }
 
       // 입력 필드 초기화
       ipInputs.forEach((id) => {
