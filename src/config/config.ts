@@ -55,6 +55,8 @@ export class Config {
       jwtExpireSecond: prismaData?.jwtExpireSecond || 3600,
       enabledTagsJson: prismaData?.enabledTagsJson || '',
       enabledCorsJson: prismaData?.enabledCorsJson || '',
+      blockedIpJson: prismaData?.blockedIpJson || '',
+      blockedBotJson: prismaData?.blockedBotJson || '',
       createdAt: prismaData?.createdAt || new Date(),
       updatedAt: prismaData?.updatedAt || null,
     };

@@ -7,6 +7,7 @@ import path from 'path';
 
 import { ExpressLogger } from './common/utils/log';
 import { Config, asyncConfig } from './config/config';
+import { AccessMiddleware } from './middlewares/access';
 import { GlobalMiddleware } from './middlewares/global';
 import { LoggerMiddleware } from './middlewares/logger';
 import { NonceMiddleware } from './middlewares/nonce';
@@ -20,6 +21,7 @@ export class App {
   private loggerMiddleware: IMiddleware;
   private sanitizeMiddleware: IMiddleware;
   private nonceMiddleware: IMiddleware;
+  private accessMiddleware: IMiddleware;
   private globalMiddleware: IMiddleware;
 
   private config: Config;
@@ -35,6 +37,7 @@ export class App {
 
     // 미들웨어 초기화
     this.loggerMiddleware = new LoggerMiddleware(this.logger);
+    this.accessMiddleware = new AccessMiddleware(config);
     this.sanitizeMiddleware = new SanitizeMiddleware(JSON.parse(config.getSettings().enabledTagsJson || '[]'));
     this.nonceMiddleware = new NonceMiddleware();
     this.globalMiddleware = new GlobalMiddleware(config);
@@ -95,6 +98,9 @@ export class App {
   }
 
   private initializeMiddlewares(): void {
+    // Access
+    this.app.use((req, res, next) => this.accessMiddleware.handle(req, res, next));
+
     // Nonce 미들웨어
     this.app.use((req, res, next) => this.nonceMiddleware.handle(req, res, next));
 
