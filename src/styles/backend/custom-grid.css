@@ -14,9 +14,11 @@
 }
 
 .gridjs-head {
-  width: 100%;
-  margin-bottom: 5px;
-  padding: 5px 1px;
+  @apply mb-4 w-full;
+
+  /* width: 100%; */
+  /* margin-bottom: 5px; */
+  /* padding: 5px 1px; */
 }
 .gridjs-head::after {
   content: '';
@@ -40,14 +42,14 @@
 }
 
 .gridjs-footer {
-  @apply rounded-b-lg border border-gray-200;
+  @apply relative z-5 block w-full rounded-b-lg border border-gray-200 bg-white px-4 py-3;
 
-  display: block;
-  position: relative;
-  width: 100%;
-  z-index: 5;
-  padding: 12px 24px;
-  background-color: #fff;
+  /* display: block; */
+  /* position: relative; */
+  /* width: 100%; */
+  /* z-index: 5; */
+  /* padding: 12px 24px; */
+  /* background-color: #fff; */
   /* box-shadow:
   0 1px 3px 0 rgba(0, 0, 0, 0.1),
   0 1px 2px 0 rgba(0, 0, 0, 0.26); */
@@ -81,19 +83,22 @@ input.gridjs-input {
 } */
 
 .gridjs-pagination {
-  color: #3d4044;
+  @apply flex flex-col justify-between gap-3 lg:flex-row lg:items-center;
+
+  /* color: #3d4044; */
 }
-.gridjs-pagination::after {
+/* .gridjs-pagination::after {
   content: '';
   display: block;
   clear: both;
-}
-.gridjs-pagination .gridjs-summary {
+} */
+/* .gridjs-pagination .gridjs-summary {
   float: left;
   margin-top: 5px;
-}
+} */
 .gridjs-pagination .gridjs-pages {
-  float: right;
+  @apply text-end;
+  /* float: right; */
 }
 .gridjs-pagination .gridjs-pages button {
   padding: 5px 14px;
