@@ -291,13 +291,20 @@
       currentGrid = new gridjs.Grid({
         data: gridData,
         columns: ['타임스탬프', '메소드', '상태 코드', '경로', '사용자 IP', '원본', '출처', '사용자 에이전트'],
-        fixedHeader: true,
+        style: {
+          table: {
+            'white-space': 'nowrap',
+          },
+        },
+        resizable: true,
         sort: true,
-        search: true,
         pagination: {
           enabled: true,
           limit: 20,
         },
+        fixedHeader: true,
+        height: '600px', // fixedHeader 사용 시 필수
+        search: true,
       });
       currentGrid.render(statsContainer);
       return '';
@@ -323,8 +330,9 @@
       currentGrid = new gridjs.Grid({
         data: gridData,
         columns: ['총 활성 사용자 수', '총 신규 사용자 수', '총 세션 수', '총 페이지 뷰 수'],
-        fixedHeader: true,
+        resizable: true,
         sort: true,
+        fixedHeader: true,
       });
       currentGrid.render(statsContainer);
       return '';
