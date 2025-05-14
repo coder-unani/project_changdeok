@@ -1,0 +1,146 @@
+<div id="system-settings-container" class="hidden">
+  <form id="system-settings-form">
+    <input type="hidden" id="enabled-tags-json" name="enabledTagsJson" value="<%=data.enabledTagsJson%>" />
+    <input type="hidden" id="enabled-cors-json" name="enabledCorsJson" value="<%=data.enabledCorsJson%>" />
+
+    <ul class="mb-4 space-y-4">
+      <!-- 파일 최대 업로드 사이즈 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="max-upload-size" class="flex w-32 flex-none gap-1 text-[13px] text-gray-500 lg:leading-11">
+          파일 최대 업로드 사이즈
+        </label>
+        <input
+          type="text"
+          id="max-upload-size"
+          name="maxUploadSize"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          value="<%=data.maxUploadSize%>"
+          placeholder="파일 최대 업로드 사이즈"
+        />
+      </li>
+
+      <!-- 관리자 로그인 유지 시간 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="jwt-expire-second" class="flex w-32 flex-none gap-1 text-[13px] text-gray-500 lg:leading-11">
+          관리자 로그인 유지 시간
+        </label>
+        <input
+          type="text"
+          id="jwt-expire-second"
+          name="jwtExpireSecond"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          value="<%=data.jwtExpireSecond%>"
+          placeholder="관리자 로그인 유지 시간"
+        />
+      </li>
+
+      <!-- 시스템 도메인 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="express-domain" class="flex w-32 flex-none gap-1 text-[13px] text-gray-500 lg:leading-11">
+          시스템 도메인
+        </label>
+        <input
+          type="text"
+          id="express-domain"
+          name="expressDomain"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          value="<%=data.expressDomain%>"
+          placeholder="시스템 도메인"
+        />
+      </li>
+
+      <!-- 시스템 포트 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="express-port" class="flex w-32 flex-none gap-1 text-[13px] text-gray-500 lg:leading-11">
+          시스템 포트
+        </label>
+        <input
+          type="text"
+          id="express-port"
+          name="expressPort"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          value="<%=data.expressPort%>"
+          placeholder="시스템 포트"
+        />
+      </li>
+
+      <!-- 시스템 허용 태그 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="enabled-tags-json" class="flex w-32 flex-none gap-1 text-[13px] text-gray-500 lg:leading-11">
+          시스템 허용 태그
+        </label>
+        <textarea
+          id="enabled-tags"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          placeholder="시스템 허용 태그"
+        ></textarea>
+      </li>
+
+      <!-- 시스템 허용 CORS -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="enabled-cors-json" class="flex w-32 flex-none gap-1 text-[13px] text-gray-500 lg:leading-11">
+          시스템 허용 CORS
+        </label>
+        <textarea
+          id="enabled-cors"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          placeholder="시스템 허용 CORS"
+        ></textarea>
+      </li>
+    </ul>
+
+    <div class="flex justify-end">
+      <button type="submit" class="orb-btn orb-btn-primary">저장</button>
+    </div>
+  </form>
+</div>
+
+<script nonce="<%=nonce%>">
+  // 시스템 설정 저장
+  document.getElementById('system-settings-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    try {
+      const enabledTags = document.getElementById('enabled-tags').value;
+      const enabledCors = document.getElementById('enabled-cors').value;
+
+      // Transform enabledTags into array format
+      const enabledTagsArray = enabledTags
+        .split(',')
+        .map((tag) => tag.trim())
+        .filter((tag) => tag.length > 0);
+
+      const enabledCorsArray = enabledCors
+        .split(',')
+        .map((tag) => tag.trim())
+        .filter((tag) => tag.length > 0);
+
+      // Create request data object
+      const requestData = {
+        maxUploadSize: document.getElementById('max-upload-size').value,
+        jwtExpireSecond: document.getElementById('jwt-expire-second').value,
+        expressDomain: document.getElementById('express-domain').value,
+        expressPort: document.getElementById('express-port').value,
+        enabledTagsJson: JSON.stringify(enabledTagsArray),
+        enabledCorsJson: JSON.stringify(enabledCorsArray),
+      };
+
+      const response = await fetch('<%=apiRoutes.settings.updateSystem.url%>', {
+        method: '<%=apiRoutes.settings.updateSystem.method%>',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      if (!response.ok) {
+        throw new Error('설정 저장 중 오류가 발생했습니다.');
+      }
+
+      alert('시스템 설정이 저장되었습니다.');
+      // window.location.reload();
+    } catch (error) {
+      alert(error.message || '설정 저장 중 오류가 발생했습니다.');
+    }
+  });
+</script>

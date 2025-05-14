@@ -1,0 +1,466 @@
+<div id="site-settings-container" class="hidden">
+  <form id="site-settings-form" enctype="multipart/form-data">
+    <input type="hidden" id="favicon-orig" name="faviconOrig" value="<%=data.favicon%>" />
+    <input type="hidden" id="logo-orig" name="logoOrig" value="<%=data.logo%>" />
+    <input type="hidden" id="og-image-orig" name="ogImageOrig" value="" />
+    <input type="hidden" id="og-tag-json" name="ogTagJson" value="<%=data.ogTagJson%>" />
+    <ul class="mb-4 space-y-4">
+      <!-- 파비콘 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="favicon" class="w-60 flex-none text-[13px] text-gray-500 lg:leading-11">
+          파비콘
+        </label>
+        <input type="file" id="favicon" name="favicon" class="hidden" accept="image/x-icon" />
+        <div class="flex-1 flex items-center">
+          <div
+            id="favicon-preview-container"
+            class="flex items-center gap-2 h-[36px] w-[230px] rounded-t-xl border-t border-r border-l border-gray-200 pr-[15px] pl-[10px]"
+          >
+            <!-- 파비콘 미리보기 -->
+            <div class="relative rounded-full h-[16px] w-[16px] bg-gray-100 overflow-hidden">
+              <button
+                type="button"
+                id="favicon-add-1"
+                class="z-20 absolute inset-0 h-full w-full cursor-pointer"
+              ></button>
+              <% if (!data.favicon) { %>
+                <%- include('icon/preview') %>
+              <% } else { %>
+              <img
+                id="favicon-preview"
+                class="h-full w-full object-cover object-center"
+                src="<%=data.favicon%>"
+                alt="이미지 미리보기"
+              />
+              <% } %>
+            </div>
+
+            <!-- 사이트 타이틀 -->
+            <p class="flex-1 text-[13px] w-full truncate"><%=data.title%></p>
+
+            <!-- 닫기 아이콘 -->
+            <div class="flex-none ml-1">
+              <%- include('icon/close') %>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <button
+            type="button"
+            id="favicon-add-2"
+            class="orb-btn orb-btn-common flex flex-none items-center gap-2"
+          >
+            <%- include('icon/plus') %>
+            변경
+          </button>
+        </div>
+      </li>
+
+      <!-- 로고 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="logo" class="w-60 flex-none text-[13px] text-gray-500 lg:leading-11">로고</label>
+        <input
+          type="file"
+          id="logo"
+          name="logo"
+          class="hidden"
+          accept="image/*"
+          placeholder="로고 주소"
+        />
+
+        <div class="flex-1 flex items-center">
+          <div
+            class="relative w-[230px] aspect-3/2 rounded-lg border border-gray-200 overflow-hidden"
+          >
+            <button
+              type="button"
+              id="logo-add-1"
+              class="z-20 absolute inset-0 h-full w-full cursor-pointer"
+            ></button>
+            <!-- 이미지 미리보기 (이미지 있을 경우) -->
+            <div
+              id="logo-preview-container"
+              class="<% if (!data.logo) { %>hidden<% } %> z-10 absolute inset-0 h-full w-full bg-gray-100"
+            >
+              <img
+                id="logo-preview"
+                class="h-full w-full object-contain"
+                src="<%=data.logo%>"
+                alt="이미지 미리보기"
+              />
+            </div>
+            <!-- 이미지 미리보기 (이미지 없을 경우) -->
+            <div
+              class="relative h-full w-full flex flex-col items-center justify-center bg-gray-100"
+            >
+              <img
+                class="block w-[50px] opacity-50"
+                src="/images/add-image-512x512.png"
+                alt="이미지 추가"
+              />
+              <p class="mt-1 text-xs text-gray-400">(200x200)</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <button
+            type="button"
+            id="logo-add-2"
+            class="orb-btn orb-btn-common flex flex-none items-center gap-2"
+          >
+            <%- include('icon/plus') %>
+            변경
+          </button>
+        </div>
+      </li>
+
+      <!-- 사이트 타이틀 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="title" class="w-60 flex-none flex gap-1 text-[13px] text-gray-500 lg:leading-11">
+          사이트 타이틀
+          <span class="text-gray-400">(title)</span>
+        </label>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          placeholder="사이트 타이틀"
+          value="<%=data.title%>"
+        />
+      </li>
+
+      <!-- 사이트 소개 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label
+          for="introduction"
+          class="w-60 flex-none flex gap-1 text-[13px] text-gray-500 lg:leading-11"
+        >
+          사이트 소개
+        </label>
+        <input
+          type="text"
+          id="introduction"
+          name="introduction"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          value="<%=data.introduction%>"
+          placeholder="사이트 소개"
+        />
+      </li>
+
+      <!-- 사이트 설명 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label
+          for="description"
+          class="w-60 flex-none flex gap-1 text-[13px] text-gray-500 lg:leading-11"
+        >
+          사이트 설명
+          <span class="text-gray-400">(meta description)</span>
+        </label>
+        <textarea
+          id="description"
+          name="description"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          placeholder="사이트 설명"
+        ><%=data.description%></textarea>
+      </li>
+
+      <!-- 사이트 키워드 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="keyword" class="w-60 flex-none flex gap-1 text-[13px] text-gray-500 lg:leading-11">
+          사이트 키워드
+          <span class="text-gray-400">(meta keywords)</span>
+        </label>
+        <div class="flex w-full flex-col">
+          <input
+            id="keyword"
+            name="keywords"
+            class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+            value="<%=data.keywords%>"
+            placeholder="사이트 키워드"
+          />
+          <p class="px-3 pt-2 text-[12px] text-gray-400">
+            * 콤마(,)로 구분하여 여러 개의 키워드를 입력할 수 있습니다.
+          </p>
+        </div>
+      </li>
+
+      <!-- 오픈그래프 타이틀 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="og-title" class="w-60 flex-none flex gap-1 text-[13px] text-gray-500 lg:leading-11">
+          오픈그래프 타이틀
+          <span class="text-gray-400">(og:title)</span>
+        </label>
+        <input
+          id="og-title"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          value=""
+          placeholder="오픈그래프 타이틀"
+        />
+      </li>
+
+      <!-- 오픈그래프 설명 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label
+          for="og-description"
+          class="w-60 flex-none flex gap-1 text-[13px] text-gray-500 lg:leading-11"
+        >
+          오픈그래프 설명
+          <span class="text-gray-400">(og:description)</span>
+        </label>
+        <input
+          id="og-description"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          value=""
+          placeholder="오픈그래프 설명"
+        />
+      </li>
+
+      <!-- 오픈그래프 이미지 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="og-image" class="w-60 flex-none flex gap-1 text-[13px] text-gray-500 lg:leading-11">
+          오픈그래프 이미지
+          <span class="text-gray-400">(og:image)</span>
+        </label>
+        <input
+          type="file"
+          id="og-image"
+          name="ogImage"
+          class="hidden"
+          accept="image/*"
+          placeholder="오픈그래프 이미지"
+        />
+
+        <div class="flex-1 flex items-center">
+          <div class="flex flex-col w-[300px]">
+            <!-- 오픈그래프 이미지 영역 -->
+            <div
+              class="relative w-full h-[158px] rounded-t-lg border-t border-r border-l border-gray-200 overflow-hidden"
+            >
+              <button
+                type="button"
+                id="og-image-add-1"
+                class="z-20 absolute inset-0 h-full w-full cursor-pointer"
+              ></button>
+
+              <!-- 이미지 미리보기 (이미지 있을 경우) -->
+              <div
+                id="og-image-preview-container"
+                class="<% if (!data.ogTagJson) { %>hidden<% } %> z-10 absolute inset-0 h-full w-full bg-gray-100"
+              >
+                <img
+                  id="og-image-preview"
+                  class="h-full w-full object-cover object-center"
+                  src=""
+                  alt="이미지 미리보기"
+                />
+              </div>
+
+              <!-- 이미지 미리보기 (이미지 없을 경우) -->
+              <div
+                class="relative h-full w-full flex flex-col items-center justify-center bg-gray-100"
+              >
+                <img
+                  class="block w-[50px] opacity-50"
+                  src="/images/add-image-512x512.png"
+                  alt="이미지 추가"
+                />
+                <p class="mt-1 text-xs text-gray-400">(512x512)</p>
+              </div>
+            </div>
+
+            <!-- 오픈그래프 텍스트 영역 -->
+            <div
+              class="flex flex-col w-full p-2.5 rounded-b-lg border-b border-r border-l border-gray-200"
+            >
+              <p id="og-title-preview" class="font-semibold">오픈그래프 타이틀</p>
+              <p id="og-description-preview" class="text-[13px] text-gray-500">
+                오픈그래프 설명
+              </p>
+              <p class="mt-2 text-[12px] text-gray-400">https://<%=data.serviceDomain%></p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <button
+            type="button"
+            id="og-image-add-2"
+            class="orb-btn orb-btn-common flex flex-none items-center gap-2"
+          >
+            <%- include('icon/plus') %>
+            변경
+          </button>
+        </div>
+      </li>
+
+      <!-- 서비스 도메인 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="service-domain" class="w-60 flex-none text-[13px] text-gray-500 lg:leading-11">
+          서비스 도메인
+        </label>
+        <input
+          type="text"
+          id="service-domain"
+          name="serviceDomain"
+          pattern="^((https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?)$"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          value="<%=data.serviceDomain%>"
+          placeholder="서비스 도메인"
+        />
+      </li>
+
+      <!-- 서비스 포트 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="service-port" class="w-60 flex-none text-[13px] text-gray-500 lg:leading-11">
+          서비스 포트
+        </label>
+        <input
+          type="number"
+          id="service-port"
+          name="servicePort"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          value="<%=data.servicePort%>"
+          placeholder="서비스 포트"
+          readonly
+        />
+      </li>
+    </ul>
+
+    <div class="flex justify-end">
+      <button type="submit" class="orb-btn orb-btn-primary">저장</button>
+    </div>
+  </form>
+</div>
+
+<script nonce="<%=nonce%>">
+  document.addEventListener('DOMContentLoaded', () => {
+    try {
+      const ogTagJson = document.getElementById('og-tag-json').value;
+      const ogTag = JSON.parse(ogTagJson);
+
+      const ogTitle = ogTag['og:title'] ? ogTag['og:title'] : '';
+      const ogDescription = ogTag['og:description'] ? ogTag['og:description'] : '';
+      const ogImage = ogTag['og:image'] ? ogTag['og:image'] : '';
+
+      document.getElementById('og-title').value = ogTitle;
+      document.getElementById('og-description').value = ogDescription;
+      document.getElementById('og-image-preview').src = ogImage;
+      document.getElementById('og-image-orig').value = ogImage;
+
+      document.getElementById('og-title-preview').textContent = ogTitle;
+      document.getElementById('og-description-preview').textContent = ogDescription;
+
+      if (ogImage) {
+        document.getElementById('og-image-preview-container').classList.remove('hidden');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    try {
+      const enabledTagsJson = document.getElementById('enabled-tags-json').value;
+      const enabledCorsJson = document.getElementById('enabled-cors-json').value;
+
+      // Convert JSON array to comma-separated string
+      const enabledTagsArray = JSON.parse(enabledTagsJson || '[]');
+      const enabledCorsArray = JSON.parse(enabledCorsJson || '[]');
+
+      document.getElementById('enabled-tags').value = enabledTagsArray.join(',');
+      document.getElementById('enabled-cors').value = enabledCorsArray.join(',');
+    } catch (error) {
+      console.error(error);
+    }
+    
+    // 사이트 설정 저장
+    document.getElementById('site-settings-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      try {
+        const ogTitle = document.getElementById('og-title').value;
+        const ogDescription = document.getElementById('og-description').value;
+        const ogTag = {
+          'og:title': ogTitle,
+          'og:description': ogDescription,
+          'og:image': '',
+        };
+
+        document.getElementById('og-tag-json').value = JSON.stringify(ogTag);
+
+        const formData = new FormData(e.target);
+
+        const response = await fetch('<%=apiRoutes.settings.updateSite.url%>', {
+          method: '<%=apiRoutes.settings.updateSite.method%>',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error('설정 저장 중 오류가 발생했습니다.');
+        }
+
+        alert('사이트 설정이 저장되었습니다.');
+        window.location.reload();
+      } catch (error) {
+        alert(error.message || '설정 저장 중 오류가 발생했습니다.');
+      }
+    });
+
+    // 파비콘 등록
+    document.querySelectorAll('[id^="favicon-add"]').forEach((button) => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('favicon').click();
+      });
+    });
+
+    // 파비콘 미리보기
+    document.getElementById('favicon').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        document.getElementById('favicon-preview').src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // 로고 등록
+    document.querySelectorAll('[id^="logo-add"]').forEach((button) => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('logo').click();
+      });
+    });
+
+    // 로고 미리보기
+    document.getElementById('logo').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        document.getElementById('logo-preview').src = e.target.result;
+        document.getElementById('logo-preview-container').classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Open Graph 이미지 등록
+    document.querySelectorAll('[id^="og-image-add"]').forEach((button) => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('og-image').click();
+      });
+    });
+
+    // Open Graph 이미지 미리보기
+    document.getElementById('og-image').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        document.getElementById('og-image-preview').src = e.target.result;
+        document.getElementById('og-image-preview-container').classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+</script>

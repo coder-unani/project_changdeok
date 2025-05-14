@@ -1,0 +1,240 @@
+<div id="company-settings-container" class="hidden">
+  <form id="company-settings-form">
+    <input type="hidden" id="company-json" name="companyJson" value="<%=data.companyJson%>" />
+
+    <ul class="mb-4 space-y-4">
+      <!-- 회사명 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="company-name" class="flex w-32 flex-none gap-1 text-[13px] text-gray-500 lg:leading-11">
+          회사명
+        </label>
+        <input
+          type="text"
+          id="company-name"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          placeholder="회사명"
+        />
+      </li>
+
+      <!-- 대표자 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="company-ceo" class="flex w-32 flex-none gap-1 text-[13px] text-gray-500 lg:leading-11">
+          대표자
+        </label>
+        <input
+          type="text"
+          id="company-ceo"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          placeholder="대표자"
+        />
+      </li>
+
+      <!-- 사업자 번호 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="company-fax" class="flex w-32 flex-none gap-1 text-[13px] text-gray-500 lg:leading-11">
+          사업자 번호
+        </label>
+        <input
+          type="tel"
+          id="company-business-number"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          placeholder="사업자 번호"
+        />
+      </li>
+
+      <!-- 대표번호 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="company-phone" class="flex w-32 flex-none gap-1 text-[13px] text-gray-500 lg:leading-11">
+          대표번호
+        </label>
+        <input
+          type="tel"
+          id="company-tel"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          placeholder="대표번호"
+        />
+      </li>
+
+      <!-- 팩스 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="company-fax" class="flex w-32 flex-none gap-1 text-[13px] text-gray-500 lg:leading-11">
+          팩스
+        </label>
+        <input
+          type="tel"
+          id="company-fax"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          placeholder="팩스"
+        />
+      </li>
+
+      <!-- 주소 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="company-address" class="flex w-32 flex-none gap-1 text-[13px] text-gray-500 lg:leading-11">
+          주소
+        </label>
+        <input
+          type="text"
+          id="company-address"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          placeholder="주소"
+        />
+      </li>
+
+      <!-- 우편번호 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="company-zip-code" class="flex w-32 flex-none gap-1 text-[13px] text-gray-500 lg:leading-11">
+          우편번호
+        </label>
+        <input
+          type="number"
+          id="company-zip-code"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          placeholder="우편번호"
+        />
+      </li>
+
+      <!-- 이메일 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="company-email" class="flex w-32 flex-none gap-1 text-[13px] text-gray-500 lg:leading-11">
+          이메일
+        </label>
+        <input
+          type="email"
+          id="company-email"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          placeholder="이메일"
+        />
+      </li>
+
+      <!-- 위도 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="company-latitude" class="flex w-32 flex-none gap-1 text-[13px] text-gray-500 lg:leading-11">
+          위도
+        </label>
+        <input
+          type="text"
+          id="company-latitude"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          placeholder="위도"
+        />
+      </li>
+
+      <!-- 경도 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="company-longitude" class="flex w-32 flex-none gap-1 text-[13px] text-gray-500 lg:leading-11">
+          경도
+        </label>
+        <input
+          type="text"
+          id="company-longitude"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          placeholder="경도"
+        />
+      </li>
+
+      <!-- 점심시간 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="company-lunchtime-start" class="flex w-32 flex-none gap-1 text-[13px] text-gray-500 lg:leading-11">
+          점심시간
+        </label>
+        <div class="flex items-center gap-2">
+          <input
+            type="time"
+            id="company-lunchtime-start"
+            class="w-[160px] rounded-lg bg-gray-100 px-4 py-3 leading-6 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+            placeholder="점심시간"
+          />
+          ~
+          <input
+            type="time"
+            id="company-lunchtime-end"
+            class="w-[160px] rounded-lg bg-gray-100 px-4 py-3 leading-6 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+            placeholder="점심시간"
+          />
+        </div>
+      </li>
+    </ul>
+
+    <div class="flex justify-end">
+      <button type="submit" class="orb-btn orb-btn-primary">저장</button>
+    </div>
+  </form>
+</div>
+
+<script nonce="<%=nonce%>">
+  document.addEventListener('DOMContentLoaded', () => {
+    try {
+      const companyJson = document.getElementById('company-json').value;
+      const company = JSON.parse(companyJson);
+
+      document.getElementById('company-name').value = company.name ? company.name : '';
+      document.getElementById('company-ceo').value = company.ceo ? company.ceo : '';
+      document.getElementById('company-business-number').value = company.businessNumber ? company.businessNumber : '';
+      document.getElementById('company-tel').value = company.tel ? company.tel : '';
+      document.getElementById('company-fax').value = company.fax ? company.fax : '';
+      document.getElementById('company-address').value = company.address ? company.address : '';
+      document.getElementById('company-zip-code').value = company.zipCode ? company.zipCode : '';
+      document.getElementById('company-email').value = company.email ? company.email : '';
+      document.getElementById('company-latitude').value = company.latitude ? company.latitude : '';
+      document.getElementById('company-longitude').value = company.longitude ? company.longitude : '';
+      document.getElementById('company-lunchtime-start').value = company.lunchtimeStart ? company.lunchtimeStart : '';
+      document.getElementById('company-lunchtime-end').value = company.lunchtimeEnd ? company.lunchtimeEnd : '';
+    } catch (error) {
+      console.error(error);
+    }
+
+    // 회사 설정 저장
+    document.getElementById('company-settings-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      try {
+        const companyName = document.getElementById('company-name').value;
+        const ceo = document.getElementById('company-ceo').value;
+        const businessNumber = document.getElementById('company-business-number').value;
+        const tel = document.getElementById('company-tel').value;
+        const fax = document.getElementById('company-fax').value;
+        const address = document.getElementById('company-address').value;
+        const zipCode = document.getElementById('company-zip-code').value;
+        const email = document.getElementById('company-email').value;
+        const latitude = document.getElementById('company-latitude').value;
+        const longitude = document.getElementById('company-longitude').value;
+        const lunchtimeStart = document.getElementById('company-lunchtime-start').value;
+        const lunchtimeEnd = document.getElementById('company-lunchtime-end').value;
+
+        const company = {
+          name: companyName,
+          ceo: ceo,
+          businessNumber: businessNumber,
+          tel: tel,
+          fax: fax,
+          address: address,
+          zipCode: zipCode,
+          email: email,
+          latitude: latitude,
+          longitude: longitude,
+          lunchtimeStart: lunchtimeStart,
+          lunchtimeEnd: lunchtimeEnd,
+        };
+
+        const response = await fetch('<%=apiRoutes.settings.updateCompany.url%>', {
+          method: '<%=apiRoutes.settings.updateCompany.method%>',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            companyJson: JSON.stringify(company),
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('설정 저장 중 오류가 발생했습니다.');
+        }
+
+        alert('회사 설정이 저장되었습니다.');
+        // window.location.reload();
+      } catch (error) {
+        alert(error.message || '설정 저장 중 오류가 발생했습니다.');
+      }
+    });
+  });
+</script>

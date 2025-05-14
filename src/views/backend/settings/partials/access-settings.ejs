@@ -1,0 +1,169 @@
+<div id="access-settings-container" class="hidden">
+  <form id="access-settings-form">
+    <input type="hidden" id="blocked-ip-json" name="blockedIpJson" value="<%=data.blockedIpJson%>" />
+    <input type="hidden" id="enabled-bot-json" name="enabledBotJson" value="<%=data.enabledBotJson%>" />
+
+    <ul class="mb-4 space-y-4">
+      <!-- 차단 IP -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="blocked-ip" class="flex w-32 flex-none gap-1 text-[13px] text-gray-500 lg:leading-11">
+          차단 IP
+        </label>
+        <div class="flex flex-col gap-2">
+          <div class="flex items-end gap-2">
+            <input
+              type="text"
+              id="blocked-ip-a"
+              class="h-[25px] w-[50px] rounded-md border border-gray-300"
+              maxlength="3"
+              pattern="[0-9]*"
+              inputmode="numeric"
+            />.
+            <input
+              type="text"
+              id="blocked-ip-b"
+              class="h-[25px] w-[50px] rounded-md border border-gray-300"
+              maxlength="3"
+              pattern="[0-9]*"
+              inputmode="numeric"
+            />.
+            <input
+              type="text"
+              id="blocked-ip-c"
+              class="h-[25px] w-[50px] rounded-md border border-gray-300"
+              maxlength="3"
+              pattern="[0-9]*"
+              inputmode="numeric"
+            />.
+            <input
+              type="text"
+              id="blocked-ip-d"
+              class="h-[25px] w-[50px] rounded-md border border-gray-300"
+              maxlength="3"
+              pattern="[0-9]*"
+              inputmode="numeric"
+            />
+            <button type="button" id="add-blocked-ip" class="orb-btn orb-btn-primary w-[50px]">추가</button>
+          </div>
+          <div id="blocked-ip-container" class="mt-2 flex flex-col gap-2"></div>
+        </div>
+      </li>
+
+      <!-- 허용 봇 -->
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="enabled-bot" class="flex w-32 flex-none gap-1 text-[13px] text-gray-500 lg:leading-11">
+          허용 봇
+        </label>
+      </li>
+    </ul>
+  </form>
+</div>
+
+<script nonce="<%=nonce%>">
+  document.addEventListener('DOMContentLoaded', () => {
+    // IP 입력 필드 숫자만 입력 가능하도록 설정
+    const ipInputs = ['blocked-ip-a', 'blocked-ip-b', 'blocked-ip-c', 'blocked-ip-d'];
+    ipInputs.forEach((id) => {
+      const input = document.getElementById(id);
+      input.addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/[^0-9]/g, '');
+        if (parseInt(e.target.value) > 255) {
+          e.target.value = '255';
+        }
+      });
+    });
+
+    // IP 추가 버튼 클릭 이벤트
+    document.getElementById('add-blocked-ip').addEventListener('click', () => {
+      const ipParts = ipInputs.map((id) => document.getElementById(id).value);
+
+      // 모든 필드가 채워져 있는지 확인
+      if (ipParts.some((part) => !part)) {
+        alert('IP 주소의 모든 부분을 입력해주세요.');
+        return;
+      }
+
+      // IP 주소 형식 검증
+      const ip = ipParts.join('.');
+      if (!/^(\d{1,3}\.){3}\d{1,3}$/.test(ip)) {
+        alert('올바른 IP 주소 형식이 아닙니다.');
+        return;
+      }
+
+      // 이미 존재하는 IP인지 확인
+      const existingIps = Array.from(document.querySelectorAll('.blocked-ip-item')).map((item) => item.dataset.ip);
+      if (existingIps.includes(ip)) {
+        alert('이미 등록된 IP 주소입니다.');
+        return;
+      }
+
+      // IP 항목 추가
+      const ipContainer = document.getElementById('blocked-ip-container');
+      const ipItem = document.createElement('div');
+      ipItem.className = 'blocked-ip-item flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-md';
+      ipItem.dataset.ip = ip;
+
+      ipItem.innerHTML = `
+        <span class="text-[13px] text-gray-600">${ip}</span>
+        <button type="button" class="delete-ip-btn ml-auto">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" fill="currentColor" class="h-[14px] w-[14px] text-gray-400 hover:text-red-500">
+            <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/>
+          </svg>
+        </button>
+      `;
+
+      // 삭제 버튼 이벤트 리스너
+      ipItem.querySelector('.delete-ip-btn').addEventListener('click', () => {
+        ipItem.remove();
+        updateBlockedIpJson();
+      });
+
+      ipContainer.appendChild(ipItem);
+
+      // 입력 필드 초기화
+      ipInputs.forEach((id) => {
+        document.getElementById(id).value = '';
+      });
+
+      // blockedIpJson 업데이트
+      updateBlockedIpJson();
+    });
+
+    // blockedIpJson 업데이트 함수
+    function updateBlockedIpJson() {
+      const blockedIps = Array.from(document.querySelectorAll('.blocked-ip-item')).map((item) => item.dataset.ip);
+      document.getElementById('blocked-ip-json').value = JSON.stringify(blockedIps);
+    }
+
+    // 기존 차단 IP 목록 로드
+    try {
+      const blockedIpJson = document.getElementById('blocked-ip-json').value;
+      const blockedIps = JSON.parse(blockedIpJson || '[]');
+
+      blockedIps.forEach((ip) => {
+        const ipContainer = document.getElementById('blocked-ip-container');
+        const ipItem = document.createElement('div');
+        ipItem.className = 'blocked-ip-item flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-md';
+        ipItem.dataset.ip = ip;
+
+        ipItem.innerHTML = `
+          <span class="text-[13px] text-gray-600">${ip}</span>
+          <button type="button" class="delete-ip-btn ml-auto">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" fill="currentColor" class="h-[14px] w-[14px] text-gray-400 hover:text-red-500">
+              <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/>
+            </svg>
+          </button>
+        `;
+
+        ipItem.querySelector('.delete-ip-btn').addEventListener('click', () => {
+          ipItem.remove();
+          updateBlockedIpJson();
+        });
+
+        ipContainer.appendChild(ipItem);
+      });
+    } catch (error) {
+      console.error('차단 IP 목록 로드 중 오류 발생:', error);
+    }
+  });
+</script>
