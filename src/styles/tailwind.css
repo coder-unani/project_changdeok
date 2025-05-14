@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 
+@import './backend/custom-grid.css';
+
 @theme {
   /* font */
   --font-pretendard: 'Pretendard', system-ui, sans-serif;
