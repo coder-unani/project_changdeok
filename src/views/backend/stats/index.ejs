@@ -145,15 +145,12 @@
 
       <div id="stats-metadata"></div>
 
-      <div class="flex items-center justify-start">
-        <div id="stats-container" class="overflow-x-auto"></div>
-      </div>
+      <div id="stats-container" class="flex overflow-x-auto"></div>
     </div>
   </div>
 </div>
 
 <!-- <link rel="stylesheet" href="/js/gridjs@6.2.0/mermaid.min.css" /> -->
-<link rel="stylesheet" href="/css/backend/custom-grid.css" />
 <script src="/js/gridjs@6.2.0/gridjs.umd.js"></script>
 <script src="/js/chart.js@4.4.9/chart.umd.js"></script>
 
@@ -352,6 +349,7 @@
       currentGrid = new gridjs.Grid({
         columns: ['총 활성 사용자 수', '총 신규 사용자 수', '총 세션 수', '총 페이지 뷰 수'],
         language: koKR,
+        search: true,
         data: gridData,
         resizable: true,
         style: {
@@ -360,6 +358,10 @@
           },
         },
         sort: true,
+        pagination: {
+          enabled: true,
+          limit: 20,
+        },
         fixedHeader: true,
       });
       currentGrid.render(statsContainer);
