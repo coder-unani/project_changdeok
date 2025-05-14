@@ -53,8 +53,8 @@ model Settings {
   jwtExpireSecond Int @default(3600) // 1시간
   enabledTagsJson String? @db.Text
   enabledCorsJson String? @db.Text
-  enabledBotJson String? @db.Text
   blockedIpJson String? @db.Text
+  blockedBotJson String? @db.Text
   createdAt DateTime @default(now())
   updatedAt DateTime? @updatedAt
 

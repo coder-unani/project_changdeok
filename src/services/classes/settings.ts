@@ -43,7 +43,7 @@ export class SettingsService extends BaseService implements ISettingsService {
         jwtExpireSecond: prismaData?.jwtExpireSecond || 3600,
         enabledTagsJson: prismaData?.enabledTagsJson || '',
         enabledCorsJson: prismaData?.enabledCorsJson || '',
-        enabledBotJson: prismaData?.enabledBotJson || '',
+        blockedBotJson: prismaData?.blockedBotJson || '',
         blockedIpJson: prismaData?.blockedIpJson || '',
         createdAt: prismaData?.createdAt || new Date(),
         updatedAt: prismaData?.updatedAt || null,

@@ -1210,7 +1210,7 @@ export class ApiController {
       // 요청 데이터
       const requestData: IRequestAccessSettings = {
         blockedIpJson: req.body.blockedIpJson,
-        enabledBotJson: req.body.enabledBotJson,
+        blockedBotJson: req.body.blockedBotJson,
       };
 
       // 접근 설정 수정

@@ -140,7 +140,7 @@ export interface IRequestCompanySettings {
 
 export interface IRequestAccessSettings {
   blockedIpJson?: string;
-  enabledBotJson?: string;
+  blockedBotJson?: string;
 }
 
 export interface IRequestSystemSettings {

@@ -101,7 +101,7 @@ export interface ICompanySettings {
 
 export interface IAccessSettings {
   blockedIpJson?: string;
-  enabledBotJson?: string;
+  blockedBotJson?: string;
 }
 
 export interface ISystemSettings {
