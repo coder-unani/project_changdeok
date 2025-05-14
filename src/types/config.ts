@@ -99,6 +99,11 @@ export interface ICompanySettings {
   companyJson?: string;
 }
 
+export interface IAccessSettings {
+  blockedIpJson?: string;
+  enabledBotJson?: string;
+}
+
 export interface ISystemSettings {
   expressDomain: string;
   expressPort: number;
@@ -108,11 +113,7 @@ export interface ISystemSettings {
   enabledCorsJson?: string;
 }
 
-export interface IAccessSettings {
-  blockIp: string[];
-}
-
-export interface ISettings extends ISiteSettings, ICompanySettings, ISystemSettings {
+export interface ISettings extends ISiteSettings, ICompanySettings, IAccessSettings, ISystemSettings {
   createdAt: Date;
   updatedAt: Date | null;
 }

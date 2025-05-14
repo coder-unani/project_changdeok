@@ -280,6 +280,11 @@ class ApiRouter {
       this.apiController.setCompanySettings(req, res);
     });
 
+    // 접근 설정 수정
+    this.router.patch(apiRoutes.settings.updateAccess.url, (req: Request, res: Response) => {
+      this.apiController.setAccessSettings(req, res);
+    });
+
     // 시스템 설정 수정
     this.router.patch(apiRoutes.settings.updateSystem.url, (req: Request, res: Response) => {
       this.apiController.setSystemSettings(req, res);

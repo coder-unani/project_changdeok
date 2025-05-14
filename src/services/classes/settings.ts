@@ -43,6 +43,8 @@ export class SettingsService extends BaseService implements ISettingsService {
         jwtExpireSecond: prismaData?.jwtExpireSecond || 3600,
         enabledTagsJson: prismaData?.enabledTagsJson || '',
         enabledCorsJson: prismaData?.enabledCorsJson || '',
+        enabledBotJson: prismaData?.enabledBotJson || '',
+        blockedIpJson: prismaData?.blockedIpJson || '',
         createdAt: prismaData?.createdAt || new Date(),
         updatedAt: prismaData?.updatedAt || null,
       };
@@ -105,7 +107,20 @@ export class SettingsService extends BaseService implements ISettingsService {
   }
 
   public async updateAccessSettings(data: IRequestAccessSettings): Promise<IServiceResponse<void>> {
-    return { result: true };
+    try {
+      // 접속 관리 셋팅 업데이트
+      await this.prisma.settings.update({
+        where: {
+          id: 1,
+        },
+        data: data,
+      });
+
+      // 응답 성공
+      return { result: true };
+    } catch (error) {
+      return this.handleError(error);
+    }
   }
 
   public async updateSystemSettings(data: IRequestSystemSettings): Promise<IServiceResponse<void>> {

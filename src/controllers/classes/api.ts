@@ -19,6 +19,7 @@ import {
 } from '../../services';
 import { IEmployeeToken } from '../../types/object';
 import {
+  IRequestAccessSettings,
   IRequestBannerUpdate,
   IRequestBannerWrite,
   IRequestBanners,
@@ -1191,6 +1192,30 @@ export class ApiController {
       // 회사 설정 수정
       const settingsService: ISettingsService = new SettingsService(prisma);
       const result = await settingsService.updateCompanySettings(req.body.companyJson);
+
+      // 수정 실패 처리
+      if (!result.result) {
+        throw new AppError(result.code, result.message);
+      }
+
+      // 응답 성공
+      res.status(httpStatus.NO_CONTENT).send(null);
+    } catch (error) {
+      this.handleError(error, res);
+    }
+  }
+
+  public async setAccessSettings(req: Request, res: Response): Promise<void> {
+    try {
+      // 요청 데이터
+      const requestData: IRequestAccessSettings = {
+        blockedIpJson: req.body.blockedIpJson,
+        enabledBotJson: req.body.enabledBotJson,
+      };
+
+      // 접근 설정 수정
+      const settingsService: ISettingsService = new SettingsService(prisma);
+      const result = await settingsService.updateAccessSettings(requestData);
 
       // 수정 실패 처리
       if (!result.result) {
