@@ -10,7 +10,6 @@ export class AccessMiddleware implements IMiddleware {
   private blockedBots: RegExp[];
 
   constructor(config: Config) {
-    console.log('config.getSettings().blockedIpJson => ', config.getSettings().blockedIpJson);
     this.blockedIps = JSON.parse(config.getSettings().blockedIpJson || '[]');
     this.allowedBots = [].map((pattern) => new RegExp(pattern, 'i'));
     this.allowedBrowsers = ['chrome', 'firefox', 'safari', 'edge', 'opera', 'msie', 'trident'].map(
@@ -24,6 +23,11 @@ export class AccessMiddleware implements IMiddleware {
   public handle(req: Request, res: Response, next: NextFunction): void {
     const ip = req.headers['x-forwarded-for'] || req.ip;
     const userAgent = req.headers['user-agent'] as string;
+
+    console.log('ip => ', ip);
+    console.log('userAgent => ', userAgent);
+    console.log('blockedIps => ', this.blockedIps);
+    console.log('this.isBlockedIp => ', this.isBlockedIp(ip as string));
 
     if (this.isBlockedIp(ip as string) || this.isBot(userAgent)) {
       res.status(403).json({
