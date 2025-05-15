@@ -12,6 +12,12 @@ export class RecaptchaMiddleware implements IMiddleware {
   }
 
   public async handle(req: Request, res: Response, next: NextFunction): Promise<void> {
+    // API 경로가 아닌 경우 미들웨어 실행하지 않음
+    if (!req.path.startsWith('/api')) {
+      next();
+      return;
+    }
+
     try {
       const recaptchaToken = req.body.recaptchaToken;
 

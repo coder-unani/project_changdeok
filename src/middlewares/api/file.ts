@@ -112,7 +112,13 @@ export class FileUploadMiddleware implements IMiddleware {
     }
   }
 
-  handle(req: Request, res: Response, next: NextFunction): void {
+  public async handle(req: Request, res: Response, next: NextFunction): Promise<void> {
+    // API 경로가 아닌 경우 미들웨어 실행하지 않음
+    if (!req.path.startsWith('/api')) {
+      next();
+      return;
+    }
+
     // 파일 업로드 저장 엔진 설정
     const storage: StorageEngine = multer.diskStorage({
       // 업로드 파일 저장 경로 설정

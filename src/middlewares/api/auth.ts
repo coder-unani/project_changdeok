@@ -19,6 +19,12 @@ export class AuthMiddleware implements IMiddleware {
   }
 
   public handle(req: Request, res: Response, next: NextFunction): void {
+    // API 경로가 아닌 경우 미들웨어 실행하지 않음
+    if (!req.path.startsWith('/api')) {
+      next();
+      return;
+    }
+
     // 인증 제외된 경로는 미들웨어 실행하지 않음
     if (this.exceptAuth.includes(req.path)) {
       next();

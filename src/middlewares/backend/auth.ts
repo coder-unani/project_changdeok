@@ -48,6 +48,12 @@ export class AuthMiddleware implements IMiddleware {
   }
 
   public handle(req: Request, res: Response, next: NextFunction): void {
+    // 백엔드가 아닌 경로는 미들웨어 실행하지 않음
+    if (!req.path.startsWith('/admin')) {
+      next();
+      return;
+    }
+
     // 인증 제외된 경로는 미들웨어 실행하지 않음
     if (this.exceptAuth.includes(req.path)) {
       next();

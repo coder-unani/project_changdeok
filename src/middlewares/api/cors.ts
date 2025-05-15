@@ -1,5 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
 import cors, { CorsOptions } from 'cors';
+import { NextFunction, Request, Response } from 'express';
+
 import { IMiddleware } from '../../types/middleware';
 
 export class CorsMiddleware implements IMiddleware {
@@ -10,6 +11,12 @@ export class CorsMiddleware implements IMiddleware {
   }
 
   public handle(req: Request, res: Response, next: NextFunction): void {
-    this.corsMiddleware(req, res, next); 
+    // API 경로가 아닌 경우 미들웨어 실행하지 않음
+    if (!req.path.startsWith('/api')) {
+      next();
+      return;
+    }
+
+    this.corsMiddleware(req, res, next);
   }
 }
