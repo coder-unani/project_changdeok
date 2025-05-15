@@ -1,5 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
 import CryptoJS from 'crypto-js';
+import { NextFunction, Request, Response } from 'express';
+
 import { IMiddleware } from '../types/middleware';
 
 export class NonceMiddleware implements IMiddleware {
@@ -13,8 +14,8 @@ export class NonceMiddleware implements IMiddleware {
     // Add nonce to response headers for CSP
     const cspDirectives = [
       "default-src 'self'",
-      `script-src 'self' 'nonce-${nonce}' https://www.googletagmanager.com https://tagassistant.google.com https://www.google-analytics.com https://www.google.com https://www.gstatic.com`,
-      `style-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://fonts.googleapis.com https://www.google.com https://www.gstatic.com`,
+      `script-src 'self' 'nonce-${nonce}' https://www.googletagmanager.com https://tagassistant.google.com https://www.google-analytics.com https://www.google.com https://www.gstatic.com https://cdn.jsdelivr.net`,
+      `style-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://fonts.googleapis.com https://www.google.com https://www.gstatic.com https://cdn.jsdelivr.net`,
       "font-src 'self' https://fonts.gstatic.com data:",
       "img-src 'self' https://www.googletagmanager.com https://fonts.gstatic.com https://www.google.com https://www.gstatic.com data:",
       "connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://www.google.com https://www.gstatic.com",
