@@ -49,9 +49,9 @@ export class EmployeeService extends BaseService implements IEmployeeService {
   private convertToEmployee(employee: any): IEmployee {
     const employeeMaskedEmail = formatEmailMasking(employee.email);
 
-    const hireDate = employee.hireDate ? convertDateToString(convertDateToKST(employee.hireDate)) : null;
-    const fireDate = employee.fireDate ? convertDateToString(convertDateToKST(employee.fireDate)) : null;
-    const birthDate = employee.birthDate ? convertDateToString(convertDateToKST(employee.birthDate)) : null;
+    const hireDate = employee.hireDate ? convertDateToString(convertDateToKST(employee.hireDate), false) : null;
+    const fireDate = employee.fireDate ? convertDateToString(convertDateToKST(employee.fireDate), false) : null;
+    const birthDate = employee.birthDate ? convertDateToString(convertDateToKST(employee.birthDate), false) : null;
     const lastLoginAt = employee.lastLoginAt ? convertDateToString(convertDateToKST(employee.lastLoginAt)) : null;
     const createdAt = employee.createdAt ? convertDateToString(convertDateToKST(employee.createdAt)) : null;
     const updatedAt = employee.updatedAt ? convertDateToString(convertDateToKST(employee.updatedAt)) : null;
@@ -101,8 +101,8 @@ export class EmployeeService extends BaseService implements IEmployeeService {
       this.validatePhoneNumber(data.mobile);
 
       // 날짜 형식 체크
-      const hireDate = this.validateDateField(data.hireDate);
-      const birthDate = this.validateDateField(data.birthDate);
+      const hireDate = data.hireDate ? convertStringToDate(data.hireDate) : null;
+      const birthDate = data.birthDate ? convertStringToDate(data.birthDate) : null;
 
       // 이메일 중복 체크
       const isUniqueEmail = await this.isUniqueEmail(data.email);
@@ -191,9 +191,9 @@ export class EmployeeService extends BaseService implements IEmployeeService {
       this.validatePhoneNumber(data.mobile);
 
       // 날짜 형식 체크
-      const hireDate = this.validateDateField(data.hireDate);
-      const birthDate = this.validateDateField(data.birthDate);
-      const fireDate = this.validateDateField(data.fireDate);
+      const hireDate = data.hireDate ? convertStringToDate(data.hireDate) : null;
+      const birthDate = data.birthDate ? convertStringToDate(data.birthDate) : null;
+      const fireDate = data.fireDate ? convertStringToDate(data.fireDate) : null;
 
       // 직원 정보 수정
       const updatedEmployee = await this.prisma.employee.update({
