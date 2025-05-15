@@ -27,6 +27,12 @@
   </div>
 </div>
 
+<!-- toastify -->
+<%- include('../common/library/toastify') %>
+
+<!-- sweetalert2 -->
+<%- include('../common/library/sweetalert2') %>
+
 <script nonce="<%=nonce%>">
   document.addEventListener('DOMContentLoaded', () => {
     const siteSettingsContainer = document.getElementById('site-settings-container');
@@ -80,7 +86,7 @@
 
     // 서버 재시작 함수
     const restartServer = async () => {
-      if (!confirm('서버를 재시작하시겠습니까?')) {
+      if (!confirmMessage('서버를 재시작하시겠습니까?')) {
         return;
       }
 

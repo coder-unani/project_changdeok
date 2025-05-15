@@ -1,0 +1,57 @@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script nonce="<%=nonce%>">
+  const alertMessage = (type, text, title = '', options = {}) => {
+    let icon = null;
+
+    switch (type) {
+      case 'success':
+        icon = 'success';
+        break;
+      case 'error':
+        icon = 'error';
+        break;
+      case 'warning':
+        icon = 'warning';
+        break;
+      default:
+        icon = 'info';
+        break;
+    }
+
+    const footer = options.footer || '';
+
+    const swalOptions = {
+      ...(title && { title }),
+      ...(text && { text }),
+      ...(icon && { icon }),
+      ...(footer && { footer }),
+    };
+
+    Swal.fire(swalOptions);
+  };
+
+  const confirmMessage = (text, title = '', successText = '', options = {}) => {
+    const icon = options.icon || 'info';
+    const footer = options.footer || '';
+
+    Swal.fire({
+      ...(title && { title }),
+      ...(text && { text }),
+      ...(icon && { icon }),
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      cancelButtonText: '취소',
+      confirmButtonText: '확인',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: '성공',
+          text: successText,
+          icon: 'success',
+        });
+      }
+    });
+  };
+</script>

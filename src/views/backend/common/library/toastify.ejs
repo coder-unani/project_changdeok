@@ -1,0 +1,39 @@
+<script src="https://cdn.jsdelivr.net/npm/toastify-js@1.12.0/src/toastify.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/toastify-js@1.12.0/src/toastify.min.css" rel="stylesheet" />
+
+<script nonce="<%=nonce%>">
+  const toastMessage = (type, message, options = {}) => {
+    const root = document.documentElement;
+    const computedStyle = getComputedStyle(root);
+    let background = '';
+
+    switch (type) {
+      case 'success':
+        background = computedStyle.getPropertyValue('--color-success').trim();
+        break;
+      case 'error':
+        background = computedStyle.getPropertyValue('--color-error').trim();
+        break;
+      case 'warning':
+        background = computedStyle.getPropertyValue('--color-warning').trim();
+        break;
+      default:
+        background = computedStyle.getPropertyValue('--color-info').trim();
+        break;
+    }
+
+    const gravity = options.gravity || 'bottom';
+    const position = options.position || 'center';
+    const duration = options.duration || 3000;
+
+    Toastify({
+      text: message,
+      duration,
+      gravity,
+      position,
+      style: {
+        background,
+      },
+    }).showToast();
+  };
+</script>

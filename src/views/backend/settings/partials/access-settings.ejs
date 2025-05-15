@@ -98,10 +98,11 @@
       });
 
       if (!response.ok) {
-        throw new Error('저장 중 오류가 발생했습니다.');
+        toastMessage('error', '접속 관리 설정 저장 중 오류가 발생했습니다.');
+        return;
       }
 
-      alert('접속 관리 설정이 저장되었습니다.');
+      alertMessage('success', '접속 관리 설정이 저장되었습니다.');
     });
 
     // IP 입력 필드 숫자만 입력 가능하도록 설정
@@ -121,7 +122,8 @@
 
       // 모든 필드가 채워져 있는지 확인
       if (ipParts.some((part) => !part)) {
-        alert('IP 주소의 모든 부분을 입력해주세요.');
+        alertMessage('IP 주소의 모든 부분을 입력해주세요.');
+        // alert('IP 주소의 모든 부분을 입력해주세요.');
         return;
       }
 
