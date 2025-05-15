@@ -1,16 +1,14 @@
 <div class="my-2">
   <h1 class="flex items-baseline justify-between gap-1.5 py-2 text-center text-slate-700 transition-all">
     <span class="text-2xl font-semibold"><%=title%></span>
-    <p class="text-right text-[13px] text-gray-500"><span class="pr-0.5 text-red-500">*</span>필수입력사항</p>
+    <p class="orb-label text-right"><span class="pr-0.5 text-red-500">*</span>필수입력사항</p>
   </h1>
 </div>
 
 <form id="formEmployeeModify">
   <div class="mb-4 space-y-4 rounded-xl bg-white p-4 text-sm text-gray-800 shadow-[0_2px_30px_rgba(0,0,0,.06)] lg:p-6">
     <div>
-      <label for="email" class="mb-2 block flex-none text-[13px] text-gray-500"
-        >이메일<span class="pl-0.5 text-red-500">*</span></label
-      >
+      <label for="email" class="orb-label mb-2 block">이메일<span class="pl-0.5 text-red-500">*</span></label>
       <p
         class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
       >
@@ -19,9 +17,7 @@
     </div>
 
     <div>
-      <label for="name" class="mb-2 block flex-none text-[13px] text-gray-500"
-        >이름<span class="pl-0.5 text-red-500">*</span></label
-      >
+      <label for="name" class="orb-label mb-2 block">이름<span class="pl-0.5 text-red-500">*</span></label>
       <input
         type="text"
         id="name"
@@ -34,7 +30,7 @@
     </div>
 
     <div>
-      <label for="phone" class="mb-2 block flex-none text-[13px] text-gray-500">전화번호</label>
+      <label for="phone" class="orb-label mb-2 block">전화번호</label>
       <input
         type="text"
         id="phone"
@@ -46,7 +42,7 @@
     </div>
 
     <div>
-      <label for="mobile" class="mb-2 block flex-none text-[13px] text-gray-500">휴대전화</label>
+      <label for="mobile" class="orb-label mb-2 block">휴대전화</label>
       <input
         type="text"
         id="mobile"
@@ -58,7 +54,7 @@
     </div>
 
     <div>
-      <label for="address" class="mb-2 block flex-none text-[13px] text-gray-500">주소</label>
+      <label for="address" class="orb-label mb-2 block">주소</label>
       <input
         type="text"
         id="address"
@@ -70,7 +66,7 @@
     </div>
 
     <div>
-      <label for="birthDate" class="mb-2 block flex-none text-[13px] text-gray-500">생년월일</label>
+      <label for="birthDate" class="orb-label mb-2 block">생년월일</label>
       <input
         type="date"
         id="birthDate"
@@ -81,7 +77,7 @@
     </div>
 
     <div>
-      <label for="position" class="mb-2 block flex-none text-[13px] text-gray-500">직급</label>
+      <label for="position" class="orb-label mb-2 block">직급</label>
       <input
         type="text"
         id="position"
@@ -93,7 +89,7 @@
     </div>
 
     <div>
-      <label for="description" class="mb-2 block flex-none text-[13px] text-gray-500">설명</label>
+      <label for="description" class="orb-label mb-2 block">설명</label>
       <input
         type="text"
         id="description"
@@ -106,7 +102,7 @@
 
     <div class="flex gap-3 lg:gap-4">
       <div class="flex-1">
-        <label for="hireDate" class="mb-2 block flex-none text-[13px] text-gray-500">입사일</label>
+        <label for="hireDate" class="orb-label mb-2 block">입사일</label>
         <input
           type="date"
           id="hireDate"
@@ -117,7 +113,7 @@
       </div>
 
       <div class="flex-1">
-        <label for="hireDate" class="mb-2 block flex-none text-[13px] text-gray-500">퇴사일</label>
+        <label for="hireDate" class="orb-label mb-2 block">퇴사일</label>
         <input
           type="date"
           id="fireDate"

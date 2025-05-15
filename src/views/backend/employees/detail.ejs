@@ -7,43 +7,43 @@
   <div class="space-y-4 text-sm bg-white p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_0_rgba(0,0,0,.06)]">
     <!-- Email -->
     <div class="flex items-center">
-      <label class="block w-28 text-[13px] text-gray-500">이메일</label>
+      <label class="block w-28 orb-label">이메일</label>
       <p class="text-gray-800 font-semibold"><%=data.email%></p>
     </div>
 
     <!-- Name -->
     <div class="flex items-center">
-      <label class="block w-28 text-[13px] text-gray-500">이름</label>
+      <label class="block w-28 orb-label">이름</label>
       <p class="text-gray-800"><%=data.name%></p>
     </div>
 
     <!-- Position -->
     <div class="flex items-center">
-      <label class="block w-28 text-[13px] text-gray-500">직급</label>
+      <label class="block w-28 orb-label">직급</label>
       <p class="text-gray-800"><%=data.position || '없음'%></p>
     </div>
 
     <!-- Phone -->
     <div class="flex" items-center>
-      <label class="block w-28 text-[13px] text-gray-500">전화번호</label>
+      <label class="block w-28 orb-label">전화번호</label>
       <p class="text-gray-800"><%=data.phone%></p>
     </div>
 
     <!-- Address -->
     <div class="flex items-center">
-      <label class="block w-28 text-[13px] text-gray-500">주소</label>
+      <label class="block w-28 orb-label">주소</label>
       <p class="text-gay-800"><%=data.address%></p>
     </div>
 
     <!-- Last Login -->
     <div class="flex items-center">
-      <label class="block w-28 text-[13px] text-gray-500">마지막 로그인</label>
+      <label class="block w-28 orb-label">마지막 로그인</label>
       <p class="text-gray-800"><%=data.lastLoginAt ?? '-' %></p>
     </div>
 
     <!-- Created At -->
     <div class="flex items-center">
-      <label class="block w-28 text-[13px] text-gray-500">생성일</label>
+      <label class="block w-28 orb-label">생성일</label>
       <p class="text-gray-800"><%=data.createdAt%></p>
     </div>
     
@@ -55,40 +55,42 @@
   </div>
   <div class="space-y-3 text-sm bg-white p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_0_rgba(0,0,0,.06)]">
     <!-- permissions -->
-    <table class="table-auto min-w-full">
-      <thead>
-        <tr>
-          <% metadata.permissions.forEach((permission, index) => { %>
-            <th class="hidden lg:table-cell text-center w-32 min-w-32 px-4 py-3 bg-gray-100 border-t border-b border-gray-200">
-              <p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500"><%=permission.title%></p>
-            </th>
-          <% }); %>
-        </tr>
-        </thead>
-        <tbody>
-          <tr class="border-b border-gray-200">
-            <% metadata.permissions.forEach((permission, index) => { %>
-              <td class="px-4 py-3 text-center">
-                <input 
-                  type="checkbox" 
-                  name="permission" 
-                  class="text-blue-500 border border-gray-300 focus:outline-none pointer-events-none"
-                  value="<%=permission.id%>"
-                  <%= data.permissions.includes(permission.id) ? 'checked' : '' %>
-                  tab-index="-1"
-                  readonly
-                >
-              </td>
-            <% }); %>
-          </tr>
-        </tbody>
-    </table>
+     <div class="overflow-x-auto w-full">
+       <table class="table-auto min-w-full">
+         <thead>
+           <tr>
+             <% metadata.permissions.forEach((permission, index) => { %>
+               <th class="text-center w-32 min-w-32 px-4 py-3 bg-gray-100 border-t border-b border-border-2">
+                 <p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500"><%=permission.title%></p>
+               </th>
+             <% }); %>
+           </tr>
+           </thead>
+           <tbody>
+             <tr class="border-b border-border-2">
+               <% metadata.permissions.forEach((permission, index) => { %>
+                 <td class="px-4 py-3 text-center">
+                   <input 
+                     type="checkbox" 
+                     name="permission" 
+                     class="text-blue-500 border border-gray-300 focus:outline-none pointer-events-none"
+                     value="<%=permission.id%>"
+                     <%= data.permissions.includes(permission.id) ? 'checked' : '' %>
+                     tab-index="-1"
+                     readonly
+                   >
+                 </td>
+               <% }); %>
+             </tr>
+           </tbody>
+       </table>
+     </div>
   </div>
 </div>
 
 <!-- Action Buttons -->
-<div class="flex flex-col lg:flex-row flex-wrap items-center justify-between gap-1">
-  <div class="flex flex-col lg:flex-row items-center gap-1 w-full lg:w-auto">
+<div class="flex flex-col lg:flex-row justify-between gap-1">
+  <div class="flex flex-col lg:flex-row lg:items-center gap-1 w-full lg:w-auto">
     <a href="<%=backendRoutes.employees.update.url.replace(':employeeId', data.id)%>" class="block orb-btn orb-btn-secondary">
       정보 수정
     </a>
@@ -99,7 +101,7 @@
       권한 변경
     </a>
   </div>
-  <div class="flex w-full lg:w-auto">
+  <div class="w-full lg:w-auto">
     <a href="<%=backendRoutes.employees.delete.url.replace(':employeeId', data.id)%>" class="orb-btn orb-btn-delete">
       삭제
     </a>

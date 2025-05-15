@@ -13,12 +13,14 @@
     --color-red-600: oklch(57.7% 0.245 27.325);
     --color-amber-100: oklch(96.2% 0.059 95.617);
     --color-amber-500: oklch(76.9% 0.188 70.08);
+    --color-amber-600: oklch(66.6% 0.179 58.318);
     --color-yellow-500: oklch(79.5% 0.184 86.047);
     --color-yellow-600: oklch(68.1% 0.162 75.834);
     --color-green-500: oklch(72.3% 0.219 149.579);
     --color-green-600: oklch(62.7% 0.194 149.214);
     --color-emerald-100: oklch(95% 0.052 163.051);
     --color-emerald-500: oklch(69.6% 0.17 162.48);
+    --color-emerald-600: oklch(59.6% 0.145 163.225);
     --color-cyan-800: oklch(45% 0.085 224.283);
     --color-sky-50: oklch(97.7% 0.013 236.62);
     --color-sky-500: oklch(68.5% 0.169 237.323);
@@ -90,7 +92,13 @@
     --font-pretendard: 'Pretendard Variable', system-ui, sans-serif;
     --font-oswald: 'Oswald', var(--font-pretendard);
     --font-cinzel: 'Cinzel', var(--font-pretendard);
-    --color-border: #e0e0e0;
+    --color-success: var(--color-emerald-500);
+    --color-error: var(--color-red-500);
+    --color-warning: var(--color-amber-500);
+    --color-info: var(--color-slate-500);
+    --color-border-1: var(--color-gray-100);
+    --color-border-2: var(--color-gray-200);
+    --color-border-3: var(--color-gray-300);
   }
 }
 @layer base {
@@ -892,20 +900,17 @@
   .border-black {
     border-color: var(--color-black);
   }
-  .border-gray-100 {
-    border-color: var(--color-gray-100);
+  .border-border-1 {
+    border-color: var(--color-border-1);
   }
-  .border-gray-200 {
-    border-color: var(--color-gray-200);
+  .border-border-2 {
+    border-color: var(--color-border-2);
   }
   .border-gray-300 {
     border-color: var(--color-gray-300);
   }
   .border-sky-700 {
     border-color: var(--color-sky-700);
-  }
-  .border-slate-100 {
-    border-color: var(--color-slate-100);
   }
   .border-slate-200 {
     border-color: var(--color-slate-200);
@@ -1187,9 +1192,6 @@
   .text-xs {
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
-  }
-  .text-\[12px\] {
-    font-size: 12px;
   }
   .text-\[13px\] {
     font-size: 13px;
@@ -1647,6 +1649,11 @@
       flex-direction: row;
     }
   }
+  .lg\:items-center {
+    @media (width >= 64rem) {
+      align-items: center;
+    }
+  }
   .lg\:items-end {
     @media (width >= 64rem) {
       align-items: flex-end;
@@ -1914,15 +1921,6 @@
       }
     }
   }
-  .dark\:hover\:bg-red-600 {
-    @media (prefers-color-scheme: dark) {
-      &:hover {
-        @media (hover: hover) {
-          background-color: var(--color-red-600);
-        }
-      }
-    }
-  }
   .dark\:hover\:text-gray-400 {
     @media (prefers-color-scheme: dark) {
       &:hover {
@@ -1994,7 +1992,7 @@
 input.gridjs-input {
   width: 100%;
   border-radius: var(--radius-lg);
-  background-color: var(--color-gray-200);
+  background-color: var(--color-gray-100);
   padding-block: calc(var(--spacing) * 3);
   padding-right: calc(var(--spacing) * 11);
   padding-left: calc(var(--spacing) * 4);
@@ -2308,12 +2306,6 @@ th.gridjs-th:last-child {
   background-color: #9bc2f7;
 }
 @layer base {
-  :root {
-    --color-success: #008000;
-    --color-error: #ff0000;
-    --color-warning: #ffa500;
-    --color-info: #000000;
-  }
   * {
     border: 0;
     margin: 0;
@@ -2325,6 +2317,7 @@ th.gridjs-th:last-child {
   html {
     font-family: var(--font-pretendard);
     color: var(--color-black);
+    background-color: var(--color-gray-50);
   }
   img.error-image {
     object-fit: none !important;
@@ -2333,6 +2326,40 @@ th.gridjs-th:last-child {
   }
 }
 @layer components {
+  .orb-label {
+    flex: none;
+    font-size: 13px;
+    color: var(--color-gray-800);
+  }
+  .orb-remark {
+    font-size: 12px;
+    color: var(--color-gray-500);
+  }
+  .orb-input {
+    width: 100%;
+    border-radius: var(--radius-lg);
+    background-color: var(--color-gray-100);
+    padding-inline: calc(var(--spacing) * 4);
+    padding-block: calc(var(--spacing) * 3);
+    &::placeholder {
+      font-size: var(--text-sm);
+      line-height: var(--tw-leading, var(--text-sm--line-height));
+    }
+    &::placeholder {
+      color: var(--color-gray-400);
+    }
+    &:focus {
+      --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
+      box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+    }
+    &:focus {
+      --tw-ring-color: var(--color-blue-200);
+    }
+    &:focus {
+      --tw-outline-style: none;
+      outline-style: none;
+    }
+  }
   .orb-hightlight {
     background-color: var(--color-blue-50);
     color: var(--color-blue-500);
@@ -2344,10 +2371,10 @@ th.gridjs-th:last-child {
     }
   }
   .orb-hightlight-warning {
-    background-color: var(--color-yellow-500);
+    background-color: var(--color-amber-500);
     color: var(--color-white);
     @media (prefers-color-scheme: dark) {
-      background-color: var(--color-yellow-600);
+      background-color: var(--color-amber-600);
     }
     @media (prefers-color-scheme: dark) {
       color: var(--color-white);
@@ -2366,11 +2393,14 @@ th.gridjs-th:last-child {
   .orb-btn {
     display: block;
     cursor: pointer;
+    border-radius: var(--radius-lg);
     padding-inline: calc(var(--spacing) * 4);
     padding-block: calc(var(--spacing) * 3);
     text-align: center;
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
     &:disabled {
       pointer-events: none;
     }
@@ -2382,25 +2412,19 @@ th.gridjs-th:last-child {
     }
   }
   .orb-btn-close {
-    border-radius: calc(infinity * 1px);
-    background-color: var(--color-slate-700);
-    --tw-gradient-from: var(--color-slate-800);
-    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
-    --tw-gradient-to: var(--color-slate-700);
-    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+    background-color: var(--color-slate-500);
     color: var(--color-white);
     transition-property: all;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
     &:hover {
       @media (hover: hover) {
-        background-color: var(--color-slate-700);
+        background-color: var(--color-slate-600);
       }
     }
   }
   .orb-btn-primary {
     min-width: 80px;
-    border-radius: var(--radius-lg);
     background-color: var(--color-blue-500);
     color: var(--color-white);
     transition-property: all;
@@ -2414,7 +2438,6 @@ th.gridjs-th:last-child {
   }
   .orb-btn-secondary {
     min-width: 80px;
-    border-radius: var(--radius-lg);
     background-color: var(--color-gray-500);
     color: var(--color-white);
     transition-property: all;
@@ -2428,21 +2451,19 @@ th.gridjs-th:last-child {
   }
   .orb-btn-tertiary {
     min-width: 80px;
-    border-radius: var(--radius-lg);
-    background-color: var(--color-green-500);
+    background-color: var(--color-emerald-500);
     color: var(--color-white);
     transition-property: all;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
     &:hover {
       @media (hover: hover) {
-        background-color: var(--color-green-600);
+        background-color: var(--color-emerald-600);
       }
     }
   }
   .orb-btn-delete {
     min-width: 80px;
-    border-radius: var(--radius-lg);
     background-color: var(--color-red-500);
     color: var(--color-white);
     transition-property: all;
@@ -2456,10 +2477,9 @@ th.gridjs-th:last-child {
   }
   .orb-btn-common {
     min-width: 80px;
-    border-radius: var(--radius-lg);
     border-style: var(--tw-border-style);
     border-width: 1px;
-    border-color: var(--color-gray-300);
+    border-color: var(--color-border-3);
     background-color: transparent;
     --tw-leading: 18px;
     line-height: 18px;
@@ -2481,7 +2501,7 @@ th.gridjs-th:last-child {
     border-top-width: 1px;
     border-bottom-style: var(--tw-border-style);
     border-bottom-width: 1px;
-    border-color: var(--color-gray-200);
+    border-color: var(--color-border-2);
     background-color: var(--color-gray-100);
     padding-inline: calc(var(--spacing) * 4);
     padding-block: calc(var(--spacing) * 3);
@@ -2501,7 +2521,7 @@ th.gridjs-th:last-child {
   .orb-list table tbody tr {
     border-bottom-style: var(--tw-border-style);
     border-bottom-width: 1px;
-    border-color: var(--color-gray-200);
+    border-color: var(--color-border-2);
   }
   .orb-list table tbody td {
     padding-inline: calc(var(--spacing) * 4);
@@ -2730,48 +2750,6 @@ th.gridjs-th:last-child {
   syntax: "*";
   inherits: false;
 }
-@property --tw-gradient-position {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-gradient-from {
-  syntax: "<color>";
-  inherits: false;
-  initial-value: #0000;
-}
-@property --tw-gradient-via {
-  syntax: "<color>";
-  inherits: false;
-  initial-value: #0000;
-}
-@property --tw-gradient-to {
-  syntax: "<color>";
-  inherits: false;
-  initial-value: #0000;
-}
-@property --tw-gradient-stops {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-gradient-via-stops {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-gradient-from-position {
-  syntax: "<length-percentage>";
-  inherits: false;
-  initial-value: 0%;
-}
-@property --tw-gradient-via-position {
-  syntax: "<length-percentage>";
-  inherits: false;
-  initial-value: 50%;
-}
-@property --tw-gradient-to-position {
-  syntax: "<length-percentage>";
-  inherits: false;
-  initial-value: 100%;
-}
 @layer properties {
   @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
     *, ::before, ::after, ::backdrop {
@@ -2817,15 +2795,6 @@ th.gridjs-th:last-child {
       --tw-drop-shadow-size: initial;
       --tw-duration: initial;
       --tw-ease: initial;
-      --tw-gradient-position: initial;
-      --tw-gradient-from: #0000;
-      --tw-gradient-via: #0000;
-      --tw-gradient-to: #0000;
-      --tw-gradient-stops: initial;
-      --tw-gradient-via-stops: initial;
-      --tw-gradient-from-position: 0%;
-      --tw-gradient-via-position: 50%;
-      --tw-gradient-to-position: 100%;
     }
   }
 }

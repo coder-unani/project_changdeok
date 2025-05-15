@@ -7,14 +7,14 @@
     <ul class="mb-4 space-y-4">
       <!-- 파비콘 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label for="favicon" class="w-60 flex-none text-[13px] text-gray-500 lg:leading-11">
+        <label for="favicon" class="w-60 orb-label lg:leading-11">
           파비콘
         </label>
         <input type="file" id="favicon" name="favicon" class="hidden" accept="image/x-icon" />
         <div class="flex-1 flex items-center">
           <div
             id="favicon-preview-container"
-            class="flex items-center gap-2 h-[36px] w-[230px] rounded-t-xl border-t border-r border-l border-gray-200 pr-[15px] pl-[10px]"
+            class="flex items-center gap-2 h-[36px] w-[230px] rounded-t-xl border-t border-r border-l border-border-2 pr-[15px] pl-[10px]"
           >
             <!-- 파비콘 미리보기 -->
             <div class="relative rounded-full h-[16px] w-[16px] bg-gray-100 overflow-hidden">
@@ -59,7 +59,7 @@
 
       <!-- 로고 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label for="logo" class="w-60 flex-none text-[13px] text-gray-500 lg:leading-11">로고</label>
+        <label for="logo" class="w-60 orb-label lg:leading-11">로고</label>
         <input
           type="file"
           id="logo"
@@ -71,7 +71,7 @@
 
         <div class="flex-1 flex items-center">
           <div
-            class="relative w-[230px] aspect-3/2 rounded-lg border border-gray-200 overflow-hidden"
+            class="relative w-[230px] aspect-3/2 rounded-lg border border-border-2 overflow-hidden"
           >
             <button
               type="button"
@@ -118,7 +118,7 @@
 
       <!-- 사이트 타이틀 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label for="title" class="w-60 flex-none flex gap-1 text-[13px] text-gray-500 lg:leading-11">
+        <label for="title" class="w-60 flex gap-1 orb-label lg:leading-11">
           사이트 타이틀
           <span class="text-gray-400">(title)</span>
         </label>
@@ -136,7 +136,7 @@
       <li class="flex flex-col gap-2 lg:flex-row">
         <label
           for="introduction"
-          class="w-60 flex-none flex gap-1 text-[13px] text-gray-500 lg:leading-11"
+          class="w-60 flex gap-1 orb-label lg:leading-11"
         >
           사이트 소개
         </label>
@@ -154,7 +154,7 @@
       <li class="flex flex-col gap-2 lg:flex-row">
         <label
           for="description"
-          class="w-60 flex-none flex gap-1 text-[13px] text-gray-500 lg:leading-11"
+          class="w-60 flex gap-1 orb-label lg:leading-11"
         >
           사이트 설명
           <span class="text-gray-400">(meta description)</span>
@@ -169,7 +169,7 @@
 
       <!-- 사이트 키워드 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label for="keyword" class="w-60 flex-none flex gap-1 text-[13px] text-gray-500 lg:leading-11">
+        <label for="keyword" class="w-60 flex gap-1 orb-label lg:leading-11">
           사이트 키워드
           <span class="text-gray-400">(meta keywords)</span>
         </label>
@@ -181,7 +181,7 @@
             value="<%=data.keywords%>"
             placeholder="사이트 키워드"
           />
-          <p class="px-3 pt-2 text-[12px] text-gray-400">
+          <p class="px-3 pt-2 orb-remark">
             * 콤마(,)로 구분하여 여러 개의 키워드를 입력할 수 있습니다.
           </p>
         </div>
@@ -189,7 +189,7 @@
 
       <!-- 오픈그래프 타이틀 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label for="og-title" class="w-60 flex-none flex gap-1 text-[13px] text-gray-500 lg:leading-11">
+        <label for="og-title" class="w-60 flex gap-1 orb-label lg:leading-11">
           오픈그래프 타이틀
           <span class="text-gray-400">(og:title)</span>
         </label>
@@ -205,7 +205,7 @@
       <li class="flex flex-col gap-2 lg:flex-row">
         <label
           for="og-description"
-          class="w-60 flex-none flex gap-1 text-[13px] text-gray-500 lg:leading-11"
+          class="w-60 flex gap-1 orb-label lg:leading-11"
         >
           오픈그래프 설명
           <span class="text-gray-400">(og:description)</span>
@@ -220,7 +220,7 @@
 
       <!-- 오픈그래프 이미지 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label for="og-image" class="w-60 flex-none flex gap-1 text-[13px] text-gray-500 lg:leading-11">
+        <label for="og-image" class="w-60 flex gap-1 orb-label lg:leading-11">
           오픈그래프 이미지
           <span class="text-gray-400">(og:image)</span>
         </label>
@@ -237,7 +237,7 @@
           <div class="flex flex-col w-[300px]">
             <!-- 오픈그래프 이미지 영역 -->
             <div
-              class="relative w-full h-[158px] rounded-t-lg border-t border-r border-l border-gray-200 overflow-hidden"
+              class="relative w-full h-[158px] rounded-t-lg border-t border-r border-l border-border-2 overflow-hidden"
             >
               <button
                 type="button"
@@ -273,13 +273,13 @@
 
             <!-- 오픈그래프 텍스트 영역 -->
             <div
-              class="flex flex-col w-full p-2.5 rounded-b-lg border-b border-r border-l border-gray-200"
+              class="flex flex-col w-full p-2.5 rounded-b-lg border-b border-r border-l border-border-2"
             >
               <p id="og-title-preview" class="font-semibold">오픈그래프 타이틀</p>
               <p id="og-description-preview" class="text-[13px] text-gray-500">
                 오픈그래프 설명
               </p>
-              <p class="mt-2 text-[12px] text-gray-400">https://<%=data.serviceDomain%></p>
+              <p class="mt-2 orb-remark">https://<%=data.serviceDomain%></p>
             </div>
           </div>
         </div>
@@ -298,7 +298,7 @@
 
       <!-- 서비스 도메인 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label for="service-domain" class="w-60 flex-none text-[13px] text-gray-500 lg:leading-11">
+        <label for="service-domain" class="w-60 orb-label lg:leading-11">
           서비스 도메인
         </label>
         <input
@@ -314,7 +314,7 @@
 
       <!-- 서비스 포트 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label for="service-port" class="w-60 flex-none text-[13px] text-gray-500 lg:leading-11">
+        <label for="service-port" class="w-60 orb-label lg:leading-11">
           서비스 포트
         </label>
         <input

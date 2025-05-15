@@ -15,9 +15,9 @@
       </div>
       <p class="text-base font-semibold"><%=metadata.banners.title%></p>
     </div>
-    <div class="flex flex-wrap flex-col lg:flex-row border border-gray-200 rounded-lg">
+    <div class="flex flex-wrap flex-col lg:flex-row border border-border-2 rounded-lg">
       <% data.banners.forEach((banner) => { %>
-        <div class="flex-1 min-w-[25%] not-last:border-b lg:not-last:border-b-0 lg:not-last:border-r lg:nth-[4n]:border-r-0 lg:nth-[n+5]:border-t border-gray-200 p-4">
+        <div class="flex-1 min-w-[25%] not-last:border-b lg:not-last:border-b-0 lg:not-last:border-r lg:nth-[4n]:border-r-0 lg:nth-[n+5]:border-t border-border-2 p-4">
           <p class="text-sm font-medium text-gray-500 mb-2"><%=banner.title%> 배너</p>
           <div class="flex justify-end gap-x-3 font-semibold text-base">
             <p>
@@ -60,16 +60,16 @@
           </a>
         </div>
         <!-- TODO: 게시물 최근 몇개 미리보기 확인 필요 -->
-        <ul class="border-t border-b border-gray-200">
-          <li class="flex justify-between p-2 text-[13px] not-last:border-b border-gray-200">
+        <ul class="border-t border-b border-border-2">
+          <li class="flex justify-between p-2 text-[13px] not-last:border-b border-border-2">
             <p class="flex-1">제목 1 입니다.</p>
             <span class="flex-none ml-2 text-gray-400">2025-03-14</span>
           </li>
-          <li class="flex justify-between p-2 text-[13px] not-last:border-b border-gray-200">
+          <li class="flex justify-between p-2 text-[13px] not-last:border-b border-border-2">
             <p class="flex-1">제목 2 입니다.</p>
             <span class="flex-none ml-2 text-gray-400">2025-03-13</span>
           </li>
-          <li class="flex justify-between p-2 text-[13px] not-last:border-b border-gray-200">
+          <li class="flex justify-between p-2 text-[13px] not-last:border-b border-border-2">
             <p class="flex-1">제목 3 입니다.</p>
             <span class="flex-none ml-2 text-gray-400">2025-03-12</span>
           </li>
@@ -92,8 +92,8 @@
               <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg>
           </a>
         </div>
-        <ul class="border-t border-b border-gray-200">
-          <li class="flex justify-between p-4 text-[13px] not-last:border-b border-gray-200">
+        <ul class="border-t border-b border-border-2">
+          <li class="flex justify-between p-4 text-[13px] not-last:border-b border-border-2">
             <p class="flex-1 text-center text-gray-400">등록된 문의가 없습니다.</p>
           </li>
         </ul>
