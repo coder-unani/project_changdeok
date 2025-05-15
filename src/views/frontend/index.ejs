@@ -3,7 +3,10 @@
   <div id="popupContainer" class="fixed inset-0 z-50 flex items-center justify-center gap-4 bg-black/50">
     <% data.popupBanner.forEach((popup) => { %>
       <div id="popupBanner<%=popup.id%>" class="flex flex-col items-end space-y-2 hidden" data-popup-id="<%=popup.id%>">
-        <button class="popup-close-btn text-white cursor-pointer">
+        <button class="popup-close-btn text-white cursor-pointer" 
+          data-gtm-click="popup-close"
+          data-gtm-popup-id="<%=popup.id%>"
+          data-gtm-popup-title="<%=popup.title%>">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
@@ -15,7 +18,10 @@
         </div>
       
         <div class="flex items-center mb-6">
-          <input type="checkbox" id="todayCheck" class="mr-2">
+          <input type="checkbox" id="todayCheck" class="mr-2" 
+            data-gtm-click="popup-dont-show"
+            data-gtm-popup-id="<%=popup.id%>"
+            data-gtm-popup-title="<%=popup.title%>">
           <label for="todayCheck" class="text-sm text-white">오늘 하루 보지 않기</label>
         </div>
       </div>
