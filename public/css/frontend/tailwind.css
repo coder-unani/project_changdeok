@@ -8,6 +8,7 @@
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
     --color-red-50: oklch(97.1% 0.013 17.38);
+    --color-red-100: oklch(93.6% 0.032 17.717);
     --color-red-300: oklch(80.8% 0.114 19.571);
     --color-red-500: oklch(63.7% 0.237 25.331);
     --color-red-600: oklch(57.7% 0.245 27.325);
@@ -34,7 +35,6 @@
     --color-violet-500: oklch(60.6% 0.25 292.717);
     --color-rose-100: oklch(94.1% 0.03 12.58);
     --color-rose-500: oklch(64.5% 0.246 16.439);
-    --color-slate-100: oklch(96.8% 0.007 247.896);
     --color-slate-200: oklch(92.9% 0.013 255.508);
     --color-slate-300: oklch(86.9% 0.022 252.894);
     --color-slate-500: oklch(55.4% 0.046 257.417);
@@ -463,9 +463,6 @@
   .h-\[24px\] {
     height: 24px;
   }
-  .h-\[25px\] {
-    height: 25px;
-  }
   .h-\[36px\] {
     height: 36px;
   }
@@ -507,6 +504,9 @@
   }
   .h-screen {
     height: 100vh;
+  }
+  .max-h-\[400px\] {
+    max-height: 400px;
   }
   .min-h-\[160px\] {
     min-height: 160px;
@@ -951,9 +951,6 @@
   .bg-gray-200 {
     background-color: var(--color-gray-200);
   }
-  .bg-gray-300 {
-    background-color: var(--color-gray-300);
-  }
   .bg-gray-500 {
     background-color: var(--color-gray-500);
   }
@@ -1097,9 +1094,6 @@
   }
   .pr-0\.5 {
     padding-right: calc(var(--spacing) * 0.5);
-  }
-  .pr-2 {
-    padding-right: calc(var(--spacing) * 2);
   }
   .pr-11 {
     padding-right: calc(var(--spacing) * 11);
@@ -1385,6 +1379,13 @@
     &:hover {
       @media (hover: hover) {
         background-color: var(--color-gray-100);
+      }
+    }
+  }
+  .hover\:bg-red-100 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-red-100);
       }
     }
   }
