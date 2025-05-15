@@ -72,8 +72,7 @@
         try {
           const recaptchaResponse = grecaptcha.getResponse();
           if (!recaptchaResponse) {
-            alertMessage('error', '보안을 위해 "로봇이 아닙니다" 확인을 해주세요.');
-            // throw new Error('보안을 위해 "로봇이 아닙니다" 확인을 해주세요.');
+            throw new Error('보안을 위해 "로봇이 아닙니다" 확인을 해주세요.');
             return;
           }
           data.recaptchaToken = recaptchaResponse;
@@ -85,7 +84,7 @@
             data[key] = value;
           });
         } catch (error) {
-          alertMessage('error', error.message || '오류가 발생했습니다.');
+          toastMessage('error', error.message || '오류가 발생했습니다.');
           grecaptcha.reset();
           return;
         }
@@ -111,12 +110,12 @@
             window.location.href = '<%=backendRoutes.index.url%>';
           });
         } catch (error) {
-          alertMessage('error', error.message || '서버 오류가 발생했습니다.');
+          toastMessage('error', error.message || '서버 오류가 발생했습니다.');
           grecaptcha.reset();
         }
       });
     } else {
-      alertMessage('error', '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+      toastMessage('error', '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
     }
   });
 </script>
