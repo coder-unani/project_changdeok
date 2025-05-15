@@ -4,7 +4,7 @@
 
 @theme {
   /* font */
-  --font-pretendard: 'Pretendard', system-ui, sans-serif;
+  --font-pretendard: 'Pretendard Variable', system-ui, sans-serif;
   --font-oswald: 'Oswald', var(--font-pretendard);
   --font-cinzel: 'Cinzel', var(--font-pretendard);
 
@@ -19,28 +19,6 @@
 
 /* 기본 스타일이 적용되는 레이어 */
 @layer base {
-  /* Pretendard */
-  @font-face {
-    font-family: 'Pretendard';
-    src: url('/fonts/Pretendard-Variable.woff2') format('woff2');
-    font-weight: 100 900;
-    font-display: swap;
-  }
-  /* Oswald */
-  @font-face {
-    font-family: 'Oswald';
-    src: url('/fonts/Oswald-Variable.woff2') format('woff2');
-    font-weight: 200 700;
-    font-display: swap;
-  }
-  /* Cinzel */
-  @font-face {
-    font-family: 'Cinzel';
-    src: url('/fonts/Cinzel-Variable.woff2') format('woff2');
-    font-weight: 400 900;
-    font-display: swap;
-  }
-
   /* 다크테마 */
   /* html[data-theme='dark'] {
     --color-primary: oklch(78.9% 0.154 211.53);

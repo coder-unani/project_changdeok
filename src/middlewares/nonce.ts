@@ -16,7 +16,7 @@ export class NonceMiddleware implements IMiddleware {
       "default-src 'self'",
       `script-src 'self' 'nonce-${nonce}' https://www.googletagmanager.com https://tagassistant.google.com https://www.google-analytics.com https://www.google.com https://www.gstatic.com https://cdn.jsdelivr.net`,
       `style-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://fonts.googleapis.com https://www.google.com https://www.gstatic.com https://cdn.jsdelivr.net`,
-      "font-src 'self' https://fonts.gstatic.com data:",
+      "font-src 'self' https://fonts.googleapis.com https://cdn.jsdelivr.net https://fonts.gstatic.com data:",
       "img-src 'self' https://www.googletagmanager.com https://fonts.gstatic.com https://www.google.com https://www.gstatic.com data:",
       "connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://www.google.com https://www.gstatic.com",
       "frame-src 'self' https://www.googletagmanager.com https://www.google.com",
