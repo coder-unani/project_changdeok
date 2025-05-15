@@ -4,9 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%=title || '관리도구'%> | <%=settings.companyInfo.name%></title>
-    <link rel="preload" href="/fonts/Pretendard-Variable.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="/css/styles.css" />
-    <link rel="stylesheet" href="/css/tailwind.css?202502081" />
+    <%- include('../../backend/common/fonts/pretendard') %>
+    <link rel="stylesheet" href="/css/backend/tailwind.css" />
   </head>
   <body class="flex h-screen bg-gray-100 p-4 lg:flex-row lg:overflow-hidden dark:bg-gray-800">
     <main class="flex w-full flex-1 flex-col"><%- body %></main>

@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 
-@import './backend/custom-grid.css';
+@import './custom-grid.css';
 
 @theme {
   /* font */
@@ -28,6 +28,7 @@
   /* html[data-theme='light'] {
     --color-primary: var(--color-primary);
   } */
+
   :root {
     --color-success: #008000;
     --color-error: #ff0000;
@@ -35,10 +36,18 @@
     --color-info: #000000;
   }
 
+  * {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   html {
     font-family: var(--font-pretendard);
     color: var(--color-black);
-    box-sizing: border-box;
   }
 
   img.error-image {
