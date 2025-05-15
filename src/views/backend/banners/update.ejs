@@ -150,11 +150,12 @@
       }
 
       // 응답 성공
-      alertMessage('success', '<%=apiRoutes.banners.update.title%> 성공');
-      window.location.href = "<%=backendRoutes.banners.list.url%>?gp=<%=metadata.groupInfo.id%>&sq=<%=data.seq%>";
+      alertMessage('success', '<%=apiRoutes.banners.update.title%> 성공').then(() => {
+        window.location.href = "<%=backendRoutes.banners.list.url%>?gp=<%=metadata.groupInfo.id%>&sq=<%=data.seq%>";
+      });
 
     } catch (error) {
-      alertMessage('error', error.message || '배너 수정에 실패했습니다.');
+      toastMessage('error', error.message || '배너 수정에 실패했습니다.');
     }
   });
 </script>
