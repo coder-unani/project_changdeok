@@ -90,10 +90,11 @@
       }
 
       // 응답 성공
-      alertMessage('success', '<%=apiRoutes.contents.delete.title%> 성공');
-      window.location.href = '<%=backendRoutes.contents.list.url%>'.replace(':groupId', '<%=metadata.group.id%>');
+      alertMessage('success', '<%=apiRoutes.contents.delete.title%> 성공').then(() => {
+        window.location.href = '<%=backendRoutes.contents.list.url%>'.replace(':groupId', '<%=metadata.group.id%>');
+      });
     } catch (error) {
-      alertMessage('error', error.message || '글 삭제에 실패했습니다.');
+      toastMessage('error', error.message || '글 삭제에 실패했습니다.');
     }
   });
 </script>

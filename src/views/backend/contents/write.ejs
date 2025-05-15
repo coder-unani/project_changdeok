@@ -46,7 +46,7 @@
 
 <script nonce="<%=nonce%>">
   // Quill 에디터 초기화
-  initEditor('content');
+  const editor = initEditor('content');
 
   // 이미지 업로드 핸들러
   function imageHandler() {
@@ -80,9 +80,9 @@
           const data = await response.json();
 
           // 에디터에 이미지 삽입
-          const range = quill.getSelection(true);
-          quill.insertEmbed(range.index, 'image', data.url);
-          quill.setSelection(range.index + 1);
+          const range = editor.getSelection(true);
+          editor.insertEmbed(range.index, 'image', data.url);
+          editor.setSelection(range.index + 1);
         } catch (error) {
           toastMessage('error', error.message || '이미지 업로드 중 오류가 발생했습니다.');
         }
@@ -97,8 +97,8 @@
       // 폼 데이터 수집
       const formData = new FormData(e.target);
 
-      // Quill 에디터 내용 가져오기
-      const content = quill.root.innerHTML;
+      // 에디터 내용 가져오기
+      const content = editor.root.innerHTML;
 
       // 폼 데이터 변환
       const data = {};
@@ -125,16 +125,18 @@
       }
 
       // 응답 성공
-      alertMessage('success', '<%=apiRoutes.contents.write.title%> 성공');
-      window.location.href = '<%=backendRoutes.contents.list.url%>'.replace(':groupId', '<%=metadata.group.id%>');
+      alertMessage('success', '<%=apiRoutes.contents.write.title%> 성공').then(() => {
+        window.location.href = '<%=backendRoutes.contents.list.url%>'.replace(':groupId', '<%=metadata.group.id%>');
+      });
     } catch (error) {
-      alertMessage('error', error.message || '글 작성에 실패하였습니다.');
+      toastMessage('error', error.message || '글 작성에 실패하였습니다.');
     }
   });
 
   // 취소 버튼 이벤트
   document.getElementById('btnCancel').addEventListener('click', () => {
-    toastMessage('info', '취소되었습니다.');
-    window.location.href = '<%=backendRoutes.contents.list.url%>'.replace(':groupId', '<%=metadata.group.id%>');
+    alertMessage('info', '취소되었습니다.').then(() => {
+      window.location.href = '<%=backendRoutes.contents.list.url%>'.replace(':groupId', '<%=metadata.group.id%>');
+    });
   });
 </script>

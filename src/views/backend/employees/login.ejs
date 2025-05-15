@@ -107,8 +107,9 @@
           }
 
           // 응답 성공
-          alertMessage('success', '로그인 성공');
-          window.location.href = '<%=backendRoutes.index.url%>';
+          alertMessage('success', '로그인 성공').then(() => {
+            window.location.href = '<%=backendRoutes.index.url%>';
+          });
         } catch (error) {
           alertMessage('error', error.message || '서버 오류가 발생했습니다.');
           grecaptcha.reset();
