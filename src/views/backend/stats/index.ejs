@@ -145,6 +145,9 @@
 <!-- chart.js -->
 <%- include('../common/library/chartjs') %>
 
+<!-- toastify -->
+<%- include('../common/library/toastify') %>
+
 <script nonce="<%=nonce%>">
   document.addEventListener('DOMContentLoaded', () => {
     const dateContainer = document.getElementById('date-container');
@@ -228,19 +231,19 @@
     const validateDates = () => {
       if (currentTab !== 'access-logs') {
         if (!startDate.value || !endDate.value) {
-          alert('시작일과 종료일을 입력해주세요.');
+          toastMessage('error', '시작일과 종료일을 입력해주세요.');
           return false;
         }
 
         if (startDate.value > endDate.value) {
-          alert('시작일이 종료일보다 클 수 없습니다.');
+          toastMessage('error', '시작일이 종료일보다 클 수 없습니다.');
           return false;
         }
 
         const maxDate = new Date();
         maxDate.setFullYear(maxDate.getFullYear() - 2);
         if (startDate.value < maxDate) {
-          alert('최대 2년까지 조회 가능합니다.');
+          toastMessage('error', '최대 2년까지 조회 가능합니다.');
           return false;
         }
       }
@@ -264,9 +267,10 @@
           throw new Error(responseData.message || response.statusText);
         }
 
+        toastMessage('success', responseData.message || '데이터 조회 성공');
         return responseData;
       } catch (error) {
-        alert(error.message || '서버 오류가 발생했습니다.');
+        toastMessage('error', error.message || '서버 오류가 발생했습니다.');
       }
     };
 
