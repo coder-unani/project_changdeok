@@ -32,13 +32,16 @@
           </tr>
         </tbody>
     </table>
-    </div>
-    <div class="text-right">
-      <button type="submit" class="orb-btn orb-btn-primary">
-        저장
-      </button>
-    </div>
-  </form>
+  </div>
+  <div class="text-right">
+    <button type="submit" class="orb-btn orb-btn-primary">
+      저장
+    </button>
+  </div>
+</form>
+
+<!-- sweetalert2 -->
+<%- include('../common/library/sweetalert2') %>
 
 <script nonce="<%=nonce%>">
   document.getElementById('formEmployeePermissions').addEventListener('submit', async function(e) {
@@ -66,10 +69,10 @@
       }
       
       // 응답 성공
-      alert('<%=apiRoutes.employees.permissions.title%> 성공');
-      
+      alertMessage('success', '<%=apiRoutes.employees.permissions.title%> 성공');
+      window.location.href = '<%=backendRoutes.employees.detail.url%>'.replace(':employeeId', '<%=data.id%>');
     } catch (err) {
-      alert(error.message || '서버 오류가 발생했습니다.');
+      alertMessage('error', error.message || '서버 오류가 발생했습니다.');
         
     }
   });

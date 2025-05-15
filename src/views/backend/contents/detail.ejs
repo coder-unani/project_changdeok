@@ -57,11 +57,17 @@
   </div>
 </div>
 
+<!-- toastify -->
+<%- include('../common/library/toastify') %>
+
+<!-- sweetalert2 -->
+<%- include('../common/library/sweetalert2') %>
+
 <script nonce="<%=nonce%>">
   document.getElementById('btn-delete').addEventListener('click', async (e) => {
     e.preventDefault();
 
-    if (!confirm('정말 삭제하시겠습니까?')) {
+    if (!confirmMessage('question', '정말 삭제하시겠습니까?')) {
       return;
     }
 
@@ -84,10 +90,10 @@
       }
 
       // 응답 성공
-      alert('<%=apiRoutes.contents.delete.title%> 성공');
+      alertMessage('success', '<%=apiRoutes.contents.delete.title%> 성공');
       window.location.href = '<%=backendRoutes.contents.list.url%>'.replace(':groupId', '<%=metadata.group.id%>');
     } catch (error) {
-      alert(error.message || '서버 오류가 발생했습니다.');
+      alertMessage('error', error.message || '글 삭제에 실패했습니다.');
     }
   });
 </script>

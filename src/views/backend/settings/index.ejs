@@ -34,6 +34,16 @@
 <%- include('../common/library/sweetalert2') %>
 
 <script nonce="<%=nonce%>">
+  // 시스템 상태 메시지 함수
+  const statusMessage = (message) => {
+    if (message) {
+      document.getElementById('system-status-message-container').classList.remove('hidden');
+      document.getElementById('system-status-message').textContent = message;
+    } else {
+      document.getElementById('system-status-message-container').classList.add('hidden');
+    }
+  };
+
   document.addEventListener('DOMContentLoaded', () => {
     const siteSettingsContainer = document.getElementById('site-settings-container');
     const companySettingsContainer = document.getElementById('company-settings-container');
@@ -69,8 +79,7 @@
         document.getElementById('cpu-status').textContent = cpuStatus;
         document.getElementById('uptime').textContent = uptime;
 
-        document.getElementById('system-status-message-container').classList.remove('hidden');
-        document.getElementById('system-status-message').textContent = '시스템 메세지 테스트';
+        toastMessage('success', '시스템 정보가 갱신되었습니다.');
 
         return true;
       } catch (error) {
@@ -78,7 +87,8 @@
         document.getElementById('memory-status').textContent = '확인 불가';
         document.getElementById('cpu-status').textContent = '확인 불가';
         document.getElementById('uptime').textContent = '확인 불가';
-        document.getElementById('system-status-message').textContent = '시스템 상태를 불러오는 중 오류가 발생했습니다.';
+
+        toastMessage('error', '시스템 상태를 불러오는 중 오류가 발생했습니다.');
 
         return false;
       }
@@ -102,13 +112,14 @@
         setTimeout(() => {
           const result = getSystemStatus();
           if (result) {
-            alert('서버가 재시작되었습니다.');
+            alertMessage('success', '서버가 재시작되었습니다.');
+            statusMessage(null);
           } else {
-            alert('서버 재시작 중 오류가 발생했습니다.');
+            alertMessage('error', '서버 재시작 중 오류가 발생했습니다.');
           }
         }, 2000);
       } catch (error) {
-        alert(error.message || '서버 재시작 중 오류가 발생했습니다.');
+        alertMessage('error', error.message || '서버 재시작 중 오류가 발생했습니다.');
       }
     };
 

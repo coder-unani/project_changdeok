@@ -98,6 +98,12 @@
   </div>
 </form>
 
+<!-- toastify -->
+<%- include('../common/library/toastify') %>
+
+<!-- sweetalert2 -->
+<%- include('../common/library/sweetalert2') %>
+
 <script nonce="<%=nonce%>">
   // 배너 이미지 등록
   document.getElementById('imageAdd').addEventListener('click', (e) => {
@@ -194,11 +200,11 @@
       }
 
       // 응답 성공
-      alert('<%=apiRoutes.banners.write.title%> 성공');
+      alertMessage('success', '<%=apiRoutes.banners.write.title%> 성공');
       window.location.href = '<%=backendRoutes.banners.list.url%>?gp=<%=metadata.groupInfo.id%>&sq=<%=metadata.seq%>';
 
     } catch (error) {
-      alert(error.message || '서버 오류가 발생했습니다.');
+      alertMessage('error', error.message || '배너 등록에 실패했습니다.');
     }
   });
 </script>

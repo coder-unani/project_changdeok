@@ -22,6 +22,9 @@
   </div>
 </div>
 
+<!-- sweetalert2 -->
+<%- include('../common/library/sweetalert2') %>
+
 <script nonce="<%=nonce%>">
   document.addEventListener('DOMContentLoaded', () => {
     const btnDelete = document.getElementById('btn-delete');
@@ -45,10 +48,10 @@
         }
 
         // 응답 성공
-        alert('<%=apiRoutes.employees.delete.title%> 성공');
+        alertMessage('success', '<%=apiRoutes.employees.delete.title%> 성공');
         window.location.href = '<%=backendRoutes.employees.url%>';
       } catch (err) {
-        alert(error.message || '서버 오류가 발생했습니다.');
+        alertMessage('error', error.message || '서버 오류가 발생했습니다.');
       }
     });
 

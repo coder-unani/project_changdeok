@@ -72,6 +72,12 @@
   </div>
 </div>
 
+<!-- toastify -->
+<%- include('../common/library/toastify') %>
+
+<!-- sweetalert2 -->
+<%- include('../common/library/sweetalert2') %>
+
 <script nonce="<%=nonce%>">
   document.getElementById('btn-delete').addEventListener('click', async (e) => {
     e.preventDefault();
@@ -91,16 +97,16 @@
         // 응답 오류
         if (!response.ok) {
           const errorData = await response.json();
-          alert(errorData.message || response.statusText);
+          throw new Error(errorData.message || response.statusText);
         }
 
         // 응답 성공
-        alert('<%=apiRoutes.banners.delete.title%> 성공');
+        alertMessage('success', '<%=apiRoutes.banners.delete.title%> 성공');
         window.location.href = '<%=backendRoutes.banners.list.url%>?gp=<%=metadata.groupInfo.id%>&sq=<%=data.seq%>';
       }
       
     } catch (error) {
-      alert(error.message || '서버 오류가 발생했습니다.');
+      alertMessage('error', error.message || '배너 삭제에 실패했습니다.');
 
     }
   });

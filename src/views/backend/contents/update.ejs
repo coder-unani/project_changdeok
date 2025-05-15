@@ -38,31 +38,17 @@
 </form>
 
 <!-- Quill Editor -->
-<link href="/js/quill/quill.snow.css" rel="stylesheet" />
-<script src="/js/quill/quill.js"></script>
+<%- include('../common/library/quill') %>
+
+<!-- toastify -->
+<%- include('../common/library/toastify') %>
+
+<!-- sweetalert2 -->
+<%- include('../common/library/sweetalert2') %>
 
 <script nonce="<%=nonce%>">
   // Quill 에디터 초기화
-  const quill = new Quill('#content', {
-    theme: 'snow',
-    modules: {
-      toolbar: {
-        container: [
-          [{ header: [1, 2, 3, 4, 5, 6, false] }],
-          ['bold', 'italic', 'underline', 'strike'],
-          [{ color: [] }, { background: [] }],
-          [{ font: [] }],
-          [{ align: [] }],
-          ['link', 'image'],
-          ['clean'],
-        ],
-        handlers: {
-          image: imageHandler,
-        },
-      },
-    },
-    placeholder: '내용을 입력해주세요.',
-  });
+  initEditor('content');
 
   // 이미지 업로드 핸들러
   function imageHandler() {
@@ -89,7 +75,7 @@
           // 응답 오류
           if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.message || response.statusText);
+            toastMessage('error', errorData.message || response.statusText);
           }
 
           // 응답 성공
@@ -100,7 +86,7 @@
           quill.insertEmbed(range.index, 'image', data.url);
           quill.setSelection(range.index + 1);
         } catch (error) {
-          alert(error.message || '이미지 업로드 중 오류가 발생했습니다.');
+          toastMessage('error', error.message || '이미지 업로드 중 오류가 발생했습니다.');
         }
       }
     };
@@ -142,12 +128,12 @@
       }
 
       // 응답 성공
-      alert('<%=apiRoutes.contents.update.title%> 성공');
+      alertMessage('success', '<%=apiRoutes.contents.update.title%> 성공');
       window.location.href = '<%=backendRoutes.contents.detail.url%>'
         .replace(':groupId', '<%=metadata.group.id%>')
         .replace(':contentId', '<%=data.id%>');
     } catch (error) {
-      alert(error.message || '서버 오류가 발생했습니다.');
+      alertMessage('error', error.message || '글 수정에 실패했습니다.');
     }
   });
 </script>

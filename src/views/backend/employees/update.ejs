@@ -134,6 +134,9 @@
   </div>
 </form>
 
+<!-- sweetalert2 -->
+<%- include('../common/library/sweetalert2') %>
+
 <script nonce="<%=nonce%>">
   document.getElementById('formEmployeeModify').addEventListener('submit', async function (event) {
     event.preventDefault();
@@ -165,9 +168,10 @@
       }
 
       // 응답 성공
-      alert('<%=apiRoutes.employees.update.title%> 성공');
+      alertMessage('success', '<%=apiRoutes.employees.update.title%> 성공');
+      window.location.href = '<%=backendRoutes.employees.detail.url%>'.replace(':employeeId', '<%=data.id%>');
     } catch (err) {
-      alert(error.message || '서버 오류가 발생했습니다.');
+      alertMessage('error', error.message || '서버 오류가 발생했습니다.');
     }
   });
 </script>

@@ -171,6 +171,9 @@
   </div>
 </form>
 
+<!-- sweetalert2 -->
+<%- include('../common/library/sweetalert2') %>
+
 <script nonce="<%=nonce%>">
   document.getElementById('formEmployeeRegister').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -204,9 +207,10 @@
       }
 
       // 응답 성공
-      alert('<%=apiRoutes.employees.regist.title%> 성공');
+      alertMessage('success', '<%=apiRoutes.employees.regist.title%> 성공');
+      window.location.href = '<%=backendRoutes.employees.url%>';
     } catch (error) {
-      alert(error.message || '서버 오류가 발생했습니다.');
+      alertMessage('error', error.message || '서버 오류가 발생했습니다.');
     }
   });
 </script>
