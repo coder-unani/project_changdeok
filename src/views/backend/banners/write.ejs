@@ -18,14 +18,14 @@
         </label>
       </div>
       <div class="relative w-full lg:w-[250px] aspect-3/2">
-        <button type="button" id="imageAdd" class="absolute top-0 left-0 w-full h-full bg-gray-100 border border-dashed border-border-2 rounded-lg cursor-pointer">
+        <button type="button" id="imageAdd" class="absolute top-0 left-0 w-full h-full bg-gray-100 border border-dashed border-border-2 rounded-lg">
           <span class="absolute inset-0 flex flex-col items-center justify-center">
             <img class="block w-[50px] opacity-50" src="/images/add-image-512x512.png" alt="이미지 추가">
             <p class="mt-1 text-xs text-gray-400">(<%=metadata.groupInfo.imageWidth%>x<%=metadata.groupInfo.imageHeight%>)</p>
           </span>
         </button>
         <div id="imagePreviewContainer" class="relative hidden w-full h-full z-10 rounded-lg overflow-hidden">
-          <button type="button" id="imageDelete" class="absolute top-2 right-2 w-[24px] h-[24px] bg-white opacity-80 rounded-full cursor-pointer z-20">
+          <button type="button" id="imageDelete" class="absolute top-2 right-2 w-[24px] h-[24px] bg-white opacity-80 rounded-full z-20">
             <span class="absolute inset-0 flex items-center justify-center">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" fill="currentColor" class="h-[16px] w-[16px] text-gray-400">
                 <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/>

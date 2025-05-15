@@ -179,7 +179,7 @@
       // IP 항목 추가
       const ipContainer = document.getElementById('blocked-ip-container');
       const ipItem = document.createElement('div');
-      ipItem.className = 'blocked-ip-item flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-md';
+      ipItem.className = 'blocked-ip-item flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-md hover:bg-gray-100';
       ipItem.dataset.ip = ip;
 
       ipItem.innerHTML = `
@@ -227,7 +227,7 @@
       blockedIps.forEach((ip) => {
         const ipContainer = document.getElementById('blocked-ip-container');
         const ipItem = document.createElement('div');
-        ipItem.className = 'blocked-ip-item flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-md';
+        ipItem.className = 'blocked-ip-item flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-md hover:bg-gray-100';
         ipItem.dataset.ip = ip;
 
         ipItem.innerHTML = `
@@ -272,7 +272,7 @@
       // 봇 패턴 항목 추가
       const botContainer = document.getElementById('blocked-bot-container');
       const botItem = document.createElement('div');
-      botItem.className = 'blocked-bot-item flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-md';
+      botItem.className = 'blocked-bot-item flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-md hover:bg-gray-100';
       botItem.dataset.pattern = botPattern;
 
       botItem.innerHTML = `
@@ -320,7 +320,8 @@
       blockedBots.forEach((pattern) => {
         const botContainer = document.getElementById('blocked-bot-container');
         const botItem = document.createElement('div');
-        botItem.className = 'blocked-bot-item flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-md';
+        botItem.className =
+          'blocked-bot-item flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-md hover:bg-gray-100';
         botItem.dataset.pattern = pattern;
 
         botItem.innerHTML = `

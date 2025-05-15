@@ -98,9 +98,9 @@
           const endPage = metadata.page + 2 > metadata.totalPage ? metadata.totalPage : metadata.page + 2;
           for (let i = startPage; i <= endPage; i++) { 
         %> 
-          <button class="cursor-pointer <%if (i === metadata.page) {%>active<%}%>"><a href="?page=<%=i%>"><%=i%></a></button>
+          <button class="<%if (i === metadata.page) {%>active<%}%>"><a href="?page=<%=i%>"><%=i%></a></button>
         <% } %>
-        <% if (metadata.page < metadata.totalPage) { %><button class="cursor-pointer"><a href="?page=<%=metadata.page + 1%>">다음</a></button><% } %>
+        <% if (metadata.page < metadata.totalPage) { %><button><a href="?page=<%=metadata.page + 1%>">다음</a></button><% } %>
       </div>
     </div>
   <% } %>
