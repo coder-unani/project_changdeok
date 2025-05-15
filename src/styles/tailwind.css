@@ -17,6 +17,13 @@
   --color-border: #e0e0e0;
 }
 
+:root {
+  --color-success: #008000;
+  --color-error: #ff0000;
+  --color-warning: #ffa500;
+  --color-info: #000000;
+}
+
 /* 기본 스타일이 적용되는 레이어 */
 @layer base {
   /* Pretendard */
