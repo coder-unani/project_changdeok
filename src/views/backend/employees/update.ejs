@@ -134,6 +134,9 @@
   </div>
 </form>
 
+<!-- toastify -->
+<%- include('../common/library/toastify') %>
+
 <!-- sweetalert2 -->
 <%- include('../common/library/sweetalert2') %>
 
@@ -171,7 +174,7 @@
       alertMessage('success', '<%=apiRoutes.employees.update.title%> 성공').then(() => {
         window.location.href = '<%=backendRoutes.employees.detail.url%>'.replace(':employeeId', '<%=data.id%>');
       });
-    } catch (err) {
+    } catch (error) {
       toastMessage('error', error.message || '서버 오류가 발생했습니다.');
     }
   });
