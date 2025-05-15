@@ -17,11 +17,19 @@
       <%- include('menu-section', { 
       title: settings.companyInfo.name,
         items: [{
+          title: '홈페이지',
+          url: `https://${settings.serviceDomain}`,
+          icon: 'home',
+          isActive: false,
+          isExternal: true
+        },{
           title: backendRoutes.dashboard.title,
           url: backendRoutes.dashboard.url,
           icon: 'dashboard',
-          isActive: backendRoutes.dashboard.title === title
-        }]
+          isActive: backendRoutes.dashboard.title === title,
+          isExternal: false
+        }
+      ]
       }) %>
 
       <%- include('menu-section', {
@@ -30,12 +38,14 @@
           title: backendRoutes.banners.screens.title,
           url: backendRoutes.banners.screens.url,
           icon: 'screen',
-          isActive: backendRoutes.banners.screens.title === title || title.includes("메인")
+          isActive: backendRoutes.banners.screens.title === title || title.includes("메인"),
+          isExternal: false
         }, {
           title: backendRoutes.banners.popups.title,
           url: backendRoutes.banners.popups.url,
           icon: 'popup',
-          isActive: backendRoutes.banners.popups.title === title || title.includes('팝업')
+          isActive: backendRoutes.banners.popups.title === title || title.includes('팝업'),
+          isExternal: false
         }]
       }) %>
 
@@ -45,17 +55,20 @@
           title: '공지사항',
           url: '/admin/contents/1',
           icon: 'notice',
-          isActive: '공지사항' === title || title.startsWith('공지사항')
+          isActive: '공지사항' === title || title.startsWith('공지사항'),
+          isExternal: false
         }, {
           title: '문의',
           url: '/admin/contents/2',
           icon: 'inquiry',
-          isActive: '문의' === title || title.startsWith('문의')
+          isActive: '문의' === title || title.startsWith('문의'),
+          isExternal: false
         }, {
           title: '상담 및 의뢰',
           url: '/admin/contents/3',
           icon: 'consultation',
-          isActive: '상담 및 의뢰' === title || title.startsWith('상담 및 의뢰')
+          isActive: '상담 및 의뢰' === title || title.startsWith('상담 및 의뢰'),
+          isExternal: false
         }]
       }) %>
 
@@ -65,30 +78,33 @@
           title: backendRoutes.employees.list.title,
           url: backendRoutes.employees.list.url,
           icon: 'employee',
-          isActive: backendRoutes.employees.list.title === title || title.startsWith('관리자')
+          isActive: backendRoutes.employees.list.title === title || title.startsWith('관리자'),
+          isExternal: false
         }, {
           title: backendRoutes.stats.title,
           url: backendRoutes.stats.url,
           icon: 'stats',
-          isActive: backendRoutes.stats.title === title
+          isActive: backendRoutes.stats.title === title,
+          isExternal: false
         }, {
           title: backendRoutes.settings.title,
           url: backendRoutes.settings.url,
           icon: 'settings',
-          isActive: backendRoutes.settings.title === title
+          isActive: backendRoutes.settings.title === title,
+          isExternal: false
         }]
       }) %>
     </nav>
   </div>
   <!-- 로그아웃 -->
-  <div class="border-t border-slate-100">
-    <ul class="flex flex-col gap-2 text-gray-500 dark:text-red-500">
-      <li class="flex mt-2 font-thin rounded-lg transition-all dark:hover:text-white hover:bg-gray-100 dark:hover:bg-red-600">
-        <button id="logout" class="flex flex-1 items-center justify-start p-2 cursor-pointer">
+  <div class="border-t border-border-1">
+    <ul class="flex flex-col gap-2 font-medium text-gray-500 dark:text-gray-100">
+      <li class="mt-2 rounded-lg transition-all dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-600">
+        <button id="logout" class="flex w-full items-center justify-start p-2 cursor-pointer">
           <span class="text-left">
             <%- include('icons/logout') %>
           </span>
-          <span class="mx-3 font-normal">관리자 로그아웃</span>
+          <span class="mx-3">관리자 로그아웃</span>
         </button>    
       </li>
     </ul>
@@ -105,7 +121,7 @@
     <!-- 닫기 버튼 -->
     <div class="text-right mx-4 mt-4 mb-8">
       <button id="menu-close" class="orb-btn orb-btn-close">
-        Close
+        닫기
       </button>
     </div>
     
