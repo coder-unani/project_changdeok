@@ -3,6 +3,23 @@ import { NextFunction, Request, Response } from 'express';
 import { Config } from '../config/config';
 import { IMiddleware } from '../types/middleware';
 
+/**
+ * 접근 제한 미들웨어
+ *
+ * 차단된 IP와 봇 패턴을 확인하여 접근을 제한합니다.
+ *
+ * @param {Config} config - 설정 객체
+ * @param {Request} req - 요청 객체
+ * @param {Response} res - 응답 객체
+ * @param {NextFunction} next - 다음 미들웨어 함수
+ * 참고)
+ * - 차단되는 봇 패턴 기본 설정 항목
+ * 'curl', 'wget', 'python', 'java', 'perl', 'ruby', 'php', 'go-http', 'headless', 'phantom', 'selenium', 'puppeteer', 'playwright', 'cypress', 'nagios'
+ * - 허용되는 봇 패턴 추천 설정 항목
+ * 'googlebot', 'naverbot', 'bingbot', 'slurp', 'daumoa', 'baiduspider', 'yandexbot'
+ * - 허용되는 브라우저 패턴 기본 설정 항목
+ * 'chrome', 'firefox', 'safari', 'edge', 'opera', 'msie', 'trident'
+ */
 export class AccessMiddleware implements IMiddleware {
   private blockedIps: string[];
   private allowedBots: RegExp[];
