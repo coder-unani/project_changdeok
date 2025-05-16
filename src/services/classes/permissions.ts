@@ -1,7 +1,7 @@
 import { ExtendedPrismaClient } from '../../library/database';
 import { IPermission, IServiceResponse } from '../../types/config';
 import { IEmployee } from '../../types/object';
-import { IRequestDefaultList } from '../../types/request';
+import { IRequestSearchList } from '../../types/request';
 import { IPermissionService } from '../../types/service';
 import { BaseService } from './service';
 
@@ -10,7 +10,7 @@ export class PermissionService extends BaseService implements IPermissionService
     super(prisma);
   }
 
-  public async list(data: IRequestDefaultList): Promise<IServiceResponse<IPermission[]>> {
+  public async list(data: IRequestSearchList): Promise<IServiceResponse<IPermission[]>> {
     try {
       // 페이지 번호가 없거나 1보다 작은 경우 1로 설정
       if (!data.page || data.page < 1) {

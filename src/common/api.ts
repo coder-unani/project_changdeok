@@ -1,8 +1,8 @@
 import { apiRoutes } from '../config/routes';
 import { IApiResponse } from '../types/config';
 import { IPermission, ISettings, ISystemStatus } from '../types/config';
-import { IBanner, IBannerGroup, IContent, IContentGroup, IEmployee } from '../types/object';
-import { IRequestBanners, IRequestContents, IRequestDefaultList } from '../types/request';
+import { IBanner, IBannerGroup, IContent, IContentGroup, IEmployee, IEmployeeLoginHistory } from '../types/object';
+import { IRequestBanners, IRequestSearchList } from '../types/request';
 
 const API_BASE_URL = 'http://localhost:3000';
 
@@ -82,7 +82,7 @@ export const getApiBannerDetail = async (bannerId: number): Promise<IApiResponse
   });
 };
 
-export const getApiContents = async (groupId: number, data: IRequestContents): Promise<IApiResponse<IContent[]>> => {
+export const getApiContents = async (groupId: number, data: IRequestSearchList): Promise<IApiResponse<IContent[]>> => {
   const params = new URLSearchParams(data as any);
   let apiUrl = `${apiRoutes.contents.list.url}`.replace(':groupId', groupId.toString());
 
@@ -110,7 +110,7 @@ export const getApiContentGroup = async (groupId: number): Promise<IApiResponse<
   });
 };
 
-export const getApiEmployees = async (data: IRequestDefaultList): Promise<IApiResponse<IEmployee[]>> => {
+export const getApiEmployees = async (data: IRequestSearchList): Promise<IApiResponse<IEmployee[]>> => {
   const params = new URLSearchParams(data as any);
   const apiUrl = `${apiRoutes.employees.list.url}`;
 

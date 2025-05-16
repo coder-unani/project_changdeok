@@ -5,7 +5,7 @@ import { ExtendedPrismaClient } from '../../library/database';
 import { encryptDataAES } from '../../library/encrypt';
 import { IServiceResponse } from '../../types/config';
 import { IContent, IContentGroup } from '../../types/object';
-import { IRequestContentUpdate, IRequestContentWrite, IRequestContents } from '../../types/request';
+import { IRequestContentUpdate, IRequestContentWrite, IRequestSearchList } from '../../types/request';
 import { IContentService } from '../../types/service';
 import { BaseService } from './service';
 
@@ -199,7 +199,7 @@ export class ContentService extends BaseService implements IContentService {
   }
 
   // 컨텐츠 목록 조회
-  public async list(groupId: number, data: IRequestContents): Promise<IServiceResponse<IContent[] | []>> {
+  public async list(groupId: number, data: IRequestSearchList): Promise<IServiceResponse<IContent[] | []>> {
     try {
       // 기본값 설정
       const page = Math.max(1, data.page || 1);

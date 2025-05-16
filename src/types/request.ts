@@ -85,23 +85,20 @@ export interface IRequestEmployeeLogin {
   userAgent?: string;
 }
 
-export interface IRequestDefaultList {
+export interface IRequestList {
   page: number;
   pageSize: number;
-  query?: string | undefined;
+  sort?: string;
+}
+export interface IRequestSearchList extends IRequestList {
+  query?: string;
+  startDate?: string;
+  endDate?: string;
 }
 
-export interface IRequestBanners extends IRequestDefaultList {
+export interface IRequestBanners extends IRequestSearchList {
   groupId: number;
   seq: number;
-}
-
-export interface IRequestContents extends IRequestDefaultList {
-  sort?: typeListSort;
-}
-
-export interface IRequestEmployees extends IRequestDefaultList {
-  sort?: typeListSort;
 }
 
 export interface IRequestEmployeeForceUpdatePassword {

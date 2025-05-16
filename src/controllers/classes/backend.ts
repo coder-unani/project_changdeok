@@ -19,7 +19,7 @@ import { decryptDataAES } from '../../library/encrypt';
 import { verifyJWT } from '../../library/jwt';
 import { IPermission, IRoute } from '../../types/config';
 import { IEmployeeToken } from '../../types/object';
-import { IRequestBanners, IRequestContents, IRequestDefaultList, typeListSort } from '../../types/request';
+import { IRequestBanners, IRequestSearchList, typeListSort } from '../../types/request';
 import { BaseWebController } from './controller';
 
 // TODO: 권한을 체크해서 다른 계정도 수정하게 할 것인지 확인 필요
@@ -259,7 +259,7 @@ export class BackendController extends BaseWebController {
       const groupId = this.validateInteger(req.params.groupId, '게시판 ID');
 
       // params 생성
-      const params: IRequestContents = {
+      const params: IRequestSearchList = {
         page: req.query.page ? parseInt(req.query.page as string) : 1,
         pageSize: req.query.pageSize ? parseInt(req.query.pageSize as string) : 10,
         query: req.query.query ? (req.query.query as string) : '',
@@ -640,7 +640,7 @@ export class BackendController extends BaseWebController {
       const queryParams = new URLSearchParams(req.body).toString();
 
       // params 생성
-      const params: IRequestDefaultList = {
+      const params: IRequestSearchList = {
         page: req.query.page ? parseInt(req.query.page as string) : 1,
         pageSize: req.query.pageSize ? parseInt(req.query.pageSize as string) : 10,
         query: req.query.query ? (req.query.query as string) : '',
@@ -661,7 +661,9 @@ export class BackendController extends BaseWebController {
         {
           ...metadata,
         },
-        employees
+        {
+          employees,
+        }
       );
 
       // 직원 목록 페이지 렌더링
