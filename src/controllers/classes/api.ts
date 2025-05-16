@@ -878,8 +878,15 @@ export class ApiController {
         const token = await createJWT(tokenData);
 
         if (token) {
-          setCookie(res, 'accessToken', token);
-          setCookie(res, 'employee', JSON.stringify(tokenData));
+          // 쿠키 옵션
+          const options = {
+            // 쿠키 유지 시간
+            maxAge: this.config.getSettings().jwtExpireSecond,
+          };
+
+          // 쿠키 저장
+          setCookie(res, 'accessToken', token, options);
+          setCookie(res, 'employee', JSON.stringify(tokenData), options);
         }
       }
 
