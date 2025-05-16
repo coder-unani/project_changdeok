@@ -1,7 +1,7 @@
 import { apiRoutes } from '../config/routes';
 import { IApiResponse } from '../types/config';
 import { IPermission, ISettings, ISystemStatus } from '../types/config';
-import { IBanner, IBannerGroup, IContent, IContentGroup, IEmployee, IEmployeeLoginHistory } from '../types/object';
+import { IBanner, IBannerGroup, IContent, IContentGroup, IEmployee } from '../types/object';
 import { IRequestBanners, IRequestSearchList } from '../types/request';
 
 const API_BASE_URL = 'http://localhost:3000';
