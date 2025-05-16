@@ -482,4 +482,63 @@ export class StatsService extends BaseService {
       return this.handleError(error);
     }
   }
+
+  public async getClickEvents(startDate: string, endDate: string): Promise<IServiceResponse<any>> {
+    try {
+      // Convert KST dates to UTC for API request
+      const utcStartDate = new Date(startDate + 'T00:00:00+09:00').toISOString().split('T')[0];
+      const utcEndDate = new Date(endDate + 'T23:59:59+09:00').toISOString().split('T')[0];
+
+      // 클릭 이벤트 데이터 조회
+      const [response] = await this.analyticsDataClient.runReport({
+        property: `properties/${process.env.GA_PROPERTY_ID}`,
+        dateRanges: [
+          {
+            startDate: utcStartDate,
+            endDate: utcEndDate,
+          },
+        ],
+        metrics: [
+          { name: 'eventCount' }, // 이벤트 발생 횟수
+          { name: 'eventValue' }, // 이벤트 값
+          { name: 'sessions' }, // 세션 수
+          { name: 'activeUsers' }, // 활성 사용자 수
+        ],
+        dimensions: [
+          { name: 'eventName' }, // 이벤트 이름
+        ],
+        orderBys: [
+          {
+            metric: { metricName: 'eventCount' },
+            desc: true,
+          },
+        ],
+      });
+
+      // 이벤트 데이터 생성
+      const eventData =
+        response.rows?.map((row) => ({
+          eventName: row.dimensionValues?.[0].value || '',
+          totalCount: parseInt(row.metricValues?.[0].value || '0'),
+          totalValue: parseFloat(row.metricValues?.[1].value || '0'),
+          totalSessions: parseInt(row.metricValues?.[2].value || '0'),
+          activeUsers: parseInt(row.metricValues?.[3].value || '0'),
+        })) || [];
+
+      // 메타데이터 생성
+      const metadata = {
+        startDate,
+        endDate,
+        rowCount: response.rows?.length || 0,
+      };
+
+      return {
+        result: true,
+        metadata,
+        data: eventData,
+      };
+    } catch (error: any) {
+      return this.handleError(error);
+    }
+  }
 }
