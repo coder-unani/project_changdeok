@@ -127,6 +127,11 @@ class BackendRouter {
       this.backendController.employeeUpdate(backendRoutes.employees.update, req, res);
     });
 
+    // 직원 삭제
+    this.router.get(backendRoutes.employees.delete.url, (req, res) => {
+      this.backendController.employeeDelete(backendRoutes.employees.delete, req, res);
+    });
+
     // 직원 목록
     this.router.get(backendRoutes.employees.list.url, (req, res) => {
       this.backendController.employees(backendRoutes.employees.list, req, res);
