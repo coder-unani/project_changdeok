@@ -35,7 +35,6 @@
     --color-violet-500: oklch(60.6% 0.25 292.717);
     --color-rose-100: oklch(94.1% 0.03 12.58);
     --color-rose-500: oklch(64.5% 0.246 16.439);
-    --color-slate-200: oklch(92.9% 0.013 255.508);
     --color-slate-300: oklch(86.9% 0.022 252.894);
     --color-slate-500: oklch(55.4% 0.046 257.417);
     --color-slate-600: oklch(44.6% 0.043 257.281);
@@ -514,6 +513,9 @@
   .max-h-\[400px\] {
     max-height: 400px;
   }
+  .min-h-\[100px\] {
+    min-height: 100px;
+  }
   .min-h-\[160px\] {
     min-height: 160px;
   }
@@ -911,9 +913,6 @@
   }
   .border-sky-700 {
     border-color: var(--color-sky-700);
-  }
-  .border-slate-200 {
-    border-color: var(--color-slate-200);
   }
   .border-slate-300 {
     border-color: var(--color-slate-300);
@@ -2174,8 +2173,8 @@ th.gridjs-th {
   font-size: 13px;
   --tw-leading: calc(var(--spacing) * 6);
   line-height: calc(var(--spacing) * 6);
-  --tw-font-weight: var(--font-weight-medium);
-  font-weight: var(--font-weight-medium);
+  --tw-font-weight: var(--font-weight-normal);
+  font-weight: var(--font-weight-normal);
   color: var(--color-gray-500);
   position: relative;
   -webkit-user-select: none;

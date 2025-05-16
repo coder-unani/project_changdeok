@@ -232,7 +232,7 @@ td.gridjs-message {
 }
 
 th.gridjs-th {
-  @apply border border-t-0 border-gray-200 bg-gray-100 px-4 py-3 text-[13px] leading-6 font-medium text-gray-500;
+  @apply border border-t-0 border-gray-200 bg-gray-100 px-4 py-3 text-[13px] leading-6 font-normal text-gray-500;
 
   position: relative;
   /* color: #6b7280; */
