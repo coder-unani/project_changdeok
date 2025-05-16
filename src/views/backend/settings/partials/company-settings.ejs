@@ -159,7 +159,7 @@
       document.getElementById('company-lunchtime-start').value = company.lunchtimeStart ? company.lunchtimeStart : '';
       document.getElementById('company-lunchtime-end').value = company.lunchtimeEnd ? company.lunchtimeEnd : '';
     } catch (error) {
-      console.error(error);
+      toastMessage('error', '회사 정보 로드 중 오류 발생:', error);
     }
 
     // 회사 설정 저장
@@ -212,7 +212,7 @@
         statusMessage('수정 사항이 있습니다. 시스템 재시작 후 반영됩니다.');
         // window.location.reload();
       } catch (error) {
-        toastMessage('error', error.message || '설정 저장 중 오류가 발생했습니다.');
+        toastMessage('error', error.message || '회사 정보 저장 중 오류가 발생했습니다.');
       }
     });
   });

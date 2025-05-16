@@ -79,8 +79,6 @@
         document.getElementById('cpu-status').textContent = cpuStatus;
         document.getElementById('uptime').textContent = uptime;
 
-        toastMessage('success', '시스템 정보가 갱신되었습니다.');
-
         return true;
       } catch (error) {
         document.getElementById('process-status').textContent = '확인 불가';
@@ -188,7 +186,10 @@
     });
 
     // 새로고침 버튼 이벤트 리스너 추가
-    document.getElementById('refresh-system-status').addEventListener('click', getSystemStatus);
+    document.getElementById('refresh-system-status').addEventListener('click', async () => {
+      await getSystemStatus();
+      toastMessage('info', '시스템 정보가 갱신되었습니다.');
+    });
 
     // 재시작 버튼 이벤트 리스너 추가
     document.getElementById('restart-server').addEventListener('click', restartServer);
