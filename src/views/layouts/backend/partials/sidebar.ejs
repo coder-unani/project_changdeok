@@ -15,21 +15,21 @@
     <!-- 메뉴 -->
     <nav class="mt-4">
       <%- include('menu-section', { 
-      title: settings.companyInfo.name,
-        items: [{
-          title: '홈페이지',
-          url: `https://${settings.serviceDomain}`,
-          icon: 'home',
-          isActive: false,
-          isExternal: true
-        },{
-          title: backendRoutes.dashboard.title,
-          url: backendRoutes.dashboard.url,
-          icon: 'dashboard',
-          isActive: backendRoutes.dashboard.title === title,
-          isExternal: false
-        }
-      ]
+        title: settings.companyInfo.name,
+          items: [{
+            title: '홈페이지',
+            url: `https://${settings.serviceDomain}`,
+            icon: 'home',
+            isActive: false,
+            isExternal: true
+          },{
+            title: backendRoutes.dashboard.title,
+            url: backendRoutes.dashboard.url,
+            icon: 'dashboard',
+            isActive: backendRoutes.dashboard.title === title,
+            isExternal: false
+          }
+        ]
       }) %>
 
       <%- include('menu-section', {

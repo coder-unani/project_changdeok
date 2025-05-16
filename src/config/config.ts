@@ -184,11 +184,3 @@ export const asyncConfig = async () => {
   await config.init();
   return config;
 };
-
-export const PERMISSIONS_DEFINE = {
-  1: '최고 관리자',
-  2: '사이트 관리',
-  3: '게시판 관리',
-  4: '관리자 관리',
-  5: '설정 관리',
-};
