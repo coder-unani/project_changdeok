@@ -7,7 +7,7 @@
     <ul class="mb-4 space-y-4">
       <!-- 파비콘 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label for="favicon" class="w-60 orb-label lg:leading-11">
+        <label for="favicon" class="w-50 orb-label lg:leading-11">
           파비콘
         </label>
         <input type="file" id="favicon" name="favicon" class="hidden" accept="image/x-icon" />
@@ -59,7 +59,7 @@
 
       <!-- 로고 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label for="logo" class="w-60 orb-label lg:leading-11">로고</label>
+        <label for="logo" class="w-50 orb-label lg:leading-11">로고</label>
         <input
           type="file"
           id="logo"
@@ -118,7 +118,7 @@
 
       <!-- 사이트 타이틀 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label for="title" class="w-60 flex gap-1 orb-label lg:leading-11">
+        <label for="title" class="w-50 flex gap-1 orb-label lg:leading-11">
           사이트 타이틀
           <span class="text-gray-400">(title)</span>
         </label>
@@ -127,7 +127,7 @@
           id="title"
           name="title"
           class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
-          placeholder="사이트 타이틀"
+          placeholder="사이트 타이틀을 입력해주세요."
           value="<%=data.title%>"
         />
       </li>
@@ -136,7 +136,7 @@
       <li class="flex flex-col gap-2 lg:flex-row">
         <label
           for="introduction"
-          class="w-60 flex gap-1 orb-label lg:leading-11"
+          class="w-50 flex gap-1 orb-label lg:leading-11"
         >
           사이트 소개
         </label>
@@ -146,7 +146,7 @@
           name="introduction"
           class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
           value="<%=data.introduction%>"
-          placeholder="사이트 소개"
+          placeholder="사이트 소개를 입력해주세요."
         />
       </li>
 
@@ -154,7 +154,7 @@
       <li class="flex flex-col gap-2 lg:flex-row">
         <label
           for="description"
-          class="w-60 flex gap-1 orb-label lg:leading-11"
+          class="w-50 flex gap-1 orb-label lg:leading-11"
         >
           사이트 설명
           <span class="text-gray-400">(meta description)</span>
@@ -163,13 +163,13 @@
           id="description"
           name="description"
           class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
-          placeholder="사이트 설명"
+          placeholder="사이트 설명을 입력해주세요."
         ><%=data.description%></textarea>
       </li>
 
       <!-- 사이트 키워드 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label for="keyword" class="w-60 flex gap-1 orb-label lg:leading-11">
+        <label for="keyword" class="w-50 flex gap-1 orb-label lg:leading-11">
           사이트 키워드
           <span class="text-gray-400">(meta keywords)</span>
         </label>
@@ -179,7 +179,7 @@
             name="keywords"
             class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
             value="<%=data.keywords%>"
-            placeholder="사이트 키워드"
+            placeholder="사이트 키워드를 입력해주세요."
           />
           <p class="orb-remark px-2 pt-2">
             * 콤마(,)로 구분하여 여러 개의 키워드를 입력할 수 있습니다.
@@ -189,7 +189,7 @@
 
       <!-- 오픈그래프 타이틀 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label for="og-title" class="w-60 flex gap-1 orb-label lg:leading-11">
+        <label for="og-title" class="w-50 flex gap-1 orb-label lg:leading-11">
           오픈그래프 타이틀
           <span class="text-gray-400">(og:title)</span>
         </label>
@@ -197,7 +197,7 @@
           id="og-title"
           class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
           value=""
-          placeholder="오픈그래프 타이틀"
+          placeholder="오픈그래프 타이틀을 입력해주세요."
         />
       </li>
 
@@ -205,7 +205,7 @@
       <li class="flex flex-col gap-2 lg:flex-row">
         <label
           for="og-description"
-          class="w-60 flex gap-1 orb-label lg:leading-11"
+          class="w-50 flex gap-1 orb-label lg:leading-11"
         >
           오픈그래프 설명
           <span class="text-gray-400">(og:description)</span>
@@ -214,13 +214,13 @@
           id="og-description"
           class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
           value=""
-          placeholder="오픈그래프 설명"
+          placeholder="오픈그래프 설명을 입력해주세요."
         />
       </li>
 
       <!-- 오픈그래프 이미지 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label for="og-image" class="w-60 flex gap-1 orb-label lg:leading-11">
+        <label for="og-image" class="w-50 flex gap-1 orb-label lg:leading-11">
           오픈그래프 이미지
           <span class="text-gray-400">(og:image)</span>
         </label>
@@ -267,7 +267,7 @@
                   src="/images/add-image-512x512.png"
                   alt="이미지 추가"
                 />
-                <p class="mt-1 text-xs text-gray-400">(512x512)</p>
+                <p class="mt-1 text-xs text-gray-400">(1200x630)</p>
               </div>
             </div>
 
@@ -298,7 +298,7 @@
 
       <!-- 서비스 도메인 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label for="service-domain" class="w-60 orb-label lg:leading-11">
+        <label for="service-domain" class="w-50 orb-label lg:leading-11">
           서비스 도메인
         </label>
         <input
@@ -307,14 +307,14 @@
           name="serviceDomain"
           class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
           value="<%=data.serviceDomain%>"
-          placeholder="서비스 도메인"
+          placeholder="서비스 도메인을 입력해주세요."
           readonly
         />
       </li>
 
       <!-- 서비스 포트 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label for="service-port" class="w-60 orb-label lg:leading-11">
+        <label for="service-port" class="w-50 orb-label lg:leading-11">
           서비스 포트
         </label>
         <input
@@ -323,7 +323,7 @@
           name="servicePort"
           class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
           value="<%=data.servicePort%>"
-          placeholder="서비스 포트"
+          placeholder="서비스 포트를 입력해주세요."
           readonly
         />
       </li>

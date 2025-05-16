@@ -547,8 +547,8 @@
   .w-36 {
     width: calc(var(--spacing) * 36);
   }
-  .w-60 {
-    width: calc(var(--spacing) * 60);
+  .w-50 {
+    width: calc(var(--spacing) * 50);
   }
   .w-64 {
     width: calc(var(--spacing) * 64);
@@ -2366,6 +2366,12 @@ th.gridjs-th:last-child {
       --tw-outline-style: none;
       outline-style: none;
     }
+  }
+  .orb-head {
+    font-size: var(--text-2xl);
+    line-height: var(--tw-leading, var(--text-2xl--line-height));
+    --tw-font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-bold);
   }
   .orb-hightlight {
     background-color: var(--color-blue-50);
