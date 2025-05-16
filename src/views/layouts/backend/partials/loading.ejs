@@ -1,0 +1,23 @@
+<div
+  id="spinner"
+  class="fixed inset-0 z-50 flex hidden items-center justify-center bg-black/30"
+  role="dialog"
+  tabindex="-1"
+>
+  <div class="flex items-center justify-center gap-2">
+    <span class="sr-only">Loading...</span>
+    <div class="h-8 w-8 animate-bounce rounded-full bg-blue-300/80 [animation-delay:-0.3s]"></div>
+    <div class="h-8 w-8 animate-bounce rounded-full bg-purple-300/80 [animation-delay:-0.15s]"></div>
+    <div class="h-8 w-8 animate-bounce rounded-full bg-pink-300/80"></div>
+  </div>
+</div>
+
+<script nonce="<%=nonce%>">
+  const isLoading = (isLoading) => {
+    if (isLoading) {
+      document.getElementById('spinner').classList.remove('hidden');
+    } else {
+      document.getElementById('spinner').classList.add('hidden');
+    }
+  };
+</script>
