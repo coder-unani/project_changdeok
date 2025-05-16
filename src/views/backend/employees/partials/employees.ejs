@@ -1,58 +1,45 @@
-<div class="my-2">
-  <div class='flex justify-between items-center gap-1.5 py-2'>
-    <h1 class="orb-head"><%=title%></h1>
-    <div class="flex items-center justify-end">
-      <a href="<%=backendRoutes.employees.regist.url%>" class="orb-btn orb-btn-primary">관리자 등록</a>
-    </div>
-  </div>
-</div>
+<div class="hidden" id="employees-container">
+  <!-- 관리자 목록 -->
+  <div id="employees" class="flex overflow-x-auto"></div>
 
-<div class="space-y-4">
-  <div class="rounded-xl bg-default-bg p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
-    <div id="admin-container" class="flex overflow-x-auto"></div>
+  <!-- 페이지네이션 -->
+  <div class="gridjs-footer">
+    <div class="gridjs-pagination">
+      <div class="gridjs-summary">현재 <b><%=metadata.start%></b> - <b><%=metadata.end%></b>건 표시. 총 <b><%=metadata.total%></b> 건이 조회되었습니다.</div>
 
-    <!-- 페이지네이션 -->
-    <div class="gridjs-footer">
-      <div class="gridjs-pagination">
-        <div class="gridjs-summary">현재 <b><%=metadata.start%></b> - <b><%=metadata.end%></b>건 표시. 총 <b><%=metadata.total%></b> 건이 조회되었습니다.</div>
-
-        <div class="gridjs-pages flex justify-center space-x-1">
-          <% if (metadata.totalPage >= 1) { %>
-            <button role="button" title="이전" aria-label="이전" <% if (metadata.page === 1) { %>disabled<% } %>>
-              <% if (metadata.page === 1) { %>
-                이전
-                <% } else { %>
-                <a href="?page=<%=metadata.page - 1%>">이전</a>
-              <% } %>
-            </button>
-
-            <% 
-              let startPage = metadata.page - 2;
-              if (startPage < 1) startPage = 1;
-              const endPage = metadata.page + 2 > metadata.totalPage ? metadata.totalPage : metadata.page + 2;
-            %>
-            <% for (let i = startPage; i <= endPage; i++) { %>
-              <button class="custom-gridjs-page-button<%=i === metadata.page ? ' gridjs-currentPage' : ''%>">
-                <a href="?page=<%=i%>"><%=i%></a>
-              </button>
-            <% } %>
-
-            <button role="button" title="다음" aria-label="다음" <% if (metadata.page === metadata.totalPage) { %>disabled<% } %>>
-              <% if (metadata.page === metadata.totalPage) { %>
-                다음
+      <div class="gridjs-pages flex justify-center space-x-1">
+        <% if (metadata.totalPage >= 1) { %>
+          <button role="button" title="이전" aria-label="이전" <% if (metadata.page === 1) { %>disabled<% } %>>
+            <% if (metadata.page === 1) { %>
+              이전
               <% } else { %>
-                <a href="?page=<%=metadata.page + 1%>">다음</a>
-              <% } %>
+              <a href="?page=<%=metadata.page - 1%>">이전</a>
+            <% } %>
+          </button>
+
+          <% 
+            let startPage = metadata.page - 2;
+            if (startPage < 1) startPage = 1;
+            const endPage = metadata.page + 2 > metadata.totalPage ? metadata.totalPage : metadata.page + 2;
+          %>
+          <% for (let i = startPage; i <= endPage; i++) { %>
+            <button class="custom-gridjs-page-button<%=i === metadata.page ? ' gridjs-currentPage' : ''%>">
+              <a href="?page=<%=i%>"><%=i%></a>
             </button>
           <% } %>
-        </div>
+
+          <button role="button" title="다음" aria-label="다음" <% if (metadata.page === metadata.totalPage) { %>disabled<% } %>>
+            <% if (metadata.page === metadata.totalPage) { %>
+              다음
+            <% } else { %>
+              <a href="?page=<%=metadata.page + 1%>">다음</a>
+            <% } %>
+          </button>
+        <% } %>
       </div>
     </div>
   </div>
 </div>
-
-<!-- grid.js -->
-<%- include('../common/library/gridjs') %>
 
 <script nonce="<%=nonce%>">
   document.addEventListener('DOMContentLoaded', () => {
@@ -75,7 +62,7 @@
       error: '데이터를 불러올 수 없습니다. 다시 시도해 주세요.',
     };
 
-    const adminListData = `<%- JSON.stringify(data) %>`;
+    const adminListData = `<%- JSON.stringify(data.employees) %>`;
     const adminList = JSON.parse(adminListData);
 
     // 데이터 배열 생성
@@ -88,7 +75,7 @@
     const currentGrid = new gridjs.Grid({
       columns: [
         { name: '번호' },
-        { 
+        {
           name: '이메일',
           formatter: (cell, row) => {
             const adminId = row.cells[0].data;
@@ -97,7 +84,7 @@
             );
           },
         },
-        { 
+        {
           name: '이름',
           formatter: (cell, row) => {
             const adminId = row.cells[0].data;
@@ -123,6 +110,6 @@
     });
 
     // grid.js 렌더링
-    currentGrid.render(document.getElementById('admin-container'));
+    currentGrid.render(document.getElementById('employees'));
   });
 </script>

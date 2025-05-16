@@ -1,6 +1,6 @@
 import { IServiceResponse } from './config';
 import { IPermission, ISettings, ISystemStatus } from './config';
-import { IBanner, IBannerGroup, IContent, IContentGroup, IEmployee } from './object';
+import { IBanner, IBannerGroup, IContent, IContentGroup, IEmployee, IEmployeeLoginHistory } from './object';
 import {
   IRequestAccessSettings,
   IRequestBannerUpdate,
@@ -9,15 +9,13 @@ import {
   IRequestCompanySettings,
   IRequestContentUpdate,
   IRequestContentWrite,
-  IRequestContents,
-  IRequestDefaultList,
   IRequestEmployeeDelete,
   IRequestEmployeeForceUpdatePassword,
   IRequestEmployeeLogin,
   IRequestEmployeeRegister,
   IRequestEmployeeUpdate,
   IRequestEmployeeUpdatePassword,
-  IRequestEmployees,
+  IRequestSearchList,
   IRequestSiteSettings,
   IRequestSystemSettings,
 } from './request';
@@ -36,7 +34,7 @@ export interface IContentService {
   read(contentId: number): Promise<IServiceResponse<IContent>>;
   update(contentId: number, data: IRequestContentUpdate): Promise<IServiceResponse>;
   delete(contentId: number): Promise<IServiceResponse>;
-  list(groupId: number, data: IRequestContents): Promise<IServiceResponse<IContent[] | []>>;
+  list(groupId: number, data: IRequestSearchList): Promise<IServiceResponse<IContent[] | []>>;
   groupInfo(groupId: number): Promise<IServiceResponse<IContentGroup>>;
 }
 
@@ -47,12 +45,13 @@ export interface IEmployeeService {
   updatePassword(id: number, data: IRequestEmployeeUpdatePassword): Promise<IServiceResponse>;
   updatePasswordForce(id: number, data: IRequestEmployeeForceUpdatePassword): Promise<IServiceResponse>;
   delete(id: number, data: IRequestEmployeeDelete): Promise<IServiceResponse>;
-  list(data: IRequestEmployees): Promise<IServiceResponse<IEmployee[] | []>>;
+  list(data: IRequestSearchList): Promise<IServiceResponse<IEmployee[] | []>>;
   login(data: IRequestEmployeeLogin): Promise<IServiceResponse<IEmployee>>;
+  loginHistory(params: IRequestSearchList): Promise<IServiceResponse<IEmployeeLoginHistory[]>>;
 }
 
 export interface IPermissionService {
-  list(data: IRequestDefaultList): Promise<IServiceResponse<IPermission[]>>;
+  list(data: IRequestSearchList): Promise<IServiceResponse<IPermission[]>>;
   updateEmployeesPermissions(
     employeeId: number,
     permissionIds: number[],

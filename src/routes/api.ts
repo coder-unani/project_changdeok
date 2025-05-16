@@ -212,6 +212,12 @@ class ApiRouter {
       this.apiController.employeeLogout(req, res);
     });
 
+    // 직원 로그인 이력
+    this.router.get(apiRoutes.employees.loginHistory.url, (req: Request, res: Response) => {
+      this.apiController.employeeLoginHistory(req, res);
+    });
+
+    // 직원 상세 정보
     this.router.get(apiRoutes.employees.detail.url, (req: Request, res: Response) => {
       this.apiController.employeeDetail(req, res);
     });

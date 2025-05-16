@@ -1,0 +1,114 @@
+<div class="hidden" id="login-history-container">
+  <div class="flex w-full items-center justify-between space-y-2">
+    <div class="flex flex-col gap-2 lg:flex-row">
+      <label class="orb-label w-12 lg:leading-11">날짜</label>
+      <div class="flex items-center gap-2">
+        <input
+          type="date"
+          id="startDate"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none lg:w-[160px]"
+          value="<%=new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0]%>"
+        />
+        ~
+        <input
+          type="date"
+          id="endDate"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none lg:w-[160px]"
+          value="<%=new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0]%>"
+        />
+      </div>
+      <label class="orb-label w-12 lg:leading-11">검색어</label>
+      <input
+        type="text"
+        id="search"
+        class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none lg:w-[160px]"
+        placeholder="검색어를 입력해주세요."
+      />
+    </div>
+    <div class="flex justify-end lg:block">
+      <button id="btn-login-history-search" class="orb-btn orb-btn-primary">조회</button>
+    </div>
+  </div>
+  <div id="login-history"></div>
+</div>
+
+<script nonce="<%=nonce%>">
+  document.addEventListener('DOMContentLoaded', () => {
+    const loginHistory = document.getElementById('login-history');
+
+    let currentGrid = null;
+    let startDate = null;
+    let endDate = null;
+    let search = null;
+
+    const initGrid = () => {
+      startDate = document.getElementById('startDate').value;
+      endDate = document.getElementById('endDate').value;
+      search = document.getElementById('search').value;
+
+      currentGrid = new gridjs.Grid({
+        columns: [
+          {
+            name: '사용자명',
+            field: 'username',
+            width: '200px',
+          },
+          {
+            name: '로그인 날짜',
+            field: 'loginDate',
+            width: '150px',
+          },
+          {
+            name: '로그인 시간',
+            field: 'loginTime',
+            width: '120px',
+          },
+          {
+            name: 'IP 주소',
+            field: 'ipAddress',
+            width: '150px',
+          },
+          {
+            name: '상태',
+            field: 'status',
+            width: '100px',
+          },
+        ],
+        language: gridLangKoKR,
+        data: [],
+        className: {
+          container: 'custom-gridjs-container', // 커스텀 페이지네이션 있을 경우 컨테이너 클래스 추가
+        },
+        resizable: true,
+        style: {
+          table: { 'white-space': 'nowrap' },
+        },
+        sort: true,
+        server: {
+          url: `<%=apiRoutes.employees.loginHistory.url%>`,
+          then: (data) =>
+            data.data.map((item) => [item.employeeEmail, item.loginAt, item.loginTime, item.clientIp, item.status]),
+          total: (data) => data.metadata.total,
+        },
+        pagination: {
+          limit: 20,
+          server: {
+            url: (prev, page, limit) => {
+              const startDate = document.getElementById('startDate').value;
+              const endDate = document.getElementById('endDate').value;
+              const search = document.getElementById('search').value;
+              return `${prev}?page=${page}&pageSize=${limit}&startDate=${startDate}&endDate=${endDate}&query=${search}`;
+            },
+          },
+        },
+      });
+
+      currentGrid.render(loginHistory);
+    };
+
+    document.getElementById('btn-login-history-search').addEventListener('click', () => {
+      currentGrid?.destroy();
+      initGrid();
+    });
+  });
+</script>

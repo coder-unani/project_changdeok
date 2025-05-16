@@ -109,6 +109,22 @@ export interface IEmployee {
   updatedAt?: typeOptionalString;
 }
 
+export interface IEmployeeLoginHistory {
+  id: number;
+  employeeId?: typeOptionalNumber;
+  employeeEmail: typeOptionalString;
+  status: string;
+  message?: typeOptionalString;
+  loginAt?: typeOptionalString;
+  logoutAt?: typeOptionalString;
+  origin?: typeOptionalString;
+  referer?: typeOptionalString;
+  clientIp?: typeOptionalString;
+  userAgent?: typeOptionalString;
+  createdAt: string;
+  updatedAt?: typeOptionalString;
+}
+
 export interface IEmployeeToken {
   id: number;
   email: string;

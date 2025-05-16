@@ -62,6 +62,7 @@ export const apiRoutes = {
     permissions: createApiRoute('PATCH', '관리자 권한 등록/수정', '/employees/:employeeId/permissions', [1, 4]),
     login: createApiRoute('POST', '관리자 로그인', '/employees/login', []),
     logout: createApiRoute('POST', '관리자 로그아웃', '/employees/logout', []),
+    loginHistory: createApiRoute('GET', '관리자 로그인 히스토리', '/employees/login-history', [1, 4]),
   },
   permissions: createApiRoute('GET', '권한 목록', '/permissions', [1, 2]),
   stats: {
@@ -192,9 +193,9 @@ export const backendRoutes = {
   employees: {
     list: createRoute(
       'GET',
-      '관리자 목록',
+      '관리자',
       `${backendRoutesPrefix}/employees`,
-      'backend/employees/list',
+      'backend/employees/index',
       backendRoutesLayout,
       [1, 4]
     ),

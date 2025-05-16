@@ -2,7 +2,6 @@ import { AuthError, NotFoundError, ValidationError } from '../../common/error';
 import {
   convertDateToKST,
   convertDateToString,
-  convertDateToUTC,
   convertStringToDate,
   formatEmailMasking,
 } from '../../common/utils/format';
@@ -10,7 +9,7 @@ import { validateEmail, validatePassword, validatePhone } from '../../common/uti
 import { ExtendedPrismaClient } from '../../library/database';
 import { hashPassword, verifyPassword } from '../../library/encrypt';
 import { IServiceResponse } from '../../types/config';
-import { IEmployee } from '../../types/object';
+import { IEmployee, IEmployeeLoginHistory } from '../../types/object';
 import {
   IRequestEmployeeDelete,
   IRequestEmployeeForceUpdatePassword,
@@ -18,7 +17,7 @@ import {
   IRequestEmployeeRegister,
   IRequestEmployeeUpdate,
   IRequestEmployeeUpdatePassword,
-  IRequestEmployees,
+  IRequestSearchList,
 } from '../../types/request';
 import { IEmployeeService } from '../../types/service';
 import { BaseService } from './service';
@@ -349,7 +348,7 @@ export class EmployeeService extends BaseService implements IEmployeeService {
     }
   }
 
-  public async list(data: IRequestEmployees): Promise<IServiceResponse<IEmployee[] | []>> {
+  public async list(data: IRequestSearchList): Promise<IServiceResponse<IEmployee[] | []>> {
     try {
       // 페이지 번호가 없거나 1보다 작은 경우 1로 설정
       const page = Math.max(1, data.page || 1);
@@ -401,6 +400,104 @@ export class EmployeeService extends BaseService implements IEmployeeService {
       };
     } catch (error) {
       return this.handleError<IEmployee[] | []>(error);
+    }
+  }
+
+  public async loginHistory(params: IRequestSearchList): Promise<IServiceResponse<IEmployeeLoginHistory[]>> {
+    try {
+      const page = params.page || 1;
+      const pageSize = params.pageSize || 10;
+      const query = params.query || '';
+      const startDate = params.startDate ? convertStringToDate(params.startDate) : null;
+      const endDate = params.endDate ? convertStringToDate(params.endDate) : null;
+
+      const sort = params.sort || 'CREATED_AT_DESC';
+      let orderBy: Record<string, string> = {
+        createdAt: 'desc',
+      };
+
+      if (sort === 'CREATED_AT_DESC') {
+        orderBy = { createdAt: 'desc' };
+      } else if (sort === 'CREATED_AT_ASC') {
+        orderBy = { createdAt: 'asc' };
+      } else if (sort === 'STATUS_DESC') {
+        orderBy = { status: 'desc' };
+      } else if (sort === 'STATUS_ASC') {
+        orderBy = { status: 'asc' };
+      } else if (sort === 'IP_DESC') {
+        orderBy = { ip: 'desc' };
+      } else if (sort === 'IP_ASC') {
+        orderBy = { ip: 'asc' };
+      } else if (sort === 'EMPLOYEE_EMAIL_DESC') {
+        orderBy = { employeeEmail: 'desc' };
+      } else if (sort === 'EMPLOYEE_EMAIL_ASC') {
+        orderBy = { employeeEmail: 'asc' };
+      } else {
+        orderBy = { createdAt: 'desc' };
+      }
+
+      const where = {
+        employeeEmail: query ? { contains: query } : undefined,
+        createdAt: {
+          ...(startDate ? { gte: startDate } : {}),
+          ...(endDate ? { lte: endDate } : {}),
+        },
+      };
+
+      // 전체 로그인 기록 수와 로그인 기록 리스트 병렬 조회
+      const [total, rows] = await Promise.all([
+        this.prisma.employeeLoginHistory.count({ where }),
+        this.prisma.employeeLoginHistory.findMany({
+          where,
+          skip: (page - 1) * pageSize,
+          take: pageSize,
+          orderBy,
+        }),
+      ]);
+
+      const loginHistory = rows.map((item) => {
+        const createdAt = convertDateToString(convertDateToKST(item.createdAt));
+        const updatedAt = item.updatedAt ? convertDateToString(convertDateToKST(item.updatedAt)) : null;
+        const loginAt = item.loginAt ? convertDateToString(convertDateToKST(item.loginAt)) : null;
+        const logoutAt = item.logoutAt ? convertDateToString(convertDateToKST(item.logoutAt)) : null;
+        return {
+          id: item.id,
+          employeeId: item.employeeId,
+          employeeEmail: item.employeeEmail,
+          status: item.status,
+          message: item.message,
+          loginAt,
+          logoutAt,
+          origin: item.origin,
+          referer: item.referer,
+          clientIp: item.clientIp,
+          userAgent: item.userAgent,
+          createdAt,
+          updatedAt,
+        };
+      });
+
+      // 메타데이터 생성
+      const metadata = {
+        total,
+        page,
+        pageSize,
+        query,
+        sort,
+        start: (page - 1) * pageSize + 1,
+        end: (page - 1) * pageSize + loginHistory.length,
+        count: loginHistory.length,
+        totalPage: Math.ceil(total / pageSize),
+      };
+
+      // 성공
+      return {
+        result: true,
+        metadata,
+        data: loginHistory,
+      };
+    } catch (error) {
+      return this.handleError(error);
     }
   }
 

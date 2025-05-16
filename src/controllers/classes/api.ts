@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import { httpStatus } from '../../common/constants';
-import { AppError, AuthError, ForbiddenError, ValidationError } from '../../common/error';
+import { AppError, AuthError, ForbiddenError, NotFoundError, ValidationError } from '../../common/error';
 import { getCookie, removeCookie, setCookie } from '../../common/utils/cookie';
 import { formatApiResponse } from '../../common/utils/format';
 import { getAccessedEmployee } from '../../common/utils/verify';
@@ -26,15 +26,13 @@ import {
   IRequestBanners,
   IRequestContentUpdate,
   IRequestContentWrite,
-  IRequestContents,
-  IRequestDefaultList,
   IRequestEmployeeDelete,
   IRequestEmployeeForceUpdatePassword,
   IRequestEmployeeLogin,
   IRequestEmployeeRegister,
   IRequestEmployeeUpdate,
   IRequestEmployeeUpdatePassword,
-  IRequestEmployees,
+  IRequestSearchList,
   IRequestSiteSettings,
   IRequestSystemSettings,
   typeListSort,
@@ -314,7 +312,7 @@ export class ApiController {
       }
 
       // 요청 데이터
-      const requestData: IRequestContents = {
+      const requestData: IRequestSearchList = {
         page: parseInt(req.query.page as string) || 1,
         pageSize: parseInt(req.query.pageSize as string) || 10,
         query: (req.query.query as string) || '',
@@ -821,7 +819,7 @@ export class ApiController {
   public async employees(req: Request, res: Response): Promise<void> {
     try {
       // 요청 데이터
-      const requestData: IRequestEmployees = {
+      const requestData: IRequestSearchList = {
         page: parseInt(req.query.page as string) || 1,
         pageSize: parseInt(req.query.pageSize as string) || 10,
         sort: req.params.sort as typeListSort,
@@ -914,11 +912,43 @@ export class ApiController {
     }
   }
 
+  // 직원 로그인 히스토리
+  public async employeeLoginHistory(req: Request, res: Response): Promise<void> {
+    try {
+      // 요청 데이터
+      const requestData: IRequestSearchList = {
+        page: parseInt(req.query.page as string) || 1,
+        pageSize: parseInt(req.query.pageSize as string) || 10,
+        query: (req.query.query as string) || '',
+        startDate: (req.query.startDate as string) || '',
+        endDate: (req.query.endDate as string) || '',
+        sort: (req.query.sort as typeListSort) || 'CREATED_AT_DESC',
+      };
+
+      // 직원 로그인 히스토리 조회
+      const employeeService: IEmployeeService = new EmployeeService(prisma);
+      const result = await employeeService.loginHistory(requestData);
+
+      // 호출 실패
+      if (!result.result || !result.data) {
+        throw new NotFoundError((result.message as string) || '직원 로그인 히스토리를 조회할 수 없습니다.');
+      }
+
+      // 응답 데이터 생성
+      const response = formatApiResponse(true, null, null, result.metadata, result.data);
+
+      // 응답 성공
+      res.status(httpStatus.OK).json(response);
+    } catch (error) {
+      this.handleError(error, res);
+    }
+  }
+
   // 권한 목록
   public async permissions(req: Request, res: Response): Promise<void> {
     try {
       // 요청 데이터
-      const requestData: IRequestDefaultList = {
+      const requestData: IRequestSearchList = {
         page: parseInt(req.query.page as string) || 1,
         pageSize: parseInt(req.query.pageSize as string) || 10,
         query: (req.query.query as string) || '',
