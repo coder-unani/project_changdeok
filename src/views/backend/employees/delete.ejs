@@ -3,15 +3,15 @@
     <span class="orb-head"><%=title%></span>
   </h1>
 </div>
-<div class="mb-4 space-y-4 rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_rgba(0,0,0,.06)] lg:p-6">
+<div class="bg-default-bg mb-4 space-y-4 rounded-xl p-4 text-sm shadow-[0_2px_30px_rgba(0,0,0,.06)] lg:p-6">
   <div class="flex flex-col items-center justify-center gap-4 py-2">
     <p class="text-center">
       관리자 계정 <span class="font-bold text-red-500"><%=data.email%></span>을(를)<br />
       정말 삭제하시겠습니까?
     </p>
     <div class="flex items-center justify-center gap-4">
-      <button id="btn-delete" class="rounded-lg bg-red-500 px-4 py-2 text-white">삭제</button>
-      <button id="btn-cancel" class="rounded-lg bg-gray-500 px-4 py-2 text-white" onclick="window.history.back()">
+      <button id="btn-delete" class="text-light rounded-lg bg-red-500 px-4 py-2">삭제</button>
+      <button id="btn-cancel" class="text-light bg-paper-bg rounded-lg px-4 py-2" onclick="window.history.back()">
         취소
       </button>
     </div>

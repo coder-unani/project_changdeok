@@ -63,7 +63,7 @@
           <!-- 차단 IP 목록 -->
           <div
             id="blocked-ip-container"
-            class="border-border-2 mt-2 flex max-h-[400px] min-h-[100px] flex-col gap-2 overflow-y-auto rounded-lg border p-2"
+            class="border-secondary-border mt-2 flex max-h-[400px] min-h-[100px] flex-col gap-2 overflow-y-auto rounded-lg border p-2"
           ></div>
         </div>
       </li>
@@ -98,7 +98,7 @@
 
           <div
             id="blocked-bot-container"
-            class="border-border-2 mt-2 flex max-h-[400px] min-h-[100px] flex-col gap-2 overflow-y-auto rounded-lg border p-2"
+            class="border-secondary-border mt-2 flex max-h-[400px] min-h-[100px] flex-col gap-2 overflow-y-auto rounded-lg border p-2"
           ></div>
         </div>
       </li>
@@ -125,7 +125,7 @@
     // 차단 IP 또는 차단 봇 패턴 아이템 생성
     const createItemElement = (value, type) => {
       const item = document.createElement('div');
-      item.className = `${type}-item flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-md hover:bg-gray-100`;
+      item.className = `${type}-item flex items-center gap-2 bg-paper-bg px-3 py-2 rounded-md hover:bg-gray-100`;
       item.dataset[type === 'blocked-ip' ? 'ip' : 'pattern'] = value;
 
       const label = document.createElement('span');

@@ -6,7 +6,7 @@
 
 <div class="space-y-4 text-gray-700">
   <!-- 화면 관리 -->
-  <div class="flex-none w-full space-y-4 text-sm bg-white p-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
+  <div class="flex-none w-full space-y-4 text-sm bg-default-bg p-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
     <div class="flex items-center">
       <div class="bg-emerald-100 text-emerald-500 rounded-md p-1 mr-2">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" class="h-[14px] w-[14px]">
@@ -15,9 +15,9 @@
       </div>
       <p class="text-base font-semibold"><%=metadata.banners.title%></p>
     </div>
-    <div class="flex flex-wrap flex-col lg:flex-row border border-border-2 rounded-lg">
+    <div class="flex flex-wrap flex-col lg:flex-row border border-secondary-border rounded-lg">
       <% data.banners.forEach((banner) => { %>
-        <div class="flex-1 min-w-[25%] not-last:border-b lg:not-last:border-b-0 lg:not-last:border-r lg:nth-[4n]:border-r-0 lg:nth-[n+5]:border-t border-border-2 p-4">
+        <div class="flex-1 min-w-[25%] not-last:border-b lg:not-last:border-b-0 lg:not-last:border-r lg:nth-[4n]:border-r-0 lg:nth-[n+5]:border-t border-secondary-border p-4">
           <p class="text-sm font-medium text-gray-500 mb-2"><%=banner.title%> 배너</p>
           <div class="flex justify-end gap-x-3 font-semibold text-base">
             <p>
@@ -42,7 +42,7 @@
   <div class="flex flex-col lg:flex-row gap-4">
     <% data.contents.forEach((content) => { %>
       <% if (content.title === '공지사항') { %>
-      <div class="flex-1 space-y-4 text-sm bg-white p-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
+      <div class="flex-1 space-y-4 text-sm bg-default-bg p-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
         <div class="flex justify-between">
           <div class="flex items-center">
             <div class="bg-rose-100 text-rose-500 rounded-md p-1 mr-2">
@@ -60,23 +60,23 @@
           </a>
         </div>
         <!-- TODO: 게시물 최근 몇개 미리보기 확인 필요 -->
-        <ul class="border-t border-b border-border-2">
-          <li class="flex justify-between p-2 text-[13px] not-last:border-b border-border-2">
+        <ul class="border-t border-b border-secondary-border">
+          <li class="flex justify-between p-2 text-[13px] not-last:border-b border-secondary-border">
             <p class="flex-1">제목 1 입니다.</p>
             <span class="flex-none ml-2 text-gray-400">2025-03-14</span>
           </li>
-          <li class="flex justify-between p-2 text-[13px] not-last:border-b border-border-2">
+          <li class="flex justify-between p-2 text-[13px] not-last:border-b border-secondary-border">
             <p class="flex-1">제목 2 입니다.</p>
             <span class="flex-none ml-2 text-gray-400">2025-03-13</span>
           </li>
-          <li class="flex justify-between p-2 text-[13px] not-last:border-b border-border-2">
+          <li class="flex justify-between p-2 text-[13px] not-last:border-b border-secondary-border">
             <p class="flex-1">제목 3 입니다.</p>
             <span class="flex-none ml-2 text-gray-400">2025-03-12</span>
           </li>
         </ul>
       </div> 
       <% } else { %>
-      <div class="flex-1 space-y-4 text-sm bg-white p-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
+      <div class="flex-1 space-y-4 text-sm bg-default-bg p-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
         <div class="flex justify-between">
           <div class="flex items-center">
             <div class="bg-blue-100 text-blue-500 rounded-md p-1 mr-2">
@@ -92,8 +92,8 @@
               <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg>
           </a>
         </div>
-        <ul class="border-t border-b border-border-2">
-          <li class="flex justify-between p-4 text-[13px] not-last:border-b border-border-2">
+        <ul class="border-t border-b border-secondary-border">
+          <li class="flex justify-between p-4 text-[13px] not-last:border-b border-secondary-border">
             <p class="flex-1 text-center text-gray-400">등록된 문의가 없습니다.</p>
           </li>
         </ul>
@@ -103,7 +103,7 @@
   </div>
 
   <!-- 사이트 관리 -->
-  <div class="w-full lg:max-w-[calc(50%-8px)] space-y-4 text-sm bg-white p-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
+  <div class="w-full lg:max-w-[calc(50%-8px)] space-y-4 text-sm bg-default-bg p-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
     <div class="flex items-center">
       <div class="bg-violet-100 text-violet-500 rounded-md p-1 mr-2">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" fill="currentColor" class="h-[14px] w-[14px]">

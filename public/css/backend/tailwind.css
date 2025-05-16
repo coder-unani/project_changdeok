@@ -22,6 +22,7 @@
     --color-emerald-100: oklch(95% 0.052 163.051);
     --color-emerald-500: oklch(69.6% 0.17 162.48);
     --color-emerald-600: oklch(59.6% 0.145 163.225);
+    --color-teal-600: oklch(60% 0.118 184.704);
     --color-cyan-800: oklch(45% 0.085 224.283);
     --color-sky-50: oklch(97.7% 0.013 236.62);
     --color-sky-500: oklch(68.5% 0.169 237.323);
@@ -52,8 +53,8 @@
     --color-zinc-300: oklch(87.1% 0.006 286.286);
     --color-zinc-400: oklch(70.5% 0.015 286.067);
     --color-zinc-500: oklch(55.2% 0.016 285.938);
-    --color-black: #0c0c0c;
-    --color-white: #ffffff;
+    --color-black: #000;
+    --color-white: #fff;
     --spacing: 0.25rem;
     --text-xs: 0.75rem;
     --text-xs--line-height: calc(1 / 0.75);
@@ -91,13 +92,22 @@
     --font-pretendard: 'Pretendard Variable', system-ui, sans-serif;
     --font-oswald: 'Oswald', var(--font-pretendard);
     --font-cinzel: 'Cinzel', var(--font-pretendard);
+    --color-light: #ffffff;
+    --color-dark: #0c0c0c;
+    --color-primary-lighter: white;
+    --color-primary-light: var(--color-gray-50);
     --color-success: var(--color-emerald-500);
-    --color-error: var(--color-red-500);
     --color-warning: var(--color-amber-500);
-    --color-info: var(--color-slate-500);
-    --color-border-1: var(--color-gray-100);
-    --color-border-2: var(--color-gray-200);
-    --color-border-3: var(--color-gray-300);
+    --color-error: var(--color-red-500);
+    --color-primary: black;
+    --color-secondary: white;
+    --color-default-bg: var(--color-primary-lighter);
+    --color-paper-bg: var(--color-primary-light);
+    --color-primary-btn: var(--color-blue-500);
+    --color-accent-btn: var(--color-blue-600);
+    --color-primary-border: var(--color-gray-100);
+    --color-secondary-border: var(--color-gray-200);
+    --color-tertiary-border: var(--color-gray-300);
   }
 }
 @layer base {
@@ -902,14 +912,14 @@
   .border-black {
     border-color: var(--color-black);
   }
-  .border-border-1 {
-    border-color: var(--color-border-1);
-  }
-  .border-border-2 {
-    border-color: var(--color-border-2);
-  }
   .border-gray-300 {
     border-color: var(--color-gray-300);
+  }
+  .border-primary-border {
+    border-color: var(--color-primary-border);
+  }
+  .border-secondary-border {
+    border-color: var(--color-secondary-border);
   }
   .border-sky-700 {
     border-color: var(--color-sky-700);
@@ -939,7 +949,7 @@
     background-color: var(--color-black);
   }
   .bg-black\/50 {
-    background-color: color-mix(in srgb, #0c0c0c 50%, transparent);
+    background-color: color-mix(in srgb, #000 50%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       background-color: color-mix(in oklab, var(--color-black) 50%, transparent);
     }
@@ -950,11 +960,11 @@
   .bg-blue-100 {
     background-color: var(--color-blue-100);
   }
+  .bg-default-bg {
+    background-color: var(--color-default-bg);
+  }
   .bg-emerald-100 {
     background-color: var(--color-emerald-100);
-  }
-  .bg-gray-50 {
-    background-color: var(--color-gray-50);
   }
   .bg-gray-100 {
     background-color: var(--color-gray-100);
@@ -962,8 +972,8 @@
   .bg-gray-200 {
     background-color: var(--color-gray-200);
   }
-  .bg-gray-500 {
-    background-color: var(--color-gray-500);
+  .bg-paper-bg {
+    background-color: var(--color-paper-bg);
   }
   .bg-red-50 {
     background-color: var(--color-red-50);
@@ -1267,6 +1277,9 @@
   .text-gray-800 {
     color: var(--color-gray-800);
   }
+  .text-light {
+    color: var(--color-light);
+  }
   .text-red-500 {
     color: var(--color-red-500);
   }
@@ -1275,9 +1288,6 @@
   }
   .text-sky-700 {
     color: var(--color-sky-700);
-  }
-  .text-slate-500 {
-    color: var(--color-slate-500);
   }
   .text-slate-700 {
     color: var(--color-slate-700);
@@ -1379,17 +1389,17 @@
       color: var(--color-zinc-400);
     }
   }
-  .hover\:bg-gray-50 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--color-gray-50);
-      }
-    }
-  }
   .hover\:bg-gray-100 {
     &:hover {
       @media (hover: hover) {
         background-color: var(--color-gray-100);
+      }
+    }
+  }
+  .hover\:bg-paper-bg {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-paper-bg);
       }
     }
   }
@@ -1421,17 +1431,17 @@
       }
     }
   }
+  .hover\:text-light {
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-light);
+      }
+    }
+  }
   .hover\:text-red-500 {
     &:hover {
       @media (hover: hover) {
         color: var(--color-red-500);
-      }
-    }
-  }
-  .hover\:text-white {
-    &:hover {
-      @media (hover: hover) {
-        color: var(--color-white);
       }
     }
   }
@@ -1930,11 +1940,11 @@
       }
     }
   }
-  .dark\:hover\:text-white {
+  .dark\:hover\:text-light {
     @media (prefers-color-scheme: dark) {
       &:hover {
         @media (hover: hover) {
-          color: var(--color-white);
+          color: var(--color-light);
         }
       }
     }
@@ -1981,7 +1991,7 @@
   border-style: var(--tw-border-style);
   border-width: 1px;
   border-color: var(--color-gray-200);
-  background-color: var(--color-white);
+  background-color: var(--color-default-bg);
   padding-inline: calc(var(--spacing) * 4);
   padding-block: calc(var(--spacing) * 3);
 }
@@ -2037,7 +2047,7 @@ input.gridjs-input {
   }
 }
 .gridjs-pagination .gridjs-pages {
-  text-align: end;
+  margin-left: auto;
 }
 .gridjs-pagination .gridjs-pages button {
   border-style: var(--tw-border-style);
@@ -2045,7 +2055,7 @@ input.gridjs-input {
   border-right-style: var(--tw-border-style);
   border-right-width: 0px;
   border-color: var(--color-gray-200);
-  background-color: var(--color-white);
+  background-color: var(--color-default-bg);
   --tw-outline-style: none;
   outline-style: none;
   padding: 5px 14px;
@@ -2069,7 +2079,7 @@ input.gridjs-input {
 }
 .gridjs-pagination .gridjs-pages button:disabled, .gridjs-pagination .gridjs-pages button[disabled], .gridjs-pagination .gridjs-pages button:hover:disabled {
   cursor: default;
-  background-color: var(--color-white);
+  background-color: var(--color-default-bg);
   color: var(--color-gray-400);
 }
 .gridjs-pagination .gridjs-pages button.gridjs-spread {
@@ -2097,6 +2107,15 @@ input.gridjs-input {
 }
 .gridjs-pagination .gridjs-pages button:last-child:focus {
   margin-right: 0;
+}
+.gridjs-pagination .gridjs-pages button.custom-gridjs-page-button {
+  display: flex;
+  padding: calc(var(--spacing) * 0);
+}
+.gridjs-pagination .gridjs-pages button.custom-gridjs-page-button > a {
+  display: block;
+  padding-inline: calc(var(--spacing) * 3);
+  padding-block: calc(var(--spacing) * 1);
 }
 button.gridjs-sort {
   float: right;
@@ -2230,7 +2249,7 @@ th.gridjs-th:last-child {
   border-bottom: 0;
 }
 .gridjs-tr:nth-child(even) {
-  background-color: var(--color-gray-50);
+  background-color: var(--color-paper-bg);
 }
 .gridjs *, .gridjs :after, .gridjs :before {
   box-sizing: border-box;
@@ -2255,6 +2274,12 @@ th.gridjs-th:last-child {
   border-radius: var(--radius-lg);
   border-bottom-style: var(--tw-border-style);
   border-bottom-width: 1px;
+}
+.custom-gridjs-container .gridjs-wrapper:nth-last-of-type(2) {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-style: var(--tw-border-style);
+  border-bottom-width: 0px;
 }
 .gridjs-search {
   padding: 2px;
@@ -2316,9 +2341,9 @@ th.gridjs-th:last-child {
     -moz-osx-font-smoothing: grayscale;
   }
   html {
-    background-color: var(--color-gray-50);
+    background-color: var(--color-paper-bg);
     font-family: var(--font-pretendard);
-    color: var(--color-black);
+    color: var(--color-primary);
   }
   button {
     cursor: pointer;
@@ -2326,8 +2351,8 @@ th.gridjs-th:last-child {
   img.error-image {
     border-style: var(--tw-border-style);
     border-width: 1px;
-    border-color: var(--color-border-2);
-    background-color: var(--color-white);
+    border-color: var(--color-secondary-border);
+    background-color: var(--color-light);
     object-fit: none !important;
   }
 }
@@ -2371,6 +2396,7 @@ th.gridjs-th:last-child {
     line-height: var(--tw-leading, var(--text-2xl--line-height));
     --tw-font-weight: var(--font-weight-bold);
     font-weight: var(--font-weight-bold);
+    color: var(--color-slate-700);
   }
   .orb-hightlight {
     background-color: var(--color-blue-50);
@@ -2379,27 +2405,27 @@ th.gridjs-th:last-child {
       background-color: var(--color-gray-600);
     }
     @media (prefers-color-scheme: dark) {
-      color: var(--color-white);
+      color: var(--color-secondary);
     }
   }
   .orb-hightlight-warning {
     background-color: var(--color-amber-500);
-    color: var(--color-white);
+    color: var(--color-secondary);
     @media (prefers-color-scheme: dark) {
       background-color: var(--color-amber-600);
     }
     @media (prefers-color-scheme: dark) {
-      color: var(--color-white);
+      color: var(--color-secondary);
     }
   }
   .orb-hightlight-error {
     background-color: var(--color-red-300);
-    color: var(--color-white);
+    color: var(--color-secondary);
     @media (prefers-color-scheme: dark) {
       background-color: var(--color-red-300);
     }
     @media (prefers-color-scheme: dark) {
-      color: var(--color-white);
+      color: var(--color-secondary);
     }
   }
   .orb-btn {
@@ -2424,7 +2450,7 @@ th.gridjs-th:last-child {
   }
   .orb-btn-close {
     background-color: var(--color-slate-500);
-    color: var(--color-white);
+    color: var(--color-secondary);
     transition-property: all;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
@@ -2436,21 +2462,26 @@ th.gridjs-th:last-child {
   }
   .orb-btn-primary {
     min-width: 80px;
-    background-color: var(--color-blue-500);
-    color: var(--color-white);
+    background-color: var(--color-primary-btn);
+    color: var(--color-secondary);
     transition-property: all;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
     &:hover {
       @media (hover: hover) {
-        background-color: var(--color-blue-600);
+        background-color: var(--color-accent-btn);
+      }
+    }
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-primary);
       }
     }
   }
   .orb-btn-secondary {
     min-width: 80px;
-    background-color: var(--color-gray-500);
-    color: var(--color-white);
+    background-color: var(--color-paper-bg);
+    color: var(--color-secondary);
     transition-property: all;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
@@ -2463,7 +2494,7 @@ th.gridjs-th:last-child {
   .orb-btn-tertiary {
     min-width: 80px;
     background-color: var(--color-emerald-500);
-    color: var(--color-white);
+    color: var(--color-secondary);
     transition-property: all;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
@@ -2476,7 +2507,7 @@ th.gridjs-th:last-child {
   .orb-btn-delete {
     min-width: 80px;
     background-color: var(--color-red-500);
-    color: var(--color-white);
+    color: var(--color-secondary);
     transition-property: all;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
@@ -2490,91 +2521,11 @@ th.gridjs-th:last-child {
     min-width: 80px;
     border-style: var(--tw-border-style);
     border-width: 1px;
-    border-color: var(--color-border-3);
+    border-color: var(--color-tertiary-border);
     background-color: transparent;
     --tw-leading: 18px;
     line-height: 18px;
     color: var(--color-gray-500);
-  }
-  .orb-list {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    color: var(--color-gray-700);
-  }
-  .orb-list table {
-    min-width: 100%;
-    table-layout: auto;
-    text-align: left;
-  }
-  .orb-list table th {
-    border-top-style: var(--tw-border-style);
-    border-top-width: 1px;
-    border-bottom-style: var(--tw-border-style);
-    border-bottom-width: 1px;
-    border-color: var(--color-border-2);
-    background-color: var(--color-gray-100);
-    padding-inline: calc(var(--spacing) * 4);
-    padding-block: calc(var(--spacing) * 3);
-  }
-  .orb-list table th p {
-    font-size: var(--text-xs);
-    line-height: var(--tw-leading, var(--text-xs--line-height));
-    --tw-leading: 1;
-    line-height: 1;
-    --tw-font-weight: var(--font-weight-semibold);
-    font-weight: var(--font-weight-semibold);
-    color: var(--color-gray-500);
-    @media (width >= 64rem) {
-      font-size: 13px;
-    }
-  }
-  .orb-list table tbody tr {
-    border-bottom-style: var(--tw-border-style);
-    border-bottom-width: 1px;
-    border-color: var(--color-border-2);
-  }
-  .orb-list table tbody td {
-    padding-inline: calc(var(--spacing) * 4);
-    padding-block: calc(var(--spacing) * 3);
-  }
-  .orb-list table tbody td p {
-    font-size: var(--text-xs);
-    line-height: var(--tw-leading, var(--text-xs--line-height));
-    color: var(--color-gray-800);
-    @media (width >= 64rem) {
-      font-size: var(--text-sm);
-      line-height: var(--tw-leading, var(--text-sm--line-height));
-    }
-  }
-  .orb-list button {
-    min-height: calc(var(--spacing) * 9);
-    min-width: calc(var(--spacing) * 9);
-    border-radius: var(--radius-lg);
-    background-color: var(--color-white);
-    padding-inline: calc(var(--spacing) * 3);
-    padding-block: calc(var(--spacing) * 1);
-    font-size: var(--text-sm);
-    line-height: var(--tw-leading, var(--text-sm--line-height));
-    --tw-font-weight: var(--font-weight-normal);
-    font-weight: var(--font-weight-normal);
-    color: var(--color-slate-500);
-    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to, opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter;
-    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-    transition-duration: var(--tw-duration, var(--default-transition-duration));
-    --tw-duration: 200ms;
-    transition-duration: 200ms;
-    --tw-ease: var(--ease-in);
-    transition-timing-function: var(--ease-in);
-    &:hover {
-      @media (hover: hover) {
-        text-decoration-line: underline;
-      }
-    }
-  }
-  .orb-list button.active {
-    background-color: var(--color-blue-50);
-    color: var(--color-blue-500);
   }
 }
 @property --tw-translate-x {

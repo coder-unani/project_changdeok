@@ -4,7 +4,7 @@
   </h1>
 </div>
 <div id="adminDetails">
-  <div class="space-y-4 text-sm bg-white p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_0_rgba(0,0,0,.06)]">
+  <div class="space-y-4 text-sm bg-default-bg p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_0_rgba(0,0,0,.06)]">
     <!-- Email -->
     <div class="flex items-center">
       <label class="block w-28 orb-label">이메일</label>
@@ -53,21 +53,21 @@
       <span class="orb-head">관리자 권한 정보</span>
     </h1>
   </div>
-  <div class="space-y-3 text-sm bg-white p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_0_rgba(0,0,0,.06)]">
+  <div class="space-y-3 text-sm bg-default-bg p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_0_rgba(0,0,0,.06)]">
     <!-- permissions -->
      <div class="overflow-x-auto w-full">
        <table class="table-auto min-w-full">
          <thead>
            <tr>
              <% metadata.permissions.forEach((permission, index) => { %>
-               <th class="text-center w-32 min-w-32 px-4 py-3 bg-gray-100 border-t border-b border-border-2">
+               <th class="text-center w-32 min-w-32 px-4 py-3 bg-gray-100 border-t border-b border-secondary-border">
                  <p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500"><%=permission.title%></p>
                </th>
              <% }); %>
            </tr>
            </thead>
            <tbody>
-             <tr class="border-b border-border-2">
+             <tr class="border-b border-secondary-border">
                <% metadata.permissions.forEach((permission, index) => { %>
                  <td class="px-4 py-3 text-center">
                    <input 

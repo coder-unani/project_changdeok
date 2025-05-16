@@ -9,7 +9,7 @@
   <%- include('partials/system-status') %>
 
   <!-- 설정 -->
-  <div class="rounded-xl bg-white p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
+  <div class="bg-default-bg rounded-xl p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
     <!-- 탭메뉴 -->
     <%- include('partials/tab-menu') %>
 
@@ -127,7 +127,7 @@
       document.querySelectorAll('[data-tab]').forEach((button) => {
         button.classList.remove('active', 'bg-blue-50', 'text-blue-500');
         button.classList.add(
-          'hover:bg-gray-50',
+          'hover:bg-paper-bg',
           'hover:text-gray-700',
           'dark:hover:bg-gray-800',
           'dark:hover:text-gray-400'
@@ -138,7 +138,7 @@
       const activeButton = document.querySelector(`[data-tab="${activeTab}"]`);
       if (activeButton) {
         activeButton.classList.remove(
-          'hover:bg-gray-50',
+          'hover:bg-paper-bg',
           'hover:text-gray-700',
           'dark:hover:bg-gray-800',
           'dark:hover:text-gray-400'

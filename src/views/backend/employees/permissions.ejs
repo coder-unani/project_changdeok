@@ -4,19 +4,19 @@
   </h1>
 </div>
 <form id="formEmployeePermissions">
-  <div class="space-y-4 text-sm bg-white p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
+  <div class="space-y-4 text-sm bg-default-bg p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
     <table class="table-auto min-w-full">
       <thead>
         <tr>
           <% metadata.permissions.forEach((permission, index) => { %>
-            <th class="hidden lg:table-cell text-center w-32 min-w-32 px-4 py-3 bg-gray-100 border-t border-b border-border-2">
+            <th class="hidden lg:table-cell text-center w-32 min-w-32 px-4 py-3 bg-gray-100 border-t border-b border-secondary-border">
               <p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500"><%=permission.title%></p>
             </th>
           <% }); %>
         </tr>
         </thead>
         <tbody>
-          <tr class="border-b border-border-2">
+          <tr class="border-b border-secondary-border">
           <% metadata.permissions.forEach((permission, index) => { %>
             <td class="px-4 py-3 text-center">
               <input 

@@ -42,7 +42,7 @@
 }
 
 .gridjs-footer {
-  @apply relative z-5 block w-full rounded-b-lg border border-gray-200 bg-white px-4 py-3;
+  @apply bg-default-bg relative z-5 block w-full rounded-b-lg border border-gray-200 px-4 py-3;
 
   /* display: block; */
   /* position: relative; */
@@ -97,11 +97,11 @@ input.gridjs-input {
   margin-top: 5px;
 } */
 .gridjs-pagination .gridjs-pages {
-  @apply text-end;
+  @apply ml-auto;
   /* float: right; */
 }
 .gridjs-pagination .gridjs-pages button {
-  @apply border border-r-0 border-gray-200 bg-white outline-none;
+  @apply bg-default-bg border border-r-0 border-gray-200 outline-none;
 
   padding: 5px 14px;
   /* border: 1px solid #d2d6dc; */
@@ -130,7 +130,7 @@ input.gridjs-input {
 .gridjs-pagination .gridjs-pages button:disabled,
 .gridjs-pagination .gridjs-pages button[disabled],
 .gridjs-pagination .gridjs-pages button:hover:disabled {
-  @apply cursor-default bg-white text-gray-400;
+  @apply bg-default-bg cursor-default text-gray-400;
 
   /* cursor: default; */
   /* background-color: #fff; */
@@ -162,6 +162,12 @@ input.gridjs-input {
 }
 .gridjs-pagination .gridjs-pages button:last-child:focus {
   margin-right: 0;
+}
+.gridjs-pagination .gridjs-pages button.custom-gridjs-page-button {
+  @apply flex p-0;
+}
+.gridjs-pagination .gridjs-pages button.custom-gridjs-page-button > a {
+  @apply block px-3 py-1;
 }
 
 button.gridjs-sort {
@@ -294,7 +300,7 @@ th.gridjs-th:last-child {
   border-bottom: 0;
 }
 .gridjs-tr:nth-child(even) {
-  @apply bg-gray-50;
+  @apply bg-paper-bg;
 }
 
 .gridjs *,
@@ -324,6 +330,9 @@ th.gridjs-th:last-child {
   @apply rounded-lg border-b;
   /* border-radius: 8px; */
   /* border-bottom-width: 1px; */
+}
+.custom-gridjs-container .gridjs-wrapper:nth-last-of-type(2) {
+  @apply rounded-b-none border-b-0;
 }
 
 .gridjs-search {

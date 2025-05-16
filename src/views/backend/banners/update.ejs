@@ -8,7 +8,7 @@
 <form id="formBannerUpdate" enctype="multipart/form-data">
   <!-- 이미지 형식만 가능한 input file -->
   <input type="file" id="image" name="image" class="hidden" accept="image/*">
-  <div class="space-y-4 text-sm bg-white p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
+  <div class="space-y-4 text-sm bg-default-bg p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
     <div>
       <div class="flex justify-between items-baseline">
         <label for="image" class="block mb-2 orb-label">
@@ -16,21 +16,21 @@
         </label>
       </div>
       <div class="relative w-full lg:w-[250px] aspect-3/2">
-        <button type="button" id="imageAdd" class="absolute top-0 left-0 w-full h-full bg-gray-100 border border-dashed border-border-2 rounded-lg">
+        <button type="button" id="imageAdd" class="absolute top-0 left-0 w-full h-full bg-gray-100 border border-dashed border-secondary-border rounded-lg">
           <span class="absolute inset-0 flex flex-col items-center justify-center">
             <img class="block w-[50px] opacity-50" src="/images/add-image-512x512.png" alt="이미지 추가">
             <p class="mt-1 text-xs text-gray-400">(<%=metadata.groupInfo.imageWidth%>x<%=metadata.groupInfo.imageHeight%>)</p>
           </span>
         </button>
         <div id="imagePreviewContainer" class="relative block w-full h-full z-10 rounded-lg overflow-hidden">
-          <button type="button" id="imageDelete" class="absolute top-2 right-2 w-[24px] h-[24px] bg-white opacity-80 rounded-full z-20">
+          <button type="button" id="imageDelete" class="absolute top-2 right-2 w-[24px] h-[24px] bg-default-bg opacity-80 rounded-full z-20">
             <span class="absolute inset-0 flex items-center justify-center">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" fill="currentColor" class="h-[16px] w-[16px] text-gray-400">
                 <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/>
               </svg>
             </span>
           </button>
-          <div class="relative w-full h-full bg-gray-100 border border-border-2 rounded-lg z-10 overflow-hidden">
+          <div class="relative w-full h-full bg-gray-100 border border-secondary-border rounded-lg z-10 overflow-hidden">
             <img id="imagePreview" class="w-full h-full object-contain" src="<%=data.imagePath || '/images/no-image-200x200.jpg'%>" alt="이미지 미리보기">
           </div>
         </div>
@@ -58,7 +58,7 @@
     <div class="flex flex-col lg:flex-row gap-4">
       <div class="flex-1">
         <label for="linkType" class="block mb-2 orb-label">링크 타입</label>
-        <select id="linkType" name="linkType" class="w-full p-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 border-r-12 border-border-1">
+        <select id="linkType" name="linkType" class="w-full p-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 border-r-12 border-primary-border">
           <option value="">선택</option>
           <option value="self" <%if (data.linkType === 'self') {%>selected<%}%>>내부 링크</option>
           <option value="outer" <%if (data.linkType === 'outer') {%>selected<%}%>>외부 링크</option>
@@ -72,7 +72,7 @@
 
     <div>
       <label for="isPublished" class="block mb-2 orb-label">발행 여부</label>
-      <select id="isPublished" name="isPublished" class="w-full p-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 border-r-12 border-border-1">
+      <select id="isPublished" name="isPublished" class="w-full p-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 border-r-12 border-primary-border">
         <option value="N" <%if (!data.isPublished) {%>selected<%}%>>미발행</option>
         <option value="Y" <%if (data.isPublished) {%>selected<%}%>>발행</option>
       </select>

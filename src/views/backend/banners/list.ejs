@@ -29,7 +29,7 @@
 </div>
 
 <div class="orb-list">
-  <div class="bg-white p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)] overflow-x-auto">
+  <div class="bg-default-bg p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)] overflow-x-auto">
     <table class="table-fixed">
       <thead>
       <tr>
@@ -89,7 +89,7 @@
   </div>
   <!-- 페이지 버튼 -->
   <% if (metadata.totalPage >= 1) { %>
-    <div class="bg-white py-2 lg:py-4 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">  
+    <div class="bg-default-bg py-2 lg:py-4 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">  
       <div class="flex justify-center space-x-1">
         <% if (metadata.page > 1) { %><button><a href="?page=<%=metadata.page - 1%>">이전</a></button><% } %>
         <% 
