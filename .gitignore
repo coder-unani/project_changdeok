@@ -24,5 +24,6 @@ logs
 .DS_Store
 
 # Media Uploads
+public/css/*/tailwind.css
 public/uploads
 
