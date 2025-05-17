@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { CookieOptions } from 'express-serve-static-core';
 
 /**
  *
@@ -22,11 +23,9 @@ export const getCookie = (req: Request, name: string): string | null => {
  * @param value 쿠키 값
  * @param options 추가 옵션
  */
-export const setCookie = (res: Response, name: string, value: string, options: any = {}): void => {
+export const setCookie = (res: Response, name: string, value: string, options: CookieOptions = {}): void => {
   try {
-    let cookieOptions = {
-      httpOnly: true,
-      secure: true,
+    let cookieOptions: CookieOptions = {
       ...options,
     };
 
