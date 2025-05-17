@@ -378,6 +378,8 @@
     document.getElementById('site-settings-form').addEventListener('submit', async (e) => {
       e.preventDefault();
 
+      isLoading(true);
+
       try {
         const ogTitle = document.getElementById('og-title').value;
         const ogDescription = document.getElementById('og-description').value;
@@ -404,6 +406,8 @@
         statusMessage('수정 사항이 있습니다. 시스템 재시작 후 반영됩니다.');
       } catch (error) {
         alertMessage('error', error.message || '사이트 설정 저장 중 오류가 발생했습니다.');
+      } finally {
+        isLoading(false);
       }
     });
 

@@ -88,6 +88,8 @@
   document.getElementById('system-settings-form').addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    isLoading(true);
+
     try {
       const enabledTags = document.getElementById('enabled-tags').value;
       const enabledCors = document.getElementById('enabled-cors').value;
@@ -129,6 +131,8 @@
       statusMessage('수정 사항이 있습니다. 시스템 재시작 후 반영됩니다.');
     } catch (error) {
       alertMessage('error', error.message || '설정 저장 중 오류가 발생했습니다.');
+    } finally {
+      isLoading(false);
     }
   });
 </script>

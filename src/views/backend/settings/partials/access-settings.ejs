@@ -174,27 +174,35 @@
     document.getElementById('access-settings-form').addEventListener('submit', async (e) => {
       e.preventDefault();
 
+      isLoading(true);
+
       const blockedIpJson = document.getElementById('blocked-ip-json').value;
       const blockedBotJson = document.getElementById('blocked-bot-json').value;
 
-      const response = await fetch('<%=apiRoutes.settings.updateAccess.url%>', {
-        method: '<%=apiRoutes.settings.updateAccess.method%>',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          blockedIpJson,
-          blockedBotJson,
-        }),
-      });
+      try {
+        const response = await fetch('<%=apiRoutes.settings.updateAccess.url%>', {
+          method: '<%=apiRoutes.settings.updateAccess.method%>',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            blockedIpJson,
+            blockedBotJson,
+          }),
+        });
 
-      if (!response.ok) {
+        if (!response.ok) {
+          toastMessage('error', '접속 관리 설정 저장 중 오류가 발생했습니다.');
+          return;
+        }
+
+        alertMessage('success', '접속 관리 설정이 저장되었습니다.');
+        statusMessage('수정 사항이 있습니다. 시스템 재시작 후 반영됩니다.');
+      } catch (error) {
         toastMessage('error', '접속 관리 설정 저장 중 오류가 발생했습니다.');
-        return;
+      } finally {
+        isLoading(false);
       }
-
-      alertMessage('success', '접속 관리 설정이 저장되었습니다.');
-      statusMessage('수정 사항이 있습니다. 시스템 재시작 후 반영됩니다.');
     });
 
     // IP 입력 필드 숫자만 입력 가능하도록 설정

@@ -54,6 +54,7 @@
 
     // 시스템 상태 확인 함수
     const getSystemStatus = async () => {
+      isLoading(true);
       try {
         const response = await fetch('<%=apiRoutes.systems.status.url%>', {
           method: '<%=apiRoutes.systems.status.method%>',
@@ -89,6 +90,8 @@
         toastMessage('error', '시스템 상태를 불러오는 중 오류가 발생했습니다.');
 
         return false;
+      } finally {
+        isLoading(false);
       }
     };
 
@@ -97,6 +100,8 @@
       if (!confirmMessage('서버를 재시작하시겠습니까?')) {
         return;
       }
+
+      isLoading(true);
 
       try {
         const response = await fetch('<%=apiRoutes.systems.restart.url%>', {
@@ -118,6 +123,8 @@
         }, 2000);
       } catch (error) {
         alertMessage('error', error.message || '서버 재시작 중 오류가 발생했습니다.');
+      } finally {
+        isLoading(false);
       }
     };
 
