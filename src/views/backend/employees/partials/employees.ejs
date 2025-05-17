@@ -1,115 +1,88 @@
 <div class="hidden" id="employees-container">
-  <!-- 관리자 목록 -->
-  <div id="employees" class="flex overflow-x-auto"></div>
-
-  <!-- 페이지네이션 -->
-  <div class="gridjs-footer">
-    <div class="gridjs-pagination">
-      <div class="gridjs-summary">현재 <b><%=metadata.start%></b> - <b><%=metadata.end%></b>건 표시. 총 <b><%=metadata.total%></b> 건이 조회되었습니다.</div>
-
-      <div class="gridjs-pages flex justify-center space-x-1">
-        <% if (metadata.totalPage >= 1) { %>
-          <button role="button" title="이전" aria-label="이전" <% if (metadata.page === 1) { %>disabled<% } %>>
-            <% if (metadata.page === 1) { %>
-              이전
-              <% } else { %>
-              <a href="?page=<%=metadata.page - 1%>">이전</a>
-            <% } %>
-          </button>
-
-          <% 
-            let startPage = metadata.page - 2;
-            if (startPage < 1) startPage = 1;
-            const endPage = metadata.page + 2 > metadata.totalPage ? metadata.totalPage : metadata.page + 2;
-          %>
-          <% for (let i = startPage; i <= endPage; i++) { %>
-            <button class="custom-gridjs-page-button<%=i === metadata.page ? ' gridjs-currentPage' : ''%>">
-              <a href="?page=<%=i%>"><%=i%></a>
-            </button>
-          <% } %>
-
-          <button role="button" title="다음" aria-label="다음" <% if (metadata.page === metadata.totalPage) { %>disabled<% } %>>
-            <% if (metadata.page === metadata.totalPage) { %>
-              다음
-            <% } else { %>
-              <a href="?page=<%=metadata.page + 1%>">다음</a>
-            <% } %>
-          </button>
-        <% } %>
-      </div>
+  <div class="flex w-full items-center justify-between space-y-2">
+    <div class="flex flex-col gap-2 lg:flex-row">
+      <input
+        type="text"
+        id="employees-query"
+        class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none lg:w-[160px]"
+        placeholder="검색어를 입력해주세요."
+      />
+    </div>
+    <div class="flex justify-end lg:block">
+      <button id="btn-employees-search" class="orb-btn orb-btn-primary">조회</button>
     </div>
   </div>
+  <!-- 관리자 목록 -->
+  <div id="employees" class="flex overflow-x-auto"></div>
 </div>
 
 <script nonce="<%=nonce%>">
   document.addEventListener('DOMContentLoaded', () => {
-    // gridjs 한국어 설정
-    const koKR = {
-      search: { placeholder: '관리자 검색' },
-      sort: { sortAsc: '오름차순 정렬', sortDesc: '내림차순 정렬' },
-      pagination: {
-        previous: '이전',
-        next: '다음',
-        navigate: (page) => `${page}페이지로 이동`,
-        page: (page) => `${page}페이지`,
-        showing: '현재',
-        of: '건 표시. 총',
-        to: '-',
-        results: '건이 조회되었습니다.',
-      },
-      loading: '데이터를 불러오는 중...',
-      noRecordsFound: '데이터가 없습니다.',
-      error: '데이터를 불러올 수 없습니다. 다시 시도해 주세요.',
+    const employees = document.getElementById('employees');
+
+    let currentGrid = null;
+
+    const initGrid = async () => {
+      // 기존 grid 초기화
+      currentGrid?.destroy();
+
+      // gridjs 인스턴스 생성
+      currentGrid = new gridjs.Grid({
+        columns: [
+          { name: '번호' },
+          {
+            name: '이메일',
+            formatter: (cell, row) => {
+              const adminId = row.cells[0].data;
+              return gridjs.html(
+                `<a href="/admin/employees/${adminId}" class="hover:underline decoration-gray-800">${cell}</a>`
+              );
+            },
+          },
+          {
+            name: '이름',
+            formatter: (cell, row) => {
+              const adminId = row.cells[0].data;
+              return gridjs.html(
+                `<a href="/admin/employees/${adminId}" class="hover:underline decoration-gray-800">${cell}</a>`
+              );
+            },
+          },
+          { name: '생성일' },
+          { name: '마지막 로그인' },
+        ],
+        language: gridLangKoKR,
+        data: [],
+        className: {
+          container: 'custom-gridjs-container', // 커스텀 페이지네이션 있을 경우 컨테이너 클래스 추가
+        },
+        resizable: true,
+        style: {
+          table: { 'white-space': 'nowrap' },
+        },
+        sort: true,
+        server: {
+          url: `<%=apiRoutes.employees.list.url%>`,
+          then: (data) => data.data.map((item) => [item.id, item.email, item.name, item.createdAt, item.lastLoginAt]),
+          total: (data) => data.metadata.total,
+        },
+        pagination: {
+          limit: 20,
+          server: {
+            url: (prev, page, limit) => {
+              const query = document.getElementById('employees-query').value;
+              return `${prev}?page=${page}&pageSize=${limit}&query=${query}`;
+            },
+          },
+        },
+      });
+
+      // gridjs 렌더링
+      currentGrid.render(employees);
     };
 
-    const adminListData = `<%- JSON.stringify(data.employees) %>`;
-    const adminList = JSON.parse(adminListData);
-
-    // 데이터 배열 생성
-    const adminTableData =
-      adminList.length === 0
-        ? [['등록된 관리자가 없습니다.']]
-        : adminList.map((admin) => [admin.id, admin.email, admin.name, admin.createdAt, admin.lastLoginAt]);
-
-    // Grid 인스턴스 생성
-    const currentGrid = new gridjs.Grid({
-      columns: [
-        { name: '번호' },
-        {
-          name: '이메일',
-          formatter: (cell, row) => {
-            const adminId = row.cells[0].data;
-            return gridjs.html(
-              `<a href="/admin/employees/${adminId}" class="hover:underline decoration-gray-800">${cell}</a>`
-            );
-          },
-        },
-        {
-          name: '이름',
-          formatter: (cell, row) => {
-            const adminId = row.cells[0].data;
-            return gridjs.html(
-              `<a href="/admin/employees/${adminId}" class="hover:underline decoration-gray-800">${cell}</a>`
-            );
-          },
-        },
-        { name: '생성일' },
-        { name: '마지막 로그인' },
-      ],
-      language: koKR,
-      search: true,
-      data: adminTableData,
-      className: {
-        container: 'custom-gridjs-container', // 커스텀 페이지네이션 있을 경우 컨테이너 클래스 추가
-      },
-      resizable: true,
-      style: {
-        table: { 'white-space': 'nowrap' },
-      },
-      sort: true,
+    document.getElementById('btn-employees-search').addEventListener('click', () => {
+      initGrid();
     });
-
-    // grid.js 렌더링
-    currentGrid.render(document.getElementById('employees'));
   });
 </script>

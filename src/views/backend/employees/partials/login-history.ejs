@@ -5,14 +5,14 @@
       <div class="flex items-center gap-2">
         <input
           type="date"
-          id="startDate"
+          id="login-history-start-date"
           class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none lg:w-[160px]"
           value="<%=new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0]%>"
         />
         ~
         <input
           type="date"
-          id="endDate"
+          id="login-history-end-date"
           class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none lg:w-[160px]"
           value="<%=new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0]%>"
         />
@@ -20,7 +20,7 @@
       <label class="orb-label w-12 lg:leading-11">검색어</label>
       <input
         type="text"
-        id="search"
+        id="login-history-query"
         class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none lg:w-[160px]"
         placeholder="검색어를 입력해주세요."
       />
@@ -37,15 +37,12 @@
     const loginHistory = document.getElementById('login-history');
 
     let currentGrid = null;
-    let startDate = null;
-    let endDate = null;
-    let search = null;
 
     const initGrid = () => {
-      startDate = document.getElementById('startDate').value;
-      endDate = document.getElementById('endDate').value;
-      search = document.getElementById('search').value;
+      // 기존 grid 초기화
+      currentGrid?.destroy();
 
+      // gridjs 인스턴스 생성
       currentGrid = new gridjs.Grid({
         columns: [
           {
@@ -94,20 +91,20 @@
           limit: 20,
           server: {
             url: (prev, page, limit) => {
-              const startDate = document.getElementById('startDate').value;
-              const endDate = document.getElementById('endDate').value;
-              const search = document.getElementById('search').value;
+              const startDate = document.getElementById('login-history-start-date').value;
+              const endDate = document.getElementById('login-history-end-date').value;
+              const search = document.getElementById('login-history-query').value;
               return `${prev}?page=${page}&pageSize=${limit}&startDate=${startDate}&endDate=${endDate}&query=${search}`;
             },
           },
         },
       });
 
+      // gridjs 렌더링
       currentGrid.render(loginHistory);
     };
 
     document.getElementById('btn-login-history-search').addEventListener('click', () => {
-      currentGrid?.destroy();
       initGrid();
     });
   });
