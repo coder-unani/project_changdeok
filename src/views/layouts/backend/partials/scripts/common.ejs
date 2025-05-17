@@ -9,17 +9,4 @@
     }
     return null;
   };
-
-  function getCookies() {
-    const cookies = {};
-    // document.cookie는 "key1=value1; key2=value2; ..." 형식의 문자열입니다.
-    document.cookie.split(';').forEach((cookie) => {
-      const [name, ...rest] = cookie.trim().split('=');
-      const value = rest.join('=');
-      if (name) {
-        cookies[name] = decodeURIComponent(value);
-      }
-    });
-    return cookies;
-  }
 </script>
