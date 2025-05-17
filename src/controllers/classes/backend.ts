@@ -8,7 +8,6 @@ import {
   getApiContentGroup,
   getApiContents,
   getApiEmployeeDetail,
-  getApiEmployees,
   getApiPermissionList,
   getApiSettings,
 } from '../../common/api';
@@ -630,41 +629,14 @@ export class BackendController extends BaseWebController {
     }
   };
 
-  // 직원 목록
+  // 직원 관리 페이지
   public employees = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 접근 권한 체크
       await this.verifyPermission(req, route.permissions);
 
-      // 쿼리 파라미터 생성
-      const queryParams = new URLSearchParams(req.body).toString();
-
-      // params 생성
-      const params: IRequestSearchList = {
-        page: req.query.page ? parseInt(req.query.page as string) : 1,
-        pageSize: req.query.pageSize ? parseInt(req.query.pageSize as string) : 10,
-        query: req.query.query ? (req.query.query as string) : '',
-      };
-
-      // 관리자 목록 조회
-      const { result, message, metadata, data: employees } = await getApiEmployees(params);
-
-      // 호출 실패
-      if (!result || !employees) {
-        throw new NotFoundError((message as string) || '관리자 목록을 조회할 수 없습니다.');
-      }
-
       // 페이지 데이터 생성
-      const data = this.createPageData(
-        route,
-        route.title,
-        {
-          ...metadata,
-        },
-        {
-          employees,
-        }
-      );
+      const data = this.createPageData(route, route.title);
 
       // 직원 목록 페이지 렌더링
       res.render(route.view, data);
