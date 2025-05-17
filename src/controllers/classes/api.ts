@@ -858,38 +858,42 @@ export class ApiController {
 
       // 직원 로그인 처리
       const employeeService: IEmployeeService = new EmployeeService(prisma);
-      const result = await employeeService.login(requestData);
+      const { result, code, message, metadata, data } = await employeeService.login(requestData);
 
       // 로그인 실패 처리
-      if (!result.result) {
-        throw new AppError(result.code, result.message);
+      if (!result || !data) {
+        throw new AppError(code, message);
+      }
+
+      const token = createJWT(
+        { id: data.id },
+        this.config.getJwtSecretKey(),
+        this.config.getSettings().jwtExpireSecond
+      );
+
+      if (!token) {
+        throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, '인증 토큰 생성 실패');
       }
 
       // 로그인 성공시 쿠키에 토큰 저장
-      if (result.data) {
-        const tokenData: IEmployeeToken = {
-          id: result.data.id,
-          email: result.data.email,
-          name: result.data.name,
-          permissions: result.data.permissions,
-        };
-        const token = createJWT(tokenData, this.config.getJwtSecretKey(), this.config.getSettings().jwtExpireSecond);
+      const employee: IEmployeeToken = {
+        id: data.id,
+        email: data.email,
+        name: data.name,
+        permissions: data.permissions,
+        token,
+      };
 
-        if (token) {
-          // 쿠키 옵션
-          const options = {
-            // 쿠키 유지 시간
-            maxAge: this.config.getSettings().jwtExpireSecond,
-          };
+      const options = {
+        // 쿠키 유지 시간
+        maxAge: this.config.getSettings().jwtExpireSecond,
+      };
 
-          // 쿠키 저장
-          setCookie(res, 'accessToken', token, options);
-          setCookie(res, 'employee', JSON.stringify(tokenData), { ...options, httpOnly: true, secure: true });
-        }
-      }
+      // 쿠키 저장
+      setCookie(res, 'employee', JSON.stringify(employee), { ...options, httpOnly: true, secure: true });
 
       // 응답 데이터 생성
-      const response = formatApiResponse(true, null, null, result.metadata, result.data);
+      const response = formatApiResponse(true, null, null, metadata, data);
 
       // 로그인 성공
       res.status(httpStatus.OK).json(response);
@@ -903,7 +907,7 @@ export class ApiController {
     try {
       // 쿠키 삭제
       removeCookie(res, 'employee');
-      removeCookie(res, 'accessToken');
+      removeCookie(res, 'employeeToken');
 
       // 로그아웃 성공
       res.status(httpStatus.NO_CONTENT).send(null);

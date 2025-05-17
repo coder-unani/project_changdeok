@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 
+import { setCookie } from '../common/utils/cookie';
 import { Config } from '../config/config';
+import { createJWT } from '../library/jwt';
 import { IMiddleware } from '../types/middleware';
 
 /**
@@ -21,12 +23,14 @@ import { IMiddleware } from '../types/middleware';
  * 'chrome', 'firefox', 'safari', 'edge', 'opera', 'msie', 'trident'
  */
 export class AccessMiddleware implements IMiddleware {
+  private config: Config;
   private blockedIps: string[];
   private allowedBots: RegExp[];
   private allowedBrowsers: RegExp[];
   private blockedBots: RegExp[];
 
   constructor(config: Config) {
+    this.config = config;
     this.blockedIps = JSON.parse(config.getSettings().blockedIpJson || '[]');
     this.allowedBots = [].map((pattern) => new RegExp(pattern, 'i'));
     this.allowedBrowsers = ['chrome', 'firefox', 'safari', 'edge', 'opera', 'msie', 'trident'].map(
@@ -38,24 +42,38 @@ export class AccessMiddleware implements IMiddleware {
   }
 
   public handle(req: Request, res: Response, next: NextFunction): void {
-    const ip = req.headers['x-forwarded-for'] || req.ip;
+    const clientIp = req.headers['x-forwarded-for'] || req.ip;
     const userAgent = req.headers['user-agent'] as string;
 
-    if (this.isBlockedIp(ip as string)) {
+    // 차단된 IP
+    if (this.isBlockedIp(clientIp as string)) {
       res.status(403).json({
-        error: 'IP blocked',
         message: 'Access denied for blocked IP',
       });
       return;
     }
 
+    // 차단된 봇
     if (this.isBot(userAgent)) {
       res.status(403).json({
-        error: 'Bot traffic detected',
-        message: 'Access denied for bot traffic',
+        message: 'Access denied for blocked bot',
       });
       return;
     }
+
+    // access token 생성
+    const accessToken = createJWT(
+      {
+        ip: clientIp,
+      },
+      this.config.getJwtSecretKey(),
+      this.config.getSettings().jwtExpireSecond
+    );
+
+    // access token 저장
+    setCookie(res, 'access_token', accessToken, {
+      maxAge: this.config.getSettings().jwtExpireSecond,
+    });
 
     next();
   }

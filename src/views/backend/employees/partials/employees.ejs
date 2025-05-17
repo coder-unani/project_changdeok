@@ -69,7 +69,7 @@
         server: {
           url: `<%=apiRoutes.employees.list.url%>?${params.toString()}`,
           headers: {
-            Authorization: `Bearer ${getCookie('accessToken')}`,
+            Authorization: `Bearer ${getCookie('access_token')}`,
           },
           then: (data) => data.data.map((item) => [item.id, item.email, item.name, item.createdAt, item.lastLoginAt]),
           total: (data) => data.metadata.total,

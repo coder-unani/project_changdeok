@@ -130,6 +130,7 @@ export interface IEmployeeToken {
   email: string;
   name: string;
   permissions: number[] | undefined | null;
+  token: string;
 }
 
 export interface IEmployeeUpdate {

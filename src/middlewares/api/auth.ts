@@ -5,7 +5,6 @@ import { removeCookie } from '../../common/utils/cookie';
 import { apiRoutes } from '../../config/routes';
 import { verifyJWT } from '../../library/jwt';
 import { IMiddleware } from '../../types/middleware';
-import { IEmployeeToken } from '../../types/object';
 
 export class AuthMiddleware implements IMiddleware {
   private jwtSecretKey: string;
@@ -36,7 +35,7 @@ export class AuthMiddleware implements IMiddleware {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
       // 인증키 없음. 로그인 페이지로 이동
-      res.status(httpStatus.UNAUTHORIZED).json({ message: '로그인이 필요합니다.' });
+      res.status(httpStatus.UNAUTHORIZED).json({ message: '인증키가 없습니다.' });
       return;
     }
 
@@ -45,18 +44,18 @@ export class AuthMiddleware implements IMiddleware {
 
     // 토큰 없음. 로그인 페이지로 이동
     if (!token) {
-      res.status(httpStatus.UNAUTHORIZED).json({ message: '로그인이 필요합니다.' });
+      res.status(httpStatus.UNAUTHORIZED).json({ message: '인증키가 없습니다.' });
       return;
     }
 
     req.body.accessToken = token;
 
     // JWT 검증
-    const decodedToken: IEmployeeToken = verifyJWT(token, this.jwtSecretKey);
+    const decodedToken: any = verifyJWT(token, this.jwtSecretKey);
 
     // 유효하지 않은 토큰. 로그인 페이지로 이동
     if (!decodedToken) {
-      res.status(httpStatus.UNAUTHORIZED).json({ message: '토큰 정보가 만료되었습니다.' });
+      res.status(httpStatus.UNAUTHORIZED).json({ message: '인증키 정보가 만료되었습니다.' });
       return;
     }
 

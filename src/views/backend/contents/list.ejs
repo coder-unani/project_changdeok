@@ -83,7 +83,7 @@
         server: {
           url: `<%=apiRoutes.contents.list.url.replace(':groupId', metadata.group.id)%>?${params.toString()}`,
           headers: {
-            Authorization: `Bearer ${getCookie('accessToken')}`,
+            Authorization: `Bearer ${getCookie('access_token')}`,
           },
           then: (data) => data.data.map((item) => [item.id, item.title, item.writerName, item.createdAt]),
           total: (data) => data.metadata.total,
