@@ -6,7 +6,7 @@
 
 <div class="text-sm bg-default-bg p-4 pb-8 mb-4 lg:p-6 lg:pb-10 rounded-xl shadow-[0_2px_30px_0_rgba(0,0,0,.06)]">
   <div class="flex flex-col gap-6">
-    <div class="flex items-center h-[280px] lg:h-[320px] rounded-lg bg-gray-100 border border-secondary-border">
+    <div class="flex items-center h-[280px] lg:h-[320px] rounded-lg bg-gray-100 border border-main-border">
       <img class="w-full h-full object-contain rounded-md cursor-pointer" src="<%=data.imagePath || '/images/no-image-200x200.jpg'%>" alt="이미지" />
     </div>
     <div class="flex-1 space-y-4 lg:col-span-2">
@@ -61,7 +61,7 @@
 <!-- Action Buttons -->
 <div class="flex flex-col lg:flex-row flex-wrap items-center justify-between gap-1">
   <div class="flex flex-col lg:flex-row items-center gap-1 w-full lg:w-auto">
-    <a href="<%=backendRoutes.banners.update.url.replace(':bannerId', data.id)%>" class="block orb-btn orb-btn-secondary">
+    <a href="<%=backendRoutes.banners.update.url.replace(':bannerId', data.id)%>" class="block orb-btn orb-btn-primary">
       수정
     </a>
   </div>

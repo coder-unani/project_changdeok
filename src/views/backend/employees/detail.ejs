@@ -60,14 +60,14 @@
          <thead>
            <tr>
              <% metadata.permissions.forEach((permission, index) => { %>
-               <th class="text-center w-32 min-w-32 px-4 py-3 bg-gray-100 border-t border-b border-secondary-border">
+               <th class="text-center w-32 min-w-32 px-4 py-3 bg-gray-100 border-t border-b border-main-border">
                  <p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500"><%=permission.title%></p>
                </th>
              <% }); %>
            </tr>
            </thead>
            <tbody>
-             <tr class="border-b border-secondary-border">
+             <tr class="border-b border-main-border">
                <% metadata.permissions.forEach((permission, index) => { %>
                  <td class="px-4 py-3 text-center">
                    <input 
@@ -91,13 +91,13 @@
 <!-- Action Buttons -->
 <div class="flex flex-col lg:flex-row justify-between gap-1">
   <div class="flex flex-col lg:flex-row lg:items-center gap-1 w-full lg:w-auto">
-    <a href="<%=backendRoutes.employees.update.url.replace(':employeeId', data.id)%>" class="block orb-btn orb-btn-secondary">
+    <a href="<%=backendRoutes.employees.update.url.replace(':employeeId', data.id)%>" class="block orb-btn orb-btn-primary">
       정보 수정
     </a>
-    <a href="<%=backendRoutes.employees.updatePassword.url.replace(':employeeId', data.id)%>" class="orb-btn orb-btn-secondary">
+    <a href="<%=backendRoutes.employees.updatePassword.url.replace(':employeeId', data.id)%>" class="orb-btn orb-btn-primary">
       비밀번호 변경
     </a>
-    <a href="<%=backendRoutes.employees.permissions.url.replace(':employeeId', data.id)%>" class="orb-btn orb-btn-secondary">
+    <a href="<%=backendRoutes.employees.permissions.url.replace(':employeeId', data.id)%>" class="orb-btn orb-btn-primary">
       권한 변경
     </a>
   </div>

@@ -8,7 +8,7 @@
   <div class="bg-default-bg rounded-xl p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
     <!-- 탭메뉴 -->
     <ul
-      class="border-secondary-border mb-4 flex overflow-x-auto border-b text-center text-sm font-medium text-gray-500 dark:border-gray-700 dark:text-gray-400"
+      class="border-main-border mb-4 flex overflow-x-auto border-b text-center text-sm font-medium text-gray-500 lg:mb-6 dark:border-gray-700 dark:text-gray-400"
     >
       <li class="me-2 flex-none">
         <button
@@ -77,44 +77,38 @@
     </ul>
 
     <!-- 날짜 선택 -->
-    <div id="date-container" class="flex hidden flex-col gap-2 lg:flex-row">
-      <div class="flex flex-1 flex-col gap-2 lg:flex-row">
-        <label class="orb-label w-12 lg:leading-11">날짜</label>
+    <div id="date-container" class="flex hidden justify-between gap-2">
+      <div class="w-[200px]">
         <input
           type="date"
           id="date"
           name="date"
-          class="w-[160px] rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          class="orb-input"
           value="<%=new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0]%>"
         />
       </div>
-      <div class="flex justify-end lg:block">
-        <button id="btn-logs-view" class="orb-btn orb-btn-primary">조회</button>
-      </div>
+      <button id="btn-logs-view" class="orb-btn orb-btn-success">조회</button>
     </div>
 
     <!-- 날짜 범위 선택 -->
     <div id="date-range-container" class="flex hidden flex-col gap-2 lg:flex-row">
       <div class="w-full space-y-2">
-        <div class="flex flex-col gap-2 lg:flex-row">
-          <label class="orb-label w-12 lg:leading-11">날짜</label>
-          <div class="flex items-center gap-2">
-            <input
-              type="date"
-              id="startDate"
-              name="startDate"
-              class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none lg:w-[160px]"
-              value="<%=new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0]%>"
-            />
-            ~
-            <input
-              type="date"
-              id="endDate"
-              name="endDate"
-              class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none lg:w-[160px]"
-              value="<%=new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0]%>"
-            />
-          </div>
+        <div class="flex items-center gap-1">
+          <input
+            type="date"
+            id="startDate"
+            name="startDate"
+            class="orb-input lg:w-[200px]"
+            value="<%=new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0]%>"
+          />
+          ~
+          <input
+            type="date"
+            id="endDate"
+            name="endDate"
+            class="orb-input lg:w-[200px]"
+            value="<%=new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0]%>"
+          />
         </div>
         <div class="orb-remark leading-5">
           <p>* 접속 통계는 Google Analytics 데이터를 기반으로 합니다.</p>
@@ -123,7 +117,7 @@
         </div>
       </div>
       <div class="flex justify-end lg:block">
-        <button id="btn-stats-search" class="orb-btn orb-btn-primary">조회</button>
+        <button id="btn-stats-search" class="orb-btn orb-btn-success">조회</button>
       </div>
     </div>
   </div>

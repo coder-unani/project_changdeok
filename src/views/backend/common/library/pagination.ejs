@@ -5,7 +5,7 @@
 
     <div class="gridjs-pages flex justify-center space-x-1">
       <% if (metadata.totalPage >= 1) { %>
-        <button role="button" title="이전" aria-label="이전" <% if (metadata.page === 1) { %>disabled<% } %>>
+        <button role="button" title="이전" aria-label="이전"<% if (metadata.page === 1) { %> disabled<% } %>>
           <% if (metadata.page === 1) { %>
             이전
             <% } else { %>
@@ -24,7 +24,7 @@
           </button>
         <% } %>
 
-        <button role="button" title="다음" aria-label="다음" <% if (metadata.page === metadata.totalPage) { %>disabled<% } %>>
+        <button role="button" title="다음" aria-label="다음"<% if (metadata.page === metadata.totalPage) { %> disabled<% } %>>
           <% if (metadata.page === metadata.totalPage) { %>
             다음
           <% } else { %>

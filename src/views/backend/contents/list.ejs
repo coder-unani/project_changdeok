@@ -1,85 +1,111 @@
-<div class="mt-2">
-  <h1 class='flex justify-start items-center gap-1.5 py-2 text-center text-slate-700 transition-all'>
+<div class="my-2">
+  <h1 class="flex items-center justify-start gap-1.5 py-2 text-center text-slate-700 transition-all">
     <span class="orb-head"><%=title%></span>
   </h1>
 </div>
-<div class="py-2 mb-2">
-  <div class="flex justify-between items-center">
-    <div>
-      <a href="<%=backendRoutes.contents.write.url.replace(':groupId', metadata.group.id)%>" class="orb-btn orb-btn-primary">게시글 등록</a>
-    </div>
-    <div class="flex-1 flex justify-end">
-      <div class="relative w-full lg:max-w-[200px] ml-4">
+
+<div class="bg-default-bg mb-4 overflow-x-auto rounded-xl p-4 text-sm shadow-[0_2px_30px_rgba(0,0,0,.06)] lg:p-6">
+  <div class="space-y-4">
+    <div class="flex w-full items-center justify-between gap-2">
+      <div class="flex flex-1 justify-between gap-2">
         <input
-        class="w-full pr-11 pl-4 py-3 bg-gray-200 text-gray-700 text-sm placeholder:text-gray-400 rounded-lg transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-200"
-        placeholder="게시물 검색"
+          type="text"
+          id="contents-query"
+          class="orb-input lg:max-w-[200px]"
+          placeholder="검색어를 입력해주세요."
         />
-        <button
-        class="absolute h-8 w-8 inset-y-0 right-2 my-auto px-2 flex items-center bg-transparent rounded"
-        type="button"
-        >
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-8 h-8 text-gray-600">
-          <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-        </svg>
-        </button>
+        <button id="btn-contents-search" class="orb-btn orb-btn-primary">조회</button>
       </div>
     </div>
-  </div>
-</div>  
-  
-<div class="orb-list">
-  <div class="bg-default-bg p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)] overflow-x-auto">
-    <table>
-      <thead>
-      <tr>
-        <th class="w-24 min-w-24 text-center"><p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500">글번호</p></th>
-        <th class="w-auto min-w-[280px] text-center"><p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500">제목</p></th>
-        <th class="w-32 min-w-32 text-center"><p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500">작성자</p></th>
-        <th class="hidden w-32 min-w-32 text-center lg:table-cell"><p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500">작성일</p></th>
-      </tr>
-      </thead>
-      <tbody>
-        <% if (data.length === 0) { %>
-          <tr>
-            <td colspan="5" class="py-6 text-center"><p class="text-gray-400">등록된 게시글이 없습니다.</p></td>
-          </tr>
-        <% } else { %>
-        <% data.forEach(content => { %>
-          <tr>
-            <td class="text-center">
-              <p><%=content.id%></p>
-            </td>
-            <td>
-              <a href="<%=backendRoutes.contents.detail.url.replace(':groupId', metadata.group.id).replace(':contentId', content.id)%>" class="hover:underline decoration-gray-800">
-                <p class="font-medium"><%=content.title%></p>
-              </a>
-            </td>
-            <td>
-              <p class="text-center"><%=content.writerName ?? '-'%></p>
-            </td>
-            <td class="hidden lg:table-cell text-center">
-              <p class="text-xs"><%=content.createdAt%></p>
-            </td>
-          </tr>
-        <% }); } %>
-      </tbody>
-    </table>
-  </div>
-  <!-- 페이지 버튼 -->
-  <% if (metadata.totalPage >= 1) { %>
-    <div class="bg-default-bg py-2 lg:py-4 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">  
-      <div class="flex justify-center space-x-1">
-        <% if (metadata.page > 1) { %><button><a href="?page=<%=metadata.page - 1%>">이전</a></button><% } %>
-        <% 
-          let startPage = metadata.page - 2;
-          if (startPage < 1) startPage = 1;
-          const endPage = metadata.page + 2 > metadata.totalPage ? metadata.totalPage : metadata.page + 2;
-          for (let i = startPage; i <= endPage; i++) { 
-        %> 
-          <button class="<%if (i === metadata.page) {%>active<%}%>"><a href="?page=<%=i%>"><%=i%></a></button>
-        <% } %>
-        <% if (metadata.page < metadata.totalPage) { %><button><a href="?page=<%=metadata.page + 1%>">다음</a></button><% } %>
-      </div>
+
+    <!-- 게시물 목록 -->
+    <div id="contents" class="flex overflow-x-auto"></div>
+
+    <!-- 게시글 등록 -->
+    <div class="flex items-center">
+      <a
+        href="<%=backendRoutes.contents.write.url.replace(':groupId', metadata.group.id)%>"
+        class="orb-btn orb-btn-success"
+        >게시글 등록</a
+      >
     </div>
-  <% } %>
+  </div>
 </div>
+
+<!-- grid.js -->
+<%- include('../common/library/gridjs') %>
+
+<script nonce="<%=nonce%>">
+  document.addEventListener('DOMContentLoaded', () => {
+    const contents = document.getElementById('contents');
+    const customGridLang = {
+      ...gridLangKoKR,
+      noRecordsFound: '등록된 게시글이 없습니다.',
+    };
+
+    let currentGrid = null;
+
+    const initGrid = async () => {
+      // 기존 grid 초기화
+      currentGrid?.destroy();
+
+      const query = document.getElementById('contents-query').value;
+      const params = new URLSearchParams({ query });
+
+      // gridjs 인스턴스 생성
+      currentGrid = new gridjs.Grid({
+        columns: [
+          { name: '글번호' },
+          {
+            name: '제목',
+            formatter: (cell, row) => {
+              const contentId = row.cells[0].data;
+              const groupId = `<%=metadata.group.id%>`;
+              const url = `<%=backendRoutes.contents.detail.url%>`;
+              return gridjs.html(
+                `<a href="${url.replace(':groupId', groupId).replace(':contentId', contentId)}" class="hover:underline decoration-gray-800">${cell}</a>`
+              );
+            },
+          },
+          { name: '작성자' },
+          {
+            name: '작성일',
+            class: 'hidden lg:table-cell text-xs',
+          },
+        ],
+        language: customGridLang,
+        data: [],
+        resizable: true,
+        style: {
+          table: { 'white-space': 'nowrap' },
+        },
+        sort: true,
+        server: {
+          url: `<%=apiRoutes.contents.list.url.replace(':groupId', metadata.group.id)%>?${params.toString()}`,
+          headers: {
+            Authorization: `Bearer ${getCookie('accessToken')}`,
+          },
+          then: (data) => data.data.map((item) => [item.id, item.title, item.writerName, item.createdAt]),
+          total: (data) => data.metadata.total,
+        },
+        pagination: {
+          limit: 20,
+          server: {
+            url: (prev, page, limit) => {
+              return `${prev}&page=${page}&pageSize=${limit}`;
+            },
+          },
+        },
+      });
+
+      // gridjs 렌더링
+      currentGrid.render(contents);
+    };
+
+    document.getElementById('btn-contents-search').addEventListener('click', () => {
+      initGrid();
+    });
+
+    initGrid();
+  });
+</script>
