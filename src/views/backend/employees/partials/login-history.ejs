@@ -44,33 +44,7 @@
 
       // gridjs 인스턴스 생성
       currentGrid = new gridjs.Grid({
-        columns: [
-          {
-            name: '사용자명',
-            field: 'username',
-            width: '200px',
-          },
-          {
-            name: '로그인 날짜',
-            field: 'loginDate',
-            width: '150px',
-          },
-          {
-            name: '로그인 시간',
-            field: 'loginTime',
-            width: '120px',
-          },
-          {
-            name: 'IP 주소',
-            field: 'ipAddress',
-            width: '150px',
-          },
-          {
-            name: '상태',
-            field: 'status',
-            width: '100px',
-          },
-        ],
+        columns: ['사용자명', '로그인 날짜', '로그인 시간', 'IP 주소', '상태'],
         language: gridLangKoKR,
         data: [],
         className: {
