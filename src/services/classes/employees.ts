@@ -350,13 +350,9 @@ export class EmployeeService extends BaseService implements IEmployeeService {
 
   public async list(data: IRequestSearchList): Promise<IServiceResponse<IEmployee[] | []>> {
     try {
-      // 페이지 번호가 없거나 1보다 작은 경우 1로 설정
       const page = Math.max(1, data.page || 1);
-
-      // 페이지 크기가 작거나 너무 크면 10으로 설정
       const pageSize = Math.min(100, Math.max(1, data.pageSize || 10));
-
-      // 정렬이 없는 경우 id로 설정
+      const query = data.query || '';
       const sort = data.sort || 'ID_ASC';
 
       // 정렬 조건 설정
@@ -367,11 +363,16 @@ export class EmployeeService extends BaseService implements IEmployeeService {
         TITLE_ASC: { name: 'asc' as const },
       }[sort] || { id: 'asc' as const };
 
+      const where = {
+        isDeleted: false,
+        name: query ? { contains: query } : undefined,
+      };
+
       // 전체 직원 수와 직원 리스트 병렬 조회
       const [total, employees] = await Promise.all([
-        this.prisma.employee.count({ where: { isDeleted: false } }),
+        this.prisma.employee.count({ where }),
         this.prisma.employee.findMany({
-          where: { isDeleted: false },
+          where,
           skip: (page - 1) * pageSize,
           take: pageSize,
           orderBy,
