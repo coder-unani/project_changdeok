@@ -91,7 +91,9 @@ export class BackendController extends BaseWebController {
       const seq = this.validateInteger(req.query.sq, '배너 시퀀스');
 
       // 배너 그룹 정보 조회
-      const apiGroupInfo = await getApiBannerGroup([groupId]);
+      const apiGroupInfo = await getApiBannerGroup([groupId], {
+        accessToken: req.cookies.accessToken,
+      });
       const bannerGroupInfo = apiGroupInfo.data?.[0] || null;
 
       // 배너 그룹 정보 조회 실패
@@ -126,7 +128,14 @@ export class BackendController extends BaseWebController {
       // 배너 ID
       const bannerId = this.validateInteger(req.params.bannerId, '배너 ID');
 
-      const { result, message, metadata, data: banner } = await getApiBannerDetail(bannerId);
+      const {
+        result,
+        message,
+        metadata,
+        data: banner,
+      } = await getApiBannerDetail(bannerId, {
+        accessToken: req.cookies.accessToken,
+      });
 
       // 배너 상세 정보 조회 실패
       if (!result || !banner) {
@@ -153,7 +162,14 @@ export class BackendController extends BaseWebController {
       const bannerId = this.validateInteger(req.params.bannerId, '배너 ID');
 
       // 배너 상세 정보 조회
-      const { result, message, metadata, data: banner } = await getApiBannerDetail(bannerId);
+      const {
+        result,
+        message,
+        metadata,
+        data: banner,
+      } = await getApiBannerDetail(bannerId, {
+        accessToken: req.cookies.accessToken,
+      });
 
       // 배너 상세 정보 조회 실패
       if (!result || !banner) {
@@ -182,7 +198,9 @@ export class BackendController extends BaseWebController {
       // 배너 시퀀스
       const seq = this.validateInteger(req.query.sq, '배너 시퀀스');
 
-      const getBannerGroup = await getApiBannerGroup([groupId]);
+      const getBannerGroup = await getApiBannerGroup([groupId], {
+        accessToken: req.cookies.accessToken,
+      });
       const bannerGroupInfo = getBannerGroup.data?.[0] || null;
 
       if (!getBannerGroup.result || !bannerGroupInfo) {
@@ -199,7 +217,14 @@ export class BackendController extends BaseWebController {
       };
 
       // API 호출
-      const { result, message, metadata, data: banners } = await getApiBanners(params);
+      const {
+        result,
+        message,
+        metadata,
+        data: banners,
+      } = await getApiBanners(params, {
+        accessToken: req.cookies.accessToken,
+      });
 
       // 호출 실패
       if (!result || !banners) {
@@ -266,7 +291,15 @@ export class BackendController extends BaseWebController {
       };
 
       // API 호출
-      const { result, code, message, metadata, data: contents } = await getApiContents(groupId, params);
+      const {
+        result,
+        code,
+        message,
+        metadata,
+        data: contents,
+      } = await getApiContents(groupId, params, {
+        accessToken: req.cookies.accessToken,
+      });
 
       // 호출 실패
       if (!result || !contents) {
@@ -274,7 +307,9 @@ export class BackendController extends BaseWebController {
       }
 
       // 게시판 그룹 정보
-      const { data: group } = await getApiContentGroup(groupId);
+      const { data: group } = await getApiContentGroup(groupId, {
+        accessToken: req.cookies.accessToken,
+      });
 
       // 페이지 데이터 생성
       const groupTitle = group?.title ?? '게시판';
@@ -297,7 +332,14 @@ export class BackendController extends BaseWebController {
       const groupId = this.validateInteger(req.params.groupId, '게시판 ID');
 
       // 게시판 그룹 정보
-      const { result, message, metadata, data: group } = await getApiContentGroup(groupId);
+      const {
+        result,
+        message,
+        metadata,
+        data: group,
+      } = await getApiContentGroup(groupId, {
+        accessToken: req.cookies.accessToken,
+      });
 
       // 호출 실패
       if (!result || !group) {
@@ -330,7 +372,9 @@ export class BackendController extends BaseWebController {
       const contentId = this.validateInteger(req.params.contentId, '게시글 ID');
 
       // 게시판 그룹 정보 API 호출
-      const getContentGroup = await getApiContentGroup(groupId);
+      const getContentGroup = await getApiContentGroup(groupId, {
+        accessToken: req.cookies.accessToken,
+      });
 
       if (!getContentGroup.result) {
         throw new AppError(getContentGroup.code || 500, getContentGroup.message || '');
@@ -339,7 +383,9 @@ export class BackendController extends BaseWebController {
       const groupTitle = getContentGroup.data?.title ?? '게시판';
 
       // 컨텐츠 상세 API 호출
-      const getContentDetail = await getApiContentDetail(groupId, contentId);
+      const getContentDetail = await getApiContentDetail(groupId, contentId, {
+        accessToken: req.cookies.accessToken,
+      });
 
       if (!getContentDetail.result) {
         throw new NotFoundError((getContentDetail.message as string) || '게시글 상세 정보를 조회할 수 없습니다.');
@@ -379,7 +425,9 @@ export class BackendController extends BaseWebController {
       const contentId = this.validateInteger(req.params.contentId, '게시글 ID');
 
       // API 호출
-      const getContentDetail = await getApiContentDetail(groupId, contentId);
+      const getContentDetail = await getApiContentDetail(groupId, contentId, {
+        accessToken: req.cookies.accessToken,
+      });
 
       // 호출 실패
       if (!getContentDetail.result || !getContentDetail.data) {
@@ -387,7 +435,9 @@ export class BackendController extends BaseWebController {
       }
 
       // 게시판 그룹 정보
-      const getContentGroup = await getApiContentGroup(groupId);
+      const getContentGroup = await getApiContentGroup(groupId, {
+        accessToken: req.cookies.accessToken,
+      });
 
       // 호출 실패
       if (!getContentGroup.result || !getContentGroup.data) {
@@ -412,11 +462,14 @@ export class BackendController extends BaseWebController {
       await this.verifyPermission(req, route.permissions);
 
       // 직원 정보 조회
-      const accessToken = req.cookies.accessToken;
-      const decodedToken = accessToken ? verifyJWT(accessToken, this.config.getJwtSecretKey()) : null;
+      const decodedToken = req.cookies.accessToken
+        ? verifyJWT(req.cookies.accessToken, this.config.getJwtSecretKey())
+        : null;
 
       // 현재 로그인한 직원 정보 조회
-      const { data: grantedByEmployee } = await getApiEmployeeDetail(decodedToken.id);
+      const { data: grantedByEmployee } = await getApiEmployeeDetail(decodedToken.id, {
+        accessToken: req.cookies.accessToken,
+      });
 
       // 현재 로그인한 직원이 권한 관리자 또는 최고 관리자인 경우
       let permissions: IPermission[] = [];
@@ -424,7 +477,9 @@ export class BackendController extends BaseWebController {
         grantedByEmployee &&
         (grantedByEmployee.permissions?.includes(1) || grantedByEmployee.permissions?.includes(2))
       ) {
-        const getPermissions = await getApiPermissionList(1, 10);
+        const getPermissions = await getApiPermissionList({
+          accessToken: req.cookies.accessToken,
+        });
         if (getPermissions.result && getPermissions.data) {
           permissions = getPermissions.data;
         }
@@ -452,7 +507,9 @@ export class BackendController extends BaseWebController {
       await this.verifyPermission(req, route.permissions, employeeId);
 
       // 관리자 상세 정보 조회
-      const getEmployeeDetail = await getApiEmployeeDetail(employeeId);
+      const getEmployeeDetail = await getApiEmployeeDetail(employeeId, {
+        accessToken: req.cookies.accessToken,
+      });
 
       // 호출 실패
       if (!getEmployeeDetail.result || !getEmployeeDetail.data) {
@@ -460,7 +517,9 @@ export class BackendController extends BaseWebController {
       }
 
       // 전체 권한 목록
-      const getPermissions = await getApiPermissionList(1, 10);
+      const getPermissions = await getApiPermissionList({
+        accessToken: req.cookies.accessToken,
+      });
 
       // 호출 실패
       if (!getPermissions.result || !getPermissions.data) {
@@ -495,7 +554,13 @@ export class BackendController extends BaseWebController {
       await this.verifyPermission(req, route.permissions, employeeId);
 
       // 관리자 정보 조회
-      const { result, message, data: employee } = await getApiEmployeeDetail(employeeId);
+      const {
+        result,
+        message,
+        data: employee,
+      } = await getApiEmployeeDetail(employeeId, {
+        accessToken: req.cookies.accessToken,
+      });
 
       // 결과가 없는 경우 에러 페이지 이동
       if (!result || !employee) {
@@ -551,7 +616,13 @@ export class BackendController extends BaseWebController {
       await this.verifyPermission(req, route.permissions, employeeId);
 
       // 직원 정보 조회
-      const { result, message, data: employee } = await getApiEmployeeDetail(employeeId);
+      const {
+        result,
+        message,
+        data: employee,
+      } = await getApiEmployeeDetail(employeeId, {
+        accessToken: req.cookies.accessToken,
+      });
 
       // 호출 실패
       if (!result || !employee) {
@@ -578,8 +649,9 @@ export class BackendController extends BaseWebController {
       const employeeId = this.validateInteger(req.params.employeeId, '직원 ID');
 
       // 직원 정보 조회
-      const accessToken = req.cookies.accessToken;
-      const decodedToken = accessToken ? verifyJWT(accessToken, this.config.getJwtSecretKey()) : null;
+      const decodedToken = req.cookies.accessToken
+        ? verifyJWT(req.cookies.accessToken, this.config.getJwtSecretKey())
+        : null;
 
       // Access Token이 없는 경우 에러 페이지로 이동
       if (!decodedToken) {
@@ -587,7 +659,9 @@ export class BackendController extends BaseWebController {
       }
 
       // 현재 로그인한 직원 정보 조회
-      const { data: grantedByEmployee } = await getApiEmployeeDetail(decodedToken.id);
+      const { data: grantedByEmployee } = await getApiEmployeeDetail(decodedToken.id, {
+        accessToken: req.cookies.accessToken,
+      });
 
       // 현재 로그인한 직원 정보가 없는 경우 에러 페이지로 이동
       if (!grantedByEmployee) {
@@ -595,7 +669,9 @@ export class BackendController extends BaseWebController {
       }
 
       // 권한을 수정하려는 직원 정보 조회
-      const getEmployeeDetail = await getApiEmployeeDetail(employeeId);
+      const getEmployeeDetail = await getApiEmployeeDetail(employeeId, {
+        accessToken: req.cookies.accessToken,
+      });
 
       // 직원 정보가 없는 경우 에러 페이지로 이동
       if (!getEmployeeDetail.result || !getEmployeeDetail.data) {
@@ -603,7 +679,9 @@ export class BackendController extends BaseWebController {
       }
 
       // 전체 권한 목록
-      const getPermissions = await getApiPermissionList(1, 10);
+      const getPermissions = await getApiPermissionList({
+        accessToken: req.cookies.accessToken,
+      });
 
       // 호출 실패
       if (!getPermissions.result || !getPermissions.data) {
@@ -692,7 +770,9 @@ export class BackendController extends BaseWebController {
   public settings = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 사이트 설정 조회
-      const { result, data: siteSettings } = await getApiSettings();
+      const { result, data: siteSettings } = await getApiSettings({
+        accessToken: req.cookies.accessToken,
+      });
 
       // 결과가 없는 경우 에러 페이지로 이동
       if (!result || !siteSettings) {

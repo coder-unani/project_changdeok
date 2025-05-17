@@ -7,12 +7,15 @@ import { IRequestBanners, IRequestSearchList } from '../types/request';
 const API_BASE_URL = 'http://localhost:3000';
 
 interface FetchOptions {
-  method: string;
   accessToken?: string;
   params?: URLSearchParams;
 }
 
-const fetchApi = async <T>(url: string, options: FetchOptions): Promise<IApiResponse<T>> => {
+const fetchApi = async <T>(
+  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
+  url: string,
+  options: FetchOptions = {}
+): Promise<IApiResponse<T>> => {
   try {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
@@ -25,7 +28,7 @@ const fetchApi = async <T>(url: string, options: FetchOptions): Promise<IApiResp
     const finalUrl = options.params ? `${API_BASE_URL}${url}?${options.params.toString()}` : `${API_BASE_URL}${url}`;
 
     const apiResponse = await fetch(finalUrl, {
-      method: options.method,
+      method,
       headers,
     });
 
@@ -55,89 +58,118 @@ const fetchApi = async <T>(url: string, options: FetchOptions): Promise<IApiResp
   }
 };
 
-export const getApiBannerGroup = async (groupIds: number[] = []): Promise<IApiResponse<IBannerGroup[]>> => {
+export const getApiBannerGroup = async (
+  groupIds: number[] = [],
+  options: FetchOptions = {}
+): Promise<IApiResponse<IBannerGroup[]>> => {
   const groupIdsString = groupIds.length > 0 ? groupIds.join(',') : 'all';
   const apiUrl = `${apiRoutes.banners.group.url}`.replace(':groupIds', groupIdsString);
 
-  return fetchApi<IBannerGroup[]>(apiUrl, {
-    method: apiRoutes.banners.group.method,
+  console.log(apiUrl);
+  console.log(options);
+
+  return fetchApi<IBannerGroup[]>(apiRoutes.banners.group.method, apiUrl, {
+    ...options,
   });
 };
 
-export const getApiBanners = async (data: IRequestBanners): Promise<IApiResponse<IBanner[] | []>> => {
+export const getApiBanners = async (
+  data: IRequestBanners,
+  options: FetchOptions = {}
+): Promise<IApiResponse<IBanner[] | []>> => {
   const params = new URLSearchParams(data as any);
   const apiUrl = `${apiRoutes.banners.list.url}`;
 
-  return fetchApi<IBanner[]>(apiUrl, {
-    method: apiRoutes.banners.list.method,
+  console.log(apiUrl);
+  console.log(options);
+
+  return fetchApi<IBanner[]>(apiRoutes.banners.list.method, apiUrl, {
+    ...options,
     params,
   });
 };
 
-export const getApiBannerDetail = async (bannerId: number): Promise<IApiResponse<IContent>> => {
+export const getApiBannerDetail = async (
+  bannerId: number,
+  options: FetchOptions = {}
+): Promise<IApiResponse<IContent>> => {
   const apiUrl = `${apiRoutes.banners.detail.url}`.replace(':bannerId', bannerId.toString());
 
-  return fetchApi<IContent>(apiUrl, {
-    method: apiRoutes.banners.detail.method,
+  return fetchApi<IContent>(apiRoutes.banners.detail.method, apiUrl, {
+    ...options,
   });
 };
 
-export const getApiContents = async (groupId: number, data: IRequestSearchList): Promise<IApiResponse<IContent[]>> => {
+export const getApiContents = async (
+  groupId: number,
+  data: IRequestSearchList,
+  options: FetchOptions = {}
+): Promise<IApiResponse<IContent[]>> => {
   const params = new URLSearchParams(data as any);
   let apiUrl = `${apiRoutes.contents.list.url}`.replace(':groupId', groupId.toString());
 
-  return fetchApi<IContent[]>(apiUrl, {
-    method: apiRoutes.contents.list.method,
+  return fetchApi<IContent[]>(apiRoutes.contents.list.method, apiUrl, {
+    ...options,
     params,
   });
 };
 
-export const getApiContentDetail = async (groupId: number, contentId: number): Promise<IApiResponse<IContent>> => {
+export const getApiContentDetail = async (
+  groupId: number,
+  contentId: number,
+  options: FetchOptions = {}
+): Promise<IApiResponse<IContent>> => {
   const apiUrl = `${apiRoutes.contents.detail.url}`
     .replace(':groupId', groupId.toString())
     .replace(':contentId', contentId.toString());
 
-  return fetchApi<IContent>(apiUrl, {
-    method: apiRoutes.contents.detail.method,
+  return fetchApi<IContent>(apiRoutes.contents.detail.method, apiUrl, {
+    ...options,
   });
 };
 
-export const getApiContentGroup = async (groupId: number): Promise<IApiResponse<IContentGroup>> => {
+export const getApiContentGroup = async (
+  groupId: number,
+  options: FetchOptions = {}
+): Promise<IApiResponse<IContentGroup>> => {
   const apiUrl = `${apiRoutes.contents.group.url}`.replace(':groupId', groupId.toString());
 
-  return fetchApi<IContentGroup>(apiUrl, {
-    method: apiRoutes.contents.group.method,
+  return fetchApi<IContentGroup>(apiRoutes.contents.group.method, apiUrl, {
+    ...options,
   });
 };
 
-export const getApiEmployeeDetail = async (employeeId: number): Promise<IApiResponse<IEmployee>> => {
+export const getApiEmployeeDetail = async (
+  employeeId: number,
+  options: FetchOptions = {}
+): Promise<IApiResponse<IEmployee>> => {
   const apiUrl = `${apiRoutes.employees.detail.url}`.replace(':employeeId', employeeId.toString());
 
-  return fetchApi<IEmployee>(apiUrl, {
-    method: apiRoutes.employees.detail.method,
+  return fetchApi<IEmployee>(apiRoutes.employees.detail.method, apiUrl, {
+    ...options,
   });
 };
 
-export const getApiPermissionList = async (page: number, pageSize: number): Promise<IApiResponse<IPermission[]>> => {
+export const getApiPermissionList = async (options: FetchOptions = {}): Promise<IApiResponse<IPermission[]>> => {
   const apiUrl = `${apiRoutes.permissions.url}`;
 
-  return fetchApi<IPermission[]>(apiUrl, {
-    method: apiRoutes.permissions.method,
+  return fetchApi<IPermission[]>(apiRoutes.permissions.method, apiUrl, {
+    ...options,
   });
 };
 
-export const getApiSettings = async (): Promise<IApiResponse<ISettings>> => {
+export const getApiSettings = async (options: FetchOptions = {}): Promise<IApiResponse<ISettings>> => {
   const apiUrl = `${apiRoutes.settings.read.url}`;
 
-  return fetchApi<ISettings>(apiUrl, {
-    method: apiRoutes.settings.read.method,
+  return fetchApi<ISettings>(apiRoutes.settings.read.method, apiUrl, {
+    ...options,
   });
 };
 
-export const getApiSystemStatus = async (): Promise<IApiResponse<ISystemStatus>> => {
+export const getApiSystemStatus = async (options: FetchOptions = {}): Promise<IApiResponse<ISystemStatus>> => {
   const apiUrl = `${apiRoutes.systems.status.url}`;
 
-  return fetchApi<ISystemStatus>(apiUrl, {
-    method: apiRoutes.systems.status.method,
+  return fetchApi<ISystemStatus>(apiRoutes.systems.status.method, apiUrl, {
+    ...options,
   });
 };
