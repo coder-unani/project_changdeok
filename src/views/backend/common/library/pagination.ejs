@@ -1,0 +1,37 @@
+<!-- 페이지네이션 -->
+<div class="gridjs-footer">
+  <div class="gridjs-pagination">
+    <div class="gridjs-summary">현재 <b><%=metadata.start%></b> - <b><%=metadata.end%></b>건 표시. 총 <b><%=metadata.total%></b> 건이 조회되었습니다.</div>
+
+    <div class="gridjs-pages flex justify-center space-x-1">
+      <% if (metadata.totalPage >= 1) { %>
+        <button role="button" title="이전" aria-label="이전" <% if (metadata.page === 1) { %>disabled<% } %>>
+          <% if (metadata.page === 1) { %>
+            이전
+            <% } else { %>
+            <a href="?page=<%=metadata.page - 1%>">이전</a>
+          <% } %>
+        </button>
+
+        <% 
+          let startPage = metadata.page - 2;
+          if (startPage < 1) startPage = 1;
+          const endPage = metadata.page + 2 > metadata.totalPage ? metadata.totalPage : metadata.page + 2;
+        %>
+        <% for (let i = startPage; i <= endPage; i++) { %>
+          <button class="custom-gridjs-page-button<%=i === metadata.page ? ' gridjs-currentPage' : ''%>">
+            <a href="?page=<%=i%>"><%=i%></a>
+          </button>
+        <% } %>
+
+        <button role="button" title="다음" aria-label="다음" <% if (metadata.page === metadata.totalPage) { %>disabled<% } %>>
+          <% if (metadata.page === metadata.totalPage) { %>
+            다음
+          <% } else { %>
+            <a href="?page=<%=metadata.page + 1%>">다음</a>
+          <% } %>
+        </button>
+      <% } %>
+    </div>
+  </div>
+</div>

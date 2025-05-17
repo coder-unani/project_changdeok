@@ -7,11 +7,13 @@
     <%- include('../../backend/common/fonts/pretendard') %>
     <link rel="stylesheet" href="/css/backend/tailwind.css" />
   </head>
-  <body class="mx-auto flex h-screen max-w-[1340px] flex-col p-4 lg:flex-row lg:px-8 lg:pt-6 lg:pb-10">
-    <%- include('partials/header') %> <%- include('partials/sidebar') %>
-    <main class="w-full lg:pl-[260px]">
-      <div class="pb-6 lg:ml-6 lg:pb-10"><%- body %></div>
-      <%- include('partials/loading') %>
-    </main>
+  <body>
+    <div class="mx-auto flex h-screen max-w-[1340px] flex-col p-4 lg:flex-row lg:px-8 lg:pt-6 lg:pb-10">
+      <%- include('partials/header') %> <%- include('partials/sidebar') %>
+      <main class="w-full lg:pl-[260px]">
+        <div class="pb-6 lg:ml-6 lg:pb-10"><%- body %></div>
+        <%- include('partials/loading') %>
+      </main>
+    </div>
   </body>
 </html>
