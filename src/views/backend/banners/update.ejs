@@ -130,6 +130,8 @@
   // 배너 수정 요청
   document.getElementById('formBannerUpdate').addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    isLoading(true);
     
     try {
       // 폼 데이터 수집
@@ -156,6 +158,8 @@
 
     } catch (error) {
       toastMessage('error', error.message || '배너 수정에 실패했습니다.');
+    } finally {
+      isLoading(false);
     }
   });
 </script>

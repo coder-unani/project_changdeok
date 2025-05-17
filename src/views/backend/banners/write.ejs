@@ -133,6 +133,8 @@
   document.getElementById('formBannerWrite').addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    isLoading(true);
+
     try {
       // 폼 데이터 수집
       const formData = new FormData(e.target);
@@ -206,6 +208,8 @@
 
     } catch (error) {
       toastMessage('error', error.message || '배너 등록에 실패했습니다.');
+    } finally {
+      isLoading(false);
     }
   });
 </script>
