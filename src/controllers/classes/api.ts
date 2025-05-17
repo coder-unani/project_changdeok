@@ -549,7 +549,7 @@ export class ApiController {
 
       // 로그인 확인
       const accessToken = getCookie(req, 'accessToken');
-      const tokenEmployee = accessToken ? await verifyJWT(accessToken) : null;
+      const tokenEmployee = accessToken ? verifyJWT(accessToken, this.config.getJwtSecretKey()) : null;
       if (!tokenEmployee) {
         throw new AuthError('로그인 정보가 없습니다.');
       }
@@ -661,7 +661,7 @@ export class ApiController {
 
       // 로그인 확인
       const accessToken = getCookie(req, 'accessToken');
-      const tokenEmployee = accessToken ? await verifyJWT(accessToken) : null;
+      const tokenEmployee = accessToken ? verifyJWT(accessToken, this.config.getJwtSecretKey()) : null;
       if (!tokenEmployee) {
         throw new AuthError('로그인 정보가 없습니다.');
       }
@@ -778,7 +778,7 @@ export class ApiController {
       const requestPermissions = requestData.permissions.map((permission: any) => parseInt(permission));
 
       // 로그인 유저 정보
-      const decodedToken = await verifyJWT(req.cookies.accessToken);
+      const decodedToken = verifyJWT(req.cookies.accessToken, this.config.getJwtSecretKey());
       const grantedById = decodedToken ? parseInt(decodedToken.id) : null;
 
       // 로그인 확인
@@ -873,7 +873,7 @@ export class ApiController {
           name: result.data.name,
           permissions: result.data.permissions,
         };
-        const token = await createJWT(tokenData);
+        const token = createJWT(tokenData, this.config.getJwtSecretKey(), this.config.getSettings().jwtExpireSecond);
 
         if (token) {
           // 쿠키 옵션
@@ -884,7 +884,7 @@ export class ApiController {
 
           // 쿠키 저장
           setCookie(res, 'accessToken', token, options);
-          setCookie(res, 'employee', JSON.stringify(tokenData), options);
+          setCookie(res, 'employee', JSON.stringify(tokenData), { ...options, httpOnly: true, secure: true });
         }
       }
 

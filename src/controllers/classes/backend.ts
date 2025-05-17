@@ -413,7 +413,7 @@ export class BackendController extends BaseWebController {
 
       // 직원 정보 조회
       const accessToken = req.cookies.accessToken;
-      const decodedToken = accessToken ? await verifyJWT(accessToken) : null;
+      const decodedToken = accessToken ? verifyJWT(accessToken, this.config.getJwtSecretKey()) : null;
 
       // 현재 로그인한 직원 정보 조회
       const { data: grantedByEmployee } = await getApiEmployeeDetail(decodedToken.id);
@@ -579,7 +579,7 @@ export class BackendController extends BaseWebController {
 
       // 직원 정보 조회
       const accessToken = req.cookies.accessToken;
-      const decodedToken = accessToken ? await verifyJWT(accessToken) : null;
+      const decodedToken = accessToken ? verifyJWT(accessToken, this.config.getJwtSecretKey()) : null;
 
       // Access Token이 없는 경우 에러 페이지로 이동
       if (!decodedToken) {

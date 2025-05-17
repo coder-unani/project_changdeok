@@ -14,10 +14,12 @@ const COOKIE_NAMES = {
 } as const;
 
 export class AuthMiddleware implements IMiddleware {
+  private jwtSecretKey: string;
   private loginPath: string;
   private exceptAuth: string[];
 
-  constructor(exceptPath: string[] = []) {
+  constructor(jwtSecretKey: string, exceptPath: string[] = []) {
+    this.jwtSecretKey = jwtSecretKey;
     this.loginPath = backendRoutes.employees.login.url;
     this.exceptAuth = [...exceptPath, this.loginPath, backendRoutes.employees.forgotPassword.url];
   }
@@ -38,9 +40,9 @@ export class AuthMiddleware implements IMiddleware {
   }
 
   // 토큰 검증
-  private async validateToken(token: string): Promise<IEmployeeToken | null> {
+  private validateToken(token: string): IEmployeeToken | null {
     try {
-      return await verifyJWT(token);
+      return verifyJWT(token, this.jwtSecretKey);
     } catch (error) {
       new ExpressLogger().error(`토큰 검증 실패: ${error}`);
       return null;

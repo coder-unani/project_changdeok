@@ -1,24 +1,25 @@
 import { NextFunction, Request, Response } from 'express';
 
+import { httpStatus } from '../../common/constants';
 import { removeCookie } from '../../common/utils/cookie';
-import { backendRoutes } from '../../config/routes';
+import { apiRoutes } from '../../config/routes';
 import { verifyJWT } from '../../library/jwt';
 import { IMiddleware } from '../../types/middleware';
 import { IEmployeeToken } from '../../types/object';
 
 export class AuthMiddleware implements IMiddleware {
+  private jwtSecretKey: string;
   private loginPath: string;
-  private forgotPasswordPath: string;
   private exceptAuth: string[];
 
   // 생성자
-  constructor(exceptPath: string[] = []) {
-    this.loginPath = backendRoutes.employees.login.url;
-    this.forgotPasswordPath = backendRoutes.employees.forgotPassword.url;
-    this.exceptAuth = [...exceptPath, this.loginPath, this.forgotPasswordPath];
+  constructor(jwtSecretKey: string, exceptPath: string[] = []) {
+    this.jwtSecretKey = jwtSecretKey;
+    this.loginPath = apiRoutes.employees.login.url;
+    this.exceptAuth = [...exceptPath, this.loginPath];
   }
 
-  public handle(req: Request, res: Response, next: NextFunction): void {
+  public async handle(req: Request, res: Response, next: NextFunction): Promise<void> {
     // API 경로가 아닌 경우 미들웨어 실행하지 않음
     if (!req.path.startsWith('/api')) {
       next();
@@ -34,11 +35,9 @@ export class AuthMiddleware implements IMiddleware {
     // 인증헤더 확인
     const authHeader = req.headers.authorization;
     if (!authHeader) {
-      next();
-      return;
       // 인증키 없음. 로그인 페이지로 이동
-      // res.status(401).json({ message: '로그인이 필요합니다.' });
-      // return;
+      res.status(httpStatus.UNAUTHORIZED).json({ message: '로그인이 필요합니다.' });
+      return;
     }
 
     // Bearer <token> 형식에서 토큰만 추출
@@ -46,21 +45,20 @@ export class AuthMiddleware implements IMiddleware {
 
     // 토큰 없음. 로그인 페이지로 이동
     if (!token) {
-      // res.status(401).json({ message: '로그인이 필요합니다.' });
-      next();
+      res.status(httpStatus.UNAUTHORIZED).json({ message: '로그인이 필요합니다.' });
       return;
     }
 
     req.body.accessToken = token;
 
     // JWT 검증
-    // const decodedToken: IEmployeeToken = verifyJWT(token);
+    const decodedToken: IEmployeeToken = verifyJWT(token, this.jwtSecretKey);
 
     // 유효하지 않은 토큰. 로그인 페이지로 이동
-    // if (!decodedToken) {
-    // res.status(401).json({ message: '토큰 정보가 만료되었습니다.' });
-    // return;
-    // }
+    if (!decodedToken) {
+      res.status(httpStatus.UNAUTHORIZED).json({ message: '토큰 정보가 만료되었습니다.' });
+      return;
+    }
 
     // 다음 미들웨어로 이동
     next();

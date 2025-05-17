@@ -3,6 +3,7 @@ import { NextFunction, Request, Response, Router } from 'express';
 import { Config } from '../config/config';
 import { apiRoutes } from '../config/routes';
 import { ApiController } from '../controllers';
+import { AuthMiddleware } from '../middlewares/api/auth';
 import { CorsMiddleware } from '../middlewares/api/cors';
 import { FileUploadMiddleware } from '../middlewares/api/file';
 import { RecaptchaMiddleware } from '../middlewares/api/recaptcha';
@@ -12,6 +13,7 @@ class ApiRouter {
   private config: Config;
   private router: Router;
   private apiController: ApiController;
+  private authMiddleware: IMiddleware;
   private corsMiddleware: IMiddleware;
   private recaptchaMiddleware: IMiddleware;
   private bannerUploadMiddleware: FileUploadMiddleware;
@@ -23,6 +25,7 @@ class ApiRouter {
 
     this.router = Router();
     this.apiController = new ApiController(config);
+    this.authMiddleware = new AuthMiddleware(config.getJwtSecretKey());
     this.corsMiddleware = new CorsMiddleware(config.getCORSApiOptions());
     this.recaptchaMiddleware = new RecaptchaMiddleware(config.getRecaptchaSecretKey());
     this.bannerUploadMiddleware = new FileUploadMiddleware({
@@ -87,6 +90,7 @@ class ApiRouter {
   }
 
   private initializeMiddlewares(): void {
+    this.router.use((req, res, next) => this.authMiddleware.handle(req, res, next));
     this.router.use((req, res, next) => this.corsMiddleware.handle(req, res, next));
   }
 

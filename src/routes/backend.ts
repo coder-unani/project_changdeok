@@ -18,8 +18,8 @@ class BackendRouter {
     this.config = config;
 
     this.router = Router();
-    this.backendController = new BackendController(config);
-    this.authMiddleware = new AuthMiddleware();
+    this.backendController = new BackendController(this.config);
+    this.authMiddleware = new AuthMiddleware(this.config.getJwtSecretKey());
     this.permissionMiddleware = new PermissionMiddleware();
 
     this.initializeMiddlewares();

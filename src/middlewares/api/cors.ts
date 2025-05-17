@@ -1,6 +1,7 @@
 import cors, { CorsOptions } from 'cors';
 import { NextFunction, Request, Response } from 'express';
 
+import { httpStatus } from '../../common/constants';
 import { IMiddleware } from '../../types/middleware';
 
 export class CorsMiddleware implements IMiddleware {
