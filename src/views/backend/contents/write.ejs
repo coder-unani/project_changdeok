@@ -89,6 +89,8 @@
   document.getElementById('formContentWrite').addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    isLoading(true);
+
     try {
       // 폼 데이터 수집
       const formData = new FormData(e.target);
@@ -126,6 +128,8 @@
       });
     } catch (error) {
       toastMessage('error', error.message || '글 작성에 실패하였습니다.');
+    } finally {
+      isLoading(false);
     }
   });
 

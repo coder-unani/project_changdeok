@@ -142,6 +142,8 @@
   document.getElementById('formEmployeeModify').addEventListener('submit', async function (event) {
     event.preventDefault();
 
+    isLoading(true);
+
     // 폼 데이터 수집
     const formData = new FormData(this);
 
@@ -174,6 +176,8 @@
       });
     } catch (error) {
       toastMessage('error', error.message || '서버 오류가 발생했습니다.');
+    } finally {
+      isLoading(false);
     }
   });
 </script>

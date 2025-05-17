@@ -56,6 +56,8 @@
     input.onchange = async () => {
       const file = input.files[0];
       if (file) {
+        isLoading(true);
+
         try {
           // FormData 생성
           const formData = new FormData();
@@ -83,6 +85,8 @@
           editor.setSelection(range.index + 1);
         } catch (error) {
           toastMessage('error', error.message || '이미지 업로드 중 오류가 발생했습니다.');
+        } finally {
+          isLoading(false);
         }
       }
     };
@@ -90,6 +94,8 @@
 
   document.getElementById('formContentUpdate').addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    isLoading(true);
 
     try {
       // 폼 데이터 수집
@@ -131,6 +137,8 @@
       });
     } catch (error) {
       toastMessage('error', error.message || '글 수정에 실패했습니다.');
+    } finally {
+      isLoading(false);
     }
   });
 </script>

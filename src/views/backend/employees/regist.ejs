@@ -176,6 +176,8 @@
   document.getElementById('formEmployeeRegister').addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    isLoading(true);
+
     // 폼 데이터 수집
     const formData = new FormData(e.target);
 
@@ -185,10 +187,10 @@
       data[key] = value;
     });
     
-    // permissions를 추가
-    data.permissions = Array.from(document.querySelectorAll('input[id^="permission"]:checked')).map(checkbox => Number(checkbox.value));
-
     try {
+      // permissions를 추가
+      data.permissions = Array.from(document.querySelectorAll('input[id^="permission"]:checked')).map(checkbox => Number(checkbox.value));
+
       // 직원 등록 API 호출
       const response = await fetch('<%=apiRoutes.employees.regist.url%>', {
         method: '<%=apiRoutes.employees.regist.method%>',
@@ -210,6 +212,8 @@
       });
     } catch (error) {
       toastMessage('error', error.message || '서버 오류가 발생했습니다.');
+    } finally {
+      isLoading(false);
     }
   });
 </script>
