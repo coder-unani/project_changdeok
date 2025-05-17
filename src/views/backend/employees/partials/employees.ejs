@@ -22,12 +22,20 @@
       // 기존 grid 초기화
       currentGrid?.destroy();
 
+      const query = document.getElementById('employees-query').value;
+
+      const params = new URLSearchParams({
+        query,
+      });
+
+      const serverUrl = `<%=apiRoutes.employees.list.url%>?${params.toString()}`;
+
       // gridjs 인스턴스 생성
       currentGrid = new gridjs.Grid({
         columns: [
           { name: '번호' },
           {
-            name: '이메일',
+            name: '아이디',
             formatter: (cell, row) => {
               const adminId = row.cells[0].data;
               return gridjs.html(
@@ -58,7 +66,7 @@
         },
         sort: true,
         server: {
-          url: `<%=apiRoutes.employees.list.url%>`,
+          url: serverUrl,
           then: (data) => data.data.map((item) => [item.id, item.email, item.name, item.createdAt, item.lastLoginAt]),
           total: (data) => data.metadata.total,
         },
@@ -66,8 +74,7 @@
           limit: 20,
           server: {
             url: (prev, page, limit) => {
-              const query = document.getElementById('employees-query').value;
-              return `${prev}?page=${page}&pageSize=${limit}&query=${query}`;
+              return `${prev}&page=${page}&pageSize=${limit}`;
             },
           },
         },
@@ -80,5 +87,7 @@
     document.getElementById('btn-employees-search').addEventListener('click', () => {
       initGrid();
     });
+
+    initGrid();
   });
 </script>

@@ -42,9 +42,39 @@
       // 기존 grid 초기화
       currentGrid?.destroy();
 
+      const startDate = document.getElementById('login-history-start-date').value;
+      const endDate = document.getElementById('login-history-end-date').value;
+      const query = document.getElementById('login-history-query').value;
+
+      const params = new URLSearchParams({
+        startDate,
+        endDate,
+        query,
+      });
+
+      const serverUrl = `<%=apiRoutes.employees.loginHistory.url%>?${params.toString()}`;
+
       // gridjs 인스턴스 생성
       currentGrid = new gridjs.Grid({
-        columns: ['사용자명', '로그인 날짜', '로그인 시간', 'IP 주소', '상태'],
+        columns: [
+          '관리자 번호',
+          '아이디',
+          '로그인 시간',
+          {
+            name: '상태',
+            formatter: (cell) =>
+              gridjs.html(
+                cell === 'SUCCESS'
+                  ? `<span class="px-2.5 py-1 bg-emerald-100 rounded-full text-sm font-medium text-emerald-500">성공</span>`
+                  : `<span class="px-2.5 py-1 bg-amber-100 rounded-full text-sm font-medium text-amber-500">실패</span>`
+              ),
+          },
+          'IP 주소',
+          '메세지',
+          '오리진',
+          '참조',
+          '사용자 에이전트',
+        ],
         language: gridLangKoKR,
         data: [],
         className: {
@@ -56,19 +86,27 @@
         },
         sort: true,
         server: {
-          url: `<%=apiRoutes.employees.loginHistory.url%>`,
-          then: (data) =>
-            data.data.map((item) => [item.employeeEmail, item.loginAt, item.loginTime, item.clientIp, item.status]),
+          url: serverUrl,
+          then: (data) => {
+            return data.data.map((item) => [
+              item.employeeId ? item.employeeId : '-',
+              item.employeeEmail,
+              item.loginAt,
+              item.status,
+              item.clientIp,
+              item.message,
+              item.origin ? item.origin : '-',
+              item.referer ? item.referer : '-',
+              item.userAgent ? item.userAgent : '-',
+            ]);
+          },
           total: (data) => data.metadata.total,
         },
         pagination: {
           limit: 20,
           server: {
             url: (prev, page, limit) => {
-              const startDate = document.getElementById('login-history-start-date').value;
-              const endDate = document.getElementById('login-history-end-date').value;
-              const search = document.getElementById('login-history-query').value;
-              return `${prev}?page=${page}&pageSize=${limit}&startDate=${startDate}&endDate=${endDate}&query=${search}`;
+              return `${prev}&page=${page}&pageSize=${limit}`;
             },
           },
         },
@@ -81,5 +119,7 @@
     document.getElementById('btn-login-history-search').addEventListener('click', () => {
       initGrid();
     });
+
+    initGrid();
   });
 </script>
