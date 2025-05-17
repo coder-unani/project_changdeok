@@ -1,10 +1,5 @@
 import { AuthError, NotFoundError, ValidationError } from '../../common/error';
-import {
-  convertDateToKST,
-  convertDateToString,
-  convertStringToDate,
-  formatEmailMasking,
-} from '../../common/utils/format';
+import { convertDateToKST, convertDateToString, convertStringToDate } from '../../common/utils/format';
 import { validateEmail, validatePassword, validatePhone } from '../../common/utils/validate';
 import { ExtendedPrismaClient } from '../../library/database';
 import { hashPassword, verifyPassword } from '../../library/encrypt';
@@ -46,8 +41,6 @@ export class EmployeeService extends BaseService implements IEmployeeService {
 
   // 직원 정보 변환 메서드
   private convertToEmployee(employee: any): IEmployee {
-    const employeeMaskedEmail = formatEmailMasking(employee.email);
-
     const hireDate = employee.hireDate ? convertDateToString(convertDateToKST(employee.hireDate), false) : null;
     const fireDate = employee.fireDate ? convertDateToString(convertDateToKST(employee.fireDate), false) : null;
     const birthDate = employee.birthDate ? convertDateToString(convertDateToKST(employee.birthDate), false) : null;
@@ -57,7 +50,7 @@ export class EmployeeService extends BaseService implements IEmployeeService {
 
     return {
       id: employee.id,
-      email: employeeMaskedEmail,
+      email: employee.email,
       name: employee.name,
       position: employee.position,
       description: employee.description,
