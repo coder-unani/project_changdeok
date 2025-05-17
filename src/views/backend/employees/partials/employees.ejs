@@ -28,8 +28,6 @@
         query,
       });
 
-      const serverUrl = `<%=apiRoutes.employees.list.url%>?${params.toString()}`;
-
       // gridjs 인스턴스 생성
       currentGrid = new gridjs.Grid({
         columns: [
@@ -66,7 +64,10 @@
         },
         sort: true,
         server: {
-          url: serverUrl,
+          url: `<%=apiRoutes.employees.list.url%>?${params.toString()}`,
+          headers: {
+            Authorization: `Bearer ${getCookie('accessToken')}`,
+          },
           then: (data) => data.data.map((item) => [item.id, item.email, item.name, item.createdAt, item.lastLoginAt]),
           total: (data) => data.metadata.total,
         },
