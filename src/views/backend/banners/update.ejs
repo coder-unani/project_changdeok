@@ -16,7 +16,7 @@
         </label>
       </div>
       <div class="relative w-full lg:w-[250px] aspect-3/2">
-        <button type="button" id="imageAdd" class="absolute top-0 left-0 w-full h-full bg-gray-100 border border-dashed border-secondary-border rounded-lg">
+        <button type="button" id="imageAdd" class="absolute top-0 left-0 w-full h-full bg-gray-100 border border-dashed border-main-border rounded-lg">
           <span class="absolute inset-0 flex flex-col items-center justify-center">
             <img class="block w-[50px] opacity-50" src="/images/add-image-512x512.png" alt="이미지 추가">
             <p class="mt-1 text-xs text-gray-400">(<%=metadata.groupInfo.imageWidth%>x<%=metadata.groupInfo.imageHeight%>)</p>
@@ -30,7 +30,7 @@
               </svg>
             </span>
           </button>
-          <div class="relative w-full h-full bg-gray-100 border border-secondary-border rounded-lg z-10 overflow-hidden">
+          <div class="relative w-full h-full bg-gray-100 border border-main-border rounded-lg z-10 overflow-hidden">
             <img id="imagePreview" class="w-full h-full object-contain" src="<%=data.imagePath || '/images/no-image-200x200.jpg'%>" alt="이미지 미리보기">
           </div>
         </div>
@@ -58,7 +58,7 @@
     <div class="flex flex-col lg:flex-row gap-4">
       <div class="flex-1">
         <label for="linkType" class="block mb-2 orb-label">링크 타입</label>
-        <select id="linkType" name="linkType" class="w-full p-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 border-r-12 border-primary-border">
+        <select id="linkType" name="linkType" class="w-full p-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 border-r-12 border-light-border">
           <option value="">선택</option>
           <option value="self" <%if (data.linkType === 'self') {%>selected<%}%>>내부 링크</option>
           <option value="outer" <%if (data.linkType === 'outer') {%>selected<%}%>>외부 링크</option>
@@ -72,7 +72,7 @@
 
     <div>
       <label for="isPublished" class="block mb-2 orb-label">발행 여부</label>
-      <select id="isPublished" name="isPublished" class="w-full p-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 border-r-12 border-primary-border">
+      <select id="isPublished" name="isPublished" class="w-full p-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 border-r-12 border-light-border">
         <option value="N" <%if (!data.isPublished) {%>selected<%}%>>미발행</option>
         <option value="Y" <%if (data.isPublished) {%>selected<%}%>>발행</option>
       </select>
@@ -91,7 +91,7 @@
   </div>
       
   <div class="text-right">
-    <button type="submit" class="orb-btn orb-btn-primary">
+    <button type="submit" class="orb-btn orb-btn-success">
       수정
     </button>
   </div>

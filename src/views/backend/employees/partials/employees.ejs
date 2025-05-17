@@ -1,20 +1,27 @@
 <div class="hidden space-y-4" id="employees-container">
-  <div class="flex w-full items-center justify-between gap-2">
-    <div class="flex gap-2">
+  <div class="flex w-full flex-col justify-between gap-2 lg:flex-row lg:items-center">
+    <div class="flex flex-1 justify-between gap-2">
       <input type="text" id="employees-query" class="orb-input lg:max-w-[200px]" placeholder="검색어를 입력해주세요." />
       <button id="btn-employees-search" class="orb-btn orb-btn-primary">조회</button>
     </div>
-    <div class="flex items-center justify-end">
-      <a href="<%=backendRoutes.employees.regist.url%>" class="orb-btn orb-btn-primary">관리자 등록</a>
-    </div>
   </div>
+
   <!-- 관리자 목록 -->
   <div id="employees" class="flex overflow-x-auto"></div>
+
+  <!-- 관리자 등록 -->
+  <div class="flex items-center">
+    <a href="<%=backendRoutes.employees.regist.url%>" class="orb-btn orb-btn-success">관리자 등록</a>
+  </div>
 </div>
 
 <script nonce="<%=nonce%>">
   document.addEventListener('DOMContentLoaded', () => {
     const employees = document.getElementById('employees');
+    const customGridLang = {
+      ...gridLangKoKR,
+      noRecordsFound: '등록된 관리자가 없습니다.',
+    };
 
     let currentGrid = null;
 
@@ -23,10 +30,7 @@
       currentGrid?.destroy();
 
       const query = document.getElementById('employees-query').value;
-
-      const params = new URLSearchParams({
-        query,
-      });
+      const params = new URLSearchParams({ query });
 
       // gridjs 인스턴스 생성
       currentGrid = new gridjs.Grid({
@@ -35,29 +39,28 @@
           {
             name: '아이디',
             formatter: (cell, row) => {
-              const adminId = row.cells[0].data;
+              const employeeId = row.cells[0].data;
+              const url = `<%=backendRoutes.employees.detail.url%>`;
               return gridjs.html(
-                `<a href="/admin/employees/${adminId}" class="hover:underline decoration-gray-800">${cell}</a>`
+                `<a href="${url.replace(':employeeId', employeeId)}"class="hover:underline decoration-gray-800">${cell}</a>`
               );
             },
           },
           {
             name: '이름',
             formatter: (cell, row) => {
-              const adminId = row.cells[0].data;
+              const employeeId = row.cells[0].data;
+              const url = `<%=backendRoutes.employees.detail.url%>`;
               return gridjs.html(
-                `<a href="/admin/employees/${adminId}" class="hover:underline decoration-gray-800">${cell}</a>`
+                `<a href="${url.replace(':employeeId', employeeId)}"class="hover:underline decoration-gray-800">${cell}</a>`
               );
             },
           },
           { name: '생성일' },
           { name: '마지막 로그인' },
         ],
-        language: gridLangKoKR,
+        language: customGridLang,
         data: [],
-        className: {
-          container: 'custom-gridjs-container', // 커스텀 페이지네이션 있을 경우 컨테이너 클래스 추가
-        },
         resizable: true,
         style: {
           table: { 'white-space': 'nowrap' },

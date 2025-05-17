@@ -9,16 +9,16 @@
 
     switch (type) {
       case 'success':
-        background = computedStyle.getPropertyValue('--color-success').trim();
+        background = computedStyle.getPropertyValue('--color-success-main').trim();
         break;
       case 'error':
-        background = computedStyle.getPropertyValue('--color-error').trim();
+        background = computedStyle.getPropertyValue('--color-error-main').trim();
         break;
       case 'warning':
-        background = computedStyle.getPropertyValue('--color-warning').trim();
+        background = computedStyle.getPropertyValue('--color-warning-main').trim();
         break;
       default:
-        background = computedStyle.getPropertyValue('--color-dark').trim();
+        background = computedStyle.getPropertyValue('--color-common-black').trim();
         break;
     }
 
