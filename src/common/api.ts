@@ -110,16 +110,6 @@ export const getApiContentGroup = async (groupId: number): Promise<IApiResponse<
   });
 };
 
-export const getApiEmployees = async (data: IRequestSearchList): Promise<IApiResponse<IEmployee[]>> => {
-  const params = new URLSearchParams(data as any);
-  const apiUrl = `${apiRoutes.employees.list.url}`;
-
-  return fetchApi<IEmployee[]>(apiUrl, {
-    method: apiRoutes.employees.list.method,
-    params,
-  });
-};
-
 export const getApiEmployeeDetail = async (employeeId: number): Promise<IApiResponse<IEmployee>> => {
   const apiUrl = `${apiRoutes.employees.detail.url}`.replace(':employeeId', employeeId.toString());
 
