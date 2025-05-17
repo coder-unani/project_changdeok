@@ -247,10 +247,12 @@
     // API 호출 함수
     const fetchStats = async (url, method) => {
       try {
+        const accessToken = getCookie('access_token');
         const response = await fetch(url, {
           method,
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
           },
         });
 

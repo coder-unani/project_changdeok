@@ -439,6 +439,8 @@
       try {
         // TODO: 폼 데이터 유효성 검사
         // isNonUserWrite, isEncrypt = true;
+        const accessToken = getCookie('access_token');
+
 
         // 폼 데이터 수집
         const formData = new FormData(e.target);
@@ -468,6 +470,7 @@
           method: '<%=apiRoutes.contents.write.method%>',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
           },
           body: JSON.stringify(formatData),
         });

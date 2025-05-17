@@ -9,7 +9,7 @@ import { IEmployeeToken } from '../../types/object';
 
 // Constants
 const COOKIE_NAMES = {
-  ACCESS_TOKEN: 'accessToken',
+  ACCESS_TOKEN: 'access_token',
   EMPLOYEE: 'employee',
 } as const;
 
