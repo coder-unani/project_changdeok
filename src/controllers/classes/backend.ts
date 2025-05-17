@@ -27,10 +27,10 @@ export class BackendController extends BaseWebController {
   public index = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 페이지 데이터 생성
-      const data = this.createPageData(route);
+      const pageData = this.createPageData(route);
 
       // 관리자 홈 페이지 렌더링
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -65,14 +65,14 @@ export class BackendController extends BaseWebController {
       };
 
       // 페이지 데이터 생성
-      const data = this.createPageData(route, route.title, metadata, {
+      const pageData = this.createPageData(route, route.title, metadata, {
         banners,
         contents,
         employees,
       });
 
       // 대시보드 페이지 렌더링
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -105,7 +105,7 @@ export class BackendController extends BaseWebController {
       }
 
       // 페이지 데이터 생성
-      const data = this.createPageData(route, `${bannerGroupInfo.title} ${route.title}`, {
+      const pageData = this.createPageData(route, `${bannerGroupInfo.title} ${route.title}`, {
         groupInfo: {
           id: apiGroupInfo.metadata.group.ids?.[0],
           title: bannerGroupInfo.title,
@@ -116,7 +116,7 @@ export class BackendController extends BaseWebController {
       });
 
       // 배너 등록 페이지 렌더링
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -145,10 +145,10 @@ export class BackendController extends BaseWebController {
       }
 
       // 페이지 데이터 생성
-      const data = this.createPageData(route, `${metadata.groupInfo.title} ${route.title}`, metadata, banner);
+      const pageData = this.createPageData(route, `${metadata.groupInfo.title} ${route.title}`, metadata, banner);
 
       // 배너 상세 페이지 렌더링
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -177,10 +177,10 @@ export class BackendController extends BaseWebController {
       }
 
       // 페이지 데이터 생성
-      const data = this.createPageData(route, `${metadata.groupInfo.title} ${route.title}`, metadata, banner);
+      const pageData = this.createPageData(route, `${metadata.groupInfo.title} ${route.title}`, metadata, banner);
 
       // 배너 상세 페이지 렌더링
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -229,10 +229,10 @@ export class BackendController extends BaseWebController {
       }
 
       // 페이지 데이터 생성
-      const data = this.createPageData(route, `${metadata.groupInfo.title} ${route.title}`, metadata, banners);
+      const pageData = this.createPageData(route, `${metadata.groupInfo.title} ${route.title}`, metadata, banners);
 
       // 배너 목록 페이지 렌더링
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -245,10 +245,10 @@ export class BackendController extends BaseWebController {
       await this.verifyPermission(req, route.permissions);
 
       // 페이지 데이터 생성
-      const data = this.createPageData(route);
+      const pageData = this.createPageData(route);
 
       // 배너 관리 페이지 렌더링
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -261,10 +261,10 @@ export class BackendController extends BaseWebController {
       await this.verifyPermission(req, route.permissions);
 
       // 페이지 데이터 생성
-      const data = this.createPageData(route);
+      const pageData = this.createPageData(route);
 
       // 팝업 관리 페이지 렌더링
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -288,14 +288,14 @@ export class BackendController extends BaseWebController {
       const getContentGroup = await getApiContentGroup(groupId, apiOptions);
 
       // 페이지 데이터 생성
-      const data = this.createPageData(
+      const pageData = this.createPageData(
         route,
         `${getContentGroup.data?.title ?? '게시판'} 목록`,
         getContentGroup.metadata
       );
 
       // 게시판 관리 페이지 렌더링
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -324,14 +324,14 @@ export class BackendController extends BaseWebController {
       }
 
       // 페이지 데이터 생성
-      const data = this.createPageData(
+      const pageData = this.createPageData(
         route,
         `${getContentGroup.data?.title ?? '게시판'} 작성`,
         getContentGroup.metadata
       );
 
       // 게시글 작성 페이지 렌더링
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -375,7 +375,7 @@ export class BackendController extends BaseWebController {
       }
 
       // 페이지 데이터 생성
-      const data = this.createPageData(
+      const pageData = this.createPageData(
         route,
         `${groupTitle} 상세`,
         {
@@ -385,7 +385,7 @@ export class BackendController extends BaseWebController {
       );
 
       // 게시글 상세 정보 페이지 렌더링
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -424,10 +424,15 @@ export class BackendController extends BaseWebController {
 
       // 페이지 데이터 생성
       const groupTitle = getContentGroup.data?.title ?? '게시판';
-      const data = this.createPageData(route, `${groupTitle} 수정`, getContentDetail.metadata, getContentDetail.data);
+      const pageData = this.createPageData(
+        route,
+        `${groupTitle} 수정`,
+        getContentDetail.metadata,
+        getContentDetail.data
+      );
 
       // 게시글 상세 정보 페이지 렌더링
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -466,12 +471,12 @@ export class BackendController extends BaseWebController {
       }
 
       // 페이지 데이터 생성
-      const data = this.createPageData(route, route.title, {
+      const pageData = this.createPageData(route, route.title, {
         permissions,
       });
 
       // 직원 등록 페이지 렌더링
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -508,7 +513,7 @@ export class BackendController extends BaseWebController {
       }
 
       // 페이지 데이터 생성
-      const data = this.createPageData(
+      const pageData = this.createPageData(
         route,
         route.title,
         {
@@ -519,7 +524,7 @@ export class BackendController extends BaseWebController {
       );
 
       // 상세 정보 페이지 렌더링
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -548,10 +553,10 @@ export class BackendController extends BaseWebController {
       }
 
       // 페이지 데이터 생성
-      const data = this.createPageData(route, route.title, {}, employee);
+      const pageData = this.createPageData(route, route.title, {}, employee);
 
       // 직원 정보 수정 페이지 렌더링
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -577,10 +582,10 @@ export class BackendController extends BaseWebController {
       }
 
       // 페이지 데이터 생성
-      const data = this.createPageData(route, route.title, {}, { employeeId, isForceUpdatePassword });
+      const pageData = this.createPageData(route, route.title, {}, { employeeId, isForceUpdatePassword });
 
       // 직원 비밀번호 수정 페이지 렌더링
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -609,10 +614,10 @@ export class BackendController extends BaseWebController {
       }
 
       // 페이지 데이터 생성
-      const data = this.createPageData(route, route.title, {}, employee);
+      const pageData = this.createPageData(route, route.title, {}, employee);
 
       // 직원 삭제 페이지 렌더링
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -657,7 +662,7 @@ export class BackendController extends BaseWebController {
       }
 
       // 페이지 데이터 생성
-      const data = this.createPageData(
+      const pageData = this.createPageData(
         route,
         route.title,
         {
@@ -669,7 +674,7 @@ export class BackendController extends BaseWebController {
       );
 
       // 직원 권한 수정 페이지 렌더링
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -682,10 +687,10 @@ export class BackendController extends BaseWebController {
       await this.verifyPermission(req, route.permissions);
 
       // 페이지 데이터 생성
-      const data = this.createPageData(route, route.title);
+      const pageData = this.createPageData(route, route.title);
 
       // 직원 목록 페이지 렌더링
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -699,10 +704,10 @@ export class BackendController extends BaseWebController {
       };
 
       // 페이지 데이터 생성
-      const data = this.createPageData(route, '', { ...metadata });
+      const pageData = this.createPageData(route, '', { ...metadata });
 
       // 로그인 페이지 렌더링
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -712,10 +717,10 @@ export class BackendController extends BaseWebController {
   public employeeForgotPassword = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 페이지 데이터 생성
-      const data = this.createPageData(route);
+      const pageData = this.createPageData(route);
 
       // 비밀번호 찾기 페이지 렌더링
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -725,10 +730,10 @@ export class BackendController extends BaseWebController {
   public stats = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 페이지 데이터 생성
-      const data = this.createPageData(route);
+      const pageData = this.createPageData(route);
 
       // 통계 페이지 렌더링
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -751,10 +756,10 @@ export class BackendController extends BaseWebController {
       }
 
       // 페이지 데이터 생성
-      const data = this.createPageData(route, route.title, {}, siteSettings);
+      const pageData = this.createPageData(route, route.title, {}, siteSettings);
 
       // 설정 페이지 렌더링
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -780,11 +785,23 @@ export class BackendController extends BaseWebController {
     accessPermissions: number[] = [],
     accessEmployeeId?: number
   ): Promise<void> => {
-    const loggedInEmployee = await this.getLoggedInEmployee(req, accessEmployeeId);
-
     // 권한이 필요없는 페이지이면 접근 가능
     if (accessPermissions.length === 0 && !accessEmployeeId) {
       return;
+    }
+
+    // 로그인 정보가 없는 경우 에러 페이지로 이동
+    const cookieEmployee = req.cookies.employee;
+    if (!cookieEmployee) {
+      throw new AuthError('로그인이 필요합니다.');
+    }
+
+    // Cookie 직원 정보 파싱
+    const loggedInEmployee: IEmployeeToken = JSON.parse(cookieEmployee);
+
+    // 로그인한 직원 정보가 없는 경우 에러 페이지로 이동
+    if (!loggedInEmployee) {
+      throw new AuthError('로그인이 필요합니다.');
     }
 
     // 특정 직원 ID가 허용되어 있으면 해당 직원은 접근 가능
