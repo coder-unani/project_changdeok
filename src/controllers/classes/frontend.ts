@@ -16,8 +16,12 @@ export class FrontendController {
       // 배너 정보 가져오기
       const bannerGroupIds: number[] = [1, 2, 3, 4, 5];
 
-      // API 호출
-      const getBannerGroup = await getApiBannerGroup(bannerGroupIds);
+      // API 인증정보
+      const apiOptions = {
+        token: req.cookies.access_token,
+      };
+
+      // 배너 기본 정보 설정
       let popupBanner: IBannerDisp[] = [];
       let topBanner: IBannerDisp = {
         title: 'Trusted Expertise, Proven Results.',
@@ -32,6 +36,9 @@ export class FrontendController {
       };
       let midBanner2: IBannerDisp[] = [];
       let midBanner3: IBannerDisp[] = [];
+
+      // 배너 그룹 정보 API 호출
+      const getBannerGroup = await getApiBannerGroup(bannerGroupIds, apiOptions);
 
       // 배너 정보 조회 성공
       if (getBannerGroup.result) {
@@ -94,11 +101,11 @@ export class FrontendController {
       // 콘텐츠 그룹 정보 가져오기
       const contentGroupId: number = 3;
 
-      // API 호출
-      const getContentGroup = await getApiContentGroup(contentGroupId);
+      // 컨텐츠 그룹 정보 API 호출
+      const getContentGroup = await getApiContentGroup(contentGroupId, apiOptions);
 
       // 페이지 데이터 생성
-      const data = {
+      const pageData = {
         layout: route.layout,
         title: route.title,
         metadata: {
@@ -114,7 +121,7 @@ export class FrontendController {
         },
       };
 
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -126,8 +133,13 @@ export class FrontendController {
       // 배너 정보 가져오기
       const groupIds: number[] = [4];
 
-      // API 호출
-      const { result, message, metadata, data: bannerGroups } = await getApiBannerGroup(groupIds);
+      // API 인증정보
+      const apiOptions = {
+        token: req.cookies.access_token,
+      };
+
+      // 배너 그룹 정보 API 호출
+      const { result, data: bannerGroups } = await getApiBannerGroup(groupIds, apiOptions);
       const midBanner: IBannerDisp[] = [];
 
       if (result) {
@@ -143,7 +155,7 @@ export class FrontendController {
       }
 
       // 페이지 데이터 생성
-      const data = {
+      const pageData = {
         layout: route.layout,
         title: route.title,
         metadata: {},
@@ -152,7 +164,7 @@ export class FrontendController {
         },
       };
 
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -164,8 +176,13 @@ export class FrontendController {
       // 배너 정보 가져오기
       const groupIds: number[] = [4];
 
+      // API 인증정보
+      const apiOptions = {
+        token: req.cookies.access_token,
+      };
+
       // API 호출
-      const { result, message, metadata, data: bannerGroups } = await getApiBannerGroup(groupIds);
+      const { result, data: bannerGroups } = await getApiBannerGroup(groupIds, apiOptions);
       const midBanner: IBannerDisp[] = [];
 
       if (result) {
@@ -181,7 +198,7 @@ export class FrontendController {
       }
 
       // 페이지 데이터 생성
-      const data = {
+      const pageData = {
         layout: route.layout,
         title: route.title,
         metadata: {},
@@ -190,7 +207,7 @@ export class FrontendController {
         },
       };
 
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -200,14 +217,14 @@ export class FrontendController {
   public results = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 페이지 데이터 생성
-      const data = {
+      const pageData = {
         layout: route.layout,
         title: route.title,
         metadata: {},
         data: {},
       };
 
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -217,14 +234,14 @@ export class FrontendController {
   public qna = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 페이지 데이터 생성
-      const data = {
+      const pageData = {
         layout: route.layout,
         title: route.title,
         metadata: {},
         data: {},
       };
 
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
@@ -237,10 +254,13 @@ export class FrontendController {
       const contentGroupId: number = 3;
 
       // API 호출
-      const getContentGroup = await getApiContentGroup(contentGroupId);
+      const options = {
+        token: req.cookies.access_token,
+      };
+      const getContentGroup = await getApiContentGroup(contentGroupId, options);
 
       // 페이지 데이터 생성
-      const data = {
+      const pageData = {
         layout: route.layout,
         title: route.title,
         metadata: {
@@ -249,7 +269,7 @@ export class FrontendController {
         data: {},
       };
 
-      res.render(route.view, data);
+      res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);
     }
