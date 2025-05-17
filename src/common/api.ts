@@ -7,7 +7,7 @@ import { IRequestBanners, IRequestSearchList } from '../types/request';
 const API_BASE_URL = 'http://localhost:3000';
 
 interface FetchOptions {
-  accessToken?: string;
+  token?: string;
   params?: URLSearchParams;
 }
 
@@ -21,8 +21,8 @@ const fetchApi = async <T>(
       'Content-Type': 'application/json',
     };
 
-    if (options.accessToken) {
-      headers['Authorization'] = `Bearer ${options.accessToken}`;
+    if (options.token) {
+      headers['Authorization'] = `Bearer ${options.token}`;
     }
 
     const finalUrl = options.params ? `${API_BASE_URL}${url}?${options.params.toString()}` : `${API_BASE_URL}${url}`;
