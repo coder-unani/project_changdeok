@@ -77,9 +77,6 @@ export const getApiBanners = async (
   const params = new URLSearchParams(data as any);
   const apiUrl = `${apiRoutes.banners.list.url}`;
 
-  console.log(apiUrl);
-  console.log(options);
-
   return fetchApi<IBanner[]>(apiRoutes.banners.list.method, apiUrl, {
     ...options,
     params,
