@@ -46,9 +46,14 @@ export class GlobalMiddleware implements IMiddleware {
       ogTag,
       companyInfo,
     };
+
+    // 라우트
     res.locals.routes = frontendRoutes;
     res.locals.apiRoutes = apiRoutes;
     res.locals.backendRoutes = backendRoutes;
+
+    // 정적 파일 경로
+    res.locals.staticPath = this.config.getStaticPath();
 
     next();
   }

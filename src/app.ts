@@ -43,7 +43,7 @@ export class App {
     this.globalMiddleware = new GlobalMiddleware(config);
 
     // 스태틱 파일 경로 설정
-    this.app.use(express.static(path.resolve(__dirname, config.getStaticPath())));
+    this.app.use(express.static(path.resolve(__dirname, '../public')));
 
     // 템플릿 엔진 설정
     this.app.set('views', path.resolve(__dirname, 'views'));

@@ -65,9 +65,6 @@ export const getApiBannerGroup = async (
   const groupIdsString = groupIds.length > 0 ? groupIds.join(',') : 'all';
   const apiUrl = `${apiRoutes.banners.group.url}`.replace(':groupIds', groupIdsString);
 
-  console.log(apiUrl);
-  console.log(options);
-
   return fetchApi<IBannerGroup[]>(apiRoutes.banners.group.method, apiUrl, {
     ...options,
   });
