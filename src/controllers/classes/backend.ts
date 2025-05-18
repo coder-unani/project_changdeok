@@ -450,8 +450,8 @@ export class BackendController extends BaseWebController {
       };
 
       // 직원 정보 조회
-      const decodedToken = req.cookies.accessToken
-        ? verifyJWT(req.cookies.accessToken, this.config.getJwtSecretKey())
+      const decodedToken = req.cookies.access_token
+        ? verifyJWT(req.cookies.access_token, this.config.getJwtSecretKey())
         : null;
 
       // 현재 로그인한 직원 정보 조회
@@ -541,7 +541,7 @@ export class BackendController extends BaseWebController {
 
       // API 인증정보
       const apiOptions = {
-        token: req.cookies.accessToken,
+        token: req.cookies.access_token,
       };
 
       // 관리자 정보 조회
@@ -602,7 +602,7 @@ export class BackendController extends BaseWebController {
 
       // API 인증정보
       const apiOptions = {
-        token: req.cookies.accessToken,
+        token: req.cookies.access_token,
       };
 
       // 직원 정보 조회
@@ -631,7 +631,7 @@ export class BackendController extends BaseWebController {
 
       // API 인증정보
       const apiOptions = {
-        token: req.cookies.accessToken,
+        token: req.cookies.access_token,
       };
 
       // 직원 ID 추출
@@ -729,6 +729,9 @@ export class BackendController extends BaseWebController {
   // 통계 관리
   public stats = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
+      // 접근 권한 체크
+      await this.verifyPermission(req, route.permissions);
+
       // 페이지 데이터 생성
       const pageData = this.createPageData(route);
 
@@ -742,9 +745,12 @@ export class BackendController extends BaseWebController {
   // 설정
   public settings = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
+      // 접근 권한 체크
+      await this.verifyPermission(req, route.permissions);
+
       // API 인증정보
       const apiOptions = {
-        token: req.cookies.accessToken,
+        token: req.cookies.access_token,
       };
 
       // 사이트 설정 조회
