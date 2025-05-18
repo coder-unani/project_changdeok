@@ -391,11 +391,23 @@
 
         document.getElementById('og-tag-json').value = JSON.stringify(ogTag);
 
+        // FormData 생성
         const formData = new FormData(e.target);
+        const body = Object.fromEntries(formData.entries());
 
+        // API 인증정보
+        const apiOptions = {
+          token: getCookie('access_token'),
+        };
+
+        // API 호출
         const response = await fetch('<%=apiRoutes.settings.updateSite.url%>', {
           method: '<%=apiRoutes.settings.updateSite.method%>',
-          body: formData,
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${apiOptions.token}`,
+          },
+          body: JSON.stringify(body),
         });
 
         if (!response.ok) {
