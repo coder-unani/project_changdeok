@@ -157,25 +157,6 @@
     let currentGrid = null; // 현재 Grid 인스턴스를 저장할 변수
     let currentTab = null; // 현재 탭을 저장할 변수
 
-    // gridjs 한국어 설정
-    const koKR = {
-      search: { placeholder: '데이터 검색' },
-      sort: { sortAsc: '오름차순 정렬', sortDesc: '내림차순 정렬' },
-      pagination: {
-        previous: '이전',
-        next: '다음',
-        navigate: (page) => `${page}페이지로 이동`,
-        page: (page) => `${page}페이지`,
-        showing: '현재',
-        of: '건 표시. 총',
-        to: '-',
-        results: '건이 조회되었습니다.',
-      },
-      loading: '데이터를 불러오는 중...',
-      noRecordsFound: '데이터가 없습니다.',
-      error: '데이터를 불러올 수 없습니다. 다시 시도해 주세요.',
-    };
-
     // 탭 전환 함수
     const switchTab = (activeTab) => {
       // 모든 탭 버튼에서 active 클래스 제거
@@ -295,7 +276,7 @@
       // Grid 인스턴스 생성
       currentGrid = new gridjs.Grid({
         columns: ['타임스탬프', '메소드', '상태 코드', '경로', '사용자 IP', '원본', '출처', '사용자 에이전트'],
-        language: koKR,
+        language: gridLangKoKR,
         search: true,
         data: gridData,
         resizable: true,
@@ -330,7 +311,7 @@
       // Grid 인스턴스 생성
       currentGrid = new gridjs.Grid({
         columns: ['총 활성 사용자 수', '총 신규 사용자 수', '총 세션 수', '총 페이지 뷰 수'],
-        language: koKR,
+        language: gridLangKoKR,
         data: gridData,
         resizable: true,
         style: {
@@ -360,13 +341,13 @@
         item.newUsers,
         item.sessions,
         item.pageViews,
-        item.averageSessionDuration,
+        item.averageSessionDuration.toFixed(2),
       ]);
 
       // Grid 인스턴스 생성
       currentGrid = new gridjs.Grid({
-        columns: ['날짜', '활성 사용자 수', '신규 사용자 수', '세션 수', '페이지 뷰 수', '평균 세션 시간'],
-        language: koKR,
+        columns: ['날짜', '활성 사용자 수', '신규 사용자 수', '세션 수', '페이지 뷰 수', '평균 세션 시간 (초)'],
+        language: gridLangKoKR,
         search: true,
         data: gridData,
         resizable: true,
@@ -401,7 +382,7 @@
       // Grid 인스턴스 생성
       currentGrid = new gridjs.Grid({
         columns: ['페이지 경로', '페이지 뷰 수'],
-        language: koKR,
+        language: gridLangKoKR,
         search: true,
         data: gridData,
         resizable: true,
@@ -442,7 +423,7 @@
       // Grid 인스턴스 생성
       currentGrid = new gridjs.Grid({
         columns: ['출처', '매체', '신규 사용자 수', '세션 수', '페이지 뷰 수'],
-        language: koKR,
+        language: gridLangKoKR,
         search: true,
         data: gridData,
         resizable: true,
@@ -477,7 +458,7 @@
       // Grid 인스턴스 생성
       currentGrid = new gridjs.Grid({
         columns: ['시간대', '활성 사용자 수', '세션 수', '페이지 뷰 수'],
-        language: koKR,
+        language: gridLangKoKR,
         data: gridData,
         resizable: true,
         style: {
@@ -507,13 +488,13 @@
         item.activeUsers,
         item.sessions,
         item.pageViews,
-        item.averageSessionDuration,
+        item.averageSessionDuration.toFixed(2),
       ]);
 
       // Grid 인스턴스 생성
       currentGrid = new gridjs.Grid({
-        columns: ['브라우저', '활성 사용자 수', '세션 수', '페이지 뷰 수', '평균 세션 시간'],
-        language: koKR,
+        columns: ['브라우저', '활성 사용자 수', '세션 수', '페이지 뷰 수', '평균 세션 시간 (초)'],
+        language: gridLangKoKR,
         search: true,
         data: gridData,
         resizable: true,
@@ -529,53 +510,6 @@
         },
       });
       currentGrid.render(statsContainer);
-
-      // 차트 생성
-      const chartData = {
-        labels: gridData.map((item) => item.browser),
-        datasets: [
-          {
-            label: '브라우저 활성 사용자 수',
-            data: gridData.map((item) => item.activeUsers),
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.8)',
-              'rgba(54, 162, 235, 0.8)',
-              'rgba(255, 206, 86, 0.8)',
-              'rgba(75, 192, 192, 0.8)',
-              'rgba(153, 102, 255, 0.8)',
-              'rgba(255, 159, 64, 0.8)',
-            ],
-            borderColor: [
-              'rgba(255, 99, 132, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)',
-              'rgba(255, 159, 64, 1)',
-            ],
-            borderWidth: 1,
-            hoverOffset: 4,
-          },
-        ],
-      };
-
-      const config = {
-        type: 'doughnut',
-        data: chartData,
-      };
-
-      // 이전 차트가 있다면 제거
-      const existingChart = Chart.getChart(statsChart);
-      if (existingChart) {
-        existingChart.destroy();
-      }
-
-      // 차트 컨테이너 표시
-      chartContainer.classList.remove('hidden');
-
-      // 차트 생성
-      const chart = new Chart(statsChart, config);
-      return '';
     };
 
     // 국가
@@ -592,7 +526,7 @@
       const gridData = statsArray.map((item) => [item.country, item.activeUsers, item.sessions, item.pageViews]);
       currentGrid = new gridjs.Grid({
         columns: ['국가', '활성 사용자 수', '세션 수', '페이지 뷰 수'],
-        language: koKR,
+        language: gridLangKoKR,
         search: true,
         data: gridData,
         resizable: true,
