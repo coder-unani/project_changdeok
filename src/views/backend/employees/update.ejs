@@ -154,12 +154,18 @@
     });
 
     try {
+      // API 인증정보
+      const apiOptions = {
+        token: getCookie('access_token'),
+      };
+
       // 직원 수정 API 호출
       const apiUrl = '<%=apiRoutes.employees.update.url%>'.replace(':employeeId', '<%=data.id%>');
       const response = await fetch(apiUrl, {
         method: '<%=apiRoutes.employees.update.method%>',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiOptions.token}`,
         },
         body: JSON.stringify(data),
       });

@@ -188,6 +188,11 @@
     });
     
     try {
+      // API 인증정보
+      const apiOptions = {
+        token: getCookie('access_token'),
+      };
+
       // permissions를 추가
       data.permissions = Array.from(document.querySelectorAll('input[id^="permission"]:checked')).map(checkbox => Number(checkbox.value));
 
@@ -196,6 +201,7 @@
         method: '<%=apiRoutes.employees.regist.method%>',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiOptions.token}`,
         },
         body: JSON.stringify(data),
       });

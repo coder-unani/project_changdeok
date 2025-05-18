@@ -111,6 +111,11 @@
       });
       data.content = content;
 
+      // API 인증정보
+      const apiOptions = {
+        token: getCookie('access_token'),
+      };
+
       // 컨텐츠 등록 API 호출
       const apiUrl = '<%=apiRoutes.contents.update.url%>'
         .replace(':groupId', '<%=metadata.group.id%>')
@@ -119,6 +124,7 @@
         method: '<%=apiRoutes.contents.update.method%>',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiOptions.token}`,
         },
         body: JSON.stringify(data),
       });
