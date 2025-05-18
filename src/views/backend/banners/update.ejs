@@ -147,7 +147,6 @@
       const response = await fetch(apiUrl, {
         method: '<%=apiRoutes.banners.update.method%>',
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${apiOptions.token}`,
         },
         body: formData
