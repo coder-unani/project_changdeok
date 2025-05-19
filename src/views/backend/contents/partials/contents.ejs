@@ -1,0 +1,92 @@
+<div id="contents-container" class="hidden space-y-4">
+  <div class="flex w-full items-center justify-between gap-2">
+    <div class="flex flex-1 justify-between gap-2">
+      <input type="text" id="contents-query" class="orb-input lg:max-w-[200px]" placeholder="검색어를 입력해주세요." />
+      <button id="btn-contents-search" class="orb-btn orb-btn-primary">조회</button>
+    </div>
+  </div>
+
+  <div id="contents" class="flex overflow-x-auto"></div>
+
+  <div class="flex items-center">
+    <a
+      href="<%=backendRoutes.contents.write.url.replace(':groupId', metadata.group.id)%>"
+      class="orb-btn orb-btn-success"
+      >게시글 등록</a
+    >
+  </div>
+</div>
+
+<script nonce="<%=nonce%>">
+  document.addEventListener('DOMContentLoaded', () => {
+    const contents = document.getElementById('contents');
+
+    let currentGrid = null;
+
+    const initGrid = async () => {
+      // 기존 grid 초기화
+      currentGrid?.destroy();
+
+      const query = document.getElementById('contents-query').value;
+      const params = new URLSearchParams({ query });
+
+      // gridjs 인스턴스 생성
+      currentGrid = new gridjs.Grid({
+        columns: [
+          { name: '글번호' },
+          {
+            name: '제목',
+            formatter: (cell, row) => {
+              const contentId = row.cells[0].data;
+              const groupId = `<%=metadata.group.id%>`;
+              const url = `<%=backendRoutes.contents.detail.url%>`;
+              return gridjs.html(
+                `<a href="${url.replace(':groupId', groupId).replace(':contentId', contentId)}" class="hover:underline decoration-gray-800">${cell}</a>`
+              );
+            },
+          },
+          { name: '작성자' },
+          {
+            name: '작성일',
+            class: 'hidden lg:table-cell text-xs',
+          },
+        ],
+        language: {
+          ...gridLangKoKR,
+          noRecordsFound: '등록된 게시글이 없습니다.',
+        },
+        data: [],
+        resizable: true,
+        style: {
+          table: { 'white-space': 'nowrap' },
+        },
+        sort: true,
+        server: {
+          url: `<%=apiRoutes.contents.list.url.replace(':groupId', metadata.group.id)%>?${params.toString()}`,
+          headers: {
+            Authorization: `Bearer ${getCookie('access_token')}`,
+          },
+          then: (data) => data.data.map((item) => [item.id, item.title, item.writerName, item.createdAt]),
+          total: (data) => data.metadata.total,
+        },
+        pagination: {
+          limit: Number('<%=data.group.sizePerPage%>') || 20,
+          server: {
+            url: (prev, page, limit) => {
+              return `${prev}&page=${page}&pageSize=${limit}`;
+            },
+          },
+        },
+      });
+
+      // gridjs 렌더링
+      currentGrid.render(contents);
+    };
+
+    document.getElementById('btn-contents-search').addEventListener('click', () => {
+      initGrid();
+    });
+
+    initGrid();
+  });
+</script>

@@ -6,29 +6,14 @@
 
 <div class="bg-default-bg mb-4 overflow-x-auto rounded-xl p-4 text-sm shadow-[0_2px_30px_rgba(0,0,0,.06)] lg:p-6">
   <div class="space-y-4">
-    <div class="flex w-full items-center justify-between gap-2">
-      <div class="flex flex-1 justify-between gap-2">
-        <input
-          type="text"
-          id="contents-query"
-          class="orb-input lg:max-w-[200px]"
-          placeholder="검색어를 입력해주세요."
-        />
-        <button id="btn-contents-search" class="orb-btn orb-btn-primary">조회</button>
-      </div>
-    </div>
+    <!-- 탭메뉴 -->
+    <%- include('partials/tab-menu') %>
 
-    <!-- 게시물 목록 -->
-    <div id="contents" class="flex overflow-x-auto"></div>
+    <!-- 게시물 관리 -->
+    <%- include('partials/contents') %>
 
-    <!-- 게시글 등록 -->
-    <div class="flex items-center">
-      <a
-        href="<%=backendRoutes.contents.write.url.replace(':groupId', metadata.group.id)%>"
-        class="orb-btn orb-btn-success"
-        >게시글 등록</a
-      >
-    </div>
+    <!-- 설정 -->
+    <%- include('partials/setting') %>
   </div>
 </div>
 
@@ -37,75 +22,55 @@
 
 <script nonce="<%=nonce%>">
   document.addEventListener('DOMContentLoaded', () => {
-    const contents = document.getElementById('contents');
-    const customGridLang = {
-      ...gridLangKoKR,
-      noRecordsFound: '등록된 게시글이 없습니다.',
-    };
+    const contentsContainer = document.getElementById('contents-container');
+    const settingContainer = document.getElementById('contents-setting-container');
 
-    let currentGrid = null;
+    let currentTab = null;
 
-    const initGrid = async () => {
-      // 기존 grid 초기화
-      currentGrid?.destroy();
-
-      const query = document.getElementById('contents-query').value;
-      const params = new URLSearchParams({ query });
-
-      // gridjs 인스턴스 생성
-      currentGrid = new gridjs.Grid({
-        columns: [
-          { name: '글번호' },
-          {
-            name: '제목',
-            formatter: (cell, row) => {
-              const contentId = row.cells[0].data;
-              const groupId = `<%=metadata.group.id%>`;
-              const url = `<%=backendRoutes.contents.detail.url%>`;
-              return gridjs.html(
-                `<a href="${url.replace(':groupId', groupId).replace(':contentId', contentId)}" class="hover:underline decoration-gray-800">${cell}</a>`
-              );
-            },
-          },
-          { name: '작성자' },
-          {
-            name: '작성일',
-            class: 'hidden lg:table-cell text-xs',
-          },
-        ],
-        language: customGridLang,
-        data: [],
-        resizable: true,
-        style: {
-          table: { 'white-space': 'nowrap' },
-        },
-        sort: true,
-        server: {
-          url: `<%=apiRoutes.contents.list.url.replace(':groupId', metadata.group.id)%>?${params.toString()}`,
-          headers: {
-            Authorization: `Bearer ${getCookie('access_token')}`,
-          },
-          then: (data) => data.data.map((item) => [item.id, item.title, item.writerName, item.createdAt]),
-          total: (data) => data.metadata.total,
-        },
-        pagination: {
-          limit: 20,
-          server: {
-            url: (prev, page, limit) => {
-              return `${prev}&page=${page}&pageSize=${limit}`;
-            },
-          },
-        },
+    const switchTab = (activeTab) => {
+      // 모든 탭 버튼에서 active 클래스 제거
+      document.querySelectorAll('[data-tab]').forEach((button) => {
+        button.classList.remove('active', 'bg-blue-50', 'text-blue-500');
+        button.classList.add(
+          'hover:bg-paper-bg',
+          'hover:text-gray-700',
+          'dark:hover:bg-gray-800',
+          'dark:hover:text-gray-400'
+        );
       });
 
-      // gridjs 렌더링
-      currentGrid.render(contents);
+      // 클릭된 탭 버튼에 active 클래스 추가
+      const activeButton = document.querySelector(`[data-tab="${activeTab}"]`);
+      if (activeButton) {
+        activeButton.classList.remove(
+          'hover:bg-paper-bg',
+          'hover:text-gray-700',
+          'dark:hover:bg-gray-800',
+          'dark:hover:text-gray-400'
+        );
+        activeButton.classList.add('active', 'bg-blue-50', 'text-blue-500');
+      }
+
+      if (activeTab === 'contents') {
+        contentsContainer.classList.remove('hidden');
+        settingContainer.classList.add('hidden');
+      } else if (activeTab === 'contents-setting') {
+        contentsContainer.classList.add('hidden');
+        settingContainer.classList.remove('hidden');
+      }
+
+      currentTab = activeTab;
     };
 
-    document.getElementById('btn-contents-search').addEventListener('click', () => {
-      initGrid();
+    // 탭 버튼에 이벤트 리스너 추가
+    document.querySelectorAll('[data-tab]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const tabName = button.getAttribute('data-tab');
+        switchTab(tabName);
+      });
     });
 
-    initGrid();
+    // 초기화
+    switchTab('contents');
   });
 </script>

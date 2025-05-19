@@ -1,0 +1,104 @@
+<div id="contents-setting-container" class="hidden">
+  <form id="contents-settings-form">
+    <ul class="mb-4 space-y-4">
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="contents-group-id" class="orb-label flex w-32 gap-1 lg:leading-11">게시판 번호</label>
+        <input
+          type="number"
+          id="contents-group-id"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          value="<%=data.group.id%>"
+          readonly
+        />
+      </li>
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="title" class="orb-label flex w-32 gap-1 lg:leading-11">게시판 이름</label>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          value="<%=data.group.title%>"
+          readonly
+        />
+      </li>
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="description" class="orb-label flex w-32 gap-1 lg:leading-11">게시판 설명</label>
+        <input
+          id="description"
+          name="description"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          value="<%=data.group.description%>"
+        />
+      </li>
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="sizePerPage" class="orb-label flex w-32 gap-1 lg:leading-11">페이지당 게시글 수</label>
+        <input
+          type="number"
+          id="sizePerPage"
+          name="sizePerPage"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          value="<%=data.group.sizePerPage%>"
+        />
+      </li>
+      <li class="flex flex-col gap-2 lg:flex-row">
+        <label for="isActive" class="orb-label flex w-32 gap-1 lg:leading-11">게시판 사용여부</label>
+        <select
+          id="isActive"
+          name="isActive"
+          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          disabled
+        >
+          <option value="Y" <%=data.group.isActivated ? 'selected' : ''%>>사용</option>
+          <option value="N" <%=!data.group.isActivated ? 'selected' : ''%>>미사용</option>
+        </select>
+      </li>
+    </ul>
+
+    <div class="flex justify-end">
+      <button type="submit" class="orb-btn orb-btn-success">저장</button>
+    </div>
+  </form>
+</div>
+
+<!-- sweetalert2 -->
+<%- include('../../common/library/sweetalert2') %>
+
+<script nonce="<%=nonce%>">
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('contents-settings-form');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+      
+      // API 인증 정보
+      const apiOptions = {
+        token: getCookie('access_token'),
+      };
+
+      // 컨텐츠 그룹 수정 API 호출
+      const apiUrl = '<%=apiRoutes.contents.updateGroup.url%>'.replace(':groupId', '<%=data.group.id%>');
+      const response = await fetch(apiUrl, {
+        method: '<%=apiRoutes.contents.updateGroup.method%>',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiOptions.token}`,
+        },
+        body: JSON.stringify(data),
+      });
+
+      // 응답 오류
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || response.statusText);
+      }
+
+      // 응답 성공
+      alertMessage('success', '<%=apiRoutes.contents.updateGroup.title%> 성공').then(() => {
+        window.location.href = '<%=backendRoutes.contents.list.url%>'.replace(":groupId", '<%=data.group.id%>');
+      });
+    });
+  });
+</script>
+
