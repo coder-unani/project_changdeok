@@ -397,15 +397,15 @@ export class EmployeeService extends BaseService implements IEmployeeService {
     }
   }
 
-  public async loginHistory(params: IRequestSearchList): Promise<IServiceResponse<IEmployeeLoginHistory[]>> {
+  public async loginHistory(data: IRequestSearchList): Promise<IServiceResponse<IEmployeeLoginHistory[]>> {
     try {
-      const page = params.page || 1;
-      const pageSize = params.pageSize || 10;
-      const query = params.query || '';
-      const startDate = params.startDate ? convertStringToDate(params.startDate) : null;
-      const endDate = params.endDate ? convertStringToDate(params.endDate) : null;
+      const page = data.page || 1;
+      const pageSize = data.pageSize || 10;
+      const query = data.query || '';
+      const utcStartDate = new Date(data.startDate + 'T00:00:00+09:00');
+      const utcEndDate = new Date(data.endDate + 'T23:59:59+09:00');
 
-      const sort = params.sort || 'CREATED_AT_DESC';
+      const sort = data.sort || 'CREATED_AT_DESC';
       let orderBy: Record<string, string> = {
         createdAt: 'desc',
       };
@@ -433,8 +433,8 @@ export class EmployeeService extends BaseService implements IEmployeeService {
       const where = {
         employeeEmail: query ? { contains: query } : undefined,
         createdAt: {
-          ...(startDate ? { gte: startDate } : {}),
-          ...(endDate ? { lte: endDate } : {}),
+          ...(utcStartDate ? { gte: utcStartDate } : {}),
+          ...(utcEndDate ? { lte: utcEndDate } : {}),
         },
       };
 
@@ -449,6 +449,7 @@ export class EmployeeService extends BaseService implements IEmployeeService {
         }),
       ]);
 
+      // 로그인 기록 변환
       const loginHistory = rows.map((item) => {
         const createdAt = convertDateToString(convertDateToKST(item.createdAt));
         const updatedAt = item.updatedAt ? convertDateToString(convertDateToKST(item.updatedAt)) : null;
