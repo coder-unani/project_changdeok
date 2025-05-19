@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Start nginx service
-echo "** nginx 서비스 시작 **"
-if ! sudo systemctl start nginx.service; then
-    echo "** nginx 서비스 시작 실패 **"
+# Start envoy service
+echo "** envoy 서비스 시작 **"
+if ! sudo systemctl start envoy.service; then
+    echo "** envoy 서비스 시작 실패 **"
     exit 1
 fi
 

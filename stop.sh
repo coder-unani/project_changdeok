@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Stop nginx service
-echo "** nginx 서비스 중지 **"
-if ! sudo systemctl stop nginx.service; then
-    echo "** nginx 서비스 중지 실패 **"
+# Stop envoy service
+echo "** envoy 서비스 중지 **"
+if ! sudo systemctl stop envoy.service; then
+    echo "** envoy 서비스 중지 실패 **"
     exit 1
 fi
 
