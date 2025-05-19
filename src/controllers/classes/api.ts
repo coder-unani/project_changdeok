@@ -24,6 +24,7 @@ import {
   IRequestBannerUpdate,
   IRequestBannerWrite,
   IRequestBanners,
+  IRequestContentGroupUpdate,
   IRequestContentUpdate,
   IRequestContentWrite,
   IRequestEmployeeDelete,
@@ -536,6 +537,39 @@ export class ApiController {
       // 조회 성공
       const response = formatApiResponse(true, null, null, result.metadata, result.data);
       res.status(httpStatus.OK).json(response);
+    } catch (error) {
+      this.handleError(error, res);
+    }
+  }
+
+  // 컨텐츠 그룹 수정
+  public async contentGroupUpdate(req: Request, res: Response): Promise<void> {
+    try {
+      // 컨텐츠 그룹 ID 추출
+      const groupId = Number(req.params.groupId);
+
+      // ID가 숫자가 아닌 경우 에러 처리
+      if (!groupId || isNaN(groupId)) {
+        throw new ValidationError('컨텐츠 그룹 ID가 잘못되었습니다.');
+      }
+
+      // 요청 데이터
+      const requestData: IRequestContentGroupUpdate = {
+        description: req.body.description || null,
+        sizePerPage: Number(req.body.sizePerPage || null),
+      };
+
+      // 컨텐츠 그룹 수정 처리
+      const contentService: IContentService = new ContentService(prisma);
+      const result = await contentService.updateGroup(groupId, requestData);
+
+      // 수정 실패 처리
+      if (!result.result) {
+        throw new AppError(result.code, result.message);
+      }
+
+      // 수정 성공
+      res.status(httpStatus.NO_CONTENT).send(null);
     } catch (error) {
       this.handleError(error, res);
     }

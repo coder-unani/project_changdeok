@@ -143,6 +143,11 @@ class ApiRouter {
       this.apiController.contentGroupInfo(req, res);
     });
 
+    // 컨텐츠 그룹 수정
+    this.router.put(apiRoutes.contents.updateGroup.url, (req: Request, res: Response) => {
+      this.apiController.contentGroupUpdate(req, res);
+    });
+
     // 컨텐츠 등록
     this.router.post(apiRoutes.contents.write.url, (req: Request, res: Response) => {
       this.apiController.contentWrite(req, res);

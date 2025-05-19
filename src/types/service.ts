@@ -7,6 +7,7 @@ import {
   IRequestBannerWrite,
   IRequestBanners,
   IRequestCompanySettings,
+  IRequestContentGroupUpdate,
   IRequestContentUpdate,
   IRequestContentWrite,
   IRequestEmployeeDelete,
@@ -36,6 +37,7 @@ export interface IContentService {
   delete(contentId: number): Promise<IServiceResponse>;
   list(groupId: number, data: IRequestSearchList): Promise<IServiceResponse<IContent[] | []>>;
   groupInfo(groupId: number): Promise<IServiceResponse<IContentGroup>>;
+  updateGroup(groupId: number, data: IRequestContentGroupUpdate): Promise<IServiceResponse>;
 }
 
 export interface IEmployeeService {

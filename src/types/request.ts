@@ -42,6 +42,11 @@ export interface IRequestContentUpdate {
   isActivated?: boolean;
 }
 
+export interface IRequestContentGroupUpdate {
+  description?: string;
+  sizePerPage?: number;
+}
+
 export interface IRequestEmployeeRegister {
   email: string;
   name: string;

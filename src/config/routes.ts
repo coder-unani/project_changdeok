@@ -50,6 +50,7 @@ export const apiRoutes = {
     update: createApiRoute('PUT', '게시글 수정', '/contents/:groupId/:contentId', [1, 3]),
     delete: createApiRoute('DELETE', '게시글 삭제', '/contents/:groupId/:contentId', [1, 3]),
     group: createApiRoute('GET', '게시판 그룹 정보', '/contents/groups/:groupId', [1, 3]),
+    updateGroup: createApiRoute('PUT', '게시판 그룹 수정', '/contents/groups/:groupId', [1, 3]),
     uploadImage: createApiRoute('POST', '게시글 이미지 업로드', '/contents/:groupId/upload-image', [1, 3]),
   },
   employees: {
