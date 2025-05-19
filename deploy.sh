@@ -23,7 +23,7 @@ fi
 
 # Pull the latest code
 echo "** Git에서 최신 코드를 가져옴 **"
-if ! git pull origin main; then
+if ! git pull referer main; then
     handle_error "Git pull 실패"
 fi
 
