@@ -300,6 +300,7 @@ model ContentGroup {
   isEncrypt Boolean @default(false)
   isActivated Boolean @default(true)
   isDeleted Boolean @default(false)
+  registNotice String @default("NONE")
   createdAt DateTime @default(now())
   updatedAt DateTime? @updatedAt
 
