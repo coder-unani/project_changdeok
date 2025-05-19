@@ -54,6 +54,7 @@ export interface IContentGroup {
   isComment: boolean;
   isFileUpload: boolean;
   isEncrypt: boolean;
+  registNotice: string;
   isActivated: boolean;
 }
 

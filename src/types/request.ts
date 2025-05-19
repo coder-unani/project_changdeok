@@ -45,6 +45,7 @@ export interface IRequestContentUpdate {
 export interface IRequestContentGroupUpdate {
   description?: string;
   sizePerPage?: number;
+  registNotice?: 'EMAIL' | 'NONE';
 }
 
 export interface IRequestEmployeeRegister {

@@ -341,6 +341,7 @@ export class ContentService extends BaseService implements IContentService {
         isComment: prismaResult.isComment,
         isFileUpload: prismaResult.isFileUpload,
         isEncrypt: prismaResult.isEncrypt,
+        registNotice: prismaResult.registNotice,
         isActivated: prismaResult.isActivated,
       };
 
@@ -368,10 +369,17 @@ export class ContentService extends BaseService implements IContentService {
         throw new NotFoundError('컨텐츠 그룹이 존재하지 않습니다.');
       }
 
+      const updateData: Partial<IRequestContentGroupUpdate> = {};
+
+      // 업데이트할 필드만 추가
+      if (data.description !== undefined) updateData.description = data.description;
+      if (data.sizePerPage !== undefined) updateData.sizePerPage = data.sizePerPage;
+      if (data.registNotice !== undefined) updateData.registNotice = data.registNotice;
+
       // 컨텐츠 그룹 수정
       await this.prisma.contentGroup.update({
         where: { id: groupId },
-        data: { ...data, updatedAt: new Date() },
+        data: { ...updateData, updatedAt: new Date() },
       });
 
       // 응답 성공

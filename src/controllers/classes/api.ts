@@ -557,6 +557,7 @@ export class ApiController {
       const requestData: IRequestContentGroupUpdate = {
         description: req.body.description || null,
         sizePerPage: Number(req.body.sizePerPage || null),
+        registNotice: ['EMAIL'].includes(req.body.registNotice) ? req.body.registNotice : 'NONE',
       };
 
       // 컨텐츠 그룹 수정 처리
