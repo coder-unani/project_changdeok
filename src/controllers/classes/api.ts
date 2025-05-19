@@ -951,7 +951,7 @@ export class ApiController {
     try {
       // 쿠키 삭제
       removeCookie(res, 'employee');
-      removeCookie(res, 'employeeToken');
+      removeCookie(res, 'access_token');
 
       // 로그아웃 성공
       res.status(httpStatus.NO_CONTENT).send(null);
