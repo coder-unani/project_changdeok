@@ -3,13 +3,6 @@
 # .env 파일에서 SERVICE_NAME 읽기
 SERVICE_NAME=$(grep -oP '(?<=^SERVICE_NAME=)[^\n]+' .env)
 
-# Stop envoy service
-echo "** envoy 서비스 중지 **"
-if ! sudo systemctl stop envoy.service; then
-    echo "** envoy 서비스 중지 실패 **"
-    exit 1
-fi
-
 # Check if the process exists in PM2
 if npx pm2 list | grep -q "$SERVICE_NAME"; then
     # Stop the application using PM2

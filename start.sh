@@ -3,13 +3,6 @@
 # .env 파일에서 SERVICE_NAME 읽기
 SERVICE_NAME=$(grep -oP '(?<=^SERVICE_NAME=)[^\n]+' .env)
 
-# Start envoy service
-echo "** envoy 서비스 시작 **"
-if ! sudo systemctl start envoy.service; then
-    echo "** envoy 서비스 시작 실패 **"
-    exit 1
-fi
-
 # Check if the process already exists in PM2
 if npx pm2 list | grep -q "$SERVICE_NAME"; then
     echo "** 기존 $SERVICE_NAME 프로세스가 존재합니다. 재시작합니다. **"
