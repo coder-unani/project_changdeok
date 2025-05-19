@@ -291,7 +291,10 @@ export class BackendController extends BaseWebController {
       const pageData = this.createPageData(
         route,
         `${getContentGroup.data?.title ?? '게시판'} 목록`,
-        getContentGroup.metadata
+        getContentGroup.metadata,
+        {
+          group: getContentGroup.data,
+        }
       );
 
       // 게시판 관리 페이지 렌더링
