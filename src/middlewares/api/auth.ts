@@ -15,7 +15,7 @@ export class AuthMiddleware implements IMiddleware {
   constructor(jwtSecretKey: string, exceptPath: string[] = []) {
     this.jwtSecretKey = jwtSecretKey;
     this.loginPath = apiRoutes.employees.login.url;
-    this.exceptAuth = [...exceptPath, this.loginPath];
+    this.exceptAuth = [...exceptPath, this.loginPath, apiRoutes.health.url];
   }
 
   public async handle(req: Request, res: Response, next: NextFunction): Promise<void> {

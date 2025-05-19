@@ -55,6 +55,15 @@ export class ApiController {
     this.config = config;
   }
 
+  // 헬스 체크
+  public async healthCheck(req: Request, res: Response): Promise<void> {
+    try {
+      res.status(httpStatus.OK).send('OK');
+    } catch (error) {
+      this.handleError(error, res);
+    }
+  }
+
   // 배너 등록
   public async bannerWrite(req: Request, res: Response): Promise<void> {
     try {

@@ -95,6 +95,11 @@ class ApiRouter {
   }
 
   private initializeRoutes(): void {
+    // 헬스 체크
+    this.router.get(apiRoutes.health.url, (req: Request, res: Response) => {
+      this.apiController.healthCheck(req, res);
+    });
+
     // 배너 관련 라우트
     this.router.post(
       apiRoutes.banners.write.url,

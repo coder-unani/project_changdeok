@@ -32,7 +32,7 @@ const createRoute = (
 });
 
 export const apiRoutes = {
-  info: createApiRoute('GET', '웹사이트 정보', '/info', []),
+  health: createApiRoute('GET', '헬스 체크', '/health', []),
   banners: {
     list: createApiRoute('GET', '배너 목록', '/banners', []),
     write: createApiRoute('POST', '배너 등록', '/banners/write', [1, 2]),
