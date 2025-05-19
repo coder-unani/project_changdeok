@@ -18,6 +18,7 @@ import { decryptDataAES } from '../../library/encrypt';
 import { verifyJWT } from '../../library/jwt';
 import { IPermission, IRoute } from '../../types/config';
 import { IEmployeeToken } from '../../types/object';
+import { IBanner, IBannerDisp, IBannerGroup } from '../../types/object';
 import { IRequestBanners, IRequestSearchList, typeListSort } from '../../types/request';
 import { BaseWebController } from './controller';
 
@@ -244,8 +245,78 @@ export class BackendController extends BaseWebController {
       // 접근 권한 체크
       await this.verifyPermission(req, route.permissions);
 
+      // 배너 정보 가져오기
+      const bannerGroupIds: number[] = [2, 3, 4, 5];
+
+      // API 인증정보
+      const apiOptions = {
+        token: req.cookies.access_token,
+      };
+
+      // 배너 기본 정보 설정
+      let topBanner: IBannerDisp[] = [];
+      let midBanner1: IBannerDisp[] = [];
+      let midBanner2: IBannerDisp[] = [];
+      let midBanner3: IBannerDisp[] = [];
+
+      // 배너 그룹 정보 API 호출
+      const getBannerGroup = await getApiBannerGroup(bannerGroupIds, apiOptions);
+
+      // 배너 정보 조회 성공
+      if (getBannerGroup.result) {
+        if (getBannerGroup.data?.[0]) {
+          getBannerGroup.data[0].banners?.forEach((banner: IBanner) => {
+            topBanner.push({
+              title: banner.title,
+              description: banner.description,
+              imagePath: banner.imagePath,
+            });
+          });
+        }
+
+        if (getBannerGroup.data?.[1]) {
+          getBannerGroup.data[1].banners?.forEach((banner: IBanner) => {
+            midBanner1.push({
+              title: banner.title,
+              description: banner.description,
+              imagePath: banner.imagePath,
+            });
+          });
+        }
+
+        if (getBannerGroup.data?.[2]) {
+          getBannerGroup.data[2].banners?.forEach((banner: IBanner) => {
+            midBanner2.push({
+              title: banner.title,
+              description: banner.description,
+              imagePath: banner.imagePath,
+            });
+          });
+        }
+
+        if (getBannerGroup.data?.[3]) {
+          getBannerGroup.data[3].banners?.forEach((banner: IBanner) => {
+            midBanner3.push({
+              title: banner.title,
+              description: banner.description,
+              imagePath: banner.imagePath,
+            });
+          });
+        }
+      }
+
       // 페이지 데이터 생성
-      const pageData = this.createPageData(route);
+      const pageData = this.createPageData(
+        route,
+        '',
+        {},
+        {
+          topBanner,
+          midBanner1,
+          midBanner2,
+          midBanner3,
+        }
+      );
 
       // 배너 관리 페이지 렌더링
       res.render(route.view, pageData);
@@ -260,8 +331,36 @@ export class BackendController extends BaseWebController {
       // 접근 권한 체크
       await this.verifyPermission(req, route.permissions);
 
+      // 배너 정보 가져오기
+      const bannerGroupIds: number[] = [1];
+
+      // API 인증정보
+      const apiOptions = {
+        token: req.cookies.access_token,
+      };
+
+      // 배너 기본 정보 설정
+      let popupBanner: IBannerDisp[] = [];
+
+      // 배너 그룹 정보 API 호출
+      const getBannerGroup = await getApiBannerGroup(bannerGroupIds, apiOptions);
+
+      // 배너 정보 조회 성공
+      if (getBannerGroup.result) {
+        if (getBannerGroup.data?.[0]) {
+          getBannerGroup.data[0].banners?.forEach((banner: IBanner) => {
+            popupBanner.push({
+              id: banner.id,
+              title: banner.title,
+              description: banner.description,
+              imagePath: banner.imagePath,
+            });
+          });
+        }
+      }
+
       // 페이지 데이터 생성
-      const pageData = this.createPageData(route);
+      const pageData = this.createPageData(route, '', {}, { popupBanner });
 
       // 팝업 관리 페이지 렌더링
       res.render(route.view, pageData);

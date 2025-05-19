@@ -5,17 +5,29 @@
 </div>
 
 <div class="bg-default-bg mb-4 space-y-3 rounded-xl p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
-  <h2 class="text-base font-semibold text-gray-500">메인 팝업</h2>
-  <ul class="flex flex-wrap gap-2">
-    <li class="border-main-border w-full flex-1 rounded-lg border text-center">
-      <a href="<%=backendRoutes.banners.list.url%>?gp=1&sq=1" class="block h-full w-full p-4 font-medium text-gray-500"
-        >01</a
-      >
-    </li>
-    <li class="border-main-border w-full flex-1 rounded-lg border text-center">
-      <a href="<%=backendRoutes.banners.list.url%>?gp=1&sq=2" class="block h-full w-full p-4 font-medium text-gray-500"
-        >02</a
-      >
-    </li>
-  </ul>
+  <div class="border-main-border border-b last:border-0 space-y-4 pb-4">
+    <p class="text-base font-medium text-gray-600">팝업</p>
+    <div class="flex gap-2 flex-col lg:flex-row">
+      <p class="w-24">이미지</p>
+      <div class="flex flex-1 flex-col gap-2">
+        <% if (Object.keys(data?.popupBanner || {}).length > 0) { %>
+          <% data.popupBanner.forEach((banner, index) => { %>
+            <div class="flex gap-2 flex-1 justify-between">
+              <div class="w-full max-w-[320px]">
+                <img src="<%=banner.imagePath%>" alt="이미지 미리보기" class="h-full w-full object-cover" />
+              </div>
+              <div>
+                <a
+                  href="<%=backendRoutes.banners.list.url%>?gp=1&sq=<%=index + 1%>"
+                  class="orb-btn orb-btn-info flex items-center gap-2"
+                >
+                  <%- include('../common/icons/plus') %> 변경
+                </a>
+              </div>
+            </div>
+          <% }) %>
+        <% } %>
+      </div>
+    </div>
+  </div>
 </div>

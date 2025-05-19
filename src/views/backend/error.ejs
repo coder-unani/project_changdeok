@@ -1,20 +1,16 @@
 <div class="flex h-full w-full flex-grow items-center justify-center">
-  <div class="bg-default-bg w-96 rounded-lg p-4 shadow-md">
-    <div class="mx-auto mb-4 block max-w-[360px] border-b border-slate-300 pb-2">
-      <h1 class="flex items-center justify-center gap-1.5 px-4 py-2 text-center text-slate-700 transition-all">
+  <div class="bg-default-bg w-96 rounded-lg p-4 shadow-[0_2px_30px_rgba(0,0,0,.06)]">
+    <div class="border-main-border mx-auto mb-4 block max-w-[360px] border-b pb-2">
+      <h1 class="text-primary-dark flex items-center justify-center gap-1.5 px-4 py-2 text-center transition-all">
         <span class="font-bold"><%= typeof title !== 'undefined' ? title : 'ERROR' %></span>
       </h1>
     </div>
     <div>
-      <h2 class="w-full p-4 text-center">
+      <h2 class="p-4 text-center">
         <%= typeof message !== 'undefined' ? message : '알 수 없는 오류가 발생했습니다.' %>
       </h2>
-      <div class="p-4 text-center">
-        <button
-          class="focus:ring-opacity-50 text-common-white rounded-md bg-slate-700 px-4 py-2 hover:bg-slate-800 focus:ring-2 focus:ring-slate-600 focus:outline-none"
-        >
-          뒤로가기
-        </button>
+      <div class="p-4">
+        <button class="orb-btn orb-btn-primary mx-auto">뒤로가기</button>
       </div>
     </div>
   </div>

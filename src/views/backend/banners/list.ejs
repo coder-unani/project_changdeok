@@ -1,107 +1,168 @@
-<div class="mt-2">
-  <h1 class='flex justify-start items-center gap-1.5 py-2 text-center text-slate-700 transition-all'>
+<div class="my-2">
+  <h1 class="flex items-center justify-start gap-1.5 py-2 text-center text-slate-700 transition-all">
     <span class="orb-head"><%=title%></span>
   </h1>
 </div>
 
-<div class="py-2 mb-2">
-  <div class="flex justify-between items-center">
-    <div>
-      <a href="<%=backendRoutes.banners.write.url%>?gp=<%=metadata.groupInfo.id%>&sq=<%=metadata.seq%>" class="orb-btn orb-btn-success">신규 등록</a>
-    </div>
-    <div class="flex-1 flex justify-end">
-      <div class="relative w-full lg:max-w-[200px] ml-4">
-        <input
-        class="w-full pr-11 pl-4 py-3 bg-gray-200 text-gray-700 text-sm placeholder:text-gray-400 rounded-lg transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-200"
-        placeholder="게시물 검색"
-        />
-        <button
-        class="absolute h-8 w-8 inset-y-0 right-2 my-auto px-2 flex items-center bg-transparent rounded"
-        type="button"
-        >
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-8 h-8 text-gray-600">
-          <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-        </svg>
-        </button>
+<div class="bg-default-bg mb-4 overflow-x-auto rounded-xl p-4 text-sm shadow-[0_2px_30px_rgba(0,0,0,.06)] lg:p-6">
+  <div class="space-y-4">
+    <div class="flex w-full items-center justify-between gap-2">
+      <div class="flex flex-1 justify-between gap-2">
+        <input type="text" id="banners-query" class="orb-input lg:max-w-[200px]" placeholder="검색어를 입력해주세요." />
+        <button id="btn-banners-search" class="orb-btn orb-btn-primary">조회</button>
       </div>
+    </div>
+
+    <!-- 배너 목록 -->
+    <div id="banners" class="flex overflow-x-auto"></div>
+
+    <!-- 배너 등록 -->
+    <div class="flex items-center">
+      <a
+        href="<%=backendRoutes.banners.write.url%>?gp=<%=metadata.groupInfo.id%>&sq=<%=metadata.seq%>"
+        class="orb-btn orb-btn-success"
+        >배너 등록</a
+      >
     </div>
   </div>
 </div>
 
-<div class="orb-list">
-  <div class="bg-default-bg p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)] overflow-x-auto">
-    <table class="table-fixed">
-      <thead>
-      <tr>
-        <th class="w-24 min-w-24 text-center"><p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500">번호</p></th>
-        <th class="w-36 min-w-[132px] text-center"><p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500">이미지</p></th>
-        <th class="w-auto min-w-[280px] text-center"><p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500">상세정보</p></th>
-        <th class="w-[160px] min-w-[160px] text-center"><p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500">발행 기간</p></th>
-        <th class="w-[100px] min-w-[100px] text-center"><p class="text-xs lg:text-[13px] font-normal leading-none text-gray-500">발행 여부</p></th>
-      </tr>
-      </thead>
-      <tbody>
-        <% if (data.length === 0) { %>
-          <tr>
-            <td colspan="5" class="py-6 text-center"><p class="text-gray-400">등록된 배너가 없습니다.</p></td>
-          </tr>
-        <% } else { %>
-        <% data.forEach(banner => { %>
-          <tr>
-            <td class="text-center">
-              <p><%=banner.id%></p>
-            </td>
-            <td class="flex justify-center flex-none text-center">
-              <img src="<%=banner.imagePath || '/images/no-image-200x200.jpg'%>" class="w-[100px] h-[100px] object-cover rounded-md cursor-pointer" alt="이미지" />
-            </td>
-            <td>
-              <div>
-                <p class="text-sm font-semibold break-keep mb-1.5"><a href="<%=backendRoutes.banners.detail.url.replace(':bannerId', banner.id)%>" class="hover:underline decoration-gray-800"><%=banner.title%></a></p>
-                <p class="text-[13px] text-gray-400"><%=banner.description%></p>
-              </div>
-            </td>
-            <td class="text-center">
-              <!-- <p class="hidden lg:block"><%=banner.publishedAt%> ~ <%=banner.unpublishedAt%></p> -->
-              <p class="hidden lg:block text-xs">
-                <span class="block"><%= banner.publishedAt ? banner.publishedAt.slice(0, -3) : '' %></span>
-                <span class="block">~ <%= banner.unpublishedAt ? banner.unpublishedAt.slice(0, -3) : '' %></span>
-              </p>
-              <p class="block lg:hidden text-xs">
-                <span class="block"><%= banner.publishedAt ? banner.publishedAt.slice(0, -3) : '' %></span>
-                <span class="block">~ <%= banner.unpublishedAt ? banner.unpublishedAt.slice(0, -3) : '' %></span>
-              </p>
-            </td>
-            <td class="text-center">
-              <% if (!banner.isPublished) { %> 
-                <span class="px-2.5 py-1 bg-amber-100 rounded-full text-sm font-medium text-amber-500">미발행</span>
-              <% } else if (banner.publishedAt <= new Date().toISOString() && (!banner.unpublishedAt || banner.unpublishedAt >= new Date().toISOString())) { %>
-                <span class="px-2.5 py-1 bg-emerald-100 rounded-full text-sm font-medium text-emerald-500">발행중</span>
-              <% } else if (banner.publishedAt > new Date().toISOString()) { %>
-                <span class="px-2.5 py-1 bg-blue-100 rounded-full text-sm font-medium text-blue-500">예약</span>
-              <% } else { %>
-                <span class="px-2.5 py-1 bg-gray-100 rounded-full text-sm font-medium text-gray-500">종료</span>
-              <% } %>
-            </td>
-          </tr>
-        <% }); } %>
-      </tbody>
-    </table>
-  </div>
-  <!-- 페이지 버튼 -->
-  <% if (metadata.totalPage >= 1) { %>
-    <div class="bg-default-bg py-2 lg:py-4 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">  
-      <div class="flex justify-center space-x-1">
-        <% if (metadata.page > 1) { %><button><a href="?page=<%=metadata.page - 1%>">이전</a></button><% } %>
-        <% 
-          let startPage = metadata.page - 2;
-          if (startPage < 1) startPage = 1;
-          const endPage = metadata.page + 2 > metadata.totalPage ? metadata.totalPage : metadata.page + 2;
-          for (let i = startPage; i <= endPage; i++) { 
-        %> 
-          <button class="<%if (i === metadata.page) {%>active<%}%>"><a href="?page=<%=i%>"><%=i%></a></button>
-        <% } %>
-        <% if (metadata.page < metadata.totalPage) { %><button><a href="?page=<%=metadata.page + 1%>">다음</a></button><% } %>
-      </div>
-    </div>
-  <% } %>
-</div>
+<!-- grid.js -->
+<%- include('../common/library/gridjs') %>
+
+<script nonce="<%=nonce%>">
+  document.addEventListener('DOMContentLoaded', () => {
+    const banners = document.getElementById('banners');
+    const customGridLang = {
+      ...gridLangKoKR,
+      noRecordsFound: '등록된 배너가 없습니다.',
+    };
+
+    let currentGrid = null;
+
+    const initGrid = async () => {
+      // 기존 grid 초기화
+      currentGrid?.destroy();
+
+      const query = document.getElementById('banners-query').value;
+      const params = new URLSearchParams({ query });
+
+      // url 쿼리 값 가져오기
+      const urlParams = new URLSearchParams(window.location.search);
+      const groupId = urlParams.get('gp');
+      const seq = urlParams.get('sq');
+
+      // API 요청 파라미터에 그룹 ID와 시퀀스 추가
+      if (groupId) params.append('groupId', groupId);
+      if (seq) params.append('seq', seq);
+
+      // gridjs 인스턴스 생성
+      currentGrid = new gridjs.Grid({
+        columns: [
+          { name: '번호' },
+          {
+            name: '이미지',
+            formatter: (cell) => {
+              return gridjs.html(
+                `<img src="${cell || '/images/no-image-200x200.jpg'}" class="w-[100px] h-[100px] object-cover rounded-md" alt="이미지" />`
+              );
+            },
+          },
+          {
+            name: '상세정보',
+            formatter: (cell, row) => {
+              const bannerId = row.cells[0].data;
+              const url = `<%=backendRoutes.banners.detail.url%>`;
+              return gridjs.html(
+                `<div>
+                  <p class="text-sm font-semibold break-keep mb-1.5">
+                    <a href="${url.replace(':bannerId', bannerId)}" class="hover:underline decoration-gray-800">${cell.title}</a>
+                  </p>
+                  <p class="text-[13px] text-gray-400">${cell.description}</p>
+                </div>`
+              );
+            },
+          },
+          {
+            name: '발행 기간',
+            formatter: (cell) => {
+              return gridjs.html(
+                `<div>
+                  <span class="block">${cell.publishedAt ? cell.publishedAt.slice(0, -3) : ''}</span>
+                  <span class="block">~ ${cell.unpublishedAt ? cell.unpublishedAt.slice(0, -3) : ''}</span>
+                </div>`
+              );
+            },
+          },
+          {
+            name: '발행 여부',
+            formatter: (cell) => {
+              let status = '';
+              let className = '';
+
+              if (!cell.isPublished) {
+                status = '미발행';
+                className = 'bg-amber-100 text-amber-500';
+              } else if (
+                cell.publishedAt <= new Date().toISOString() &&
+                (!cell.unpublishedAt || cell.unpublishedAt >= new Date().toISOString())
+              ) {
+                status = '발행중';
+                className = 'bg-emerald-100 text-emerald-500';
+              } else if (cell.publishedAt > new Date().toISOString()) {
+                status = '예약';
+                className = 'bg-blue-100 text-blue-500';
+              } else {
+                status = '종료';
+                className = 'bg-gray-100 text-gray-500';
+              }
+
+              return gridjs.html(
+                `<span class="px-2.5 py-1 ${className} rounded-full text-sm font-medium">${status}</span>`
+              );
+            },
+          },
+        ],
+        language: customGridLang,
+        data: [],
+        resizable: true,
+        style: {
+          table: { 'white-space': 'nowrap' },
+        },
+        sort: true,
+        server: {
+          url: `<%=apiRoutes.banners.list.url%>?${params.toString()}`,
+          headers: {
+            Authorization: `Bearer ${getCookie('access_token')}`,
+          },
+          then: (data) =>
+            data.data.map((item) => [
+              item.id,
+              item.imagePath,
+              { title: item.title, description: item.description },
+              { publishedAt: item.publishedAt, unpublishedAt: item.unpublishedAt },
+              { isPublished: item.isPublished, publishedAt: item.publishedAt, unpublishedAt: item.unpublishedAt },
+            ]),
+          total: (data) => data.metadata.total,
+        },
+        pagination: {
+          limit: 20,
+          server: {
+            url: (prev, page, limit) => {
+              return `${prev}&page=${page}&pageSize=${limit}`;
+            },
+          },
+        },
+      });
+
+      // gridjs 렌더링
+      currentGrid.render(banners);
+    };
+
+    document.getElementById('btn-banners-search').addEventListener('click', () => {
+      initGrid();
+    });
+
+    initGrid();
+  });
+</script>
