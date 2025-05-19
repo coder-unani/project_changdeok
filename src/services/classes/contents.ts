@@ -5,7 +5,12 @@ import { ExtendedPrismaClient } from '../../library/database';
 import { encryptDataAES } from '../../library/encrypt';
 import { IServiceResponse } from '../../types/config';
 import { IContent, IContentGroup } from '../../types/object';
-import { IRequestContentUpdate, IRequestContentWrite, IRequestSearchList } from '../../types/request';
+import {
+  IRequestContentGroupUpdate,
+  IRequestContentUpdate,
+  IRequestContentWrite,
+  IRequestSearchList,
+} from '../../types/request';
 import { IContentService } from '../../types/service';
 import { BaseService } from './service';
 
@@ -341,6 +346,36 @@ export class ContentService extends BaseService implements IContentService {
 
       // 응답 성공
       return { result: true, metadata: { group: { id: groupId } }, data: groupInfo };
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
+  // 컨텐츠 그룹 수정
+  public async updateGroup(groupId: number, data: IRequestContentGroupUpdate): Promise<IServiceResponse> {
+    try {
+      // 컨텐츠 그룹 조회
+      const prismaResult = await this.prisma.contentGroup.findUnique({
+        where: {
+          id: groupId,
+          isDeleted: false,
+          isActivated: true,
+        },
+      });
+
+      // 컨텐츠 그룹이 없는 경우
+      if (!prismaResult) {
+        throw new NotFoundError('컨텐츠 그룹이 존재하지 않습니다.');
+      }
+
+      // 컨텐츠 그룹 수정
+      await this.prisma.contentGroup.update({
+        where: { id: groupId },
+        data: { ...data, updatedAt: new Date() },
+      });
+
+      // 응답 성공
+      return { result: true };
     } catch (error) {
       return this.handleError(error);
     }
