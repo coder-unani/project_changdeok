@@ -508,3 +508,36 @@ model Banner {
   // 테이블명 설정
   @@map("orb_banner")
 }
+
+/**
+  * 이메일 히스토리
+  * - id: ID (자동 증가)
+  * - subject: 제목
+  * - text: 텍스트
+  * - html: HTML
+  * - to: 수신자 이메일
+  * - from: 발신자 이메일
+  * - isSent: 발송 여부
+  * - sendAt: 발송일
+  * - message: 메시지
+  * - contentId: 컨텐츠 ID
+  * - createdAt: 생성시간 (자동 기록)
+  * - updatedAt: 업데이트시간 (자동 기록)
+  */
+model MailHistory {
+  id Int @id @default(autoincrement())
+  subject String
+  text String? @db.Text
+  html String? @db.Text
+  to String
+  from String
+  isSent Boolean @default(false)
+  sendAt DateTime?
+  message String? @db.Text
+  contentId Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
+
+  // 테이블명 설정
+  @@map("orb_mail_history")
+}
