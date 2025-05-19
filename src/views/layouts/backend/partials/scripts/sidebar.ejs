@@ -28,10 +28,17 @@
 
   const logout = async () => {
     try {
+      // API 인증 정보
+      const apiOptions = {
+        token: getCookie('access_token'),
+      };
+
+      // API 호출
       const response = await fetch('<%=apiRoutes.employees.logout.url%>', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiOptions.token}`,
         },
         body: JSON.stringify({}),
       });
@@ -40,6 +47,8 @@
         throw new Error('로그아웃에 실패했습니다.');
       }
 
+      // 로그아웃 성공
+      removeCookie('access_token');
       window.location.href = '<%=backendRoutes.employees.login.url%>';
     } catch (error) {
       console.error(error);
