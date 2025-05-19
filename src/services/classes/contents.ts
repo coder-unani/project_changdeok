@@ -1,7 +1,9 @@
+import { httpStatus } from '../../common/constants';
 import { AppError, NotFoundError, ValidationError } from '../../common/error';
 import { convertDateToKST, convertDateToString } from '../../common/utils/format';
 import { validateStringLength } from '../../common/utils/validate';
 import { ExtendedPrismaClient } from '../../library/database';
+import { MailService } from '../../library/email';
 import { encryptDataAES } from '../../library/encrypt';
 import { IServiceResponse } from '../../types/config';
 import { IContent, IContentGroup } from '../../types/object';
@@ -34,21 +36,62 @@ export class ContentService extends BaseService implements IContentService {
       }
 
       // 컨텐츠 그룹 정보 조회
-      const groupInfo = await this.groupInfo(groupId);
-      if (!groupInfo.result) {
-        throw new AppError(groupInfo.code, groupInfo.message);
+      const { result, message, data: contentGroup } = await this.groupInfo(groupId);
+      if (!result || !contentGroup) {
+        throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, message);
       }
 
       // 컨텐츠 생성
-      await this.prisma.content.create({
+      const content = await this.prisma.content.create({
         data: {
           groupId,
           title: data.title.trim(),
-          content: groupInfo.data?.isEncrypt ? await encryptDataAES(data.content) : data.content?.trim(),
+          content: contentGroup.isEncrypt ? await encryptDataAES(data.content) : data.content?.trim(),
           ip: data.ip || '',
           userAgent: data.userAgent || '',
         },
       });
+
+      // 등록 알림
+      if (contentGroup.registNotice === 'EMAIL') {
+        const subject = `${contentGroup.title} 등록 알림`;
+        const text = '테스트입니다.';
+        const html = '<p>테스트입니다.</p>';
+        const to = 'dev@orbitcode.kr';
+
+        try {
+          await new MailService().sendMail({ subject, text, html, to });
+
+          this.prisma.mailHistory.create({
+            data: {
+              subject,
+              text,
+              html,
+              to,
+              from: 'dev@orbitcode.kr',
+              contentId: content.id,
+              isSent: true,
+              sendAt: new Date(),
+              message: '성공',
+            },
+          });
+        } catch (error) {
+          const message = error instanceof Error ? error.message : '에러 발생';
+          this.prisma.mailHistory.create({
+            data: {
+              subject,
+              text,
+              html,
+              to,
+              from: 'dev@orbitcode.kr',
+              contentId: content.id,
+              isSent: false,
+              sendAt: new Date(),
+              message,
+            },
+          });
+        }
+      }
 
       // 응답 성공
       return { result: true };
