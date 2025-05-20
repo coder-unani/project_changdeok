@@ -63,6 +63,10 @@
           const uploadUrl = '/api/contents/<%=metadata.group.id%>/upload-image';
           const response = await fetch(uploadUrl, {
             method: 'POST',
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization: `Bearer ${getCookie('access_token')}`,
+            },
             body: formData,
           });
 
@@ -105,18 +109,13 @@
       });
       data.content = content;
 
-      // API 인증정보
-      const apiOptions = {
-        token: getCookie('access_token'),
-      };
-
       // 컨텐츠 저장 API 호출
       const saveUrl = '<%=apiRoutes.contents.write.url%>'.replace(':groupId', '<%=metadata.group.id%>');
       const response = await fetch(saveUrl, {
         method: '<%=apiRoutes.contents.write.method%>',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${apiOptions.token}`,
+          Authorization: `Bearer ${getCookie('access_token')}`,
         },
         body: JSON.stringify(data),
       });
@@ -128,13 +127,16 @@
       }
 
       // 응답 성공
-      alertMessage('success', '<%=apiRoutes.contents.write.title%> 성공').then(() => {
-        window.location.href = '<%=backendRoutes.contents.list.url%>'.replace(':groupId', '<%=metadata.group.id%>');
-      });
+      alertMessage('success', '<%=apiRoutes.contents.write.title%> 성공')
+        .then(() => {
+          window.location.href = '<%=backendRoutes.contents.list.url%>'.replace(':groupId', '<%=metadata.group.id%>');
+        })
+        .then(() => {
+          isLoading(false);
+        });
     } catch (error) {
-      toastMessage('error', error.message || '글 작성에 실패하였습니다.');
-    } finally {
       isLoading(false);
+      toastMessage('error', error.message || '글 작성에 실패하였습니다.');
     }
   });
 
