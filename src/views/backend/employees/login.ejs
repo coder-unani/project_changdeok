@@ -57,12 +57,6 @@
 <!-- recaptcha -->
 <%- include('../common/library/recaptcha') %>
 
-<!-- toastify -->
-<%- include('../common/library/toastify') %>
-
-<!-- sweetalert2 -->
-<%- include('../common/library/sweetalert2') %>
-
 <script nonce="<%=nonce%>">
   document.addEventListener('DOMContentLoaded', () => {
     if ('<%=metadata.recaptchaSiteKey%>' !== '') {

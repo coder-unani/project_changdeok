@@ -1,3 +1,9 @@
+<script src="/js/toastify-js@1.12.0/toastify.min.js"></script>
+<link href="/js/toastify-js@1.12.0/toastify.min.css" rel="stylesheet" />
+
+<script src="/js/sweetalert2@11.21.2/sweetalert2.all.min.js"></script>
+<link href="/js/sweetalert2@11.21.2/sweetalert2.min.css" rel="stylesheet" />
+
 <script nonce="<%=nonce%>">
   const getCookie = (name) => {
     const cookies = document.cookie.split(';');
@@ -14,5 +20,142 @@
     if (getCookie(name)) {
       document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
     }
+  };
+
+  const toastMessage = (type, message, options = {}) => {
+    const root = document.documentElement;
+    const computedStyle = getComputedStyle(root);
+    let background = '';
+
+    switch (type) {
+      case 'success':
+        background = computedStyle.getPropertyValue('--color-success-main').trim();
+        break;
+      case 'error':
+        background = computedStyle.getPropertyValue('--color-error-main').trim();
+        break;
+      case 'warning':
+        background = computedStyle.getPropertyValue('--color-warning-main').trim();
+        break;
+      default:
+        background = computedStyle.getPropertyValue('--color-common-black').trim();
+        break;
+    }
+
+    const gravity = options.gravity || 'top';
+    const position = options.position || 'center';
+    const duration = options.duration || 3000;
+
+    Toastify({
+      text: message,
+      duration,
+      gravity,
+      position,
+      style: {
+        background,
+      },
+    }).showToast();
+  };
+
+  const alertMessage = (type, text, title = '', options = {}) => {
+    const root = document.documentElement;
+    const computedStyle = getComputedStyle(root);
+
+    let icon = null;
+
+    switch (type) {
+      case 'success':
+        icon = 'success';
+        break;
+      case 'error':
+        icon = 'error';
+        break;
+      case 'warning':
+        icon = 'warning';
+        break;
+      case 'question':
+        icon = 'question';
+        break;
+      default:
+        icon = 'info';
+        break;
+    }
+
+    // 기본 옵션 설정
+    const defaultOptions = {
+      title: title || '',
+      text: text || '',
+      icon: icon,
+      confirmButtonText: '확인',
+      confirmButtonColor: computedStyle.getPropertyValue('--color-success').trim(),
+      showClass: {
+        popup: 'animate__animated animate__fadeInDown',
+      },
+      hideClass: {
+        popup: 'animate__animated animate__fadeOutUp',
+      },
+    };
+
+    // 사용자 정의 옵션과 기본 옵션 병합
+    const swalOptions = {
+      ...defaultOptions,
+      ...options,
+      // 중첩된 객체는 별도로 병합
+      showClass: {
+        ...defaultOptions.showClass,
+        ...(options.showClass || {}),
+      },
+      hideClass: {
+        ...defaultOptions.hideClass,
+        ...(options.hideClass || {}),
+      },
+    };
+
+    return Swal.fire(swalOptions);
+  };
+
+  const confirmMessage = (type, text, title = '', successText = '', options = {}) => {
+    const root = document.documentElement;
+    const computedStyle = getComputedStyle(root);
+
+    let icon = null;
+
+    switch (type) {
+      case 'success':
+        icon = 'success';
+        break;
+      case 'error':
+        icon = 'error';
+        break;
+      case 'warning':
+        icon = 'warning';
+        break;
+      case 'question':
+        icon = 'question';
+        break;
+      default:
+        icon = 'info';
+        break;
+    }
+    const footer = options.footer || '';
+
+    Swal.fire({
+      ...(title && { title }),
+      ...(text && { text }),
+      ...(icon && { icon }),
+      showCancelButton: true,
+      confirmButtonColor: computedStyle.getPropertyValue('--color-success').trim(),
+      cancelButtonColor: computedStyle.getPropertyValue('--color-error').trim(),
+      cancelButtonText: '취소',
+      confirmButtonText: '확인',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: '성공',
+          text: successText,
+          icon: 'success',
+        });
+      }
+    });
   };
 </script>
