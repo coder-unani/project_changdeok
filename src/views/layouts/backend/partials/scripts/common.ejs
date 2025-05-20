@@ -158,4 +158,40 @@
       }
     });
   };
+
+  const fetchApi = async (method, url, options = {}) => {
+    isLoading(true);
+    try {
+      const headers = {
+        Authorization: `Bearer ${getCookie('access_token')}`,
+        ...options.headers,
+      };
+
+      const body = options.body ? options.body : null;
+
+      const finalUrl = options.params ? `${url}?${options.params.toString()}` : `${url}`;
+
+      const apiResponse = await fetch(finalUrl, {
+        method,
+        headers,
+        body,
+      });
+
+      const responseToJson = await apiResponse.json();
+
+      if (!apiResponse.ok) {
+        throw new Error(responseToJson.message || apiResponse.statusText);
+      }
+
+      if (!responseToJson.result) {
+        throw new Error(responseToJson.message);
+      }
+
+      return responseToJson;
+    } catch (error) {
+      toastMessage('error', error.message);
+    } finally {
+      isLoading(false);
+    }
+  };
 </script>
