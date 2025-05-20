@@ -98,10 +98,6 @@
             }
           );
 
-          if (!response.result) {
-            throw new Error(response.message);
-          }
-
           setTimeout(() => {
             const result = getSystemStatus();
             if (result) {
