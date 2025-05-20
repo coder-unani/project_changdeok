@@ -222,30 +222,6 @@
       return true;
     };
 
-    // API 호출 함수
-    const fetchStats = async (url, method) => {
-      try {
-        const response = await fetch(url, {
-          method,
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${getCookie('access_token')}`,
-          },
-        });
-
-        const responseData = await response.json();
-
-        if (!response.ok) {
-          throw new Error(responseData.message || response.statusText);
-        }
-
-        toastMessage('success', responseData.message || '데이터 조회 성공');
-        return responseData;
-      } catch (error) {
-        toastMessage('error', error.message || '서버 오류가 발생했습니다.');
-      }
-    };
-
     // HTML 생성 함수들
     // 접속 로그
     const createAccessLogsHtml = (data) => {
@@ -560,10 +536,14 @@
         }
 
         // 데이터 가져오기
-        const data = await fetchStats(apiUrl, method);
+        const response = await fetchApi(method, apiUrl, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
-        if (data && (Array.isArray(data) ? data.length > 0 : Object.keys(data).length > 0)) {
-          createHtml(data);
+        if (response && (Array.isArray(response) ? response.length > 0 : Object.keys(response).length > 0)) {
+          createHtml(response);
         } else {
           statsContainer.innerHTML = '<p class="text-gray-500">데이터가 없습니다.</p>';
         }

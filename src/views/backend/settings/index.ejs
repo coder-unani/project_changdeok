@@ -48,27 +48,18 @@
 
     // 시스템 상태 확인 함수
     const getSystemStatus = async () => {
-      isLoading(true);
       try {
         // API 호출
-        const response = await fetch('<%=apiRoutes.systems.status.url%>', {
+        const response = await fetchApi('<%=apiRoutes.systems.status.method%>', '<%=apiRoutes.systems.status.url%>', {
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${getCookie('access_token')}`,
           },
-          method: '<%=apiRoutes.systems.status.method%>',
         });
 
-        if (!response.ok) {
-          throw new Error('시스템 상태 확인 중 오류가 발생했습니다.');
-        }
-
-        const data = await response.json();
-
-        const processInfo = data.data.processInfo;
-        const memoryInfo = data.data.memoryInfo;
-        const cpuInfo = data.data.cpuInfo;
-        const uptime = data.data.uptime;
+        const processInfo = response.data.processInfo;
+        const memoryInfo = response.data.memoryInfo;
+        const cpuInfo = response.data.cpuInfo;
+        const uptime = response.data.uptime;
 
         const processStatus = processInfo.isRunning ? `실행 중 (PID: ${processInfo.pid})` : '중지됨';
         const memoryStatus = `${memoryInfo.free} / ${memoryInfo.total}`;
@@ -89,8 +80,6 @@
         toastMessage('error', '시스템 상태를 불러오는 중 오류가 발생했습니다.');
 
         return false;
-      } finally {
-        isLoading(false);
       }
     };
 
@@ -100,20 +89,16 @@
         return;
       }
 
-      isLoading(true);
-
       try {
         // API 호출
-        const response = await fetch('<%=apiRoutes.systems.restart.url%>', {
-          method: '<%=apiRoutes.systems.restart.method%>',
+        const response = await fetchApi('<%=apiRoutes.systems.restart.method%>', '<%=apiRoutes.systems.restart.url%>', {
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${getCookie('access_token')}`,
           },
         });
 
-        if (!response.ok) {
-          throw new Error('서버 재시작 중 오류가 발생했습니다.');
+        if (!response.result) {
+          throw new Error(response.message);
         }
 
         setTimeout(() => {
@@ -127,8 +112,6 @@
         }, 2000);
       } catch (error) {
         alertMessage('error', error.message || '서버 재시작 중 오류가 발생했습니다.');
-      } finally {
-        isLoading(false);
       }
     };
 
