@@ -25,14 +25,15 @@
               ></button>
               <% if (!data.favicon) { %>
                 <%- include('../../common/icons/preview') %>
-              <% } else { %>
-              <img
-                id="favicon-preview"
-                class="h-full w-full object-cover object-center"
-                src="<%=data.favicon%>"
-                alt="이미지 미리보기"
-              />
               <% } %>
+              <div class="w-full h-full z-10 <% if (!data.favicon) { %>hidden<% } %>">
+                <img
+                  id="favicon-preview"
+                  class="h-full w-full object-cover object-center"
+                  src="<%=data.favicon%>"
+                  alt="이미지 미리보기"
+                />
+              </div>
             </div>
 
             <!-- 사이트 타이틀 -->
@@ -422,6 +423,7 @@
       const reader = new FileReader();
       reader.onload = (e) => {
         document.getElementById('favicon-preview').src = e.target.result;
+        document.getElementById('favicon-preview-container').classList.remove('hidden');
       };
       reader.readAsDataURL(file);
     });
