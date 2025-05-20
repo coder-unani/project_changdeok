@@ -98,13 +98,13 @@ export class App {
   }
 
   private initializeMiddlewares(): void {
-    // Access
+    // 접근 제어
     this.app.use((req, res, next) => this.accessMiddleware.handle(req, res, next));
 
     // Nonce 미들웨어
     this.app.use((req, res, next) => this.nonceMiddleware.handle(req, res, next));
 
-    // Rate Limiter
+    // 요청 제한
     this.app.use(
       rateLimit({
         windowMs: 15 * 60 * 1000,
@@ -116,20 +116,20 @@ export class App {
       })
     );
 
-    // Cookie Parser
+    // 쿠키 파서
     this.app.use(cookieParser());
 
-    // Body Parser
+    // 바디 파서
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(express.json());
 
-    // Logger
+    // 로거
     this.app.use((req, res, next) => this.loggerMiddleware.handle(req, res, next));
 
     // Sanitizer
     this.app.use((req, res, next) => this.sanitizeMiddleware.handle(req, res, next));
 
-    // Global
+    // 전역
     this.app.use((req, res, next) => this.globalMiddleware.handle(req, res, next));
   }
 
