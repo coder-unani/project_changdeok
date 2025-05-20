@@ -391,17 +391,13 @@
 
         // FormData 생성
         const formData = new FormData(e.target);
-        const body = Object.fromEntries(formData.entries());
-
+        
         // API 호출
         const response = await fetchApi(
           '<%=apiRoutes.settings.updateSite.method%>',
           '<%=apiRoutes.settings.updateSite.url%>',
           {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(body),
+            body: formData,
           }
         );
 
