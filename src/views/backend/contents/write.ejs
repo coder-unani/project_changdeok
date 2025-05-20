@@ -64,7 +64,6 @@
           const response = await fetch(uploadUrl, {
             method: 'POST',
             headers: {
-              'Content-Type': 'multipart/form-data',
               Authorization: `Bearer ${getCookie('access_token')}`,
             },
             body: formData,
