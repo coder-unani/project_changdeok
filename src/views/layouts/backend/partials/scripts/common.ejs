@@ -186,7 +186,7 @@
         throw new Error(apiResponse.statusText);
       }
 
-      return await apiResponse.json();
+      return apiResponse ? await apiResponse.json() : null;
     } catch (error) {
       throw error;
     } finally {
