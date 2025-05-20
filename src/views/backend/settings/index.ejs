@@ -56,16 +56,11 @@
     const getSystemStatus = async () => {
       isLoading(true);
       try {
-        // API 인증정보
-        const apiOptions = {
-          token: getCookie('access_token'),
-        };
-
         // API 호출
         const response = await fetch('<%=apiRoutes.systems.status.url%>', {
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${apiOptions.token}`,
+            Authorization: `Bearer ${getCookie('access_token')}`,
           },
           method: '<%=apiRoutes.systems.status.method%>',
         });
@@ -114,17 +109,12 @@
       isLoading(true);
 
       try {
-        // API 인증정보
-        const apiOptions = {
-          token: getCookie('access_token'),
-        };
-
         // API 호출
         const response = await fetch('<%=apiRoutes.systems.restart.url%>', {
           method: '<%=apiRoutes.systems.restart.method%>',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${apiOptions.token}`,
+            Authorization: `Bearer ${getCookie('access_token')}`,
           },
         });
 

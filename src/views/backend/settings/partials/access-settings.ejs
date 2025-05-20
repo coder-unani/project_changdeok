@@ -180,17 +180,12 @@
       const blockedBotJson = document.getElementById('blocked-bot-json').value;
 
       try {
-        // API 인증정보
-        const apiOptions = {
-          token: getCookie('access_token'),
-        };
-
         // API 호출
         const response = await fetch('<%=apiRoutes.settings.updateAccess.url%>', {
           method: '<%=apiRoutes.settings.updateAccess.method%>',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${apiOptions.token}`,
+            Authorization: `Bearer ${getCookie('access_token')}`,
           },
           body: JSON.stringify({
             blockedIpJson,

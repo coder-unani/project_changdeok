@@ -197,17 +197,12 @@
           lunchtimeEnd: lunchtimeEnd,
         };
 
-        // API 인증정보
-        const apiOptions = {
-          token: getCookie('access_token'),
-        };
-
         // API 호출
         const response = await fetch('<%=apiRoutes.settings.updateCompany.url%>', {
           method: '<%=apiRoutes.settings.updateCompany.method%>',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${apiOptions.token}`,
+            Authorization: `Bearer ${getCookie('access_token')}`,
           },
           body: JSON.stringify({
             companyJson: JSON.stringify(company),
