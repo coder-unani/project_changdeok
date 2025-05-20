@@ -12,18 +12,18 @@ if [ ! -f "./restart.sh" ] || [ ! -x "./restart.sh" ]; then
 fi
 
 # Create backup of current build
-echo "** 현재 빌드 백업 생성 **"
-BACKUP_DIR="./backups/$(date +%Y%m%d_%H%M%S)"
-mkdir -p "$BACKUP_DIR"
-if [ -d "./dist" ]; then
-    if ! cp -r ./dist "$BACKUP_DIR/"; then
-        handle_error "백업 생성 실패"
-    fi
-fi
+# echo "** 현재 빌드 백업 생성 **"
+# BACKUP_DIR="./backups/$(date +%Y%m%d_%H%M%S)"
+# mkdir -p "$BACKUP_DIR"
+# if [ -d "./dist" ]; then
+#     if ! cp -r ./dist "$BACKUP_DIR/"; then
+#         handle_error "백업 생성 실패"
+#     fi
+# fi
 
 # Pull the latest code
 echo "** Git에서 최신 코드를 가져옴 **"
-if ! git pull referer main; then
+if ! git pull origin main; then
     handle_error "Git pull 실패"
 fi
 
@@ -48,16 +48,16 @@ if [ -d "./dist/views" ]; then
 fi
 
 # Build the project
-echo "** 프로젝트 빌드 **"
-if ! npm run build; then
-    echo "** 빌드 실패, 백업에서 복원 시도 **"
-    if [ -d "$BACKUP_DIR/dist" ]; then
-        if ! cp -r "$BACKUP_DIR/dist" ./; then
-            handle_error "백업에서 복원 실패"
-        fi
-    fi
-    handle_error "프로젝트 빌드 실패"
-fi
+# echo "** 프로젝트 빌드 **"
+# if ! npm run build; then
+#     echo "** 빌드 실패, 백업에서 복원 시도 **"
+#     if [ -d "$BACKUP_DIR/dist" ]; then
+#         if ! cp -r "$BACKUP_DIR/dist" ./; then
+#             handle_error "백업에서 복원 실패"
+#         fi
+#     fi
+#     handle_error "프로젝트 빌드 실패"
+# fi
 
 # Verify the build
 echo "** 빌드 검증 **"
