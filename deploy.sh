@@ -48,16 +48,16 @@ if [ -d "./dist/views" ]; then
 fi
 
 # Build the project
-# echo "** 프로젝트 빌드 **"
-# if ! npm run build; then
-#     echo "** 빌드 실패, 백업에서 복원 시도 **"
-#     if [ -d "$BACKUP_DIR/dist" ]; then
-#         if ! cp -r "$BACKUP_DIR/dist" ./; then
-#             handle_error "백업에서 복원 실패"
-#         fi
-#     fi
-#     handle_error "프로젝트 빌드 실패"
-# fi
+echo "** 프로젝트 빌드 **"
+if ! npm run build; then
+    echo "** 빌드 실패, 백업에서 복원 시도 **"
+    if [ -d "$BACKUP_DIR/dist" ]; then
+        if ! cp -r "$BACKUP_DIR/dist" ./; then
+            handle_error "백업에서 복원 실패"
+        fi
+    fi
+    handle_error "프로젝트 빌드 실패"
+fi
 
 # Verify the build
 echo "** 빌드 검증 **"
