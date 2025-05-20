@@ -7,119 +7,75 @@
     <ul class="mb-4 space-y-4">
       <!-- 파비콘 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label for="favicon" class="w-50 orb-label lg:leading-11">
-          파비콘
-        </label>
+        <label for="favicon" class="orb-label w-50 lg:leading-11"> 파비콘 </label>
         <input type="file" id="favicon" name="favicon" class="hidden" accept="image/x-icon" />
-        <div class="flex-1 flex items-center">
+        <div class="flex flex-1 items-center">
           <div
-            id="favicon-preview-container"
-            class="flex items-center gap-2 h-[36px] w-[230px] rounded-t-xl border-t border-r border-l border-main-border pr-[15px] pl-[10px]"
+            class="border-main-border flex h-[36px] w-[230px] items-center gap-2 rounded-t-xl border-t border-r border-l pr-[15px] pl-[10px]"
           >
             <!-- 파비콘 미리보기 -->
-            <div class="relative rounded-full h-[16px] w-[16px] text-gray-500 bg-gray-100 overflow-hidden">
-              <button
-                type="button"
-                id="favicon-add-1"
-                class="z-20 absolute inset-0 h-full w-full"
-              ></button>
-              <% if (!data.favicon) { %>
-                <%- include('../../common/icons/preview') %>
-              <% } %>
-              <div class="w-full h-full z-10 <% if (!data.favicon) { %>hidden<% } %>">
-                <img
-                  id="favicon-preview"
-                  class="h-full w-full object-cover object-center"
-                  src="<%=data.favicon%>"
-                  alt="이미지 미리보기"
-                />
-              </div>
+            <div
+              id="favicon-preview-container"
+              class="relative h-[16px] w-[16px] overflow-hidden rounded-full bg-gray-100 text-gray-500"
+            >
+              <button type="button" id="favicon-add-1" class="absolute inset-0 z-20 h-full w-full"></button>
+              <img
+                id="favicon-preview"
+                class="<% if (!data.favicon) { %>hidden<% } %> absolute inset-0 z-10 h-full w-full object-cover object-center"
+                src="<%=data.favicon%>"
+                alt="이미지 미리보기"
+              />
+              <%- include('../../common/icons/preview') %>
             </div>
 
             <!-- 사이트 타이틀 -->
-            <p class="flex-1 text-[13px] w-full truncate"><%=data.title%></p>
+            <p class="w-full flex-1 truncate text-[13px]"><%=data.title%></p>
 
             <!-- 닫기 아이콘 -->
-            <div class="flex-none ml-1 text-gray-500">
-              <%- include('../../common/icons/close') %>
-            </div>
+            <div class="ml-1 flex-none text-gray-500"><%- include('../../common/icons/close') %></div>
           </div>
         </div>
 
         <div>
-          <button
-            type="button"
-            id="favicon-add-2"
-            class="orb-btn orb-btn-info flex items-center gap-2"
-          >
-            <%- include('../../common/icons/plus') %>
-            변경
+          <button type="button" id="favicon-add-2" class="orb-btn orb-btn-info flex items-center gap-2">
+            <%- include('../../common/icons/plus') %> 변경
           </button>
         </div>
       </li>
 
       <!-- 로고 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label for="logo" class="w-50 orb-label lg:leading-11">로고</label>
-        <input
-          type="file"
-          id="logo"
-          name="logo"
-          class="hidden"
-          accept="image/*"
-          placeholder="로고 주소"
-        />
+        <label for="logo" class="orb-label w-50 lg:leading-11">로고</label>
+        <input type="file" id="logo" name="logo" class="hidden" accept="image/*" placeholder="로고 주소" />
 
-        <div class="flex-1 flex items-center">
-          <div
-            class="relative w-[230px] aspect-3/2 rounded-lg border border-main-border overflow-hidden"
-          >
-            <button
-              type="button"
-              id="logo-add-1"
-              class="z-20 absolute inset-0 h-full w-full"
-            ></button>
+        <div class="flex flex-1 items-center">
+          <div class="border-main-border relative aspect-3/2 w-[230px] overflow-hidden rounded-lg border">
+            <button type="button" id="logo-add-1" class="absolute inset-0 z-20 h-full w-full"></button>
             <!-- 이미지 미리보기 (이미지 있을 경우) -->
             <div
               id="logo-preview-container"
-              class="<% if (!data.logo) { %>hidden<% } %> z-10 absolute inset-0 h-full w-full bg-gray-100"
+              class="<% if (!data.logo) { %>hidden<% } %> absolute inset-0 z-10 h-full w-full bg-gray-100"
             >
-              <img
-                id="logo-preview"
-                class="h-full w-full object-contain"
-                src="<%=data.logo%>"
-                alt="이미지 미리보기"
-              />
+              <img id="logo-preview" class="h-full w-full object-contain" src="<%=data.logo%>" alt="이미지 미리보기" />
             </div>
             <!-- 이미지 미리보기 (이미지 없을 경우) -->
-            <div
-              class="relative h-full w-full flex flex-col items-center justify-center bg-gray-100"
-            >
-              <img
-                class="block w-[50px] opacity-50"
-                src="/images/add-image-512x512.png"
-                alt="이미지 추가"
-              />
+            <div class="relative flex h-full w-full flex-col items-center justify-center bg-gray-100">
+              <img class="block w-[50px] opacity-50" src="/images/add-image-512x512.png" alt="이미지 추가" />
               <p class="mt-1 text-xs text-gray-400">(200x200)</p>
             </div>
           </div>
         </div>
 
         <div>
-          <button
-            type="button"
-            id="logo-add-2"
-            class="orb-btn orb-btn-info flex items-center gap-2"
-          >
-            <%- include('../../common/icons/plus') %>
-            변경
+          <button type="button" id="logo-add-2" class="orb-btn orb-btn-info flex items-center gap-2">
+            <%- include('../../common/icons/plus') %> 변경
           </button>
         </div>
       </li>
 
       <!-- 사이트 타이틀 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label for="title" class="w-50 flex gap-1 orb-label lg:leading-11">
+        <label for="title" class="orb-label flex w-50 gap-1 lg:leading-11">
           사이트 타이틀
           <span class="text-gray-400">(title)</span>
         </label>
@@ -135,12 +91,7 @@
 
       <!-- 사이트 소개 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label
-          for="introduction"
-          class="w-50 flex gap-1 orb-label lg:leading-11"
-        >
-          사이트 소개
-        </label>
+        <label for="introduction" class="orb-label flex w-50 gap-1 lg:leading-11"> 사이트 소개 </label>
         <input
           type="text"
           id="introduction"
@@ -153,10 +104,7 @@
 
       <!-- 사이트 설명 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label
-          for="description"
-          class="w-50 flex gap-1 orb-label lg:leading-11"
-        >
+        <label for="description" class="orb-label flex w-50 gap-1 lg:leading-11">
           사이트 설명
           <span class="text-gray-400">(meta description)</span>
         </label>
@@ -165,12 +113,14 @@
           name="description"
           class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
           placeholder="사이트 설명을 입력해주세요."
-        ><%=data.description%></textarea>
+        >
+<%=data.description%></textarea
+        >
       </li>
 
       <!-- 사이트 키워드 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label for="keyword" class="w-50 flex gap-1 orb-label lg:leading-11">
+        <label for="keyword" class="orb-label flex w-50 gap-1 lg:leading-11">
           사이트 키워드
           <span class="text-gray-400">(meta keywords)</span>
         </label>
@@ -182,15 +132,13 @@
             value="<%=data.keywords%>"
             placeholder="사이트 키워드를 입력해주세요."
           />
-          <p class="orb-remark px-2 pt-2">
-            * 콤마(,)로 구분하여 여러 개의 키워드를 입력할 수 있습니다.
-          </p>
+          <p class="orb-remark px-2 pt-2">* 콤마(,)로 구분하여 여러 개의 키워드를 입력할 수 있습니다.</p>
         </div>
       </li>
 
       <!-- 오픈그래프 타이틀 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label for="og-title" class="w-50 flex gap-1 orb-label lg:leading-11">
+        <label for="og-title" class="orb-label flex w-50 gap-1 lg:leading-11">
           오픈그래프 타이틀
           <span class="text-gray-400">(og:title)</span>
         </label>
@@ -204,10 +152,7 @@
 
       <!-- 오픈그래프 설명 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label
-          for="og-description"
-          class="w-50 flex gap-1 orb-label lg:leading-11"
-        >
+        <label for="og-description" class="orb-label flex w-50 gap-1 lg:leading-11">
           오픈그래프 설명
           <span class="text-gray-400">(og:description)</span>
         </label>
@@ -221,7 +166,7 @@
 
       <!-- 오픈그래프 이미지 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label for="og-image" class="w-50 flex gap-1 orb-label lg:leading-11">
+        <label for="og-image" class="orb-label flex w-50 gap-1 lg:leading-11">
           오픈그래프 이미지
           <span class="text-gray-400">(og:image)</span>
         </label>
@@ -234,22 +179,18 @@
           placeholder="오픈그래프 이미지"
         />
 
-        <div class="flex-1 flex items-center">
-          <div class="flex flex-col w-[300px]">
+        <div class="flex flex-1 items-center">
+          <div class="flex w-[300px] flex-col">
             <!-- 오픈그래프 이미지 영역 -->
             <div
-              class="relative w-full h-[158px] rounded-t-lg border-t border-r border-l border-main-border overflow-hidden"
+              class="border-main-border relative h-[158px] w-full overflow-hidden rounded-t-lg border-t border-r border-l"
             >
-              <button
-                type="button"
-                id="og-image-add-1"
-                class="z-20 absolute inset-0 h-full w-full"
-              ></button>
+              <button type="button" id="og-image-add-1" class="absolute inset-0 z-20 h-full w-full"></button>
 
               <!-- 이미지 미리보기 (이미지 있을 경우) -->
               <div
                 id="og-image-preview-container"
-                class="<% if (!data.ogTagJson) { %>hidden<% } %> z-10 absolute inset-0 h-full w-full bg-gray-100"
+                class="<% if (!data.ogTagJson) { %>hidden<% } %> absolute inset-0 z-10 h-full w-full bg-gray-100"
               >
                 <img
                   id="og-image-preview"
@@ -260,48 +201,31 @@
               </div>
 
               <!-- 이미지 미리보기 (이미지 없을 경우) -->
-              <div
-                class="relative h-full w-full flex flex-col items-center justify-center bg-gray-100"
-              >
-                <img
-                  class="block w-[50px] opacity-50"
-                  src="/images/add-image-512x512.png"
-                  alt="이미지 추가"
-                />
+              <div class="relative flex h-full w-full flex-col items-center justify-center bg-gray-100">
+                <img class="block w-[50px] opacity-50" src="/images/add-image-512x512.png" alt="이미지 추가" />
                 <p class="mt-1 text-xs text-gray-400">(1200x630)</p>
               </div>
             </div>
 
             <!-- 오픈그래프 텍스트 영역 -->
-            <div
-              class="flex flex-col w-full p-2.5 rounded-b-lg border-b border-r border-l border-main-border"
-            >
+            <div class="border-main-border flex w-full flex-col rounded-b-lg border-r border-b border-l p-2.5">
               <p id="og-title-preview" class="font-semibold">오픈그래프 타이틀</p>
-              <p id="og-description-preview" class="text-[13px] text-gray-500">
-                오픈그래프 설명
-              </p>
+              <p id="og-description-preview" class="text-[13px] text-gray-500">오픈그래프 설명</p>
               <p class="orb-remark mt-2">https://<%=data.serviceDomain%></p>
             </div>
           </div>
         </div>
 
         <div>
-          <button
-            type="button"
-            id="og-image-add-2"
-            class="orb-btn orb-btn-info flex items-center gap-2"
-          >
-            <%- include('../../common/icons/plus') %>
-            변경
+          <button type="button" id="og-image-add-2" class="orb-btn orb-btn-info flex items-center gap-2">
+            <%- include('../../common/icons/plus') %> 변경
           </button>
         </div>
       </li>
 
       <!-- 서비스 도메인 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label for="service-domain" class="w-50 orb-label lg:leading-11">
-          서비스 도메인
-        </label>
+        <label for="service-domain" class="orb-label w-50 lg:leading-11"> 서비스 도메인 </label>
         <input
           type="text"
           id="service-domain"
@@ -315,9 +239,7 @@
 
       <!-- 서비스 포트 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label for="service-port" class="w-50 orb-label lg:leading-11">
-          서비스 포트
-        </label>
+        <label for="service-port" class="orb-label w-50 lg:leading-11"> 서비스 포트 </label>
         <input
           type="number"
           id="service-port"
@@ -374,7 +296,7 @@
     } catch (error) {
       toastMessage('error', '허용된 TAGS/CORS ORIGIN 로드 중 오류 발생:', error);
     }
-    
+
     // 사이트 설정 저장
     document.getElementById('site-settings-form').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -392,7 +314,7 @@
 
         // FormData 생성
         const formData = new FormData(e.target);
-        
+
         // API 호출
         const response = await fetchApi(
           '<%=apiRoutes.settings.updateSite.method%>',
@@ -423,7 +345,7 @@
       const reader = new FileReader();
       reader.onload = (e) => {
         document.getElementById('favicon-preview').src = e.target.result;
-        document.getElementById('favicon-preview-container').classList.remove('hidden');
+        document.getElementById('favicon-preview').classList.remove('hidden');
       };
       reader.readAsDataURL(file);
     });
