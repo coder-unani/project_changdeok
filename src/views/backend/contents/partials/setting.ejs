@@ -83,18 +83,13 @@
       const formData = new FormData(form);
       const data = Object.fromEntries(formData.entries());
       
-      // API 인증 정보
-      const apiOptions = {
-        token: getCookie('access_token'),
-      };
-
       // 컨텐츠 그룹 수정 API 호출
       const apiUrl = '<%=apiRoutes.contents.updateGroup.url%>'.replace(':groupId', '<%=data.group.id%>');
       const response = await fetch(apiUrl, {
         method: '<%=apiRoutes.contents.updateGroup.method%>',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${apiOptions.token}`,
+          Authorization: `Bearer ${getCookie('access_token')}`,
         },
         body: JSON.stringify(data),
       });

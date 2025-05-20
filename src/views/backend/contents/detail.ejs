@@ -72,11 +72,6 @@
     }
 
     try {
-      // API 인증정보
-      const apiOptions = {
-        token: getCookie('access_token'),
-      };
-
       // 컨텐츠 삭제 API 호출
       const apiUrl = '<%=apiRoutes.contents.delete.url%>'
         .replace(':groupId', '<%=metadata.group.id%>')
@@ -85,7 +80,7 @@
         method: '<%=apiRoutes.contents.delete.method%>',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${apiOptions.token}`,
+          Authorization: `Bearer ${getCookie('access_token')}`,
         },
       });
 
