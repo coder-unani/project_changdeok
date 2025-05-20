@@ -52,18 +52,13 @@
     const data = { permissions };
 
     try {
-      // API 인증정보
-      const apiOptions = {
-        token: getCookie('access_token'),
-      };
-
       // 권한 부여 API 호출
       const apiUrl = '<%=apiRoutes.employees.permissions.url%>'.replace(':employeeId', '<%=data.id%>');
       const response = await fetch(apiUrl, {
         method: '<%=apiRoutes.employees.permissions.method%>',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${apiOptions.token}`,
+          Authorization: `Bearer ${getCookie('access_token')}`,
         },
         body: JSON.stringify(data)
       });

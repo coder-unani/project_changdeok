@@ -32,18 +32,13 @@
       e.preventDefault();
 
       try {
-        // API 인증정보
-        const apiOptions = {
-          token: getCookie('access_token'),
-        };
-
         // 직원 삭제 API 호출
         const apiUrl = '<%=apiRoutes.employees.delete.url%>'.replace(':employeeId', '<%=data.id%>');
         const response = await fetch(apiUrl, {
           method: '<%=apiRoutes.employees.delete.method%>',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${apiOptions.token}`,
+            Authorization: `Bearer ${getCookie('access_token')}`,
           },
         });
 
