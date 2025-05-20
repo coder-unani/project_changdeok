@@ -85,18 +85,13 @@
     try {
       // 삭제 확인
       if (confirm('삭제하시겠습니까?')) {
-        // API 인증정보
-        const apiOptions = {
-          token: getCookie('access_token'),
-        };
-
         // 배너 삭제 API 호출
         const apiUrl = '<%=apiRoutes.banners.delete.url%>'.replace(':bannerId', '<%=data.id%>');
         const response = await fetch(apiUrl, {
           method: '<%=apiRoutes.banners.delete.method%>',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${apiOptions.token}`,
+            Authorization: `Bearer ${getCookie('access_token')}`,
           },
         });
 

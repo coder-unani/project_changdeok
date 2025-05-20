@@ -187,17 +187,12 @@
         throw new Error('발행 마감일은 현재 시간보다 이전일 수 없습니다.');
       }
 
-      // API 인증정보
-      const apiOptions = {
-        token: getCookie('access_token'),
-      };
-
       // 배너 등록 API 호출
       const apiUrl = '<%=apiRoutes.banners.write.url%>';
       const response = await fetch(apiUrl, {
         method: '<%=apiRoutes.banners.write.method%>',
         headers: {
-          Authorization: `Bearer ${apiOptions.token}`,
+          Authorization: `Bearer ${getCookie('access_token')}`,
         },
         body: formData
       });

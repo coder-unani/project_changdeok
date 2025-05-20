@@ -137,17 +137,12 @@
       // 폼 데이터 수집
       const formData = new FormData(e.target);
 
-      // API 인증정보
-      const apiOptions = {
-        token: getCookie('access_token'),
-      };
-
       // 배너 등록 API 호출
       const apiUrl = '<%=apiRoutes.banners.update.url%>'.replace(':bannerId', '<%=data.id%>');
       const response = await fetch(apiUrl, {
         method: '<%=apiRoutes.banners.update.method%>',
         headers: {
-          Authorization: `Bearer ${apiOptions.token}`,
+          Authorization: `Bearer ${getCookie('access_token')}`,
         },
         body: formData
       });
