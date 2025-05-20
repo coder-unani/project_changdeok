@@ -88,8 +88,6 @@
   document.getElementById('system-settings-form').addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    isLoading(true);
-
     try {
       const enabledTags = document.getElementById('enabled-tags').value;
       const enabledCors = document.getElementById('enabled-cors').value;
@@ -116,25 +114,21 @@
       };
 
       // API 호출
-      const response = await fetch('<%=apiRoutes.settings.updateSystem.url%>', {
-        method: '<%=apiRoutes.settings.updateSystem.method%>',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${getCookie('access_token')}`,
-        },
-        body: JSON.stringify(requestData),
-      });
-
-      if (!response.ok) {
-        alertMessage('error', '설정 저장 중 오류가 발생했습니다.');
-      }
+      const response = await fetchApi(
+        '<%=apiRoutes.settings.updateSystem.method%>',
+        '<%=apiRoutes.settings.updateSystem.url%>',
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestData),
+        }
+      );
 
       alertMessage('success', '시스템 설정이 저장되었습니다.');
       statusMessage('수정 사항이 있습니다. 시스템 재시작 후 반영됩니다.');
     } catch (error) {
       alertMessage('error', error.message || '설정 저장 중 오류가 발생했습니다.');
-    } finally {
-      isLoading(false);
     }
   });
 </script>

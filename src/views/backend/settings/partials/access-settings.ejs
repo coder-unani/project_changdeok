@@ -174,8 +174,6 @@
     document.getElementById('access-settings-form').addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      isLoading(true);
-
       const blockedIpJson = document.getElementById('blocked-ip-json').value;
       const blockedBotJson = document.getElementById('blocked-bot-json').value;
 
@@ -195,16 +193,10 @@
           }
         );
 
-        if (!response.result) {
-          throw new Error(response.message);
-        }
-
         alertMessage('success', '접속 관리 설정이 저장되었습니다.');
         statusMessage('수정 사항이 있습니다. 시스템 재시작 후 반영됩니다.');
       } catch (error) {
         toastMessage('error', '접속 관리 설정 저장 중 오류가 발생했습니다.');
-      } finally {
-        isLoading(false);
       }
     });
 
