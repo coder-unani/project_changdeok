@@ -182,19 +182,13 @@
         body,
       });
 
-      const responseToJson = await apiResponse.json();
-
       if (!apiResponse.ok) {
-        throw new Error(responseToJson.message || apiResponse.statusText);
+        throw new Error(apiResponse.statusText);
       }
 
-      if (!responseToJson.result) {
-        throw new Error(responseToJson.message);
-      }
-
-      return responseToJson;
+      return await apiResponse.json();
     } catch (error) {
-      toastMessage('error', error.message);
+      throw error;
     } finally {
       isLoading(false);
     }
