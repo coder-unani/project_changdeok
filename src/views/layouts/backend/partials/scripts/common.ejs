@@ -186,6 +186,11 @@
         throw new Error(apiResponse.statusText);
       }
 
+      // 204 No Content 응답 처리
+      if (apiResponse.status === 204) {
+        return null;
+      }
+
       return apiResponse ? await apiResponse.json() : null;
     } catch (error) {
       throw error;
