@@ -97,7 +97,7 @@
   }
 
   .orb-head {
-    @apply text-2xl font-bold text-slate-700;
+    @apply text-xl font-bold text-slate-700 lg:text-2xl;
   }
 
   .orb-hightlight {
@@ -116,11 +116,17 @@
   .orb-btn-primary {
     @apply text-common-white bg-common-black min-w-[80px] transition-all;
   }
+  .orb-btn-primary-alert {
+    @apply text-common-white hover:bg-primary-main min-w-[80px] bg-gray-600 transition-all;
+  }
   .orb-btn-success {
     @apply text-common-white hover:bg-success-dark bg-success-main min-w-[80px] transition-all;
   }
   .orb-btn-delete {
     @apply text-common-white bg-error-main hover:bg-error-dark min-w-[80px] transition-all;
+  }
+  .orb-btn-delete-alert {
+    @apply text-common-white hover:bg-error-main min-w-[80px] bg-red-400 transition-all;
   }
   .orb-btn-info {
     @apply border-dark-border text-primary-light min-w-[80px] border bg-transparent leading-[18px];

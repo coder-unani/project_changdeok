@@ -57,6 +57,28 @@
     }).showToast();
   };
 
+  // 기본 옵션 설정
+  const swalDefaultOptions = {
+    width: '400px',
+    customClass: {
+      popup: '!rounded-xl !p-4',
+      title: '!text-lg !font-bold !text-gray-700',
+      htmlContainer: '!text-sm !text-primary-main',
+      confirmButton: 'orb-btn orb-btn-primary-alert',
+      cancelButton: 'orb-btn orb-btn-delete-alert',
+      actions: '!gap-2',
+    },
+    buttonsStyling: false,
+    cancelButtonText: '취소',
+    confirmButtonText: '확인',
+    showClass: {
+      popup: 'animate__animated animate__fadeInDown',
+    },
+    hideClass: {
+      popup: 'animate__animated animate__fadeOutUp',
+    },
+  };
+
   const alertMessage = (type, text, title = '', options = {}) => {
     const root = document.documentElement;
     const computedStyle = getComputedStyle(root);
@@ -81,32 +103,19 @@
         break;
     }
 
-    // 기본 옵션 설정
-    const defaultOptions = {
-      title: title || '',
-      text: text || '',
-      icon: icon,
-      confirmButtonText: '확인',
-      confirmButtonColor: computedStyle.getPropertyValue('--color-success').trim(),
-      showClass: {
-        popup: 'animate__animated animate__fadeInDown',
-      },
-      hideClass: {
-        popup: 'animate__animated animate__fadeOutUp',
-      },
-    };
-
     // 사용자 정의 옵션과 기본 옵션 병합
     const swalOptions = {
-      ...defaultOptions,
+      ...swalDefaultOptions,
       ...options,
+      ...(title && { title }),
+      ...(text && { text }),
       // 중첩된 객체는 별도로 병합
       showClass: {
-        ...defaultOptions.showClass,
+        ...swalDefaultOptions.showClass,
         ...(options.showClass || {}),
       },
       hideClass: {
-        ...defaultOptions.hideClass,
+        ...swalDefaultOptions.hideClass,
         ...(options.hideClass || {}),
       },
     };
@@ -139,23 +148,19 @@
     }
     const footer = options.footer || '';
 
-    Swal.fire({
+    const swalOptions = {
+      ...swalDefaultOptions,
+      ...options,
       ...(title && { title }),
       ...(text && { text }),
-      ...(icon && { icon }),
+      // ...(icon && { icon }),
       showCancelButton: true,
-      confirmButtonColor: computedStyle.getPropertyValue('--color-success').trim(),
-      cancelButtonColor: computedStyle.getPropertyValue('--color-error').trim(),
       cancelButtonText: '취소',
       confirmButtonText: '확인',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: '성공',
-          text: successText,
-          icon: 'success',
-        });
-      }
+    };
+
+    return Swal.fire(swalOptions).then((result) => {
+      return result.isConfirmed;
     });
   };
 

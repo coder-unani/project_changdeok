@@ -1,57 +1,54 @@
 <script nonce="<%=nonce%>">
-  const menuToggle = document.getElementById('menu-toggle');
-  const sidebarMobile = document.getElementById('sidebar-mobile');
-  const closeMenu = document.getElementById('menu-close');
+  document.addEventListener('DOMContentLoaded', () => {
+    const menuToggle = document.getElementById('menu-toggle');
+    const sidebarMobile = document.getElementById('sidebar-mobile');
+    const closeMenu = document.getElementById('menu-close');
 
-  menuToggle.addEventListener('click', () => {
-    sidebarMobile.classList.toggle('translate-x-full');
-  });
+    menuToggle.addEventListener('click', () => {
+      sidebarMobile.classList.toggle('translate-x-full');
+    });
 
-  closeMenu.addEventListener('click', () => {
-    sidebarMobile.classList.add('translate-x-full');
-  });
+    closeMenu.addEventListener('click', () => {
+      sidebarMobile.classList.add('translate-x-full');
+    });
 
-  const buttonLogout = document.getElementById('logout');
-  const buttonLogoutMobile = document.getElementById('logout-mobile');
+    const logout = async () => {
+      if (await confirmMessage('info', '로그아웃 하시겠습니까?', '로그아웃')) {
+        try {
+          // 로그아웃 API 호출
+          const response = await fetch('<%=apiRoutes.employees.logout.url%>', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${getCookie('access_token')}`,
+            },
+            body: JSON.stringify({}),
+          });
 
-  buttonLogout.addEventListener('click', () => {
-    if (confirm('로그아웃 하시겠습니까?')) {
-      logout();
-    }
-  });
+          if (!response.ok) {
+            throw new Error('로그아웃에 실패했습니다.');
+          }
 
-  buttonLogoutMobile.addEventListener('click', () => {
-    if (confirm('로그아웃 하시겠습니까?')) {
-      logout();
-    }
-  });
-
-  const logout = async () => {
-    try {
-      // API 인증 정보
-      const apiOptions = {
-        token: getCookie('access_token'),
-      };
-
-      // API 호출
-      const response = await fetch('<%=apiRoutes.employees.logout.url%>', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${apiOptions.token}`,
-        },
-        body: JSON.stringify({}),
-      });
-
-      if (!response.ok) {
-        throw new Error('로그아웃에 실패했습니다.');
+          // 로그아웃 성공
+          removeCookie('access_token');
+          alertMessage('success', '로그아웃 되었습니다.', '로그아웃').then(() => {
+            window.location.href = '<%=backendRoutes.employees.login.url%>';
+          });
+        } catch (error) {
+          console.error(error);
+        }
       }
+    };
 
-      // 로그아웃 성공
-      removeCookie('access_token');
-      window.location.href = '<%=backendRoutes.employees.login.url%>';
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    const buttonLogout = document.getElementById('logout');
+    const buttonLogoutMobile = document.getElementById('logout-mobile');
+
+    buttonLogout.addEventListener('click', () => {
+      logout();
+    });
+
+    buttonLogoutMobile.addEventListener('click', () => {
+      logout();
+    });
+  });
 </script>
