@@ -181,21 +181,22 @@
 
       try {
         // API 호출
-        const response = await fetch('<%=apiRoutes.settings.updateAccess.url%>', {
-          method: '<%=apiRoutes.settings.updateAccess.method%>',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${getCookie('access_token')}`,
-          },
-          body: JSON.stringify({
-            blockedIpJson,
-            blockedBotJson,
-          }),
-        });
+        const response = await fetchApi(
+          '<%=apiRoutes.settings.updateAccess.method%>',
+          '<%=apiRoutes.settings.updateAccess.url%>',
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              blockedIpJson,
+              blockedBotJson,
+            }),
+          }
+        );
 
-        if (!response.ok) {
-          toastMessage('error', '접속 관리 설정 저장 중 오류가 발생했습니다.');
-          return;
+        if (!response.result) {
+          throw new Error(response.message);
         }
 
         alertMessage('success', '접속 관리 설정이 저장되었습니다.');

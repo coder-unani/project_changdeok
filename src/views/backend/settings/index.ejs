@@ -28,78 +28,75 @@
 </div>
 
 <script nonce="<%=nonce%>">
-    // 시스템 상태 메시지 함수
-    const statusMessage = (message) => {
-      if (message) {
-        document.getElementById('system-status-message-container').classList.remove('hidden');
-        document.getElementById('system-status-message').textContent = message;
-      } else {
-        document.getElementById('system-status-message-container').classList.add('hidden');
+  // 시스템 상태 메시지 함수
+  const statusMessage = (message) => {
+    if (message) {
+      document.getElementById('system-status-message-container').classList.remove('hidden');
+      document.getElementById('system-status-message').textContent = message;
+    } else {
+      document.getElementById('system-status-message-container').classList.add('hidden');
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const siteSettingsContainer = document.getElementById('site-settings-container');
+    const companySettingsContainer = document.getElementById('company-settings-container');
+    const accessSettingsContainer = document.getElementById('access-settings-container');
+    const systemSettingsContainer = document.getElementById('system-settings-container');
+
+    let currentTab = null;
+
+    // 시스템 상태 확인 함수
+    const getSystemStatus = async () => {
+      try {
+        // API 호출
+        const response = await fetchApi('<%=apiRoutes.systems.status.method%>', '<%=apiRoutes.systems.status.url%>', {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const processInfo = response.data.processInfo;
+        const memoryInfo = response.data.memoryInfo;
+        const cpuInfo = response.data.cpuInfo;
+        const uptime = response.data.uptime;
+
+        const processStatus = processInfo.isRunning ? `실행 중 (PID: ${processInfo.pid})` : '중지됨';
+        const memoryStatus = `${memoryInfo.free} / ${memoryInfo.total}`;
+        const cpuStatus = `${cpuInfo.used} / ${cpuInfo.idle}`;
+
+        document.getElementById('process-status').textContent = processStatus;
+        document.getElementById('memory-status').textContent = memoryStatus;
+        document.getElementById('cpu-status').textContent = cpuStatus;
+        document.getElementById('uptime').textContent = uptime;
+
+        return true;
+      } catch (error) {
+        document.getElementById('process-status').textContent = '확인 불가';
+        document.getElementById('memory-status').textContent = '확인 불가';
+        document.getElementById('cpu-status').textContent = '확인 불가';
+        document.getElementById('uptime').textContent = '확인 불가';
+
+        toastMessage('error', '시스템 상태를 불러오는 중 오류가 발생했습니다.');
+
+        return false;
       }
     };
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const siteSettingsContainer = document.getElementById('site-settings-container');
-      const companySettingsContainer = document.getElementById('company-settings-container');
-      const accessSettingsContainer = document.getElementById('access-settings-container');
-      const systemSettingsContainer = document.getElementById('system-settings-container');
-
-      let currentTab = null;
-
-      // 시스템 상태 확인 함수
-      const getSystemStatus = async () => {
-  <<<<<<< HEAD
-  =======
-        isLoading(true);
-
-  >>>>>>> 328971aabcbbfd210e187286c58aa5547412d54b
+    // 서버 재시작 함수
+    const restartServer = async () => {
+      if (await confirmMessage('info', '서버를 재시작하시겠습니까?', '서버 재시작')) {
         try {
           // API 호출
-          const response = await fetchApi('<%=apiRoutes.systems.status.method%>', '<%=apiRoutes.systems.status.url%>', {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-
-          const processInfo = response.data.processInfo;
-          const memoryInfo = response.data.memoryInfo;
-          const cpuInfo = response.data.cpuInfo;
-          const uptime = response.data.uptime;
-
-          const processStatus = processInfo.isRunning ? `실행 중 (PID: ${processInfo.pid})` : '중지됨';
-          const memoryStatus = `${memoryInfo.free} / ${memoryInfo.total}`;
-          const cpuStatus = `${cpuInfo.used} / ${cpuInfo.idle}`;
-
-          document.getElementById('process-status').textContent = processStatus;
-          document.getElementById('memory-status').textContent = memoryStatus;
-          document.getElementById('cpu-status').textContent = cpuStatus;
-          document.getElementById('uptime').textContent = uptime;
-
-          return true;
-        } catch (error) {
-          document.getElementById('process-status').textContent = '확인 불가';
-          document.getElementById('memory-status').textContent = '확인 불가';
-          document.getElementById('cpu-status').textContent = '확인 불가';
-          document.getElementById('uptime').textContent = '확인 불가';
-
-          toastMessage('error', '시스템 상태를 불러오는 중 오류가 발생했습니다.');
-
-          return false;
-        }
-      };
-
-      // 서버 재시작 함수
-      const restartServer = async () => {
-        if (await confirmMessage('info', '서버를 재시작하시겠습니까?', '서버 재시작')) {
-          isLoading(true);
-
-        try {
-          // API 호출
-          const response = await fetchApi('<%=apiRoutes.systems.restart.method%>', '<%=apiRoutes.systems.restart.url%>', {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
+          const response = await fetchApi(
+            '<%=apiRoutes.systems.restart.method%>',
+            '<%=apiRoutes.systems.restart.url%>',
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
 
           if (!response.result) {
             throw new Error(response.message);
@@ -117,82 +114,83 @@
         } catch (error) {
           alertMessage('error', error.message || '서버 재시작 중 오류가 발생했습니다.');
         }
-      };
+      }
+    };
 
-      // 탭 전환 함수
-      const switchTab = (activeTab) => {
-        // 모든 탭 버튼에서 active 클래스 제거
-        document.querySelectorAll('[data-tab]').forEach((button) => {
-          button.classList.remove('active', 'bg-blue-50', 'text-blue-500');
-          button.classList.add(
-            'hover:bg-paper-bg',
-            'hover:text-gray-700',
-            'dark:hover:bg-gray-800',
-            'dark:hover:text-gray-400'
-          );
-        });
-
-        // 클릭된 탭 버튼에 active 클래스 추가
-        const activeButton = document.querySelector(`[data-tab="${activeTab}"]`);
-        if (activeButton) {
-          activeButton.classList.remove(
-            'hover:bg-paper-bg',
-            'hover:text-gray-700',
-            'dark:hover:bg-gray-800',
-            'dark:hover:text-gray-400'
-          );
-          activeButton.classList.add('active', 'bg-blue-50', 'text-blue-500');
-        }
-
-        if (activeTab === 'site-settings') {
-          siteSettingsContainer.classList.remove('hidden');
-          companySettingsContainer.classList.add('hidden');
-          accessSettingsContainer.classList.add('hidden');
-          systemSettingsContainer.classList.add('hidden');
-        } else if (activeTab === 'company-settings') {
-          siteSettingsContainer.classList.add('hidden');
-          companySettingsContainer.classList.remove('hidden');
-          accessSettingsContainer.classList.add('hidden');
-          systemSettingsContainer.classList.add('hidden');
-        } else if (activeTab === 'access-settings') {
-          siteSettingsContainer.classList.add('hidden');
-          companySettingsContainer.classList.add('hidden');
-          accessSettingsContainer.classList.remove('hidden');
-          systemSettingsContainer.classList.add('hidden');
-        } else if (activeTab === 'system-settings') {
-          siteSettingsContainer.classList.add('hidden');
-          companySettingsContainer.classList.add('hidden');
-          accessSettingsContainer.classList.add('hidden');
-          systemSettingsContainer.classList.remove('hidden');
-        }
-
-        currentTab = activeTab;
-      };
-
-      // 초기화 함수
-      const init = async () => {
-        switchTab('site-settings');
-        await getSystemStatus();
-      };
-
-      // 탭 버튼에 이벤트 리스너 추가
+    // 탭 전환 함수
+    const switchTab = (activeTab) => {
+      // 모든 탭 버튼에서 active 클래스 제거
       document.querySelectorAll('[data-tab]').forEach((button) => {
-        button.addEventListener('click', () => {
-          const tabName = button.getAttribute('data-tab');
-          switchTab(tabName);
-        });
+        button.classList.remove('active', 'bg-blue-50', 'text-blue-500');
+        button.classList.add(
+          'hover:bg-paper-bg',
+          'hover:text-gray-700',
+          'dark:hover:bg-gray-800',
+          'dark:hover:text-gray-400'
+        );
       });
 
-      // 새로고침 버튼 이벤트 리스너 추가
-      document.getElementById('refresh-system-status').addEventListener('click', async () => {
-        await getSystemStatus();
-        toastMessage('info', '시스템 정보가 갱신되었습니다.');
+      // 클릭된 탭 버튼에 active 클래스 추가
+      const activeButton = document.querySelector(`[data-tab="${activeTab}"]`);
+      if (activeButton) {
+        activeButton.classList.remove(
+          'hover:bg-paper-bg',
+          'hover:text-gray-700',
+          'dark:hover:bg-gray-800',
+          'dark:hover:text-gray-400'
+        );
+        activeButton.classList.add('active', 'bg-blue-50', 'text-blue-500');
+      }
+
+      if (activeTab === 'site-settings') {
+        siteSettingsContainer.classList.remove('hidden');
+        companySettingsContainer.classList.add('hidden');
+        accessSettingsContainer.classList.add('hidden');
+        systemSettingsContainer.classList.add('hidden');
+      } else if (activeTab === 'company-settings') {
+        siteSettingsContainer.classList.add('hidden');
+        companySettingsContainer.classList.remove('hidden');
+        accessSettingsContainer.classList.add('hidden');
+        systemSettingsContainer.classList.add('hidden');
+      } else if (activeTab === 'access-settings') {
+        siteSettingsContainer.classList.add('hidden');
+        companySettingsContainer.classList.add('hidden');
+        accessSettingsContainer.classList.remove('hidden');
+        systemSettingsContainer.classList.add('hidden');
+      } else if (activeTab === 'system-settings') {
+        siteSettingsContainer.classList.add('hidden');
+        companySettingsContainer.classList.add('hidden');
+        accessSettingsContainer.classList.add('hidden');
+        systemSettingsContainer.classList.remove('hidden');
+      }
+
+      currentTab = activeTab;
+    };
+
+    // 초기화 함수
+    const init = async () => {
+      switchTab('site-settings');
+      await getSystemStatus();
+    };
+
+    // 탭 버튼에 이벤트 리스너 추가
+    document.querySelectorAll('[data-tab]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const tabName = button.getAttribute('data-tab');
+        switchTab(tabName);
       });
-
-      // 재시작 버튼 이벤트 리스너 추가
-      document.getElementById('restart-server').addEventListener('click', restartServer);
-
-      // 초기화
-      init();
     });
+
+    // 새로고침 버튼 이벤트 리스너 추가
+    document.getElementById('refresh-system-status').addEventListener('click', async () => {
+      await getSystemStatus();
+      toastMessage('info', '시스템 정보가 갱신되었습니다.');
+    });
+
+    // 재시작 버튼 이벤트 리스너 추가
+    document.getElementById('restart-server').addEventListener('click', restartServer);
+
+    // 초기화
+    init();
+  });
 </script>

@@ -527,13 +527,7 @@
         statsContainer.innerHTML = '';
 
         // URL 조정
-        let apiUrl;
-        if (url === '<%= apiRoutes.stats.accessLogs.url %>') {
-          // 접속 로그는 endDate만 사용
-          apiUrl = '<%= apiRoutes.stats.accessLogs.url %>?date=' + date.value;
-        } else {
-          apiUrl = url + '?startDate=' + startDate.value + '&endDate=' + endDate.value;
-        }
+        const apiUrl = `${url}?startDate=${startDate.value}&endDate=${endDate.value}`;
 
         // 데이터 가져오기
         const response = await fetchApi(method, apiUrl, {
@@ -542,13 +536,17 @@
           },
         });
 
+        if (!response.result) {
+          throw new Error(response.message);
+        }
+
         if (response && (Array.isArray(response) ? response.length > 0 : Object.keys(response).length > 0)) {
           createHtml(response);
         } else {
-          statsContainer.innerHTML = '<p class="text-gray-500">데이터가 없습니다.</p>';
+          toastMessage('error', '데이터가 없습니다.');
         }
       } catch (error) {
-        statsContainer.innerHTML = `<p class="text-red-500">오류가 발생했습니다: ${error.message}</p>`;
+        toastMessage('error', `오류가 발생했습니다. : ${error.message}`);
       }
     };
 
