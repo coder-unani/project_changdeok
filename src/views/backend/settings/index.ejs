@@ -101,14 +101,14 @@
           setTimeout(() => {
             const result = getSystemStatus();
             if (result) {
-              alertMessage('success', '서버가 재시작되었습니다.');
+              alertMessage('success', '서버가 재시작되었습니다.', '서버 재시작');
               statusMessage(null);
             } else {
-              alertMessage('error', '서버 재시작 중 오류가 발생했습니다.');
+              alertMessage('error', '서버 재시작 중 오류가 발생했습니다.', '서버 재시작');
             }
           }, 2000);
         } catch (error) {
-          alertMessage('error', error.message || '서버 재시작 중 오류가 발생했습니다.');
+          alertMessage('error', error.message || '서버 재시작 중 오류가 발생했습니다.', '서버 재시작');
         }
       }
     };

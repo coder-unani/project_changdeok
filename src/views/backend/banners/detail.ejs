@@ -73,30 +73,23 @@
     document.getElementById('btn-delete').addEventListener('click', async (e) => {
       e.preventDefault();
 
-      if (await confirmMessage('question', '정말 삭제하시겠습니까?', '삭제')) {
+      if (await confirmMessage('question', '정말 삭제하시겠습니까?', '<%=apiRoutes.banners.delete.title%>')) {
         try {
-          // 삭제 확인
           // 배너 삭제 API 호출
-          const apiUrl = '<%=apiRoutes.banners.delete.url%>'.replace(':bannerId', '<%=data.id%>');
-          const response = await fetch(apiUrl, {
-            method: '<%=apiRoutes.banners.delete.method%>',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${getCookie('access_token')}`,
-            },
-          });
-
-          // 응답 오류
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || response.statusText);
-          }
+          const response = await fetchApi(
+            '<%=apiRoutes.banners.delete.method%>',
+            '<%=apiRoutes.banners.delete.url%>'.replace(':bannerId', '<%=data.id%>'),
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
 
           // 응답 성공
-          alertMessage('success', '<%=apiRoutes.banners.delete.title%> 성공', '삭제').then(() => {
+          alertMessage('success', '<%=apiRoutes.banners.delete.title%>되었습니다.', '<%=apiRoutes.banners.delete.title%>').then(() => {
             window.location.href = '<%=backendRoutes.banners.list.url%>?gp=<%=metadata.groupInfo.id%>&sq=<%=data.seq%>';
           });
-          
         } catch (error) {
           toastMessage('error', error.message || '배너 삭제에 실패했습니다.');
         }

@@ -189,23 +189,24 @@
       data.permissions = Array.from(document.querySelectorAll('input[id^="permission"]:checked')).map(checkbox => Number(checkbox.value));
 
       // 직원 등록 API 호출
-      const response = await fetch('<%=apiRoutes.employees.regist.url%>', {
-        method: '<%=apiRoutes.employees.regist.method%>',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${getCookie('access_token')}`,
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetchApi(
+        '<%=apiRoutes.employees.regist.method%>',
+        '<%=apiRoutes.employees.regist.url%>', 
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       // 응답 오류
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || response.statusText);
+      if (!response.result) {
+        throw new Error(response.message);
       }
 
       // 응답 성공
-      alertMessage('success', '<%=apiRoutes.employees.regist.title%> 성공').then(() => {  
+      alertMessage('success', '<%=apiRoutes.employees.regist.title%>되었습니다.', '<%=apiRoutes.employees.regist.title%>').then(() => {  
         window.location.href = '<%=backendRoutes.employees.url%>';
       });
     } catch (error) {

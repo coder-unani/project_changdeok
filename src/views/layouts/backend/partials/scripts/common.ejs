@@ -79,7 +79,7 @@
     },
   };
 
-  const alertMessage = (type, text, title = '', options = {}) => {
+  const alertMessage = (type, html, title = '', options = {}) => {
     const root = document.documentElement;
     const computedStyle = getComputedStyle(root);
 
@@ -108,7 +108,7 @@
       ...swalDefaultOptions,
       ...options,
       ...(title && { title }),
-      ...(text && { text }),
+      ...(html && { html }),
       // 중첩된 객체는 별도로 병합
       showClass: {
         ...swalDefaultOptions.showClass,
@@ -123,7 +123,7 @@
     return Swal.fire(swalOptions);
   };
 
-  const confirmMessage = (type, text, title = '', successText = '', options = {}) => {
+  const confirmMessage = (type, html, title = '', successText = '', options = {}) => {
     const root = document.documentElement;
     const computedStyle = getComputedStyle(root);
 
@@ -152,7 +152,7 @@
       ...swalDefaultOptions,
       ...options,
       ...(title && { title }),
-      ...(text && { text }),
+      ...(html && { html }),
       // ...(icon && { icon }),
       showCancelButton: true,
       cancelButtonText: '취소',

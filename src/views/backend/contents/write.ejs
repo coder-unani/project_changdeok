@@ -54,19 +54,13 @@
           formData.append('image', file);
 
           // 이미지 업로드 API 호출
-          const uploadUrl = '/api/contents/<%=metadata.group.id%>/upload-image';
-          const response = await fetch(uploadUrl, {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${getCookie('access_token')}`,
-            },
+          const response = await fetchApi('POST', '/api/contents/<%=metadata.group.id%>/upload-image', {
             body: formData,
           });
 
           // 응답 오류
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || response.statusText);
+          if (!response.result) {
+            throw new Error(response.message);
           }
 
           // 응답 성공
@@ -103,24 +97,24 @@
       data.content = content;
 
       // 컨텐츠 저장 API 호출
-      const saveUrl = '<%=apiRoutes.contents.write.url%>'.replace(':groupId', '<%=metadata.group.id%>');
-      const response = await fetch(saveUrl, {
-        method: '<%=apiRoutes.contents.write.method%>',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${getCookie('access_token')}`,
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetchApi(
+        '<%=apiRoutes.contents.write.method%>',
+        '<%=apiRoutes.contents.write.url%>'.replace(':groupId', '<%=metadata.group.id%>'),
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       // 응답 오류
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || response.statusText);
+      if (!response.result) {
+        throw new Error(response.message);
       }
 
       // 응답 성공
-      alertMessage('success', '<%=apiRoutes.contents.write.title%> 성공')
+      alertMessage('success', '<%=apiRoutes.contents.write.title%>되었습니다.', '<%=apiRoutes.contents.write.title%>')
         .then(() => {
           window.location.href = '<%=backendRoutes.contents.list.url%>'.replace(':groupId', '<%=metadata.group.id%>');
         })
@@ -134,9 +128,15 @@
   });
 
   // 취소 버튼 이벤트
-  document.getElementById('btnCancel').addEventListener('click', () => {
-    alertMessage('info', '취소되었습니다.').then(() => {
+  document.getElementById('btnCancel').addEventListener('click', async () => {
+    if (
+      await confirmMessage(
+        'info',
+        '작성을 취소하시겠습니까?<br>작성중인 내용은 저장되지 않습니다.',
+        '<%=apiRoutes.contents.write.title%>'
+      )
+    ) {
       window.location.href = '<%=backendRoutes.contents.list.url%>'.replace(':groupId', '<%=metadata.group.id%>');
-    });
+    }
   });
 </script>

@@ -58,19 +58,12 @@
           formData.append('image', file);
 
           // 이미지 업로드 API 호출
-          const uploadUrl = '/api/contents/<%=metadata.group.id%>/upload-image';
-          const response = await fetch(uploadUrl, {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${getCookie('access_token')}`,
-            },
+          const response = await fetchApi('POST', '/api/contents/<%=metadata.group.id%>/upload-image', {
             body: formData,
           });
 
-          // 응답 오류
-          if (!response.ok) {
-            const errorData = await response.json();
-            toastMessage('error', errorData.message || response.statusText);
+          if (!response.result) {
+            throw new Error(response.message);
           }
 
           // 응답 성공
@@ -109,26 +102,25 @@
       data.content = content;
 
       // 컨텐츠 등록 API 호출
-      const apiUrl = '<%=apiRoutes.contents.update.url%>'
-        .replace(':groupId', '<%=metadata.group.id%>')
-        .replace(':contentId', '<%=data.id%>');
-      const response = await fetch(apiUrl, {
-        method: '<%=apiRoutes.contents.update.method%>',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${getCookie('access_token')}`,
-        },
-        body: JSON.stringify(data),
-      });
-
-      // 응답 오류
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || response.statusText);
-      }
+      const response = await fetchApi(
+        '<%=apiRoutes.contents.update.method%>',
+        '<%=apiRoutes.contents.update.url%>'
+          .replace(':groupId', '<%=metadata.group.id%>')
+          .replace(':contentId', '<%=data.id%>'),
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       // 응답 성공
-      alertMessage('success', '<%=apiRoutes.contents.update.title%> 성공').then(() => {
+      alertMessage(
+        'success',
+        '<%=apiRoutes.contents.update.title%>되었습니다.',
+        '<%=apiRoutes.contents.update.title%>'
+      ).then(() => {
         window.location.href = '<%=backendRoutes.contents.detail.url%>'
           .replace(':groupId', '<%=metadata.group.id%>')
           .replace(':contentId', '<%=data.id%>');

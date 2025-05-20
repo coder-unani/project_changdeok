@@ -16,18 +16,11 @@
       if (await confirmMessage('info', '로그아웃 하시겠습니까?', '로그아웃')) {
         try {
           // 로그아웃 API 호출
-          const response = await fetch('<%=apiRoutes.employees.logout.url%>', {
-            method: 'POST',
+          const response = await fetchApi('POST', '<%=apiRoutes.employees.logout.url%>', {
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${getCookie('access_token')}`,
             },
-            body: JSON.stringify({}),
           });
-
-          if (!response.ok) {
-            throw new Error('로그아웃에 실패했습니다.');
-          }
 
           // 로그아웃 성공
           removeCookie('access_token');
@@ -35,7 +28,7 @@
             window.location.href = '<%=backendRoutes.employees.login.url%>';
           });
         } catch (error) {
-          console.error(error);
+          toastMessage('error', error.message || '로그아웃에 실패했습니다.');
         }
       }
     };

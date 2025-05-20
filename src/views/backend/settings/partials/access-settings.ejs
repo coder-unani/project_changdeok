@@ -193,7 +193,7 @@
           }
         );
 
-        alertMessage('success', '접속 관리 설정이 저장되었습니다.');
+        alertMessage('success', '접속 관리 설정이 저장되었습니다.', '설정');
         statusMessage('수정 사항이 있습니다. 시스템 재시작 후 반영됩니다.');
       } catch (error) {
         toastMessage('error', '접속 관리 설정 저장 중 오류가 발생했습니다.');
@@ -215,21 +215,21 @@
 
       // 모든 필드가 채워져 있는지 확인
       if (ipParts.some((part) => !part)) {
-        alertMessage('error', 'IP 주소의 모든 부분을 입력해주세요.');
+        alertMessage('error', 'IP 주소의 모든 부분을 입력해주세요.', '설정');
         return;
       }
 
       // IP 주소 형식 검증
       const ip = ipParts.join('.');
       if (!/^(\d{1,3}\.){3}\d{1,3}$/.test(ip)) {
-        alertMessage('error', '올바른 IP 주소 형식이 아닙니다.');
+        alertMessage('error', '올바른 IP 주소 형식이 아닙니다.', '설정');
         return;
       }
 
       // 이미 존재하는 IP인지 확인
       const existingIps = Array.from(document.querySelectorAll('.blocked-ip-item')).map((item) => item.dataset.ip);
       if (existingIps.includes(ip)) {
-        alertMessage('error', '이미 등록된 IP 주소입니다.');
+        alertMessage('error', '이미 등록된 IP 주소입니다.', '설정');
         return;
       }
 
@@ -259,7 +259,7 @@
 
       // 패턴이 비어있는지 확인
       if (!pattern) {
-        alertMessage('error', '봇 패턴을 입력해주세요.');
+        alertMessage('error', '봇 패턴을 입력해주세요.', '설정');
         return;
       }
 
@@ -268,7 +268,7 @@
         (item) => item.dataset.pattern
       );
       if (existingPatterns.includes(pattern)) {
-        alertMessage('error', '이미 등록된 봇 패턴입니다.');
+        alertMessage('error', '이미 등록된 봇 패턴입니다.', '설정');
         return;
       }
 

@@ -125,30 +125,26 @@
   document.getElementById('formBannerUpdate').addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    isLoading(true);
-    
     try {
       // 폼 데이터 수집
       const formData = new FormData(e.target);
 
       // 배너 등록 API 호출
-      const apiUrl = '<%=apiRoutes.banners.update.url%>'.replace(':bannerId', '<%=data.id%>');
-      const response = await fetch(apiUrl, {
-        method: '<%=apiRoutes.banners.update.method%>',
-        headers: {
-          Authorization: `Bearer ${getCookie('access_token')}`,
-        },
-        body: formData
-      });
+      const response = await fetchApi(
+        '<%=apiRoutes.banners.update.method%>',
+        '<%=apiRoutes.banners.update.url%>'.replace(':bannerId', '<%=data.id%>'), 
+        {
+          body: formData
+        }
+      );
 
       // 응답 오류
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || response.statusText);
+      if (!response.result) {
+        throw new Error(response.message);
       }
 
       // 응답 성공
-      alertMessage('success', '<%=apiRoutes.banners.update.title%> 성공').then(() => {
+      alertMessage('success', '<%=apiRoutes.banners.update.title%>되었습니다.', '<%=apiRoutes.banners.update.title%>').then(() => {
         window.location.href = "<%=backendRoutes.banners.list.url%>?gp=<%=metadata.groupInfo.id%>&sq=<%=data.seq%>";
       });
 

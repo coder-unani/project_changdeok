@@ -62,28 +62,32 @@
     document.getElementById('btn-delete').addEventListener('click', async (e) => {
       e.preventDefault();
 
-      if (await confirmMessage('question', '정말 삭제하시겠습니까?', '삭제')) {
+      if (await confirmMessage('question', '정말 삭제하시겠습니까?', '<%=apiRoutes.contents.delete.title%>')) {
         try {
           // 컨텐츠 삭제 API 호출
-          const apiUrl = '<%=apiRoutes.contents.delete.url%>'
-            .replace(':groupId', '<%=metadata.group.id%>')
-            .replace(':contentId', '<%=data.id%>');
-          const response = await fetch(apiUrl, {
-            method: '<%=apiRoutes.contents.delete.method%>',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${getCookie('access_token')}`,
-            },
-          });
+          const response = await fetchApi(
+            '<%=apiRoutes.contents.delete.method%>',
+            '<%=apiRoutes.contents.delete.url%>'
+              .replace(':groupId', '<%=metadata.group.id%>')
+              .replace(':contentId', '<%=data.id%>'),
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
 
           // 응답 오류
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || response.statusText);
+          if (!response.result) {
+            throw new Error(response.message);
           }
 
           // 응답 성공
-          alertMessage('success', '<%=apiRoutes.contents.delete.title%>되었습니다.', '삭제').then(() => {
+          alertMessage(
+            'success',
+            '<%=apiRoutes.contents.delete.title%>되었습니다.',
+            '<%=apiRoutes.contents.delete.title%>'
+          ).then(() => {
             window.location.href = '<%=backendRoutes.contents.list.url%>'.replace(':groupId', '<%=metadata.group.id%>');
           });
         } catch (error) {

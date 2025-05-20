@@ -182,23 +182,16 @@
       }
 
       // 배너 등록 API 호출
-      const apiUrl = '<%=apiRoutes.banners.write.url%>';
-      const response = await fetch(apiUrl, {
-        method: '<%=apiRoutes.banners.write.method%>',
-        headers: {
-          Authorization: `Bearer ${getCookie('access_token')}`,
-        },
-        body: formData
-      });
-
-      // 응답 오류 / 등록 실패
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || response.statusText);
-      }
+      const response = await fetchApi(
+        '<%=apiRoutes.banners.write.method%>',
+        '<%=apiRoutes.banners.write.url%>', 
+        {
+          body: formData
+        }
+      );
 
       // 응답 성공
-      alertMessage('success', '<%=apiRoutes.banners.write.title%> 성공').then(() => {
+      alertMessage('success', '<%=apiRoutes.banners.write.title%>되었습니다.', '<%=apiRoutes.banners.write.title%>').then(() => {
         window.location.href = '<%=backendRoutes.banners.list.url%>?gp=<%=metadata.groupInfo.id%>&sq=<%=metadata.seq%>';
       });
 
