@@ -1379,10 +1379,8 @@ export class ApiController {
         throw new AppError(result.code, result.message);
       }
 
-      res.status(200).json({
-        success: true,
-        data: result.data,
-      });
+      const response = formatApiResponse(true, null, null, null, result.data);
+      res.status(httpStatus.OK).json(response);
     } catch (error) {
       this.handleError(error, res);
     }
