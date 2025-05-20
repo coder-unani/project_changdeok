@@ -49,6 +49,7 @@
     // 시스템 상태 확인 함수
     const getSystemStatus = async () => {
       isLoading(true);
+
       try {
         // API 호출
         const response = await fetch('<%=apiRoutes.systems.status.url%>', {
@@ -96,39 +97,36 @@
 
     // 서버 재시작 함수
     const restartServer = async () => {
-      if (!confirmMessage('서버를 재시작하시겠습니까?')) {
-        return;
-      }
+      if (await confirmMessage('info', '서버를 재시작하시겠습니까?', '서버 재시작')) {
+        isLoading(true);
 
-      isLoading(true);
+        try {
+          // API 호출
+          const response = await fetch('<%=apiRoutes.systems.restart.url%>', {
+            method: '<%=apiRoutes.systems.restart.method%>',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${getCookie('access_token')}`,
+            },
+          });
 
-      try {
-        // API 호출
-        const response = await fetch('<%=apiRoutes.systems.restart.url%>', {
-          method: '<%=apiRoutes.systems.restart.method%>',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${getCookie('access_token')}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error('서버 재시작 중 오류가 발생했습니다.');
-        }
-
-        setTimeout(() => {
-          const result = getSystemStatus();
-          if (result) {
-            alertMessage('success', '서버가 재시작되었습니다.');
-            statusMessage(null);
-          } else {
-            alertMessage('error', '서버 재시작 중 오류가 발생했습니다.');
+          if (!response.ok) {
+            throw new Error('서버 재시작 중 오류가 발생했습니다.');
           }
-        }, 2000);
-      } catch (error) {
-        alertMessage('error', error.message || '서버 재시작 중 오류가 발생했습니다.');
-      } finally {
-        isLoading(false);
+
+          setTimeout(async () => {
+            const result = await getSystemStatus();
+            if (result) {
+              alertMessage('success', '서버가 재시작되었습니다.', '서버 재시작');
+              statusMessage(null);
+            } else {
+              alertMessage('error', '서버 재시작 중 오류가 발생했습니다.', '서버 재시작');
+            }
+            isLoading(false);
+          }, 2000);
+        } catch (error) {
+          alertMessage('error', error.message || '서버 재시작 중 오류가 발생했습니다.', '서버 재시작');
+        }
       }
     };
 

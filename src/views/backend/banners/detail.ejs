@@ -59,51 +59,48 @@
 </div>
 
 <!-- Action Buttons -->
-<div class="flex flex-col lg:flex-row flex-wrap items-center justify-between gap-1">
-  <div class="flex flex-col lg:flex-row items-center gap-1 w-full lg:w-auto">
-    <a href="<%=backendRoutes.banners.update.url.replace(':bannerId', data.id)%>" class="block orb-btn orb-btn-primary">
-      수정
-    </a>
-  </div>
-  <div class="flex w-full lg:w-auto">
-    <a href="#" id="btn-delete" class="orb-btn orb-btn-delete">
-      삭제
-    </a>
-  </div>
+<div class="flex items-center justify-between gap-2">
+  <a href="<%=backendRoutes.banners.update.url.replace(':bannerId', data.id)%>" class="block orb-btn orb-btn-primary">
+    수정
+  </a>
+  <a href="#" id="btn-delete" class="orb-btn orb-btn-delete">
+    삭제
+  </a>
 </div>
 
 <script nonce="<%=nonce%>">
-  document.getElementById('btn-delete').addEventListener('click', async (e) => {
-    e.preventDefault();
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('btn-delete').addEventListener('click', async (e) => {
+      e.preventDefault();
 
-    try {
-      // 삭제 확인
-      if (confirm('삭제하시겠습니까?')) {
-        // 배너 삭제 API 호출
-        const apiUrl = '<%=apiRoutes.banners.delete.url%>'.replace(':bannerId', '<%=data.id%>');
-        const response = await fetch(apiUrl, {
-          method: '<%=apiRoutes.banners.delete.method%>',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${getCookie('access_token')}`,
-          },
-        });
+      if (await confirmMessage('question', '정말 삭제하시겠습니까?', '삭제')) {
+        try {
+          // 삭제 확인
+          // 배너 삭제 API 호출
+          const apiUrl = '<%=apiRoutes.banners.delete.url%>'.replace(':bannerId', '<%=data.id%>');
+          const response = await fetch(apiUrl, {
+            method: '<%=apiRoutes.banners.delete.method%>',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${getCookie('access_token')}`,
+            },
+          });
 
-        // 응답 오류
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || response.statusText);
+          // 응답 오류
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || response.statusText);
+          }
+
+          // 응답 성공
+          alertMessage('success', '<%=apiRoutes.banners.delete.title%> 성공', '삭제').then(() => {
+            window.location.href = '<%=backendRoutes.banners.list.url%>?gp=<%=metadata.groupInfo.id%>&sq=<%=data.seq%>';
+          });
+          
+        } catch (error) {
+          toastMessage('error', error.message || '배너 삭제에 실패했습니다.');
         }
-
-        // 응답 성공
-        alertMessage('success', '<%=apiRoutes.banners.delete.title%> 성공').then(() => {
-          window.location.href = '<%=backendRoutes.banners.list.url%>?gp=<%=metadata.groupInfo.id%>&sq=<%=data.seq%>';
-        });
-      }
-      
-    } catch (error) {
-      toastMessage('error', error.message || '배너 삭제에 실패했습니다.');
-
-    }
+      };
+    });
   });
 </script>
