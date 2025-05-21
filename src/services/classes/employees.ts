@@ -317,12 +317,12 @@ export class EmployeeService extends BaseService implements IEmployeeService {
       const employeeInfo = await this.read(id);
 
       // 직원 정보가 없는 경우 에러
-      if (!employeeInfo.result) {
+      if (!employeeInfo.result || !employeeInfo.data) {
         throw new NotFoundError('직원을 찾을 수 없습니다.');
       }
 
       // fireDate 파라미터가 날짜 형식이 아닌 경우 에러 처리
-      const fireDate = this.validateDateField(data.fireDate) || new Date();
+      const fireDate = data.fireDate ? convertStringToDate(data.fireDate) : new Date();
 
       // 직원 정보 삭제(탈퇴) 처리
       await this.prisma.employee.update({
