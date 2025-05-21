@@ -591,15 +591,19 @@ export class ApiController {
       // 요청 데이터
       const requestData: IRequestEmployeeRegister = req.body;
 
-      // 로그인 확인
-      const accessToken = getCookie(req, 'accessToken');
-      const tokenEmployee = accessToken ? verifyJWT(accessToken, this.config.getJwtSecretKey()) : null;
-      if (!tokenEmployee) {
+      // 접속 정보 확인
+      const cookieAccessToken = getCookie(req, 'access_token');
+      const cookieEmployee = getCookie(req, 'employee');
+
+      // 접속 정보 확인 실패
+      if (!cookieAccessToken || !cookieEmployee) {
         throw new AuthError('로그인 정보가 없습니다.');
       }
 
-      const loggedInEmployee: IEmployeeToken = tokenEmployee;
+      // 접속 정보 확인
+      const loggedInEmployee: IEmployeeToken = JSON.parse(cookieEmployee);
 
+      // 직원 생성자 ID 설정
       requestData.grantedById = loggedInEmployee.id;
 
       // 직원 등록 처리
@@ -657,6 +661,18 @@ export class ApiController {
         throw new ValidationError('직원 ID가 잘못되었습니다.');
       }
 
+      // 접속 정보 확인
+      const cookieAccessToken = getCookie(req, 'access_token');
+      const cookieEmployee = getCookie(req, 'employee');
+
+      // 접속 정보 확인 실패
+      if (!cookieAccessToken || !cookieEmployee) {
+        throw new AuthError('로그인 정보가 없습니다.');
+      }
+
+      // 현재 로그인된 직원 정보
+      const loggedInEmployee: IEmployeeToken = JSON.parse(cookieEmployee);
+
       // 요청 데이터
       const requestData: IRequestEmployeeUpdate = req.body;
 
@@ -670,12 +686,13 @@ export class ApiController {
       }
 
       // 쿠키 업데이트
-      const loggedInEmployee: IEmployeeToken = JSON.parse(getCookie(req, 'employee') || '{}');
       if (result.data && loggedInEmployee) {
-        loggedInEmployee.id = result.data.id;
-        loggedInEmployee.name = result.data.name;
-        loggedInEmployee.permissions = result.data.permissions;
-        setCookie(res, 'employee', JSON.stringify(loggedInEmployee), {
+        const updateEmployee = {
+          ...loggedInEmployee,
+          id: result.data.id,
+          name: result.data.name,
+        };
+        setCookie(res, 'employee', JSON.stringify(updateEmployee), {
           maxAge: this.config.getSettings().jwtExpireSecond,
         });
       }
@@ -698,14 +715,17 @@ export class ApiController {
         throw new ValidationError('직원 ID가 잘못되었습니다.');
       }
 
-      // 로그인 확인
-      const accessToken = getCookie(req, 'accessToken');
-      const tokenEmployee = accessToken ? verifyJWT(accessToken, this.config.getJwtSecretKey()) : null;
-      if (!tokenEmployee) {
+      // 접속 정보 확인
+      const cookieAccessToken = getCookie(req, 'access_token');
+      const cookieEmployee = getCookie(req, 'employee');
+
+      // 접속 정보 확인 실패
+      if (!cookieAccessToken || !cookieEmployee) {
         throw new AuthError('로그인 정보가 없습니다.');
       }
 
-      const loggedInEmployee: IEmployeeToken = tokenEmployee;
+      // 현재 로그인된 직원 정보
+      const loggedInEmployee: IEmployeeToken = JSON.parse(cookieEmployee);
 
       // 접근 권한 확인
       let hasPermission = false;
@@ -725,7 +745,7 @@ export class ApiController {
       }
 
       // 접근 권한이 있고 본인인 경우
-      if (tokenEmployee.id === employeeId) {
+      if (loggedInEmployee.id === employeeId) {
         hasPermission = true;
 
         // 접근 권한이 있고 다른 계정인 경우
@@ -791,7 +811,7 @@ export class ApiController {
 
       // 쿠키 삭제
       // 다른 계정을 삭제할 수 있으므로 쿠키 삭제하지 않음
-      // removeCookie(res, 'accessToken');
+      // removeCookie(res, 'access_token');
       // removeCookie(res, 'employee');
 
       // 탈퇴 성공
@@ -812,22 +832,29 @@ export class ApiController {
         throw new ValidationError('직원 ID가 잘못되었습니다.');
       }
 
+      // 접속 정보 확인
+      const cookieAccessToken = getCookie(req, 'access_token');
+      const cookieEmployee = getCookie(req, 'employee');
+
+      // 접속 정보 확인 실패
+      if (!cookieAccessToken || !cookieEmployee) {
+        throw new AuthError('로그인 정보가 없습니다.');
+      }
+
+      // 현재 로그인된 직원 정보
+      const loggedInEmployee: IEmployeeToken = JSON.parse(cookieEmployee);
+
       // 요청 데이터
       const requestData = req.body;
       const requestPermissions = requestData.permissions.map((permission: any) => parseInt(permission));
 
-      // 로그인 유저 정보
-      const decodedToken = verifyJWT(req.cookies.accessToken, this.config.getJwtSecretKey());
-      const grantedById = decodedToken ? parseInt(decodedToken.id) : null;
-
-      // 로그인 확인
-      if (!grantedById) {
-        throw new AuthError('로그인 정보가 없습니다.');
-      }
-
       // 직원 권한 수정 처리
       const permissionService: IPermissionService = new PermissionService(prisma);
-      const result = await permissionService.updateEmployeesPermissions(employeeId, requestPermissions, grantedById);
+      const result = await permissionService.updateEmployeesPermissions(
+        employeeId,
+        requestPermissions,
+        loggedInEmployee.id
+      );
 
       // 수정 실패 처리
       if (!result.result) {
@@ -836,15 +863,13 @@ export class ApiController {
 
       // 쿠키 업데이트
       if (result.data) {
-        setCookie(
-          res,
-          'employee',
-          JSON.stringify({
-            id: result.data.id,
-            name: result.data.name,
-            permissions: result.data.permissions,
-          })
-        );
+        const updatedEmployee = {
+          ...loggedInEmployee,
+          permissions: result.data.permissions,
+        };
+        setCookie(res, 'employee', JSON.stringify(updatedEmployee), {
+          maxAge: this.config.getSettings().jwtExpireSecond,
+        });
       }
 
       // 수정 성공
