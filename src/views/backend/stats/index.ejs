@@ -527,7 +527,13 @@
         statsContainer.innerHTML = '';
 
         // URL 조정
-        const apiUrl = `${url}?startDate=${startDate.value}&endDate=${endDate.value}`;
+        let apiUrl;
+        if (url === '<%= apiRoutes.stats.accessLogs.url %>') {
+          // 접속 로그는 endDate만 사용
+          apiUrl = `<%= apiRoutes.stats.accessLogs.url %>?date=${date.value}`;
+        } else {
+          apiUrl = `${url}?startDate=${startDate.value}&endDate=${endDate.value}`;
+        }
 
         // 데이터 가져오기
         const response = await fetchApi(method, apiUrl, {
