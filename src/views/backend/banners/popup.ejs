@@ -13,7 +13,7 @@
         <% if (Object.keys(data?.popupBanner || {}).length > 0) { %>
           <% data.popupBanner.forEach((banner, index) => { %>
             <div class="flex gap-2 flex-1 justify-between">
-              <div class="w-full max-w-[320px]">
+              <div class="w-full max-w-[320px] border border-main-border">
                 <img src="<%=banner.imagePath%>" alt="이미지 미리보기" class="h-full w-full object-cover" />
               </div>
               <div>

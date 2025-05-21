@@ -13,7 +13,7 @@
         <% if (Object.keys(data?.topBanner || {}).length > 0) { %>
           <% data.topBanner.forEach((banner, index) => { %>
             <div class="flex gap-2 flex-1 justify-between">
-              <div class="w-full max-w-[320px]">
+              <div class="w-full max-w-[320px] border border-main-border">
                 <img src="<%=banner.imagePath%>" alt="이미지 미리보기" class="h-full w-full object-cover" />
               </div>
               <div>
@@ -38,7 +38,7 @@
         <% if (Object.keys(data?.midBanner1 || {}).length > 0) { %>
           <% data.midBanner1.forEach((banner, index) => { %>
             <div class="flex gap-2 flex-1 justify-between">
-              <div class="w-full max-w-[320px]">
+              <div class="w-full max-w-[320px] border border-main-border">
                 <img src="<%=banner.imagePath%>" alt="이미지 미리보기" class="h-full w-full object-cover" />
               </div>
               <div>
@@ -63,7 +63,7 @@
         <% if (Object.keys(data?.midBanner2 || {}).length > 0) { %>
           <% data.midBanner2.forEach((banner, index) => { %>
             <div class="flex gap-2 flex-1 justify-between">
-              <div class="w-full max-w-[320px]">
+              <div class="w-full max-w-[320px] border border-main-border">
                 <img src="<%=banner.imagePath%>" alt="이미지 미리보기" class="h-full w-full object-cover" />
               </div>
               <div>
@@ -88,7 +88,7 @@
         <% if (Object.keys(data?.midBanner3 || {}).length > 0) { %>
           <% data.midBanner3.forEach((banner, index) => { %>
             <div class="flex gap-2 flex-1 justify-between">
-              <div class="w-full max-w-[320px]">
+              <div class="w-full max-w-[320px] border border-main-border">
                 <img src="<%=banner.imagePath%>" alt="이미지 미리보기" class="h-full w-full object-cover" />
               </div>
               <div>
