@@ -670,19 +670,14 @@ export class ApiController {
       }
 
       // 쿠키 업데이트
-      if (result.data) {
-        setCookie(
-          res,
-          'employee',
-          JSON.stringify({
-            id: result.data.id,
-            name: result.data.name,
-            permissions: result.data.permissions,
-          }),
-          {
-            maxAge: this.config.getSettings().jwtExpireSecond,
-          }
-        );
+      const loggedInEmployee: IEmployeeToken = JSON.parse(getCookie(req, 'employee') || '{}');
+      if (result.data && loggedInEmployee) {
+        loggedInEmployee.id = result.data.id;
+        loggedInEmployee.name = result.data.name;
+        loggedInEmployee.permissions = result.data.permissions;
+        setCookie(res, 'employee', JSON.stringify(loggedInEmployee), {
+          maxAge: this.config.getSettings().jwtExpireSecond,
+        });
       }
 
       // 수정 성공
