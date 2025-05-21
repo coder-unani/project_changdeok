@@ -18,13 +18,7 @@ import {
 import { IContentService } from '../../types/service';
 import { BaseService } from './service';
 
-// 캐시 TTL (5분)
-const CACHE_TTL = 5 * 60 * 1000;
-
 export class ContentService extends BaseService implements IContentService {
-  private contentCache: Map<string, { data: any; timestamp: number }> = new Map();
-  private groupCache: Map<number, { data: IContentGroup; timestamp: number }> = new Map();
-
   constructor(prisma: ExtendedPrismaClient) {
     super(prisma);
   }
@@ -40,20 +34,6 @@ export class ContentService extends BaseService implements IContentService {
     if (!validateContent.result) {
       throw new ValidationError(validateContent.message);
     }
-  }
-
-  // 캐시에서 데이터 가져오기
-  private getCachedData<T>(key: string, cache: Map<string, { data: T; timestamp: number }>): T | null {
-    const cached = cache.get(key);
-    if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
-      return cached.data;
-    }
-    return null;
-  }
-
-  // 캐시에 데이터 설정
-  private setCachedData<T>(key: string, data: T, cache: Map<string, { data: T; timestamp: number }>): void {
-    cache.set(key, { data, timestamp: Date.now() });
   }
 
   // Prisma 컨텐츠를 IContent로 변환
@@ -110,10 +90,6 @@ export class ContentService extends BaseService implements IContentService {
       if (contentGroup.registNotice === 'EMAIL') {
         await this.sendRegistrationEmail(content, contentGroup);
       }
-
-      // 캐시 삭제
-      this.contentCache.clear();
-      this.groupCache.delete(groupId);
 
       // 응답 성공
       return { result: true };
@@ -198,17 +174,6 @@ export class ContentService extends BaseService implements IContentService {
   // 컨텐츠 조회
   public async read(contentId: number): Promise<IServiceResponse<IContent>> {
     try {
-      // 캐시 키 생성
-      const cacheKey = `content_${contentId}`;
-
-      // 캐시에서 데이터 가져오기
-      const cachedContent = this.getCachedData(cacheKey, this.contentCache);
-
-      // 캐시에 데이터가 있으면 캐시에서 데이터 반환
-      if (cachedContent) {
-        return { result: true, data: cachedContent };
-      }
-
       // 컨텐츠 조회
       const prismaContent = await this.prisma.content.findUnique({
         where: {
@@ -239,9 +204,6 @@ export class ContentService extends BaseService implements IContentService {
 
       // 컨텐츠 데이터 변환
       const content = this.convertToContent(prismaContent);
-
-      // 캐시 설정
-      this.setCachedData(cacheKey, content, this.contentCache);
 
       // 응답 성공
       return {
@@ -299,9 +261,6 @@ export class ContentService extends BaseService implements IContentService {
         data: { ...updateData, updatedAt: new Date() },
       });
 
-      // 캐시 삭제
-      this.contentCache.delete(`content_${contentId}`);
-
       // 응답 성공
       return { result: true };
     } catch (error) {
@@ -330,9 +289,6 @@ export class ContentService extends BaseService implements IContentService {
         where: { id: contentId },
         data: { isDeleted: true, updatedAt: new Date() },
       });
-
-      // 캐시 삭제
-      this.contentCache.delete(`content_${contentId}`);
 
       // 응답 성공
       return { result: true };
@@ -426,14 +382,6 @@ export class ContentService extends BaseService implements IContentService {
   // 컨텐츠 그룹 정보 조회
   public async groupInfo(groupId: number): Promise<IServiceResponse<IContentGroup>> {
     try {
-      // 캐시에서 데이터 가져오기
-      const cachedGroup = this.groupCache.get(groupId);
-
-      // 캐시에 데이터가 있으면 캐시에서 데이터 반환
-      if (cachedGroup && Date.now() - cachedGroup.timestamp < CACHE_TTL) {
-        return { result: true, metadata: { group: { id: groupId } }, data: cachedGroup.data };
-      }
-
       // 컨텐츠 그룹 조회
       const prismaResult = await this.prisma.contentGroup.findUnique({
         where: {
@@ -471,9 +419,6 @@ export class ContentService extends BaseService implements IContentService {
         isActivated: prismaResult.isActivated,
       };
 
-      // 캐시 설정
-      this.groupCache.set(groupId, { data: groupInfo, timestamp: Date.now() });
-
       // 응답 성공
       return { result: true, metadata: { group: { id: groupId } }, data: groupInfo };
     } catch (error) {
@@ -509,9 +454,6 @@ export class ContentService extends BaseService implements IContentService {
         where: { id: groupId },
         data: { ...updateData, updatedAt: new Date() },
       });
-
-      // 캐시 삭제
-      this.groupCache.delete(groupId);
 
       // 응답 성공
       return { result: true };
