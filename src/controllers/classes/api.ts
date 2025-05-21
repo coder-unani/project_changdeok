@@ -680,13 +680,15 @@ export class ApiController {
       const employeeService: IEmployeeService = new EmployeeService(prisma);
       const result = await employeeService.update(employeeId, requestData);
 
+      console.log(result);
+
       // 수정 실패 처리
       if (!result.result) {
         throw new AppError(result.code, result.message);
       }
 
-      // 쿠키 업데이트
-      if (result.data && loggedInEmployee) {
+      // 로그인 직원이 수정된 직원인 경우 쿠키 업데이트
+      if (result.data && loggedInEmployee.id === result.data.id) {
         const updateEmployee = {
           ...loggedInEmployee,
           id: result.data.id,
