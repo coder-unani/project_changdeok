@@ -59,6 +59,8 @@ export class ContentService extends BaseService implements IContentService {
         const config = await asyncConfig();
         const mailService = new MailService(this.prisma, config);
 
+        const companyInfo = JSON.parse(config.getSettings().companyJson || '{}');
+
         const subject = `${contentGroup.title} 게시글 등록 알림`;
         const contentUrl = `${backendRoutes.contents.detail.url.replace(':groupId', content.groupId.toString()).replace(':contentId', content.id.toString())}`;
         const registAt = convertDateToString(convertDateToKST(content.createdAt));
@@ -69,8 +71,8 @@ export class ContentService extends BaseService implements IContentService {
           content.title,
           registAt,
           contentUrl,
-          '',
-          ''
+          companyInfo?.companyName || '',
+          companyInfo?.address || ''
         );
         const to = 'orbitcode.dev@gmail.com';
 
