@@ -2,9 +2,11 @@ import { httpStatus } from '../../common/constants';
 import { AppError, NotFoundError, ValidationError } from '../../common/error';
 import { convertDateToKST, convertDateToString } from '../../common/utils/format';
 import { validateStringLength } from '../../common/utils/validate';
+import { asyncConfig } from '../../config/config';
+import { backendRoutes } from '../../config/routes';
 import { ExtendedPrismaClient } from '../../library/database';
-import { MailService } from '../../library/email';
 import { encryptDataAES } from '../../library/encrypt';
+import { MailService } from '../../services';
 import { IServiceResponse } from '../../types/config';
 import { IContent, IContentGroup } from '../../types/object';
 import {
@@ -54,14 +56,26 @@ export class ContentService extends BaseService implements IContentService {
 
       // 등록 알림
       if (contentGroup.registNotice === 'EMAIL') {
-        const subject = `${contentGroup.title} 등록 알림`;
-        const text = '테스트입니다.';
-        const html = '<p>테스트입니다.</p>';
+        const config = await asyncConfig();
+        const mailService = new MailService(this.prisma, config);
+
+        const subject = `${contentGroup.title} 게시글 등록 알림`;
+        const contentUrl = `${backendRoutes.contents.detail.url.replace(':groupId', content.groupId.toString()).replace(':contentId', content.id.toString())}`;
+        const registAt = convertDateToString(convertDateToKST(content.createdAt));
+
+        const { text, html } = mailService.templateContentRegist(
+          subject,
+          contentGroup.title,
+          content.title,
+          registAt,
+          contentUrl,
+          '',
+          ''
+        );
         const to = 'dev@orbitcode.kr';
-        const mailService = MailService.getInstance();
 
         try {
-          await mailService.sendMail({ subject, text, html, to });
+          await mailService.send({ subject, text, html, to });
 
           await this.prisma.mailHistory.create({
             data: {
