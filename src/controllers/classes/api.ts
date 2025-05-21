@@ -863,8 +863,8 @@ export class ApiController {
         throw new AppError(result.code, result.message);
       }
 
-      // 쿠키 업데이트
-      if (result.data) {
+      // 로그인 직원이 수정된 직원인 경우 쿠키 업데이트
+      if (result.data && loggedInEmployee.id === employeeId) {
         const updatedEmployee = {
           ...loggedInEmployee,
           permissions: result.data.permissions,
