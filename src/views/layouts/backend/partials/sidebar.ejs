@@ -1,31 +1,20 @@
 <!-- 사이드바 PC -->
-<div id="sidebar-pc" class="hidden overflow-y-auto fixed top-6 lg:flex lg:flex-col justify-between h-[calc(100vh-64px)] w-[260px] p-4 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)] z-0 text-sm bg-default-bg dark:bg-gray-700">
+<nav id="sidebar-pc" class="hidden overflow-y-auto fixed top-6 lg:flex lg:flex-col justify-between h-[calc(100vh-64px)] w-[260px] p-4 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)] z-0 text-sm bg-default-bg dark:bg-gray-700">
   <div>
     <!-- 로고 -->
-    <a href="<%=backendRoutes.index.url%>">
-      <div class="flex gap-1 items-center p-2">
-        <!-- <span class="text-gray-700">
-          <% if (settings.logo) { %>
-            <img src="<%=settings.logo%>" alt="<%=settings.companyInfo.name%>" class="w-6 h-6">
-          <% } %>
-        </span> -->
-        <span class="text-base font-bold text-gray-700"><%=settings.companyInfo.name.toUpperCase()%></span>
+    <div class="flex gap-1 items-center justify-between p-2">
+        <a href="<%=backendRoutes.index.url%>">
+          <span class="text-base font-bold text-primary-main"><%=settings.companyInfo.name.toUpperCase()%></span>
+        </a>
+        <a class="flex items-center justify-start p-2" href="<%=`https://${settings.serviceDomain}`%>" target="_blank">
+          <span class="text-primary-main">
+            <%- include(`icons/home`) %>
+          </span>
+        </a>
       </div>
-    </a>
-    <!-- 메뉴 -->
-    <nav class="mt-4">
-      <%- include('menu-section', { 
-        title: settings.companyInfo.name,
-          items: [{
-            title: '홈페이지',
-            url: `https://${settings.serviceDomain}`,
-            icon: 'home',
-            isActive: false,
-            isExternal: true
-          }
-        ]
-      }) %>
 
+    <!-- 메뉴 -->
+    <div class="mt-4">
       <%- include('menu-section', {
         title: '사이트 관리',
         items: [{
@@ -33,13 +22,11 @@
           url: backendRoutes.banners.screens.url,
           icon: 'screen',
           isActive: backendRoutes.banners.screens.title === title || title.includes("메인"),
-          isExternal: false
         }, {
           title: backendRoutes.banners.popups.title,
           url: backendRoutes.banners.popups.url,
           icon: 'popup',
           isActive: backendRoutes.banners.popups.title === title || title.includes('팝업'),
-          isExternal: false
         }]
       }) %>
 
@@ -50,19 +37,31 @@
           url: '/admin/contents/1',
           icon: 'notice',
           isActive: '공지사항' === title || title.startsWith('공지사항'),
-          isExternal: false
         }, {
           title: '문의',
           url: '/admin/contents/2',
           icon: 'inquiry',
           isActive: '문의' === title || title.startsWith('문의'),
-          isExternal: false
         }, {
           title: '상담 및 의뢰',
           url: '/admin/contents/3',
           icon: 'consultation',
           isActive: '상담 및 의뢰' === title || title.startsWith('상담 및 의뢰'),
-          isExternal: false
+        }]
+      }) %>
+
+      <%- include('menu-section', {
+        title: '현황',
+        items: [{
+          title: backendRoutes.stats.title,
+          url: backendRoutes.stats.url,
+          icon: 'chart-pie',
+          isActive: backendRoutes.stats.title === title,
+        }, {
+          title: '클릭 통계',
+          url: '',
+          icon: 'chart-simple',
+          isActive: '클릭 통계' === title || title.startsWith('클릭 통계'),
         }]
       }) %>
 
@@ -73,23 +72,16 @@
           url: backendRoutes.employees.list.url,
           icon: 'employee',
           isActive: backendRoutes.employees.list.title === title || title.startsWith('관리자'),
-          isExternal: false
-        }, {
-          title: backendRoutes.stats.title,
-          url: backendRoutes.stats.url,
-          icon: 'stats',
-          isActive: backendRoutes.stats.title === title,
-          isExternal: false
         }, {
           title: backendRoutes.settings.title,
           url: backendRoutes.settings.url,
           icon: 'settings',
           isActive: backendRoutes.settings.title === title,
-          isExternal: false
         }]
       }) %>
-    </nav>
+    </div>
   </div>
+
   <!-- 로그아웃 -->
   <div class="border-t border-light-border">
     <ul class="flex flex-col gap-2 font-medium text-gray-500 dark:text-gray-100">
@@ -103,83 +95,95 @@
       </li>
     </ul>
   </div>
-</div>
+</nav>
 
 <!-- 사이드바 MOBILE -->
-<div
+<nav
   id="sidebar-mobile"
-  class="fixed flex flex-col justify-between w-64 inset-y-0 right-0 p-4 z-50 bg-default-bg shadow-[0_2px_30px_rgba(0,0,0,.06)] transform translate-x-full transition-transform duration-300 ease-in-out lg:hidden"
+  class="fixed flex flex-col justify-between w-64 inset-y-0 right-0 px-4 py-6 z-50 text-sm bg-default-bg shadow-[0_2px_30px_rgba(0,0,0,.06)] transform translate-x-full transition-transform duration-300 ease-in-out lg:hidden"
 >
+
   <!-- 메뉴 -->
-  <nav>
+  <div>
     <!-- 닫기 버튼 -->
-    <div class="text-right mx-4 mt-4 mb-8">
-      <button id="menu-close" class="orb-btn orb-btn-info">
-        닫기
-      </button>
+    <button id="menu-close" class="p-2 text-primary-main ml-auto">
+      <%- include(`icons/close`) %>
+    </button>
+
+    <div class="flex justify-between items-center p-2 mt-4">
+      <a href="<%=backendRoutes.index.url%>">
+        <span class="text-base font-bold text-primary-main"><%=settings.companyInfo.name.toUpperCase()%></span>
+      </a>
+      <a class="flex items-center justify-start p-2" href="<%=`https://${settings.serviceDomain}`%>" target="_blank">
+        <span class="text-primary-main">
+          <%- include(`icons/home`) %>
+        </span>
+      </a>
     </div>
-    
-    <%- include('menu-section', { 
-      title: settings.companyInfo.name,
-      items: [{
-        title: '홈페이지',
-        url: `https://${settings.serviceDomain}`,
-        icon: 'home',
-        isActive: false,
-        isExternal: true
-      }]
-    }) %>
 
-    <%- include('menu-section', {
-      title: '화면 관리',
-      items: [{
-        title: backendRoutes.banners.screens.title,
-        url: backendRoutes.banners.screens.url,
-        icon: 'screen',
-        isActive: backendRoutes.banners.screens.title === title
-      }, {
-        title: backendRoutes.banners.popups.title,
-        url: backendRoutes.banners.popups.url,
-        icon: 'popup',
-        isActive: backendRoutes.banners.popups.title === title
-      }]
-    }) %>
+    <div class="mt-4">
+      <%- include('menu-section', {
+        title: '화면 관리',
+        items: [{
+          title: backendRoutes.banners.screens.title,
+          url: backendRoutes.banners.screens.url,
+          icon: 'screen',
+          isActive: backendRoutes.banners.screens.title === title
+        }, {
+          title: backendRoutes.banners.popups.title,
+          url: backendRoutes.banners.popups.url,
+          icon: 'popup',
+          isActive: backendRoutes.banners.popups.title === title
+        }]
+      }) %>
 
-    <%- include('menu-section', {
-      title: '게시판 관리',
-      items: [{
-        title: '공지사항',
-        url: '/admin/contents/1',
-        icon: 'notice',
-        isActive: '공지사항' === title || title.startsWith('공지사항')
-      }, {
-        title: '문의',
-        url: '/admin/contents/2',
-        icon: 'inquiry',
-        isActive: '문의' === title || title.startsWith('문의')
-      }]
-    }) %>
+      <%- include('menu-section', {
+        title: '게시판 관리',
+        items: [{
+          title: '공지사항',
+          url: '/admin/contents/1',
+          icon: 'notice',
+          isActive: '공지사항' === title || title.startsWith('공지사항')
+        }, {
+          title: '문의',
+          url: '/admin/contents/2',
+          icon: 'inquiry',
+          isActive: '문의' === title || title.startsWith('문의')
+        }]
+      }) %>
 
-    <%- include('menu-section', {
-      title: '사이트 관리',
-      items: [{
-        title: backendRoutes.employees.list.title,
-        url: backendRoutes.employees.list.url,
-        icon: 'employee',
-        isActive: backendRoutes.employees.list.title === title
-      }, {
-        title: backendRoutes.stats.title,
-        url: backendRoutes.stats.url,
-        icon: 'stats',
-        isActive: backendRoutes.stats.title === title
-      }, {
-        title: backendRoutes.settings.title,
-        url: backendRoutes.settings.url,
-        icon: 'settings',
-        isActive: backendRoutes.settings.title === title
-      }]
-    }) %>
-  </nav>
+      <%- include('menu-section', {
+          title: '현황',
+          items: [{
+            title: backendRoutes.stats.title,
+            url: backendRoutes.stats.url,
+            icon: 'chart-pie',
+            isActive: backendRoutes.stats.title === title,
+          }, {
+            title: '클릭 통계',
+            url: '',
+            icon: 'chart-simple',
+            isActive: '클릭 통계' === title || title.startsWith('클릭 통계'),
+          }]
+        }) %>
+
+      <%- include('menu-section', {
+        title: '사이트 관리',
+        items: [{
+          title: backendRoutes.employees.list.title,
+          url: backendRoutes.employees.list.url,
+          icon: 'employee',
+          isActive: backendRoutes.employees.list.title === title
+        }, {
+          title: backendRoutes.settings.title,
+          url: backendRoutes.settings.url,
+          icon: 'settings',
+          isActive: backendRoutes.settings.title === title
+        }]
+      }) %>
+    </div>
+  </div>
+
   <div class="border-t border-light-border">
     <ul class="flex flex-col gap-2 font-medium text-gray-500 dark:text-gray-100">
       <li class="mt-2 rounded-lg transition-all dark:hover:text-common-white hover:bg-gray-100 dark:hover:bg-gray-600">
@@ -192,6 +196,6 @@
       </li>
     </ul>
   </div>
-</div>
+</nav>
 
 <%- include('scripts/sidebar') %>
