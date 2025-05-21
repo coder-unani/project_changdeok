@@ -45,20 +45,23 @@
       </div>
     </div>
 
+    <!-- 제목 -->
     <div>
       <label for="title" class="block mb-2 orb-label">제목<span class="pl-0.5 text-red-500">*</span></label>
-      <input type="text" id="title" name="title" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200" value="<%=data.title%>" placeholder="제목을 입력해주세요." required>
+      <input type="text" id="title" name="title" class="orb-input" value="<%=data.title%>" placeholder="제목을 입력해주세요." required>
     </div>
 
+    <!-- 설명 -->
     <div>
       <label for="description" class="block mb-2 orb-label">설명</label>
-      <input type="text" id="description" name="description" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200" value="<%=data.description%>" placeholder="설명을 입력해주세요.">
+      <input type="text" id="description" name="description" class="orb-input" value="<%=data.description%>" placeholder="설명을 입력해주세요.">
     </div>
 
+    <!-- 링크 타입 -->
     <div class="flex flex-col lg:flex-row gap-4">
       <div class="flex-1">
         <label for="linkType" class="block mb-2 orb-label">링크 타입</label>
-        <select id="linkType" name="linkType" class="w-full p-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 border-r-12 border-light-border">
+        <select id="linkType" name="linkType" class="orb-select">
           <option value="">선택</option>
           <option value="self" <%if (data.linkType === 'self') {%>selected<%}%>>내부 링크</option>
           <option value="outer" <%if (data.linkType === 'outer') {%>selected<%}%>>외부 링크</option>
@@ -66,92 +69,90 @@
       </div>
       <div class="flex-3">
         <label for="linkUrl" class="block mb-2 orb-label">링크</label>
-        <input type="text" id="linkUrl" name="linkUrl" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200" value="<%=data.linkUrl%>" placeholder="링크 주소를 입력해주세요.">
+        <input type="text" id="linkUrl" name="linkUrl" class="orb-input" value="<%=data.linkUrl%>" placeholder="링크 주소를 입력해주세요.">
       </div>
     </div>
 
+    <!-- 발행 여부 -->
     <div>
       <label for="isPublished" class="block mb-2 orb-label">발행 여부</label>
-      <select id="isPublished" name="isPublished" class="w-full p-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 border-r-12 border-light-border">
+      <select id="isPublished" name="isPublished" class="orb-select">
         <option value="N" <%if (!data.isPublished) {%>selected<%}%>>미발행</option>
         <option value="Y" <%if (data.isPublished) {%>selected<%}%>>발행</option>
       </select>
     </div>
 
+    <!-- 발행 일시 -->
     <div class="flex flex-col lg:flex-row gap-4">
       <div class="flex-1">
         <label for="publishedAt" class="block mb-2 orb-label">발행 일시<span class="pl-0.5 text-red-500">*</span></label>
-        <input type="datetime-local" id="publishedAt" name="publishedAt" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200" value="<%=data.publishedAt%>" required>
+        <input type="datetime-local" id="publishedAt" name="publishedAt" class="orb-input" value="<%=data.publishedAt%>" required>
       </div>
       <div class="flex-1">
         <label for="unpublishedAt" class="block mb-2 orb-label">발행 마감 일시<span class="pl-0.5 text-red-500">*</span></label>
-        <input type="datetime-local" id="unpublishedAt" name="unpublishedAt" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200" value="<%=data.unpublishedAt%>" required>
+        <input type="datetime-local" id="unpublishedAt" name="unpublishedAt" class="orb-input" value="<%=data.unpublishedAt%>" required>
       </div>
     </div>
-  </div>
-      
-  <div class="text-right">
-    <button type="submit" class="orb-btn orb-btn-success">
+
+    <!-- 수정 버튼 -->
+    <button type="submit" class="orb-btn orb-btn-success ml-auto">
       수정
     </button>
   </div>
 </form>
 
 <script nonce="<%=nonce%>">
-  // 배너 이미지 등록
-  document.getElementById('imageAdd').addEventListener('click', (e) => {
-    document.getElementById('image').click();
-  });
+  document.addEventListener('DOMContentLoaded', () => {
+    // 배너 이미지 등록
+    document.getElementById('imageAdd').addEventListener('click', (e) => {
+      document.getElementById('image').click();
+    });
 
-  // 이미지 미리보기
-  document.getElementById('image').addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      document.getElementById('imagePreview').src = e.target.result;
-      document.getElementById('imagePreviewContainer').classList.remove('hidden');
-    }
-    reader.readAsDataURL(file);
-  });
-
-  // 이미지 삭제
-  document.getElementById('imageDelete').addEventListener('click', (e) => {
-    document.getElementById('image').value = '';
-    document.getElementById('imagePreview').src = '';
-    document.getElementById('imagePreviewContainer').classList.add('hidden');
-  });
-
-  // 배너 수정 요청
-  document.getElementById('formBannerUpdate').addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    try {
-      // 폼 데이터 수집
-      const formData = new FormData(e.target);
-
-      // 배너 등록 API 호출
-      const response = await fetchApi(
-        '<%=apiRoutes.banners.update.method%>',
-        '<%=apiRoutes.banners.update.url%>'.replace(':bannerId', '<%=data.id%>'), 
-        {
-          body: formData
-        }
-      );
-
-      // 응답 오류
-      if (!response.result) {
-        throw new Error(response.message);
+    // 이미지 미리보기
+    document.getElementById('image').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('imagePreview').src = e.target.result;
+        document.getElementById('imagePreviewContainer').classList.remove('hidden');
       }
+      reader.readAsDataURL(file);
+    });
 
-      // 응답 성공
-      alertMessage('success', '<%=apiRoutes.banners.update.title%>되었습니다.', '<%=apiRoutes.banners.update.title%>').then(() => {
-        window.location.href = "<%=backendRoutes.banners.list.url%>?gp=<%=metadata.groupInfo.id%>&sq=<%=data.seq%>";
-      });
+    // 이미지 삭제
+    document.getElementById('imageDelete').addEventListener('click', (e) => {
+      document.getElementById('image').value = '';
+      document.getElementById('imagePreview').src = '';
+      document.getElementById('imagePreviewContainer').classList.add('hidden');
+    });
 
-    } catch (error) {
-      toastMessage('error', error.message || '배너 수정에 실패했습니다.');
-    } finally {
-      isLoading(false);
-    }
+    // 배너 수정 요청
+    document.getElementById('formBannerUpdate').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      try {
+        // 폼 데이터 수집
+        const formData = new FormData(e.target);
+
+        // 배너 등록 API 호출
+        const response = await fetchApi(
+          '<%=apiRoutes.banners.update.method%>',
+          '<%=apiRoutes.banners.update.url%>'.replace(':bannerId', '<%=data.id%>'), 
+          {
+            body: formData
+          }
+        );
+
+        // 응답 성공
+        alertMessage('success', '<%=apiRoutes.banners.update.title%>되었습니다.', '<%=apiRoutes.banners.update.title%>').then(() => {
+          window.location.href = "<%=backendRoutes.banners.list.url%>?gp=<%=metadata.groupInfo.id%>&sq=<%=data.seq%>";
+        });
+
+      } catch (error) {
+        toastMessage('error', error.message || '배너 수정에 실패했습니다.');
+      } finally {
+        isLoading(false);
+      }
+    });
   });
 </script>

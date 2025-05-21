@@ -83,7 +83,7 @@
           type="text"
           id="title"
           name="title"
-          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          class="orb-input"
           placeholder="사이트 타이틀을 입력해주세요."
           value="<%=data.title%>"
         />
@@ -96,7 +96,7 @@
           type="text"
           id="introduction"
           name="introduction"
-          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          class="orb-input"
           value="<%=data.introduction%>"
           placeholder="사이트 소개를 입력해주세요."
         />
@@ -108,12 +108,7 @@
           사이트 설명
           <span class="text-gray-400">(meta description)</span>
         </label>
-        <textarea
-          id="description"
-          name="description"
-          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
-          placeholder="사이트 설명을 입력해주세요."
-        >
+        <textarea id="description" name="description" class="orb-input" placeholder="사이트 설명을 입력해주세요.">
 <%=data.description%></textarea
         >
       </li>
@@ -128,7 +123,7 @@
           <input
             id="keyword"
             name="keywords"
-            class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+            class="orb-input"
             value="<%=data.keywords%>"
             placeholder="사이트 키워드를 입력해주세요."
           />
@@ -142,12 +137,7 @@
           오픈그래프 타이틀
           <span class="text-gray-400">(og:title)</span>
         </label>
-        <input
-          id="og-title"
-          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
-          value=""
-          placeholder="오픈그래프 타이틀을 입력해주세요."
-        />
+        <input id="og-title" class="orb-input" value="" placeholder="오픈그래프 타이틀을 입력해주세요." />
       </li>
 
       <!-- 오픈그래프 설명 -->
@@ -156,12 +146,7 @@
           오픈그래프 설명
           <span class="text-gray-400">(og:description)</span>
         </label>
-        <input
-          id="og-description"
-          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
-          value=""
-          placeholder="오픈그래프 설명을 입력해주세요."
-        />
+        <input id="og-description" class="orb-input" value="" placeholder="오픈그래프 설명을 입력해주세요." />
       </li>
 
       <!-- 오픈그래프 이미지 -->
@@ -230,7 +215,7 @@
           type="text"
           id="service-domain"
           name="serviceDomain"
-          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          class="orb-input"
           value="<%=data.serviceDomain%>"
           placeholder="서비스 도메인을 입력해주세요."
           readonly
@@ -244,7 +229,7 @@
           type="number"
           id="service-port"
           name="servicePort"
-          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          class="orb-input"
           value="<%=data.servicePort%>"
           placeholder="서비스 포트를 입력해주세요."
           readonly

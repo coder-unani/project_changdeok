@@ -11,11 +11,7 @@
   >
     <div>
       <label for="email" class="orb-label mb-2 block">이메일<span class="pl-0.5 text-red-500">*</span></label>
-      <p
-        class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
-      >
-        <%=data.email%>
-      </p>
+      <p class="orb-input"><%=data.email%></p>
     </div>
 
     <div>
@@ -24,7 +20,7 @@
         type="text"
         id="name"
         name="name"
-        class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+        class="orb-input"
         value="<%=data.name%>"
         placeholder="이름을 입력해주세요."
         required
@@ -37,7 +33,7 @@
         type="text"
         id="phone"
         name="phone"
-        class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+        class="orb-input"
         value="<%=data.phone%>"
         placeholder="전화번호를 입력해주세요."
       />
@@ -49,7 +45,7 @@
         type="text"
         id="mobile"
         name="mobile"
-        class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+        class="orb-input"
         value="<%=data.mobile%>"
         placeholder="휴대전화 번호를 입력해주세요."
       />
@@ -61,7 +57,7 @@
         type="text"
         id="address"
         name="address"
-        class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+        class="orb-input"
         value="<%=data.address%>"
         placeholder="주소를 입력해주세요."
       />
@@ -69,13 +65,7 @@
 
     <div>
       <label for="birthDate" class="orb-label mb-2 block">생년월일</label>
-      <input
-        type="date"
-        id="birthDate"
-        name="birthDate"
-        class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
-        value="<%=data.birthDate%>"
-      />
+      <input type="date" id="birthDate" name="birthDate" class="orb-input" value="<%=data.birthDate%>" />
     </div>
 
     <div>
@@ -84,7 +74,7 @@
         type="text"
         id="position"
         name="position"
-        class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+        class="orb-input"
         value="<%=data.position%>"
         placeholder="직급을 입력해주세요."
       />
@@ -96,7 +86,7 @@
         type="text"
         id="description"
         name="description"
-        class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+        class="orb-input"
         value="<%=data.description%>"
         placeholder="설명을 입력해주세요."
       />
@@ -105,78 +95,61 @@
     <div class="flex gap-3 lg:gap-4">
       <div class="flex-1">
         <label for="hireDate" class="orb-label mb-2 block">입사일</label>
-        <input
-          type="date"
-          id="hireDate"
-          name="hireDate"
-          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
-          value="<%=data.hireDate%>"
-        />
+        <input type="date" id="hireDate" name="hireDate" class="orb-input" value="<%=data.hireDate%>" />
       </div>
 
       <div class="flex-1">
         <label for="hireDate" class="orb-label mb-2 block">퇴사일</label>
-        <input
-          type="date"
-          id="fireDate"
-          name="fireDate"
-          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
-          value="<%=data.fireDate%>"
-        />
+        <input type="date" id="fireDate" name="fireDate" class="orb-input" value="<%=data.fireDate%>" />
       </div>
     </div>
-  </div>
 
-  <div class="flex justify-end">
-    <button type="submit" class="orb-btn orb-btn-success">수정</button>
+    <button type="submit" class="orb-btn orb-btn-success ml-auto">수정</button>
   </div>
 </form>
 
 <script nonce="<%=nonce%>">
-  document.getElementById('formEmployeeModify').addEventListener('submit', async function (event) {
-    event.preventDefault();
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('formEmployeeModify').addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-    isLoading(true);
+      isLoading(true);
 
-    // 폼 데이터 수집
-    const formData = new FormData(this);
+      // 폼 데이터 수집
+      const formData = new FormData(e.target);
 
-    // 폼 데이터 변환
-    const data = {};
-    formData.forEach((value, key) => {
-      data[key] = value;
-    });
-
-    try {
-      // 직원 수정 API 호출
-      const response = await fetchApi(
-        '<%=apiRoutes.employees.update.method%>',
-        '<%=apiRoutes.employees.update.url%>'.replace(':employeeId', '<%=data.id%>'),
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        }
-      );
-
-      // 응답 오류
-      if (!response.result) {
-        throw new Error(response.message);
-      }
-
-      // 응답 성공
-      alertMessage(
-        'success',
-        '<%=apiRoutes.employees.update.title%>되었습니다.',
-        '<%=apiRoutes.employees.update.title%>'
-      ).then(() => {
-        window.location.href = '<%=backendRoutes.employees.detail.url%>'.replace(':employeeId', '<%=data.id%>');
+      // 폼 데이터 변환
+      const data = {};
+      formData.forEach((value, key) => {
+        data[key] = value;
       });
-    } catch (error) {
-      toastMessage('error', error.message || '서버 오류가 발생했습니다.');
-    } finally {
-      isLoading(false);
-    }
+
+      try {
+        // 직원 수정 API 호출
+        const response = await fetchApi(
+          '<%=apiRoutes.employees.update.method%>',
+          '<%=apiRoutes.employees.update.url%>'.replace(':employeeId', '<%=data.id%>'),
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          }
+        );
+
+        // 응답 성공
+        alertMessage(
+          'success',
+          '<%=apiRoutes.employees.update.title%>되었습니다.',
+          '<%=apiRoutes.employees.update.title%>'
+        ).then(() => {
+          window.location.href = '<%=backendRoutes.employees.detail.url%>'.replace(':employeeId', '<%=data.id%>');
+        });
+      } catch (error) {
+        toastMessage('error', error.message || '서버 오류가 발생했습니다.');
+      } finally {
+        isLoading(false);
+      }
+    });
   });
 </script>

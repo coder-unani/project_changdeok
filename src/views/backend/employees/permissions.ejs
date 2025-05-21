@@ -32,47 +32,43 @@
           </tr>
         </tbody>
     </table>
-  </div>
-  <div class="flex justify-end">
-    <button type="submit" class="orb-btn orb-btn-success">
-      저장
+
+    <button type="submit" class="orb-btn orb-btn-success ml-auto">
+      변경
     </button>
   </div>
 </form>
 
 <script nonce="<%=nonce%>">
-  document.getElementById('formEmployeePermissions').addEventListener('submit', async function(e) {
-    e.preventDefault();
-
-    const permissions = Array.from(document.querySelectorAll('input[name="permission"]:checked')).map(checkbox => checkbox.value);
-
-    const data = { permissions };
-
-    try {
-      // 권한 부여 API 호출
-      const response = await fetchApi(
-        '<%=apiRoutes.employees.permissions.method%>',
-        '<%=apiRoutes.employees.permissions.url%>'.replace(':employeeId', '<%=data.id%>'), 
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data)
-        }
-      );
-
-      // 응답 오류
-      if (!response.result) {
-        throw new Error(response.message);
-      }
-      
-      // 응답 성공
-      alertMessage('success', '<%=apiRoutes.employees.permissions.title%>되었습니다.', '<%=apiRoutes.employees.permissions.title%>').then(() => {
-        window.location.href = '<%=backendRoutes.employees.detail.url%>'.replace(':employeeId', '<%=data.id%>');
-      });
-    } catch (err) {
-      toastMessage('error', error.message || '서버 오류가 발생했습니다.');
+  document.addEventListener('DOMContentLoaded', () => { 
+    document.getElementById('formEmployeePermissions').addEventListener('submit', async function(e) {
+      e.preventDefault();
+  
+      const permissions = Array.from(document.querySelectorAll('input[name="permission"]:checked')).map(checkbox => checkbox.value);
+  
+      const data = { permissions };
+  
+      try {
+        // 권한 부여 API 호출
+        const response = await fetchApi(
+          '<%=apiRoutes.employees.permissions.method%>',
+          '<%=apiRoutes.employees.permissions.url%>'.replace(':employeeId', '<%=data.id%>'), 
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+          }
+        );
         
-    }
+        // 응답 성공
+        alertMessage('success', '<%=apiRoutes.employees.permissions.title%>되었습니다.', '<%=apiRoutes.employees.permissions.title%>').then(() => {
+          window.location.href = '<%=backendRoutes.employees.detail.url%>'.replace(':employeeId', '<%=data.id%>');
+        });
+      } catch (err) {
+        toastMessage('error', error.message || '서버 오류가 발생했습니다.');
+          
+      }
+    });
   });
 </script>

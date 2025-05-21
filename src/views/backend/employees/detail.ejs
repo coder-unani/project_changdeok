@@ -3,6 +3,7 @@
     <span class="orb-head"><%=title%></span>
   </h1>
 </div>
+
 <div id="adminDetails">
   <div class="space-y-4 text-sm bg-default-bg p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_0_rgba(0,0,0,.06)]">
     <!-- Email -->
@@ -46,13 +47,15 @@
       <label class="block w-28 orb-label">생성일</label>
       <p class="text-gray-800"><%=data.createdAt%></p>
     </div>
-    
   </div>
+
+  <!-- 관리자 권한 정보 -->
   <div class="mb-2">
     <h1 class='flex justify-self-start items-center gap-1.5 py-2 text-center text-slate-700 transition-all'>
       <span class="orb-head">관리자 권한 정보</span>
     </h1>
   </div>
+
   <div class="space-y-3 text-sm bg-default-bg p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_0_rgba(0,0,0,.06)]">
     <!-- permissions -->
      <div class="overflow-x-auto w-full">
@@ -89,21 +92,17 @@
 </div>
 
 <!-- Action Buttons -->
-<div class="flex flex-col lg:flex-row justify-between gap-1">
-  <div class="flex flex-col lg:flex-row lg:items-center gap-1 w-full lg:w-auto">
-    <a href="<%=backendRoutes.employees.update.url.replace(':employeeId', data.id)%>" class="block orb-btn orb-btn-primary">
-      정보 수정
-    </a>
-    <a href="<%=backendRoutes.employees.updatePassword.url.replace(':employeeId', data.id)%>" class="orb-btn orb-btn-primary">
-      비밀번호 변경
-    </a>
-    <a href="<%=backendRoutes.employees.permissions.url.replace(':employeeId', data.id)%>" class="orb-btn orb-btn-primary">
-      권한 변경
-    </a>
-  </div>
-  <div class="w-full lg:w-auto">
-    <a href="<%=backendRoutes.employees.delete.url.replace(':employeeId', data.id)%>" class="orb-btn orb-btn-delete">
-      삭제
-    </a>
-  </div>
+<div class="flex flex-col lg:flex-row justify-end gap-2">
+  <a href="<%=backendRoutes.employees.update.url.replace(':employeeId', data.id)%>" class="block orb-btn orb-btn-primary">
+    정보 수정
+  </a>
+  <a href="<%=backendRoutes.employees.updatePassword.url.replace(':employeeId', data.id)%>" class="orb-btn orb-btn-primary">
+    비밀번호 변경
+  </a>
+  <a href="<%=backendRoutes.employees.permissions.url.replace(':employeeId', data.id)%>" class="orb-btn orb-btn-primary">
+    권한 변경
+  </a>
+  <a href="<%=backendRoutes.employees.delete.url.replace(':employeeId', data.id)%>" class="orb-btn orb-btn-delete">
+    삭제
+  </a>
 </div>

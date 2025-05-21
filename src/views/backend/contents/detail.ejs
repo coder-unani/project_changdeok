@@ -5,6 +5,7 @@
 </div>
 <div class="bg-default-bg mb-4 space-y-4 rounded-xl p-4 shadow-[0_2px_30px_rgba(0,0,0,.06)] lg:p-6">
   <div class="w-full overflow-y-auto">
+    <!-- 제목 -->
     <div class="border-main-border border-b px-2 py-4">
       <p class="font-semibold"><%=data.title%></p>
       <p class="text-sm text-gray-400"><%=data.writerId || ''%> <%=data.writerName || ''%></p>
@@ -38,21 +39,24 @@
         </div>
       </div>
     </div>
+
+    <!-- 내용 -->
     <div class="px-2 pt-4 pb-8">
       <p class="text-[15px]"><%-data.content%></p>
     </div>
   </div>
 </div>
 
-<div class="flex flex-col flex-wrap items-center justify-between gap-1 lg:flex-row">
-  <div class="flex w-full lg:w-auto">
+<!-- 버튼 -->
+<div class="flex justify-end gap-2">
+  <div class="flex">
     <a
       href="<%=backendRoutes.contents.update.url.replace(':groupId', metadata.group.id).replace(':contentId', data.id)%>"
       class="orb-btn orb-btn-primary"
       >수정</a
     >
   </div>
-  <div class="flex w-full lg:w-auto">
+  <div class="flex">
     <a href="#" id="btn-delete" class="orb-btn orb-btn-delete">삭제</a>
   </div>
 </div>
@@ -76,11 +80,6 @@
               },
             }
           );
-
-          // 응답 오류
-          if (!response.result) {
-            throw new Error(response.message);
-          }
 
           // 응답 성공
           alertMessage(

@@ -11,7 +11,7 @@
           type="text"
           id="max-upload-size"
           name="maxUploadSize"
-          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          class="orb-input"
           value="<%=data.maxUploadSize%>"
           placeholder="파일 최대 업로드 사이즈를 입력해주세요."
         />
@@ -24,7 +24,7 @@
           type="text"
           id="jwt-expire-second"
           name="jwtExpireSecond"
-          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          class="orb-input"
           value="<%=data.jwtExpireSecond%>"
           placeholder="관리자 로그인 유지 시간을 입력해주세요."
         />
@@ -37,7 +37,7 @@
           type="text"
           id="express-domain"
           name="expressDomain"
-          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          class="orb-input"
           value="<%=data.expressDomain%>"
           placeholder="시스템 도메인을 입력해주세요."
         />
@@ -50,7 +50,7 @@
           type="text"
           id="express-port"
           name="expressPort"
-          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          class="orb-input"
           value="<%=data.expressPort%>"
           placeholder="시스템 포트를 입력해주세요."
         />
@@ -59,21 +59,13 @@
       <!-- 시스템 허용 태그 -->
       <li class="flex flex-col gap-2 lg:flex-row">
         <label for="enabled-tags-json" class="orb-label flex w-32 gap-1 lg:leading-11"> 시스템 허용 태그 </label>
-        <textarea
-          id="enabled-tags"
-          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
-          placeholder="시스템 허용 태그를 입력해주세요."
-        ></textarea>
+        <textarea id="enabled-tags" class="orb-input" placeholder="시스템 허용 태그를 입력해주세요."></textarea>
       </li>
 
       <!-- 시스템 허용 CORS -->
       <li class="flex flex-col gap-2 lg:flex-row">
         <label for="enabled-cors-json" class="orb-label flex w-32 gap-1 lg:leading-11"> 시스템 허용 CORS </label>
-        <textarea
-          id="enabled-cors"
-          class="w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none"
-          placeholder="시스템 허용 CORS를 입력해주세요."
-        ></textarea>
+        <textarea id="enabled-cors" class="orb-input" placeholder="시스템 허용 CORS를 입력해주세요."></textarea>
       </li>
     </ul>
 
@@ -84,51 +76,53 @@
 </div>
 
 <script nonce="<%=nonce%>">
-  // 시스템 설정 저장
-  document.getElementById('system-settings-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
+  document.addEventListener('DOMContentLoaded', () => {
+    // 시스템 설정 저장
+    document.getElementById('system-settings-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-    try {
-      const enabledTags = document.getElementById('enabled-tags').value;
-      const enabledCors = document.getElementById('enabled-cors').value;
+      try {
+        const enabledTags = document.getElementById('enabled-tags').value;
+        const enabledCors = document.getElementById('enabled-cors').value;
 
-      // Transform enabledTags into array format
-      const enabledTagsArray = enabledTags
-        .split(',')
-        .map((tag) => tag.trim())
-        .filter((tag) => tag.length > 0);
+        // Transform enabledTags into array format
+        const enabledTagsArray = enabledTags
+          .split(',')
+          .map((tag) => tag.trim())
+          .filter((tag) => tag.length > 0);
 
-      const enabledCorsArray = enabledCors
-        .split(',')
-        .map((tag) => tag.trim())
-        .filter((tag) => tag.length > 0);
+        const enabledCorsArray = enabledCors
+          .split(',')
+          .map((tag) => tag.trim())
+          .filter((tag) => tag.length > 0);
 
-      // Create request data object
-      const requestData = {
-        maxUploadSize: document.getElementById('max-upload-size').value,
-        jwtExpireSecond: document.getElementById('jwt-expire-second').value,
-        expressDomain: document.getElementById('express-domain').value,
-        expressPort: document.getElementById('express-port').value,
-        enabledTagsJson: JSON.stringify(enabledTagsArray),
-        enabledCorsJson: JSON.stringify(enabledCorsArray),
-      };
+        // Create request data object
+        const requestData = {
+          maxUploadSize: document.getElementById('max-upload-size').value,
+          jwtExpireSecond: document.getElementById('jwt-expire-second').value,
+          expressDomain: document.getElementById('express-domain').value,
+          expressPort: document.getElementById('express-port').value,
+          enabledTagsJson: JSON.stringify(enabledTagsArray),
+          enabledCorsJson: JSON.stringify(enabledCorsArray),
+        };
 
-      // API 호출
-      const response = await fetchApi(
-        '<%=apiRoutes.settings.updateSystem.method%>',
-        '<%=apiRoutes.settings.updateSystem.url%>',
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(requestData),
-        }
-      );
+        // API 호출
+        const response = await fetchApi(
+          '<%=apiRoutes.settings.updateSystem.method%>',
+          '<%=apiRoutes.settings.updateSystem.url%>',
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData),
+          }
+        );
 
-      alertMessage('success', '시스템 설정이 저장되었습니다.', '설정');
-      statusMessage('수정 사항이 있습니다. 시스템 재시작 후 반영됩니다.');
-    } catch (error) {
-      alertMessage('error', error.message || '설정 저장 중 오류가 발생했습니다.', '설정');
-    }
+        alertMessage('success', '시스템 설정이 저장되었습니다.', '설정');
+        statusMessage('수정 사항이 있습니다. 시스템 재시작 후 반영됩니다.');
+      } catch (error) {
+        alertMessage('error', error.message || '설정 저장 중 오류가 발생했습니다.', '설정');
+      }
+    });
   });
 </script>

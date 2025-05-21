@@ -4,62 +4,60 @@
   </h1>
 </div>
 
-<div class="text-sm bg-default-bg p-4 pb-8 mb-4 lg:p-6 lg:pb-10 rounded-xl shadow-[0_2px_30px_0_rgba(0,0,0,.06)]">
-  <div class="flex flex-col gap-6">
-    <div class="flex items-center h-[280px] lg:h-[320px] rounded-lg bg-gray-100 border border-main-border">
-      <img class="w-full h-full object-contain rounded-md cursor-pointer" src="<%=data.imagePath || '/images/no-image-200x200.jpg'%>" alt="이미지" />
-    </div>
-    <div class="flex-1 space-y-4 lg:col-span-2">
-      <!-- title -->
-      <div class="flex">
-        <label class="block w-24 orb-label">제목</label>
-        <p class="font-semibold text-gray-800 break-all"><%=data.title%></p>
-      </div>
+<div class="text-sm bg-default-bg p-4 mb-4 space-y-4 lg:p-6 rounded-xl shadow-[0_2px_30px_0_rgba(0,0,0,.06)]">
+  <!-- 이미지 -->
+  <div class="flex items-center h-[280px] lg:h-[320px] rounded-lg bg-gray-100 border border-main-border">
+    <img class="w-full h-full object-contain rounded-md cursor-pointer" src="<%=data.imagePath || '/images/no-image-200x200.jpg'%>" alt="이미지" />
+  </div>
 
-      <!-- description -->
-      <div class="flex">
-        <label class="block w-24 orb-label">설명</label>
-        <p class="text-gray-800 break-all"><%=data.description%></p>
-      </div>
+  <!-- 제목 -->
+  <div class="flex">
+    <label class="block w-24 orb-label">제목</label>
+    <p class="font-semibold text-gray-800 break-all"><%=data.title%></p>
+  </div>
 
-      <!-- 배너 크기 -->
-      <div class="flex">
-        <label class="block w-24 orb-label">배너 크기</label>
-        <p class="text-gray-800 break-all"><%=metadata.groupInfo.imageWidth%> x <%=metadata.groupInfo.imageHeight%></p>
-      </div>
+  <!-- 설명 -->
+  <div class="flex">
+    <label class="block w-24 orb-label">설명</label>
+    <p class="text-gray-800 break-all"><%=data.description%></p>
+  </div>
 
-      <!-- 발행여부 -->
-      <div class="flex">
-        <label class="block w-24 orb-label">발행 여부</label>
-        <p class="text-gray-800 break-all">
-          <% if (!data.isPublished) { %> 
-            <span class="px-2.5 py-1 bg-amber-100 rounded-full text-sm font-medium text-amber-500">미발행</span>
-          <% } else if (data.publishedAt <= new Date().toISOString() && (!data.unpublishedAt || data.unpublishedAt >= new Date().toISOString())) { %>
-            <span class="px-2.5 py-1 bg-emerald-100 rounded-full text-sm font-medium text-emerald-500">발행중</span>
-          <% } else if (data.publishedAt > new Date().toISOString()) { %>
-            <span class="px-2.5 py-1 bg-blue-100 rounded-full text-sm font-medium text-blue-500">예약</span>
-          <% } else { %>
-            <span class="px-2.5 py-1 bg-gray-100 rounded-full text-sm font-medium text-gray-500">종료</span>
-          <% } %></p>
-      </div>
+  <!-- 배너 크기 -->
+  <div class="flex">
+    <label class="block w-24 orb-label">배너 크기</label>
+    <p class="text-gray-800 break-all"><%=metadata.groupInfo.imageWidth%> x <%=metadata.groupInfo.imageHeight%></p>
+  </div>
 
-      <!-- 발행일시 -->
-      <div class="flex">
-        <label class="block w-24 orb-label">발행 일시</label>
-        <p class="text-gray-800 break-all"><%=data.publishedAt%> ~ <%=data.unpublishedAt%></p>
-      </div>
+  <!-- 발행여부 -->
+  <div class="flex">
+    <label class="block w-24 orb-label">발행 여부</label>
+    <p class="text-gray-800 break-all">
+      <% if (!data.isPublished) { %> 
+        <span class="px-2.5 py-1 bg-amber-100 rounded-full text-sm font-medium text-amber-500">미발행</span>
+      <% } else if (data.publishedAt <= new Date().toISOString() && (!data.unpublishedAt || data.unpublishedAt >= new Date().toISOString())) { %>
+        <span class="px-2.5 py-1 bg-emerald-100 rounded-full text-sm font-medium text-emerald-500">발행중</span>
+      <% } else if (data.publishedAt > new Date().toISOString()) { %>
+        <span class="px-2.5 py-1 bg-blue-100 rounded-full text-sm font-medium text-blue-500">예약</span>
+      <% } else { %>
+        <span class="px-2.5 py-1 bg-gray-100 rounded-full text-sm font-medium text-gray-500">종료</span>
+      <% } %></p>
+  </div>
 
-      <!-- 링크 -->
-      <div class="flex">
-        <label class="block w-24 orb-label">링크</label>
-        <p class="text-gray-800 break-all underline"><a href="<%=data.linkUrl%>"><%=data.linkUrl%></a></p>
-      </div>
-    </div>
+  <!-- 발행일시 -->
+  <div class="flex">
+    <label class="block w-24 orb-label">발행 일시</label>
+    <p class="text-gray-800 break-all"><%=data.publishedAt%> ~ <%=data.unpublishedAt%></p>
+  </div>
+
+  <!-- 링크 -->
+  <div class="flex">
+    <label class="block w-24 orb-label">링크</label>
+    <p class="text-gray-800 break-all underline"><a href="<%=data.linkUrl%>"><%=data.linkUrl%></a></p>
   </div>
 </div>
 
 <!-- Action Buttons -->
-<div class="flex items-center justify-between gap-2">
+<div class="flex justify-end gap-2">
   <a href="<%=backendRoutes.banners.update.url.replace(':bannerId', data.id)%>" class="block orb-btn orb-btn-primary">
     수정
   </a>

@@ -11,6 +11,7 @@
   <input type="hidden" name="groupId" value="<%=metadata.groupInfo.id%>">
   <input type="hidden" name="seq" value="<%=metadata.seq%>">
   <div class="space-y-4 text-sm bg-default-bg p-4 mb-4 lg:p-6 rounded-xl shadow-[0_2px_30px_rgba(0,0,0,.06)]">
+    <!-- 이미지 -->
     <div>
       <div class="flex justify-between items-baseline">
         <label for="image" class="block mb-2 orb-label">
@@ -46,20 +47,24 @@
         </ul>
       </div>
     </div>
+
+    <!-- 제목 -->
     <div>
       <label for="title" class="block mb-2 orb-label">제목<span class="pl-0.5 text-red-500">*</span></label>
-      <input type="text" id="title" name="title" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200" placeholder="제목을 입력해주세요." required>
-    </div>
-    
-    <div>
-      <label for="description" class="block mb-2 orb-label">설명</label>
-      <input type="text" id="description" name="description" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200" placeholder="설명을 입력해주세요.">
+      <input type="text" id="title" name="title" class="orb-input" placeholder="제목을 입력해주세요." required>
     </div>
 
+    <!-- 설명 -->
+    <div>
+      <label for="description" class="block mb-2 orb-label">설명</label>
+      <input type="text" id="description" name="description" class="orb-input" placeholder="설명을 입력해주세요.">
+    </div>
+
+    <!-- 링크 타입 -->
     <div class="flex flex-col lg:flex-row gap-4">
       <div class="flex-1">
         <label for="linkType" class="block mb-2 orb-label">링크 타입</label>
-        <select id="linkType" name="linkType" class="w-full p-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 border-r-12 border-light-border">
+        <select id="linkType" name="linkType" class="orb-select">
           <option value="">선택</option>
           <option value="self">내부 링크</option>
           <option value="outer">외부 링크</option>
@@ -67,138 +72,141 @@
       </div>
       <div class="flex-3">
         <label for="linkUrl" class="block mb-2 orb-label">링크</label>
-        <input type="text" id="linkUrl" name="linkUrl" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200" placeholder="링크 주소를 입력해주세요.">
+        <input type="text" id="linkUrl" name="linkUrl" class="orb-input" placeholder="링크 주소를 입력해주세요.">
       </div>
     </div>
 
+    <!-- 발행 여부 -->
     <div>
       <label for="isPublished" class="block mb-2 orb-label">발행 여부</label>
-      <select id="isPublished" name="isPublished" class="w-full p-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 border-r-12 border-light-border">
+      <select id="isPublished" name="isPublished" class="orb-select">
         <option value="N">미발행</option>
         <option value="Y">발행</option>
       </select>
     </div>
 
+    <!-- 발행 일시 -->
     <div class="flex flex-col lg:flex-row gap-4">
       <div class="flex-1">
         <label for="publishedAt" class="block mb-2 orb-label">발행 일시<span class="pl-0.5 text-red-500">*</span></label>
-        <input type="datetime-local" id="publishedAt" name="publishedAt" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200" required>
+        <input type="datetime-local" id="publishedAt" name="publishedAt" class="orb-input" required>
       </div>
       <div class="flex-1">
         <label for="unpublishedAt" class="block mb-2 orb-label">발행 마감 일시<span class="pl-0.5 text-red-500">*</span></label>
-        <input type="datetime-local" id="unpublishedAt" name="unpublishedAt" class="w-full px-4 py-3 bg-gray-100 placeholder:text-sm placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200" required>
+        <input type="datetime-local" id="unpublishedAt" name="unpublishedAt" class="orb-input" required>
       </div>
     </div>
-  </div>
-      
-  <div class="text-right">
-    <button type="submit" class="orb-btn orb-btn-success">
+    
+    <!-- 등록 버튼 -->
+    <button type="submit" class="orb-btn orb-btn-success ml-auto">
       등록
     </button>
   </div>
 </form>
 
 <script nonce="<%=nonce%>">
-  // 배너 이미지 등록
-  document.getElementById('imageAdd').addEventListener('click', (e) => {
-    e.preventDefault();
-    document.getElementById('image').click();
-  });
+  document.addEventListener('DOMContentLoaded', () => { 
+    // 배너 이미지 등록
+    document.getElementById('imageAdd').addEventListener('click', (e) => {
+      e.preventDefault();
+      document.getElementById('image').click();
+    });
 
-  // 이미지 미리보기
-  document.getElementById('image').addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      document.getElementById('imagePreview').src = e.target.result;
-      document.getElementById('imagePreviewContainer').classList.remove('hidden');
-    };
-    reader.readAsDataURL(file);
-  });
+    // 이미지 미리보기
+    document.getElementById('image').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        document.getElementById('imagePreview').src = e.target.result;
+        document.getElementById('imagePreviewContainer').classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    });
 
-  // 이미지 삭제
-  document.getElementById('imageDelete').addEventListener('click', (e) => {
-    document.getElementById('image').value = '';
-    document.getElementById('imagePreview').src = '';
-    document.getElementById('imagePreviewContainer').classList.add('hidden');
-  });
+    // 이미지 삭제
+    document.getElementById('imageDelete').addEventListener('click', (e) => {
+      document.getElementById('image').value = '';
+      document.getElementById('imagePreview').src = '';
+      document.getElementById('imagePreviewContainer').classList.add('hidden');
+    });
 
-  // 배너 등록 요청
-  document.getElementById('formBannerWrite').addEventListener('submit', async (e) => {
-    e.preventDefault();
+    // 배너 등록 요청
+    document.getElementById('formBannerWrite').addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-    isLoading(true);
+      isLoading(true);
 
-    try {
-      // 폼 데이터 수집
-      const formData = new FormData(e.target);
+      try {
+        // 폼 데이터 수집
+        const formData = new FormData(e.target);
 
-      // groupId 필수
-      if (!formData.get('groupId')) {
-        throw new Error('배너 그룹 ID가 없습니다.');
-      }
-
-      // seq 필수
-      if (!formData.get('seq')) {
-        throw new Error('배너 시퀀스가 없습니다.');
-      }
-
-      // title이 없으면 등록 불가 
-      if (!formData.get('title')) {
-        throw new Error('제목을 입력해주세요.');
-      }
-
-      // kind가 image일때 image file 필수
-      const kind = `<%=metadata.groupInfo.kind%>`;
-      if (kind === 'image' && formData.get('image').size === 0) {
-        throw new Error('이미지를 선택해주세요.');
-      }
-
-      // linkType이 있으면 link가 필수
-      if (formData.get('linkType') && !formData.get('linkUrl')) {
-        throw new Error('링크 주소를 입력해주세요.');
-      }
-      
-      // link가 있으면 linkType이 필수
-      if (formData.get('linkUrl') && !formData.get('linkType')) {
-        throw new Error('링크 타입을 선택해주세요.');
-      }
-
-      // linkType이 outer이면 link는 반드시 http:// 또는 https://로 시작
-      if (formData.get('linkType') === 'outer' && !formData.get('linkUrl').match(/^https?:\/\//)) {
-        throw new Error('외부 링크는 http:// 또는 https://로 시작해야 합니다.');
-      }
-
-      // 발행 마감일이 발행일보다 빠르면 등록 불가
-      const publishedAt = new Date(formData.get('publishedAt'));
-      const unpublishedAt = new Date(formData.get('unpublishedAt'));
-      if (publishedAt > unpublishedAt) {
-        throw new Error('발행 마감일은 발행일보다 빠를 수 없습니다.');
-      }
-
-      // 발행 마감일이 현재 시간보다 이전이면 등록 불가
-      if (unpublishedAt && unpublishedAt < new Date()) {
-        throw new Error('발행 마감일은 현재 시간보다 이전일 수 없습니다.');
-      }
-
-      // 배너 등록 API 호출
-      const response = await fetchApi(
-        '<%=apiRoutes.banners.write.method%>',
-        '<%=apiRoutes.banners.write.url%>', 
-        {
-          body: formData
+        // groupId 필수
+        if (!formData.get('groupId')) {
+          throw new Error('배너 그룹 ID가 없습니다.');
         }
-      );
 
-      // 응답 성공
-      alertMessage('success', '<%=apiRoutes.banners.write.title%>되었습니다.', '<%=apiRoutes.banners.write.title%>').then(() => {
-        window.location.href = '<%=backendRoutes.banners.list.url%>?gp=<%=metadata.groupInfo.id%>&sq=<%=metadata.seq%>';
-      });
+        // seq 필수
+        if (!formData.get('seq')) {
+          throw new Error('배너 시퀀스가 없습니다.');
+        }
 
-    } catch (error) {
-      toastMessage('error', error.message || '배너 등록에 실패했습니다.');
-    } finally {
-      isLoading(false);
-    }
+        // title이 없으면 등록 불가 
+        if (!formData.get('title')) {
+          throw new Error('제목을 입력해주세요.');
+        }
+
+        // kind가 image일때 image file 필수
+        const kind = `<%=metadata.groupInfo.kind%>`;
+        if (kind === 'image' && formData.get('image').size === 0) {
+          throw new Error('이미지를 선택해주세요.');
+        }
+
+        // linkType이 있으면 link가 필수
+        if (formData.get('linkType') && !formData.get('linkUrl')) {
+          throw new Error('링크 주소를 입력해주세요.');
+        }
+        
+        // link가 있으면 linkType이 필수
+        if (formData.get('linkUrl') && !formData.get('linkType')) {
+          throw new Error('링크 타입을 선택해주세요.');
+        }
+
+        // linkType이 outer이면 link는 반드시 http:// 또는 https://로 시작
+        if (formData.get('linkType') === 'outer' && !formData.get('linkUrl').match(/^https?:\/\//)) {
+          throw new Error('외부 링크는 http:// 또는 https://로 시작해야 합니다.');
+        }
+
+        // 발행 마감일이 발행일보다 빠르면 등록 불가
+        const publishedAt = new Date(formData.get('publishedAt'));
+        const unpublishedAt = new Date(formData.get('unpublishedAt'));
+        if (publishedAt > unpublishedAt) {
+          throw new Error('발행 마감일은 발행일보다 빠를 수 없습니다.');
+        }
+
+        // 발행 마감일이 현재 시간보다 이전이면 등록 불가
+        if (unpublishedAt && unpublishedAt < new Date()) {
+          throw new Error('발행 마감일은 현재 시간보다 이전일 수 없습니다.');
+        }
+
+        // 배너 등록 API 호출
+        const response = await fetchApi(
+          '<%=apiRoutes.banners.write.method%>',
+          '<%=apiRoutes.banners.write.url%>', 
+          {
+            body: formData
+          }
+        );
+
+        // 응답 성공
+        alertMessage('success', '<%=apiRoutes.banners.write.title%>되었습니다.', '<%=apiRoutes.banners.write.title%>').then(() => {
+          window.location.href = '<%=backendRoutes.banners.list.url%>?gp=<%=metadata.groupInfo.id%>&sq=<%=metadata.seq%>';
+        });
+
+      } catch (error) {
+        toastMessage('error', error.message || '배너 등록에 실패했습니다.');
+      } finally {
+        isLoading(false);
+      }
+    });
   });
 </script>
