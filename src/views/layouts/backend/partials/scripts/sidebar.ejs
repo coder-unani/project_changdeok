@@ -24,9 +24,7 @@
 
           // 로그아웃 성공
           removeCookie('access_token');
-          alertMessage('success', '로그아웃 되었습니다.', '로그아웃').then(() => {
-            window.location.href = '<%=backendRoutes.employees.login.url%>';
-          });
+          window.location.href = '<%=backendRoutes.employees.login.url%>';
         } catch (error) {
           toastMessage('error', error.message || '로그아웃에 실패했습니다.');
         }

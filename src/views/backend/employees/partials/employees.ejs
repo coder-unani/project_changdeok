@@ -35,7 +35,7 @@
       // gridjs 인스턴스 생성
       currentGrid = new gridjs.Grid({
         columns: [
-          { name: '번호' },
+          '번호',
           {
             name: '아이디',
             formatter: (cell, row) => {
@@ -56,8 +56,8 @@
               );
             },
           },
-          { name: '생성일' },
-          { name: '마지막 로그인' },
+          '생성일',
+          '마지막 로그인',
         ],
         language: customGridLang,
         data: [],
