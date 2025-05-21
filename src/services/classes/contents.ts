@@ -210,30 +210,30 @@ export class ContentService extends BaseService implements IContentService {
       }
 
       // 컨텐츠 조회
-      const [prismaContent, groupInfo] = await Promise.all([
-        this.prisma.content.findUnique({
-          where: {
-            id: contentId,
-            isDeleted: false,
-            isActivated: true,
-          },
-        }),
-        this.prisma.contentGroup.findUnique({
-          where: {
-            id: contentId,
-            isDeleted: false,
-            isActivated: true,
-          },
-        }),
-      ]);
+      const prismaContent = await this.prisma.content.findUnique({
+        where: {
+          id: contentId,
+          isDeleted: false,
+          isActivated: true,
+        },
+      });
 
       // 컨텐츠가 존재하지 않으면 오류 발생
       if (!prismaContent) {
         throw new NotFoundError('컨텐츠가 존재하지 않습니다.');
       }
 
+      // 컨텐츠 그룹 조회
+      const prismaContentGroup = await this.prisma.contentGroup.findUnique({
+        where: {
+          id: prismaContent.groupId,
+          isDeleted: false,
+          isActivated: true,
+        },
+      });
+
       // 컨텐츠 그룹이 존재하지 않으면 오류 발생
-      if (!groupInfo) {
+      if (!prismaContentGroup) {
         throw new NotFoundError('컨텐츠 그룹이 존재하지 않습니다.');
       }
 
@@ -248,12 +248,12 @@ export class ContentService extends BaseService implements IContentService {
         result: true,
         metadata: {
           group: {
-            id: groupInfo.id,
-            kind: groupInfo.kind,
-            title: groupInfo.title,
-            description: groupInfo.description ?? null,
+            id: prismaContentGroup.id,
+            kind: prismaContentGroup.kind,
+            title: prismaContentGroup.title,
+            description: prismaContentGroup.description ?? null,
             banners: {
-              top: groupInfo.bannerTopUrl ?? null,
+              top: prismaContentGroup.bannerTopUrl ?? null,
             },
           },
         },
