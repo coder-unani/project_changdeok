@@ -52,20 +52,18 @@ export class ContentService extends BaseService implements IContentService {
         },
       });
 
-      console.log(contentGroup);
-
       // 등록 알림
       if (contentGroup.registNotice === 'EMAIL') {
         const subject = `${contentGroup.title} 등록 알림`;
         const text = '테스트입니다.';
         const html = '<p>테스트입니다.</p>';
         const to = 'dev@orbitcode.kr';
+        const mailService = MailService.getInstance();
 
         try {
-          console.log('등록 알림 전송');
-          await new MailService().sendMail({ subject, text, html, to });
+          await mailService.sendMail({ subject, text, html, to });
 
-          this.prisma.mailHistory.create({
+          await this.prisma.mailHistory.create({
             data: {
               subject,
               text,
@@ -79,9 +77,8 @@ export class ContentService extends BaseService implements IContentService {
             },
           });
         } catch (error) {
-          console.log(error);
           const message = error instanceof Error ? error.message : '에러 발생';
-          this.prisma.mailHistory.create({
+          await this.prisma.mailHistory.create({
             data: {
               subject,
               text,
