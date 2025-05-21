@@ -95,15 +95,6 @@ export const backendRoutesNonHeaderLayout = 'layouts/backend/layoutNonHeader';
 export const backendRoutes = {
   index: createRoute('GET', '관리 시스템 홈', `${backendRoutesPrefix}/`, 'backend/index', backendRoutesLayout, []),
   error: createRoute('GET', 'ERROR', '${backendRoutesPrefix}/error', `backend/error`, backendRoutesNonHeaderLayout, []),
-  // 대시보드
-  dashboard: createRoute(
-    'GET',
-    '대시보드',
-    `${backendRoutesPrefix}/dashboard`,
-    'backend/dashboard',
-    backendRoutesLayout,
-    [1, 6]
-  ),
   // 배너 관리
   banners: {
     list: createRoute(

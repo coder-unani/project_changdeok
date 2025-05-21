@@ -27,22 +27,6 @@ export class BackendController extends BaseWebController {
   // 관리자 홈
   public index = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
-      // 페이지 데이터 생성
-      const pageData = this.createPageData(route);
-
-      // 관리자 홈 페이지 렌더링
-      res.render(route.view, pageData);
-    } catch (error) {
-      this.renderError(res, error);
-    }
-  };
-
-  // 대시보드
-  public dashboard = async (route: IRoute, req: Request, res: Response): Promise<void> => {
-    try {
-      // 접근 권한 체크
-      await this.verifyPermission(req, route.permissions);
-
       // 배너 정보
       const banners = [
         { title: '메인화면', published: 3, reserved: 1, expired: 2 },
@@ -72,7 +56,7 @@ export class BackendController extends BaseWebController {
         employees,
       });
 
-      // 대시보드 페이지 렌더링
+      // 관리자 홈 페이지 렌더링
       res.render(route.view, pageData);
     } catch (error) {
       this.renderError(res, error);

@@ -37,11 +37,6 @@ class BackendRouter {
       this.backendController.index(backendRoutes.index, req, res);
     });
 
-    // 대시보드
-    this.router.get(backendRoutes.dashboard.url, (req, res) => {
-      this.backendController.dashboard(backendRoutes.dashboard, req, res);
-    });
-
     // 화면 관리: 배너 관리
     this.router.get(backendRoutes.banners.screens.url, (req, res) => {
       this.backendController.screenBanners(backendRoutes.banners.screens, req, res);
