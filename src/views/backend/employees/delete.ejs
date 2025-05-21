@@ -40,7 +40,7 @@
           '<%=apiRoutes.employees.delete.title%>되었습니다.',
           '<%=apiRoutes.employees.delete.title%>'
         ).then(() => {
-          window.location.href = '<%=backendRoutes.employees.url%>';
+          window.location.href = '<%=backendRoutes.employees.list.url%>';
         });
       } catch (err) {
         toastMessage('error', error.message || '서버 오류가 발생했습니다.');
