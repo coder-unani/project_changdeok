@@ -1,5 +1,5 @@
 {
-  "name": "express_base",
+  "name": "cms_express",
   "version": "1.0.0",
   "main": "src/app.ts",
   "scripts": {
