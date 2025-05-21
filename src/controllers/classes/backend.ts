@@ -242,58 +242,53 @@ export class BackendController extends BaseWebController {
       let midBanner1: IBannerDisp[] = [];
       let midBanner2: IBannerDisp[] = [];
       let midBanner3: IBannerDisp[] = [];
+      const metadata: Record<string, IBannerGroup> = {};
 
       // 배너 그룹 정보 API 호출
       const getBannerGroup = await getApiBannerGroup(bannerGroupIds, apiOptions);
 
+      // 배너 정보 처리 함수
+      const processBannerGroup = (
+        bannerGroup: IBannerGroup | undefined,
+        targetBanner: IBannerDisp[],
+        targetMetadata: string
+      ) => {
+        if (!bannerGroup) return;
+
+        metadata[targetMetadata] = {
+          id: bannerGroup.id,
+          kind: bannerGroup.kind,
+          title: bannerGroup.title,
+          description: bannerGroup.description,
+          imageWidth: bannerGroup.imageWidth,
+          imageHeight: bannerGroup.imageHeight,
+          createdAt: bannerGroup.createdAt,
+        };
+
+        bannerGroup.banners?.forEach((banner: IBanner) => {
+          targetBanner.push({
+            title: banner.title,
+            description: banner.description,
+            imagePath: banner.imagePath,
+          });
+        });
+      };
+
       // 배너 정보 조회 성공
       if (getBannerGroup.result) {
-        if (getBannerGroup.data?.[0]) {
-          getBannerGroup.data[0].banners?.forEach((banner: IBanner) => {
-            topBanner.push({
-              title: banner.title,
-              description: banner.description,
-              imagePath: banner.imagePath,
-            });
-          });
-        }
-
-        if (getBannerGroup.data?.[1]) {
-          getBannerGroup.data[1].banners?.forEach((banner: IBanner) => {
-            midBanner1.push({
-              title: banner.title,
-              description: banner.description,
-              imagePath: banner.imagePath,
-            });
-          });
-        }
-
-        if (getBannerGroup.data?.[2]) {
-          getBannerGroup.data[2].banners?.forEach((banner: IBanner) => {
-            midBanner2.push({
-              title: banner.title,
-              description: banner.description,
-              imagePath: banner.imagePath,
-            });
-          });
-        }
-
-        if (getBannerGroup.data?.[3]) {
-          getBannerGroup.data[3].banners?.forEach((banner: IBanner) => {
-            midBanner3.push({
-              title: banner.title,
-              description: banner.description,
-              imagePath: banner.imagePath,
-            });
-          });
-        }
+        processBannerGroup(getBannerGroup.data?.[0], topBanner, 'topBanner');
+        processBannerGroup(getBannerGroup.data?.[1], midBanner1, 'midBanner1');
+        processBannerGroup(getBannerGroup.data?.[2], midBanner2, 'midBanner2');
+        processBannerGroup(getBannerGroup.data?.[3], midBanner3, 'midBanner3');
       }
 
       // 페이지 데이터 생성
       const pageData = this.createPageData(
         route,
         '',
-        {},
+        {
+          ...metadata,
+        },
         {
           topBanner,
           midBanner1,
@@ -325,6 +320,7 @@ export class BackendController extends BaseWebController {
 
       // 배너 기본 정보 설정
       let popupBanner: IBannerDisp[] = [];
+      const metadata: Record<string, IBannerGroup> = {};
 
       // 배너 그룹 정보 API 호출
       const getBannerGroup = await getApiBannerGroup(bannerGroupIds, apiOptions);
@@ -332,6 +328,16 @@ export class BackendController extends BaseWebController {
       // 배너 정보 조회 성공
       if (getBannerGroup.result) {
         if (getBannerGroup.data?.[0]) {
+          metadata['popupBanner'] = {
+            id: getBannerGroup.data[0].id,
+            kind: getBannerGroup.data[0].kind,
+            title: getBannerGroup.data[0].title,
+            description: getBannerGroup.data[0].description,
+            imageWidth: getBannerGroup.data[0].imageWidth,
+            imageHeight: getBannerGroup.data[0].imageHeight,
+            createdAt: getBannerGroup.data[0].createdAt,
+          };
+
           getBannerGroup.data[0].banners?.forEach((banner: IBanner) => {
             popupBanner.push({
               id: banner.id,
@@ -344,7 +350,7 @@ export class BackendController extends BaseWebController {
       }
 
       // 페이지 데이터 생성
-      const pageData = this.createPageData(route, '', {}, { popupBanner });
+      const pageData = this.createPageData(route, '', { ...metadata }, { popupBanner });
 
       // 팝업 관리 페이지 렌더링
       res.render(route.view, pageData);
