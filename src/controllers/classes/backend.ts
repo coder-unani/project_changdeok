@@ -243,14 +243,14 @@ export class BackendController extends BaseWebController {
   public screenBanners = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 접근 권한 체크
-      await this.verifyPermission(req, route.permissions);
+      const { access_token } = await this.verifyPermission(req, route.permissions);
 
       // 배너 정보 가져오기
       const bannerGroupIds: number[] = [2, 3, 4, 5];
 
       // API 인증정보
       const apiOptions = {
-        token: req.cookies.access_token,
+        token: access_token,
       };
 
       // 배너 기본 정보 설정
@@ -329,14 +329,14 @@ export class BackendController extends BaseWebController {
   public popupBanners = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 접근 권한 체크
-      await this.verifyPermission(req, route.permissions);
+      const { access_token } = await this.verifyPermission(req, route.permissions);
 
       // 배너 정보 가져오기
       const bannerGroupIds: number[] = [1];
 
       // API 인증정보
       const apiOptions = {
-        token: req.cookies.access_token,
+        token: access_token,
       };
 
       // 배너 기본 정보 설정
@@ -373,14 +373,14 @@ export class BackendController extends BaseWebController {
   public contents = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 접근 권한 체크
-      await this.verifyPermission(req, route.permissions);
+      const { access_token } = await this.verifyPermission(req, route.permissions);
 
       // 게시판 ID 추출
       const groupId = this.validateInteger(req.params.groupId, '게시판 ID');
 
       // API 인증정보
       const apiOptions = {
-        token: req.cookies.access_token,
+        token: access_token,
       };
 
       // 게시판 그룹 정보
@@ -407,11 +407,11 @@ export class BackendController extends BaseWebController {
   public contentWrite = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 접근 권한 체크
-      await this.verifyPermission(req, route.permissions);
+      const { access_token } = await this.verifyPermission(req, route.permissions);
 
       // API 인증정보
       const apiOptions = {
-        token: req.cookies.access_token,
+        token: access_token,
       };
 
       // 게시판 ID 추출
@@ -443,11 +443,11 @@ export class BackendController extends BaseWebController {
   public contentDetail = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 접근 권한 체크
-      await this.verifyPermission(req, route.permissions);
+      const { access_token } = await this.verifyPermission(req, route.permissions);
 
       // API 인증정보
       const apiOptions = {
-        token: req.cookies.access_token,
+        token: access_token,
       };
 
       // 게시판 ID와 게시글 ID 추출
@@ -497,11 +497,11 @@ export class BackendController extends BaseWebController {
   public contentUpdate = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 접근 권한 체크
-      await this.verifyPermission(req, route.permissions);
+      const { access_token } = await this.verifyPermission(req, route.permissions);
 
       // API 인증정보
       const apiOptions = {
-        token: req.cookies.access_token,
+        token: access_token,
       };
 
       // 게시판 ID와 게시글 ID 추출
@@ -544,27 +544,18 @@ export class BackendController extends BaseWebController {
   public employeeRegist = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 접근 권한 체크
-      await this.verifyPermission(req, route.permissions);
+      const { access_token, loggedInEmployee } = await this.verifyPermission(req, route.permissions);
 
       // API 인증정보
       const apiOptions = {
-        token: req.cookies.access_token,
+        token: access_token,
       };
-
-      // 직원 정보 조회
-      const decodedToken = req.cookies.access_token
-        ? verifyJWT(req.cookies.access_token, this.config.getJwtSecretKey())
-        : null;
-
-      // 현재 로그인한 직원 정보 조회
-      const loggedInEmployee = await getApiEmployeeDetail(decodedToken.id, apiOptions);
 
       // 현재 로그인한 직원이 권한 관리자 또는 최고 관리자인 경우
       let permissions: IPermission[] = [];
       if (
-        loggedInEmployee.result &&
-        loggedInEmployee.data &&
-        (loggedInEmployee.data.permissions?.includes(1) || loggedInEmployee.data.permissions?.includes(2))
+        loggedInEmployee &&
+        (loggedInEmployee.permissions?.includes(1) || loggedInEmployee.permissions?.includes(2))
       ) {
         const getPermissions = await getApiPermissionList(apiOptions);
         if (getPermissions.result && getPermissions.data) {
@@ -580,6 +571,7 @@ export class BackendController extends BaseWebController {
       // 직원 등록 페이지 렌더링
       res.render(route.view, pageData);
     } catch (error) {
+      console.log(error);
       this.renderError(res, error);
     }
   };
@@ -591,11 +583,11 @@ export class BackendController extends BaseWebController {
       const employeeId = this.validateInteger(req.params.employeeId, '직원 ID');
 
       // 접근 권한 체크
-      await this.verifyPermission(req, route.permissions, employeeId);
+      const { access_token } = await this.verifyPermission(req, route.permissions, employeeId);
 
       // API 인증정보
       const apiOptions = {
-        token: req.cookies.access_token,
+        token: access_token,
       };
 
       // 관리자 상세 정보 조회
@@ -639,11 +631,11 @@ export class BackendController extends BaseWebController {
       const employeeId = this.validateInteger(req.params.employeeId, '직원 ID');
 
       // 접근 권한 체크
-      await this.verifyPermission(req, route.permissions, employeeId);
+      const { access_token } = await this.verifyPermission(req, route.permissions, employeeId);
 
       // API 인증정보
       const apiOptions = {
-        token: req.cookies.access_token,
+        token: access_token,
       };
 
       // 관리자 정보 조회
@@ -671,16 +663,12 @@ export class BackendController extends BaseWebController {
       const employeeId = this.validateInteger(req.params.employeeId, '직원 ID');
 
       // 접근 권한 체크
-      await this.verifyPermission(req, route.permissions, employeeId);
+      const { loggedInEmployee } = await this.verifyPermission(req, route.permissions, employeeId);
 
       // 로그인한 직원과 수정하려는 직원이 다른 경우
       let isForceUpdatePassword = false;
-      const cookieEmployee = getCookie(req, 'employee');
-      if (cookieEmployee) {
-        const loggedInEmployee: IEmployeeToken = JSON.parse(cookieEmployee);
-        if (loggedInEmployee.id !== employeeId) {
-          isForceUpdatePassword = true;
-        }
+      if (loggedInEmployee && loggedInEmployee.id !== employeeId) {
+        isForceUpdatePassword = true;
       }
 
       // 페이지 데이터 생성
@@ -700,11 +688,11 @@ export class BackendController extends BaseWebController {
       const employeeId = this.validateInteger(req.params.employeeId, '직원 ID');
 
       // 접근 권한 체크
-      await this.verifyPermission(req, route.permissions, employeeId);
+      const { access_token } = await this.verifyPermission(req, route.permissions, employeeId);
 
       // API 인증정보
       const apiOptions = {
-        token: req.cookies.access_token,
+        token: access_token,
       };
 
       // 직원 정보 조회
@@ -729,18 +717,15 @@ export class BackendController extends BaseWebController {
   public employeePermissions = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 접근 권한 체크
-      await this.verifyPermission(req, route.permissions);
+      const { access_token, loggedInEmployee } = await this.verifyPermission(req, route.permissions);
 
       // API 인증정보
       const apiOptions = {
-        token: req.cookies.access_token,
+        token: access_token,
       };
 
       // 직원 ID 추출
       const employeeId = this.validateInteger(req.params.employeeId, '직원 ID');
-
-      // 직원 정보 조회
-      const loggedInEmployee = JSON.parse(res.locals.employee);
 
       // 로그인한 직원 정보가 없는 경우 에러 페이지로 이동
       if (!loggedInEmployee) {
@@ -848,11 +833,11 @@ export class BackendController extends BaseWebController {
   public settings = async (route: IRoute, req: Request, res: Response): Promise<void> => {
     try {
       // 접근 권한 체크
-      await this.verifyPermission(req, route.permissions);
+      const { access_token } = await this.verifyPermission(req, route.permissions);
 
       // API 인증정보
       const apiOptions = {
-        token: req.cookies.access_token,
+        token: access_token,
       };
 
       // 사이트 설정 조회
@@ -873,59 +858,54 @@ export class BackendController extends BaseWebController {
     }
   };
 
-  // 직원 인증 및 정보 조회 메서드
-  private async getLoggedInEmployee(req: Request, employeeId?: number): Promise<IEmployeeToken> {
-    // Cookie에서 직원 정보 추출
-    const cookieEmployee = getCookie(req, 'employee');
-    if (!cookieEmployee) {
-      throw new AuthError('로그인이 필요합니다.');
-    }
-
-    // Cookie 직원 정보 파싱
-    const loggedInEmployee: IEmployeeToken = JSON.parse(cookieEmployee);
-
-    return loggedInEmployee;
-  }
-
   // 권한 검증 메서드
   public verifyPermission = async (
     req: Request,
     accessPermissions: number[] = [],
     accessEmployeeId?: number
-  ): Promise<void> => {
-    // 권한이 필요없는 페이지이면 접근 가능
-    if (accessPermissions.length === 0 && !accessEmployeeId) {
-      return;
+  ): Promise<{ access_token: string; loggedInEmployee: IEmployeeToken | null }> => {
+    try {
+      // 권한이 필요없는 페이지이면 접근 가능
+      if (accessPermissions.length === 0 && !accessEmployeeId) {
+        return { access_token: '', loggedInEmployee: null };
+      }
+
+      const cookieAccessToken = getCookie(req, 'access_token');
+      if (!cookieAccessToken) {
+        throw new AuthError('로그인이 필요합니다.');
+      }
+
+      // 로그인 정보가 없는 경우 에러 페이지로 이동
+      const cookieEmployee = getCookie(req, 'employee');
+      if (!cookieEmployee) {
+        throw new AuthError('로그인이 필요합니다.');
+      }
+
+      // Cookie 직원 정보 파싱
+      const loggedInEmployee: IEmployeeToken = JSON.parse(cookieEmployee);
+
+      // 로그인한 직원 정보가 없는 경우 에러 페이지로 이동
+      if (!loggedInEmployee) {
+        throw new AuthError('로그인이 필요합니다.');
+      }
+
+      // 특정 직원 ID가 허용되어 있으면 해당 직원은 접근 가능
+      if (accessEmployeeId && loggedInEmployee.id === accessEmployeeId) {
+        return { access_token: cookieAccessToken, loggedInEmployee };
+      }
+
+      // 특정 권한이 허용되어 있으면 해당 직원은 접근 가능
+      if (
+        accessPermissions.length > 0 &&
+        loggedInEmployee.permissions?.some((permission) => accessPermissions.includes(permission))
+      ) {
+        return { access_token: cookieAccessToken, loggedInEmployee };
+      }
+
+      throw new AuthError('권한이 없습니다.');
+    } catch (error) {
+      throw error;
     }
-
-    // 로그인 정보가 없는 경우 에러 페이지로 이동
-    const cookieEmployee = req.cookies.employee;
-    if (!cookieEmployee) {
-      throw new AuthError('로그인이 필요합니다.');
-    }
-
-    // Cookie 직원 정보 파싱
-    const loggedInEmployee: IEmployeeToken = JSON.parse(cookieEmployee);
-
-    // 로그인한 직원 정보가 없는 경우 에러 페이지로 이동
-    if (!loggedInEmployee) {
-      throw new AuthError('로그인이 필요합니다.');
-    }
-
-    // 특정 직원 ID가 허용되어 있으면 해당 직원은 접근 가능
-    if (accessEmployeeId && loggedInEmployee.id === accessEmployeeId) {
-      return;
-    }
-
-    // 특정 권한이 허용되어 있으면 해당 직원은 접근 가능
-    if (
-      accessPermissions.length > 0 &&
-      loggedInEmployee.permissions?.some((permission) => accessPermissions.includes(permission))
-    ) {
-      return;
-    }
-
-    throw new AuthError('권한이 없습니다.');
   };
 
   // 에러 페이지
