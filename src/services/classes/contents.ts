@@ -18,24 +18,76 @@ import {
 import { IContentService } from '../../types/service';
 import { BaseService } from './service';
 
+// 캐시 TTL (5분)
+const CACHE_TTL = 5 * 60 * 1000;
+
 export class ContentService extends BaseService implements IContentService {
+  private contentCache: Map<string, { data: any; timestamp: number }> = new Map();
+  private groupCache: Map<number, { data: IContentGroup; timestamp: number }> = new Map();
+
   constructor(prisma: ExtendedPrismaClient) {
     super(prisma);
   }
 
+  // 컨텐츠 데이터 검증
+  private validateContentData(title: string, content: string): void {
+    const validateTitle = validateStringLength(title, 1, 50);
+    if (!validateTitle.result) {
+      throw new ValidationError(validateTitle.message);
+    }
+
+    const validateContent = validateStringLength(content, 1, 1000);
+    if (!validateContent.result) {
+      throw new ValidationError(validateContent.message);
+    }
+  }
+
+  // 캐시에서 데이터 가져오기
+  private getCachedData<T>(key: string, cache: Map<string, { data: T; timestamp: number }>): T | null {
+    const cached = cache.get(key);
+    if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+      return cached.data;
+    }
+    return null;
+  }
+
+  // 캐시에 데이터 설정
+  private setCachedData<T>(key: string, data: T, cache: Map<string, { data: T; timestamp: number }>): void {
+    cache.set(key, { data, timestamp: Date.now() });
+  }
+
+  // Prisma 컨텐츠를 IContent로 변환
+  private convertToContent(prismaContent: any, groupInfo?: any): IContent {
+    const createdAt = convertDateToString(convertDateToKST(prismaContent.createdAt));
+    const updatedAt = prismaContent.updatedAt ? convertDateToString(convertDateToKST(prismaContent.updatedAt)) : null;
+
+    return {
+      id: prismaContent.id,
+      groupId: prismaContent.groupId,
+      title: prismaContent.title.trim(),
+      content: prismaContent.content?.trim() || null,
+      writerId: prismaContent.writerId || null,
+      writerName: prismaContent.writerName || null,
+      writerEmail: prismaContent.writerEmail || null,
+      writerPhone: prismaContent.writerPhone || null,
+      viewCount: prismaContent.viewCount || 0,
+      likeCount: prismaContent.likeCount || 0,
+      commentCount: prismaContent.commentCount || 0,
+      isAnonymous: prismaContent.isAnonymous,
+      isNotice: prismaContent.isNotice || false,
+      isActivated: prismaContent.isActivated,
+      ip: prismaContent.ip || null,
+      userAgent: prismaContent.userAgent || null,
+      createdAt,
+      updatedAt,
+    };
+  }
+
+  // 컨텐츠 생성
   public async create(groupId: number, data: IRequestContentWrite): Promise<IServiceResponse> {
     try {
-      // 제목 길이 검증
-      const validateTitle = validateStringLength(data.title, 1, 50);
-      if (!validateTitle.result) {
-        throw new ValidationError(validateTitle.message);
-      }
-
-      // 내용 길이 검증
-      const validateContent = validateStringLength(data.content, 1, 1000);
-      if (!validateContent.result) {
-        throw new ValidationError(validateContent.message);
-      }
+      // 컨텐츠 데이터 검증
+      this.validateContentData(data.title, data.content);
 
       // 컨텐츠 그룹 정보 조회
       const { result, message, data: contentGroup } = await this.groupInfo(groupId);
@@ -54,61 +106,14 @@ export class ContentService extends BaseService implements IContentService {
         },
       });
 
-      // 등록 알림
+      // 등록 알림 이메일 전송
       if (contentGroup.registNotice === 'EMAIL') {
-        const config = await asyncConfig();
-        const mailService = new MailService(this.prisma, config);
-
-        const companyInfo = JSON.parse(config.getSettings().companyJson || '{}');
-
-        const subject = `${contentGroup.title} 게시글 등록 알림`;
-        const contentUrl = `https://${config.getSettings().serviceDomain}${backendRoutes.contents.detail.url.replace(':groupId', content.groupId.toString()).replace(':contentId', content.id.toString())}`;
-        const registAt = convertDateToString(convertDateToKST(content.createdAt));
-
-        const { text, html } = mailService.templateContentRegist(
-          subject,
-          contentGroup.title,
-          content.title,
-          registAt,
-          contentUrl,
-          companyInfo?.name || '',
-          companyInfo?.address || ''
-        );
-        const to = 'orbitcode.dev@gmail.com';
-
-        try {
-          await mailService.send({ subject, text, html, to });
-
-          await this.prisma.mailHistory.create({
-            data: {
-              subject,
-              text,
-              html,
-              to,
-              from: 'dev@orbitcode.kr',
-              contentId: content.id,
-              isSent: true,
-              sendAt: new Date(),
-              message: '성공',
-            },
-          });
-        } catch (error) {
-          const message = error instanceof Error ? error.message : '에러 발생';
-          await this.prisma.mailHistory.create({
-            data: {
-              subject,
-              text,
-              html,
-              to,
-              from: 'dev@orbitcode.kr',
-              contentId: content.id,
-              isSent: false,
-              sendAt: new Date(),
-              message,
-            },
-          });
-        }
+        await this.sendRegistrationEmail(content, contentGroup);
       }
+
+      // 캐시 삭제
+      this.contentCache.clear();
+      this.groupCache.delete(groupId);
 
       // 응답 성공
       return { result: true };
@@ -117,59 +122,126 @@ export class ContentService extends BaseService implements IContentService {
     }
   }
 
-  public async read(contentId: number): Promise<IServiceResponse<IContent>> {
+  // 등록 알림 이메일 전송
+  private async sendRegistrationEmail(content: any, contentGroup: IContentGroup): Promise<void> {
+    // 설정 조회
+    const config = await asyncConfig();
+
+    // 이메일 서비스 생성
+    const mailService = new MailService(config);
+
+    // 회사 정보 조회
+    const companyInfo = JSON.parse(config.getSettings().companyJson || '{}');
+
+    // 이메일 제목 생성
+    const subject = `${contentGroup.title} 게시글 등록 알림`;
+
+    // 컨텐츠 상세 주소 생성
+    const contentUrl = `https://${config.getSettings().serviceDomain}${backendRoutes.contents.detail.url
+      .replace(':groupId', content.groupId.toString())
+      .replace(':contentId', content.id.toString())}`;
+
+    // 등록 일시 생성
+    const registAt = convertDateToString(convertDateToKST(content.createdAt));
+
+    // 이메일 템플릿 생성
+    const { text, html } = mailService.templateContentRegist(
+      subject,
+      contentGroup.title,
+      content.title,
+      registAt,
+      contentUrl,
+      companyInfo?.name || '',
+      companyInfo?.address || ''
+    );
+
+    // 이메일 전송
     try {
-      // 컨텐츠 정보 조회
-      const prismaContent = await this.prisma.content.findUnique({
-        where: {
-          id: contentId,
-          isDeleted: false,
-          isActivated: true,
+      // 이메일 전송
+      await mailService.send({ subject, text, html, to: 'orbitcode.dev@gmail.com' });
+
+      // 이메일 전송 이력 생성
+      await this.prisma.mailHistory.create({
+        data: {
+          subject,
+          text,
+          html,
+          to: 'orbitcode.dev@gmail.com',
+          from: 'dev@orbitcode.kr',
+          contentId: content.id,
+          isSent: true,
+          sendAt: new Date(),
+          message: '성공',
         },
       });
+    } catch (error) {
+      // 이메일 전송 이력 생성
+      const message = error instanceof Error ? error.message : '에러 발생';
 
-      // 컨텐츠가 없는 경우
+      // 이메일 전송 이력 생성
+      await this.prisma.mailHistory.create({
+        data: {
+          subject,
+          text,
+          html,
+          to: 'orbitcode.dev@gmail.com',
+          from: 'dev@orbitcode.kr',
+          contentId: content.id,
+          isSent: false,
+          sendAt: new Date(),
+          message,
+        },
+      });
+    }
+  }
+
+  // 컨텐츠 조회
+  public async read(contentId: number): Promise<IServiceResponse<IContent>> {
+    try {
+      // 캐시 키 생성
+      const cacheKey = `content_${contentId}`;
+
+      // 캐시에서 데이터 가져오기
+      const cachedContent = this.getCachedData(cacheKey, this.contentCache);
+
+      // 캐시에 데이터가 있으면 캐시에서 데이터 반환
+      if (cachedContent) {
+        return { result: true, data: cachedContent };
+      }
+
+      // 컨텐츠 조회
+      const [prismaContent, groupInfo] = await Promise.all([
+        this.prisma.content.findUnique({
+          where: {
+            id: contentId,
+            isDeleted: false,
+            isActivated: true,
+          },
+        }),
+        this.prisma.contentGroup.findUnique({
+          where: {
+            id: contentId,
+            isDeleted: false,
+            isActivated: true,
+          },
+        }),
+      ]);
+
+      // 컨텐츠가 존재하지 않으면 오류 발생
       if (!prismaContent) {
         throw new NotFoundError('컨텐츠가 존재하지 않습니다.');
       }
 
-      // 컨텐츠 그룹 정보 조회
-      const groupInfo = await this.prisma.contentGroup.findUnique({
-        where: {
-          id: prismaContent.groupId,
-          isDeleted: false,
-          isActivated: true,
-        },
-      });
-
-      // 컨텐츠 그룹이 없는 경우
+      // 컨텐츠 그룹이 존재하지 않으면 오류 발생
       if (!groupInfo) {
         throw new NotFoundError('컨텐츠 그룹이 존재하지 않습니다.');
       }
 
-      // 컨텐츠 생성
-      const createdAt = convertDateToString(convertDateToKST(prismaContent.createdAt));
-      const updatedAt = prismaContent.updatedAt ? convertDateToString(convertDateToKST(prismaContent.updatedAt)) : null;
-      const content: IContent = {
-        id: prismaContent.id,
-        groupId: prismaContent.groupId,
-        title: prismaContent.title.trim(),
-        content: prismaContent.content?.trim() || null,
-        writerId: prismaContent.writerId || null,
-        writerName: prismaContent.writerName || null,
-        writerEmail: prismaContent.writerEmail || null,
-        writerPhone: prismaContent.writerPhone || null,
-        viewCount: prismaContent.viewCount || 0,
-        likeCount: prismaContent.likeCount || 0,
-        commentCount: prismaContent.commentCount || 0,
-        isAnonymous: prismaContent.isAnonymous,
-        isNotice: prismaContent.isNotice || false,
-        isActivated: prismaContent.isActivated,
-        ip: prismaContent.ip || null,
-        userAgent: prismaContent.userAgent || null,
-        createdAt,
-        updatedAt,
-      };
+      // 컨텐츠 데이터 변환
+      const content = this.convertToContent(prismaContent);
+
+      // 캐시 설정
+      this.setCachedData(cacheKey, content, this.contentCache);
 
       // 응답 성공
       return {
@@ -194,10 +266,10 @@ export class ContentService extends BaseService implements IContentService {
 
   public async update(contentId: number, data: IRequestContentUpdate): Promise<IServiceResponse> {
     try {
-      // 업데이트 데이터 생성
+      // 컨텐츠 데이터 업데이트
       const updateData: Partial<IRequestContentUpdate> = {};
 
-      // 업데이트할 필드만 추가
+      // 제목 검증
       if (data.title !== undefined) {
         const validateTitle = validateStringLength(data.title, 1, 50);
         if (!validateTitle.result) {
@@ -206,7 +278,7 @@ export class ContentService extends BaseService implements IContentService {
         updateData.title = data.title;
       }
 
-      // 내용 길이 검증
+      // 내용 검증
       if (data.content !== undefined) {
         const validateContent = validateStringLength(data.content, 1, 1000);
         if (!validateContent.result) {
@@ -227,6 +299,9 @@ export class ContentService extends BaseService implements IContentService {
         data: { ...updateData, updatedAt: new Date() },
       });
 
+      // 캐시 삭제
+      this.contentCache.delete(`content_${contentId}`);
+
       // 응답 성공
       return { result: true };
     } catch (error) {
@@ -245,7 +320,7 @@ export class ContentService extends BaseService implements IContentService {
         },
       });
 
-      // 컨텐츠가 없는 경우
+      // 컨텐츠가 존재하지 않으면 오류 발생
       if (!prismaContent) {
         throw new NotFoundError('컨텐츠가 존재하지 않습니다.');
       }
@@ -255,6 +330,9 @@ export class ContentService extends BaseService implements IContentService {
         where: { id: contentId },
         data: { isDeleted: true, updatedAt: new Date() },
       });
+
+      // 캐시 삭제
+      this.contentCache.delete(`content_${contentId}`);
 
       // 응답 성공
       return { result: true };
@@ -266,9 +344,13 @@ export class ContentService extends BaseService implements IContentService {
   // 컨텐츠 목록 조회
   public async list(groupId: number, data: IRequestSearchList): Promise<IServiceResponse<IContent[] | []>> {
     try {
-      // 기본값 설정
+      // 페이지 번호 검증
       const page = Math.max(1, data.page || 1);
+
+      // 페이지 크기 검증
       const pageSize = Math.min(100, Math.max(1, data.pageSize || 10));
+
+      // 정렬 검증
       const sort = data.sort || 'ID_ASC';
 
       // 정렬 조건 설정
@@ -279,21 +361,7 @@ export class ContentService extends BaseService implements IContentService {
         TITLE_ASC: { title: 'asc' as const },
       }[sort] || { id: 'asc' as const };
 
-      // 컨텐츠 그룹 정보 조회
-      const groupInfo = await this.prisma.contentGroup.findUnique({
-        where: {
-          id: groupId,
-          isDeleted: false,
-          isActivated: true,
-        },
-      });
-
-      // 컨텐츠 그룹이 없는 경우
-      if (!groupInfo) {
-        throw new NotFoundError('컨텐츠 그룹이 존재하지 않습니다.');
-      }
-
-      // 검색 조건 설정
+      // 조회 조건 설정
       const where = {
         groupId,
         isDeleted: false,
@@ -301,8 +369,8 @@ export class ContentService extends BaseService implements IContentService {
         ...(data.query ? { title: { contains: data.query } } : {}),
       };
 
-      // 전체 컨텐츠 수 조회
-      const [totalContents, prismaContents] = await Promise.all([
+      // 컨텐츠 조회
+      const [totalContents, prismaContents, groupInfo] = await Promise.all([
         this.prisma.content.count({ where }),
         this.prisma.content.findMany({
           where,
@@ -310,33 +378,22 @@ export class ContentService extends BaseService implements IContentService {
           take: pageSize,
           orderBy,
         }),
+        this.prisma.contentGroup.findUnique({
+          where: {
+            id: groupId,
+            isDeleted: false,
+            isActivated: true,
+          },
+        }),
       ]);
 
-      // 컨텐츠 목록 생성
-      const contents: IContent[] = prismaContents.map((content) => {
-        const createdAt = convertDateToString(convertDateToKST(content.createdAt));
-        const updatedAt = content.updatedAt ? convertDateToString(convertDateToKST(content.updatedAt)) : null;
-        return {
-          id: content.id,
-          groupId: content.groupId,
-          title: content.title,
-          content: content.content ?? null,
-          writerId: content.writerId ?? null,
-          writerName: content.writerName ?? null,
-          writerEmail: content.writerEmail ?? null,
-          writerPhone: content.writerPhone ?? null,
-          viewCount: content.viewCount ?? 0,
-          likeCount: content.likeCount ?? 0,
-          commentCount: content.commentCount ?? 0,
-          isAnonymous: content.isAnonymous,
-          isNotice: content.isNotice ?? false,
-          isActivated: content.isActivated,
-          ip: content.ip ?? null,
-          userAgent: content.userAgent ?? null,
-          createdAt,
-          updatedAt,
-        };
-      });
+      // 컨텐츠 그룹이 존재하지 않으면 오류 발생
+      if (!groupInfo) {
+        throw new NotFoundError('컨텐츠 그룹이 존재하지 않습니다.');
+      }
+
+      // 컨텐츠 데이터 변환
+      const contents = prismaContents.map((content) => this.convertToContent(content));
 
       // 응답 성공
       return {
@@ -366,8 +423,17 @@ export class ContentService extends BaseService implements IContentService {
     }
   }
 
+  // 컨텐츠 그룹 정보 조회
   public async groupInfo(groupId: number): Promise<IServiceResponse<IContentGroup>> {
     try {
+      // 캐시에서 데이터 가져오기
+      const cachedGroup = this.groupCache.get(groupId);
+
+      // 캐시에 데이터가 있으면 캐시에서 데이터 반환
+      if (cachedGroup && Date.now() - cachedGroup.timestamp < CACHE_TTL) {
+        return { result: true, metadata: { group: { id: groupId } }, data: cachedGroup.data };
+      }
+
       // 컨텐츠 그룹 조회
       const prismaResult = await this.prisma.contentGroup.findUnique({
         where: {
@@ -377,12 +443,12 @@ export class ContentService extends BaseService implements IContentService {
         },
       });
 
-      // 컨텐츠 그룹이 없는 경우
+      // 컨텐츠 그룹이 존재하지 않으면 오류 발생
       if (!prismaResult) {
         throw new NotFoundError('컨텐츠 그룹이 존재하지 않습니다.');
       }
 
-      // 컨텐츠 그룹 정보 생성
+      // 컨텐츠 그룹 데이터 변환
       const groupInfo: IContentGroup = {
         id: prismaResult.id,
         kind: prismaResult.kind,
@@ -405,6 +471,9 @@ export class ContentService extends BaseService implements IContentService {
         isActivated: prismaResult.isActivated,
       };
 
+      // 캐시 설정
+      this.groupCache.set(groupId, { data: groupInfo, timestamp: Date.now() });
+
       // 응답 성공
       return { result: true, metadata: { group: { id: groupId } }, data: groupInfo };
     } catch (error) {
@@ -412,7 +481,7 @@ export class ContentService extends BaseService implements IContentService {
     }
   }
 
-  // 컨텐츠 그룹 수정
+  // 컨텐츠 그룹 정보 업데이트
   public async updateGroup(groupId: number, data: IRequestContentGroupUpdate): Promise<IServiceResponse> {
     try {
       // 컨텐츠 그룹 조회
@@ -424,23 +493,25 @@ export class ContentService extends BaseService implements IContentService {
         },
       });
 
-      // 컨텐츠 그룹이 없는 경우
+      // 컨텐츠 그룹이 존재하지 않으면 오류 발생
       if (!prismaResult) {
         throw new NotFoundError('컨텐츠 그룹이 존재하지 않습니다.');
       }
 
+      // 컨텐츠 그룹 업데이트 데이터 설정
       const updateData: Partial<IRequestContentGroupUpdate> = {};
-
-      // 업데이트할 필드만 추가
       if (data.description !== undefined) updateData.description = data.description;
       if (data.sizePerPage !== undefined) updateData.sizePerPage = data.sizePerPage;
       if (data.registNotice !== undefined) updateData.registNotice = data.registNotice;
 
-      // 컨텐츠 그룹 수정
+      // 컨텐츠 그룹 업데이트
       await this.prisma.contentGroup.update({
         where: { id: groupId },
         data: { ...updateData, updatedAt: new Date() },
       });
+
+      // 캐시 삭제
+      this.groupCache.delete(groupId);
 
       // 응답 성공
       return { result: true };

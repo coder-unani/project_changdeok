@@ -1,8 +1,8 @@
 import nodemailer from 'nodemailer';
 
-import { Config, asyncConfig } from '../../config/config';
-import { ExtendedPrismaClient } from '../../library/database';
+import { Config } from '../../config/config';
 
+// 이메일 옵션 인터페이스
 export interface IMailOptions {
   to: string;
   subject: string;
@@ -10,41 +10,90 @@ export interface IMailOptions {
   html?: string;
 }
 
-export class MailService {
-  private config: Config;
-  private prisma: ExtendedPrismaClient;
-  private transporter: nodemailer.Transporter;
+// 이메일 오류 클래스
+export class MailError extends Error {
+  constructor(
+    message: string,
+    public readonly originalError?: unknown
+  ) {
+    super(message);
+    this.name = 'MailError';
+  }
+}
 
-  constructor(prisma: ExtendedPrismaClient, config: Config) {
-    this.prisma = prisma;
-    this.config = config;
-    this.transporter = nodemailer.createTransport({
-      service: config.getSMTPService(), // Google의 SMTP 서비스를 명시적으로 지정
-      host: config.getSMTPHost(),
-      port: config.getSMTPPort(),
-      secure: false, // TLS는 연결 후 시작됨
+// 이메일 서비스 클래스
+export class MailService {
+  private readonly transporter: nodemailer.Transporter;
+  private readonly maxRetries = 3;
+  private readonly retryDelay = 1000; // 1초
+
+  // 생성자
+  constructor(private readonly config: Config) {
+    this.validateConfig();
+    this.transporter = this.createTransporter();
+  }
+
+  // 설정 검증
+  private validateConfig(): void {
+    try {
+      this.config.getSMTPService();
+      this.config.getSMTPHost();
+      this.config.getSMTPPort();
+      this.config.getSMTPUser();
+      this.config.getSMTPPassword();
+      this.config.getSMTPFrom();
+    } catch (error) {
+      throw new MailError('SMTP 설정이 올바르지 않습니다.', error);
+    }
+  }
+
+  // 이메일 전송자 생성
+  private createTransporter(): nodemailer.Transporter {
+    return nodemailer.createTransport({
+      service: this.config.getSMTPService(),
+      host: this.config.getSMTPHost(),
+      port: this.config.getSMTPPort(),
+      secure: false,
       requireTLS: true,
       auth: {
         user: this.config.getSMTPUser(),
         pass: this.config.getSMTPPassword(),
       },
-      debug: this.config.getEnv() !== 'production', // 개발 환경에서만 디버그 로그
+      debug: this.config.getEnv() !== 'production',
       logger: this.config.getEnv() !== 'production',
     });
   }
 
-  public async send(options: IMailOptions): Promise<void> {
-    try {
-      await this.transporter.sendMail({
-        from: this.config.getSMTPFrom(),
-        ...options,
-      });
-    } catch (error) {
-      console.error('이메일 전송 중 오류가 발생했습니다:', error);
-      throw error;
-    }
+  // 지연 함수
+  private async delay(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
+  // 이메일 전송
+  public async send(options: IMailOptions): Promise<void> {
+    let lastError: unknown;
+
+    for (let attempt = 1; attempt <= this.maxRetries; attempt++) {
+      try {
+        await this.transporter.sendMail({
+          from: this.config.getSMTPFrom(),
+          ...options,
+        });
+        return;
+      } catch (error) {
+        lastError = error;
+        console.warn(`이메일 전송 시도 ${attempt}/${this.maxRetries} 실패:`, error);
+
+        if (attempt < this.maxRetries) {
+          await this.delay(this.retryDelay * attempt);
+        }
+      }
+    }
+
+    throw new MailError('이메일 전송 실패', lastError);
+  }
+
+  // 컨텐츠 등록 템플릿 생성
   public templateContentRegist(
     subject: string,
     kind: string,
@@ -54,10 +103,32 @@ export class MailService {
     companyName: string,
     companyAddress: string
   ) {
-    const currentYear = new Date().getFullYear();
+    return generateContentRegistTemplate(
+      subject,
+      kind,
+      contentTitle,
+      registAt,
+      contentUrl,
+      companyName,
+      companyAddress
+    );
+  }
+}
 
-    const text = `[${subject}] ${kind} 게시판에 새 글이 등록되었습니다. ${contentTitle} (${registAt})`;
-    const html = `
+// 컨텐츠 등록 템플릿 생성
+const generateContentRegistTemplate = (
+  subject: string,
+  kind: string,
+  contentTitle: string,
+  registAt: string,
+  contentUrl: string,
+  companyName: string,
+  companyAddress: string
+) => {
+  const currentYear = new Date().getFullYear();
+
+  const text = `[${subject}] ${kind} 게시판에 새 글이 등록되었습니다. ${contentTitle} (${registAt})`;
+  const html = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -84,7 +155,6 @@ export class MailService {
               <p style="margin: 0 0 30px 0; font-size: 16px; line-height: 1.6; color: #555555;">
                 아래 버튼을 클릭하여 자세한 내용을 확인하실 수 있습니다.
               </p>
-              <!-- 추가 정보 섹션 -->
               <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse; background-color: #f8f9fa; border-radius: 6px; margin-bottom: 30px;">
                 <tr>
                   <td style="padding: 20px; text-align: center;">
@@ -132,6 +202,5 @@ export class MailService {
 </body>
 </html>`;
 
-    return { text, html };
-  }
-}
+  return { text, html };
+};
