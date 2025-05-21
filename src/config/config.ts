@@ -153,6 +153,49 @@ export class Config {
     return process.env.RECAPTCHA_SECRET_KEY;
   };
 
+  // SMTP 정보 반환
+  public getSMTPService = (): string => {
+    if (!process.env.SMTP_SERVICE) {
+      throw new Error('SMTP_SERVICE가 설정되지 않았습니다.');
+    }
+    return process.env.SMTP_SERVICE;
+  };
+
+  public getSMTPHost = (): string => {
+    if (!process.env.SMTP_HOST) {
+      throw new Error('SMTP_HOST가 설정되지 않았습니다.');
+    }
+    return process.env.SMTP_HOST;
+  };
+
+  public getSMTPPort = (): number => {
+    if (!process.env.SMTP_PORT) {
+      throw new Error('SMTP_PORT가 설정되지 않았습니다.');
+    }
+    return Number(process.env.SMTP_PORT);
+  };
+
+  public getSMTPUser = (): string => {
+    if (!process.env.SMTP_USER) {
+      throw new Error('SMTP_USER가 설정되지 않았습니다.');
+    }
+    return process.env.SMTP_USER;
+  };
+
+  public getSMTPPassword = (): string => {
+    if (!process.env.SMTP_PASSWORD) {
+      throw new Error('SMTP_PASSWORD가 설정되지 않았습니다.');
+    }
+    return process.env.SMTP_PASSWORD;
+  };
+
+  public getSMTPFrom = (): string => {
+    if (!process.env.SMTP_FROM) {
+      throw new Error('SMTP_FROM이 설정되지 않았습니다.');
+    }
+    return process.env.SMTP_FROM;
+  };
+
   public getCORSApiOptions = (): ICORSOptions => {
     return {
       origin: this.settings?.enabledCorsJson || '',
