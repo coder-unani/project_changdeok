@@ -13,17 +13,17 @@ export class MailService {
 
   private constructor() {
     this.transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: process.env.SMTP_PORT === '465', // 465번 포트는 SSL/TLS를 사용합니다
+      service: 'gmail', // Google의 SMTP 서비스를 명시적으로 지정
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false, // TLS는 연결 후 시작됨
       requireTLS: true,
-      tls: {
-        rejectUnauthorized: false, // 개발 환경에서는 인증서 검증을 비활성화
-      },
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASSWORD,
       },
+      debug: process.env.NODE_ENV !== 'production', // 개발 환경에서만 디버그 로그
+      logger: process.env.NODE_ENV !== 'production',
     });
   }
 
