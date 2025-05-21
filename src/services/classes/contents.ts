@@ -74,6 +74,10 @@ export class ContentService extends BaseService implements IContentService {
         );
         const to = 'dev@orbitcode.kr';
 
+        console.log(contentGroup.title);
+        console.log(content.title);
+        console.log({ subject, contentUrl, registAt, text, html, to });
+
         try {
           await mailService.send({ subject, text, html, to });
 
@@ -111,6 +115,7 @@ export class ContentService extends BaseService implements IContentService {
       // 응답 성공
       return { result: true };
     } catch (error) {
+      console.log(error);
       return this.handleError(error);
     }
   }
