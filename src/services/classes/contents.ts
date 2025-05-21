@@ -62,7 +62,7 @@ export class ContentService extends BaseService implements IContentService {
         const companyInfo = JSON.parse(config.getSettings().companyJson || '{}');
 
         const subject = `${contentGroup.title} 게시글 등록 알림`;
-        const contentUrl = `${backendRoutes.contents.detail.url.replace(':groupId', content.groupId.toString()).replace(':contentId', content.id.toString())}`;
+        const contentUrl = `https://${config.getSettings().serviceDomain}${backendRoutes.contents.detail.url.replace(':groupId', content.groupId.toString()).replace(':contentId', content.id.toString())}`;
         const registAt = convertDateToString(convertDateToKST(content.createdAt));
 
         const { text, html } = mailService.templateContentRegist(
@@ -71,7 +71,7 @@ export class ContentService extends BaseService implements IContentService {
           content.title,
           registAt,
           contentUrl,
-          companyInfo?.companyName || '',
+          companyInfo?.name || '',
           companyInfo?.address || ''
         );
         const to = 'orbitcode.dev@gmail.com';
