@@ -108,11 +108,6 @@
         }
       );
 
-      // 응답 오류
-      if (!response.result) {
-        throw new Error(response.message);
-      }
-
       // 응답 성공
       alertMessage('success', '<%=apiRoutes.contents.write.title%>되었습니다.', '<%=apiRoutes.contents.write.title%>')
         .then(() => {
