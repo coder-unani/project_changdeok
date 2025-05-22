@@ -118,7 +118,7 @@
   }
 
   .orb-btn {
-    @apply block rounded-lg px-4 py-3 text-center text-sm font-medium disabled:pointer-events-none disabled:opacity-50 lg:w-auto;
+    @apply block rounded-lg px-4 py-3 text-center text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50 lg:w-auto;
   }
   .orb-btn-primary {
     @apply text-common-white bg-common-black min-w-[80px] transition-all;
