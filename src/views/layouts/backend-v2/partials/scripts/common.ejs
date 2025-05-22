@@ -1,0 +1,201 @@
+<script src="/js/toastify-js@1.12.0/toastify.min.js"></script>
+<link href="/js/toastify-js@1.12.0/toastify.min.css" rel="stylesheet" />
+
+<script src="/js/sweetalert2@11.21.2/sweetalert2.all.min.js"></script>
+<link href="/js/sweetalert2@11.21.2/sweetalert2.min.css" rel="stylesheet" />
+
+<script nonce="<%=nonce%>">
+  const getCookie = (name) => {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+      const [key, ...rest] = cookie.trim().split('=');
+      if (key === name) {
+        return decodeURIComponent(rest.join('='));
+      }
+    }
+    return null;
+  };
+
+  const removeCookie = (name) => {
+    if (getCookie(name)) {
+      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+    }
+  };
+
+  const toastMessage = (type, message, options = {}) => {
+    const root = document.documentElement;
+    const computedStyle = getComputedStyle(root);
+    let background = '';
+
+    switch (type) {
+      case 'success':
+        background = computedStyle.getPropertyValue('--color-success-main').trim();
+        break;
+      case 'error':
+        background = computedStyle.getPropertyValue('--color-error-main').trim();
+        break;
+      case 'warning':
+        background = computedStyle.getPropertyValue('--color-warning-main').trim();
+        break;
+      default:
+        background = computedStyle.getPropertyValue('--color-common-black').trim();
+        break;
+    }
+
+    const gravity = options.gravity || 'top';
+    const position = options.position || 'center';
+    const duration = options.duration || 3000;
+
+    Toastify({
+      text: message,
+      duration,
+      gravity,
+      position,
+      style: {
+        background,
+      },
+    }).showToast();
+  };
+
+  // 기본 옵션 설정
+  const swalDefaultOptions = {
+    width: '400px',
+    customClass: {
+      popup: '!rounded-xl !p-4',
+      title: '!text-lg !font-bold !text-gray-700',
+      htmlContainer: '!text-sm !text-primary-main',
+      confirmButton: 'orb-btn orb-btn-primary-alert',
+      cancelButton: 'orb-btn orb-btn-delete-alert',
+      actions: '!gap-2',
+    },
+    buttonsStyling: false,
+    cancelButtonText: '취소',
+    confirmButtonText: '확인',
+    showClass: {
+      popup: 'animate__animated animate__fadeInDown',
+    },
+    hideClass: {
+      popup: 'animate__animated animate__fadeOutUp',
+    },
+  };
+
+  const alertMessage = (type, html, title = '', options = {}) => {
+    const root = document.documentElement;
+    const computedStyle = getComputedStyle(root);
+
+    let icon = null;
+
+    switch (type) {
+      case 'success':
+        icon = 'success';
+        break;
+      case 'error':
+        icon = 'error';
+        break;
+      case 'warning':
+        icon = 'warning';
+        break;
+      case 'question':
+        icon = 'question';
+        break;
+      default:
+        icon = 'info';
+        break;
+    }
+
+    // 사용자 정의 옵션과 기본 옵션 병합
+    const swalOptions = {
+      ...swalDefaultOptions,
+      ...options,
+      ...(title && { title }),
+      ...(html && { html }),
+      // 중첩된 객체는 별도로 병합
+      showClass: {
+        ...swalDefaultOptions.showClass,
+        ...(options.showClass || {}),
+      },
+      hideClass: {
+        ...swalDefaultOptions.hideClass,
+        ...(options.hideClass || {}),
+      },
+    };
+
+    return Swal.fire(swalOptions);
+  };
+
+  const confirmMessage = (type, html, title = '', successText = '', options = {}) => {
+    const root = document.documentElement;
+    const computedStyle = getComputedStyle(root);
+
+    let icon = null;
+
+    switch (type) {
+      case 'success':
+        icon = 'success';
+        break;
+      case 'error':
+        icon = 'error';
+        break;
+      case 'warning':
+        icon = 'warning';
+        break;
+      case 'question':
+        icon = 'question';
+        break;
+      default:
+        icon = 'info';
+        break;
+    }
+    const footer = options.footer || '';
+
+    const swalOptions = {
+      ...swalDefaultOptions,
+      ...options,
+      ...(title && { title }),
+      ...(html && { html }),
+      // ...(icon && { icon }),
+      showCancelButton: true,
+      cancelButtonText: '취소',
+      confirmButtonText: '확인',
+    };
+
+    return Swal.fire(swalOptions).then((result) => {
+      return result.isConfirmed;
+    });
+  };
+
+  const fetchApi = async (method, url, options = {}) => {
+    isLoading(true);
+    try {
+      const headers = {
+        Authorization: `Bearer ${getCookie('access_token')}`,
+        ...options.headers,
+      };
+
+      const body = options.body ? options.body : null;
+
+      const finalUrl = options.params ? `${url}?${options.params.toString()}` : `${url}`;
+
+      const apiResponse = await fetch(finalUrl, {
+        method,
+        headers,
+        body,
+      });
+
+      if (!apiResponse.ok) {
+        throw new Error(apiResponse.statusText);
+      }
+
+      // 201, 204 No Content 응답 처리
+      if (apiResponse.status === 201 || apiResponse.status === 204) {
+        return null;
+      }
+
+      return apiResponse ? await apiResponse.json() : null;
+    } catch (error) {
+      throw error;
+    } finally {
+      isLoading(false);
+    }
+  };
+</script>

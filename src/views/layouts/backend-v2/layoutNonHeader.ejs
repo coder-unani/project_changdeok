@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" class="dark:bg-gray-800">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%=title || '관리도구'%> | <%=settings.companyInfo.name%></title>
+    <%- include('../../backend/common/fonts/pretendard') %>
+    <link rel="stylesheet" href="/css/backend/tailwind.css" />
+  </head>
+  <body>
+    <main class="flex h-screen p-4 lg:flex-row lg:overflow-hidden">
+      <div class="flex w-full flex-1 flex-col"><%- body %></div>
+      <%- include('partials/loading') %>
+    </main>
+    <%- include('partials/scripts/common') %>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark:bg-gray-800">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%=title || '관리도구'%> | <%=settings.companyInfo.name%> 관리 시스템</title>
+    <%- include('../../backend/common/fonts/pretendard') %>
+    <link rel="stylesheet" href="/css/backend/tailwind.css" />
+  </head>
+  <body>
+    <!-- 헤더 -->
+    <%- include('partials/header') %>
+    <!-- 사이드바 -->
+    <%- include('partials/sidebar') %>
+    <!-- 메인 -->
+    <div class="mx-auto flex h-screen max-w-[1340px] flex-col p-4 lg:flex-row lg:px-8 lg:pt-6 lg:pb-10">
+      <main class="w-full lg:pl-[260px]">
+        <div class="pb-6 lg:ml-6 lg:pb-10"><%- body %></div>
+        <%- include('partials/loading') %>
+      </main>
+      <!-- 푸터 -->
+    </div>
+    <%- include('partials/scripts/common') %>
+  </body>
+</html>
