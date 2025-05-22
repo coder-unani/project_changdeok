@@ -90,8 +90,8 @@ export const apiRoutes = {
 };
 
 export const backendRoutesPrefix = '/admin';
-export const backendRoutesLayout = 'layouts/backend/layout';
-export const backendRoutesNonHeaderLayout = 'layouts/backend/layoutNonHeader';
+export const backendRoutesLayout = 'layouts/backend-v2/layout';
+export const backendRoutesNonHeaderLayout = 'layouts/backend-v2/layoutNonHeader';
 export const backendRoutes = {
   index: createRoute('GET', '관리 시스템 홈', `${backendRoutesPrefix}/`, 'backend/index', backendRoutesLayout, []),
   error: createRoute('GET', 'ERROR', '${backendRoutesPrefix}/error', `backend/error`, backendRoutesNonHeaderLayout, []),
