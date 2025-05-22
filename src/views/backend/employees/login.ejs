@@ -3,7 +3,7 @@
     <div class="mb-2 flex items-center justify-center gap-1.5 py-4">
       <span class="text-slate-700">
         <% if (settings.logo) { %>
-          <img src="<%=settings.logo%>" alt="<%=settings.companyInfo.name%>" class="h-8 w-8" />
+        <img src="<%=settings.logo%>" alt="<%=settings.companyInfo.name%>" class="h-8 w-8" />
         <% } %>
       </span>
       <span class="text-3xl font-bold text-slate-700"><%=settings.companyInfo.name.toUpperCase()%></span>
@@ -34,20 +34,19 @@
         />
       </div>
       <% if (metadata.recaptchaSiteKey) { %>
-        <div class="mb-6">
-          <div class="g-recaptcha" data-sitekey="<%=metadata.recaptchaSiteKey%>"></div>
-        </div>
+      <div class="mb-6">
+        <div class="g-recaptcha" data-sitekey="<%=metadata.recaptchaSiteKey%>"></div>
+      </div>
       <% } %>
       <button
         type="submit"
-        class="orb-btn orb-btn-success w-full h-[56px] text-base"
-        <% if (!metadata.recaptchaSiteKey) { %>
-          disabled
-        <% } %>
+        class="orb-btn orb-btn-success w-full h-[56px] text-base <%= !metadata.recaptchaSiteKey ? 'opacity-50 cursor-not-allowed' : '' %>"
+        data-disabled="<%= !metadata.recaptchaSiteKey %>"
       >
         로그인
       </button>
     </form>
+
     <div class="mt-4">
       <a href="<%=backendRoutes.employees.forgotPassword.url%>" class="text-sm text-gray-500 hover:underline"
         >비밀번호를 잊으셨나요?</a
@@ -61,12 +60,17 @@
 
 <script nonce="<%=nonce%>">
   document.addEventListener('DOMContentLoaded', () => {
+    const submitButton = document.querySelector('button[type="submit"]');
+    if (submitButton.dataset.disabled === 'true') {
+      submitButton.disabled = true;
+    }
+
     if ('<%=metadata.recaptchaSiteKey%>' !== '') {
       document.getElementById('formAdminLogin').addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const data = {};
-        
+
         // reCAPTCHA
         try {
           const recaptchaResponse = grecaptcha.getResponse();
@@ -92,7 +96,7 @@
           // 로그인 API 호출
           const response = await fetchApi(
             '<%=apiRoutes.employees.login.method%>',
-            '<%=apiRoutes.employees.login.url%>', 
+            '<%=apiRoutes.employees.login.url%>',
             {
               headers: {
                 'Content-Type': 'application/json',
