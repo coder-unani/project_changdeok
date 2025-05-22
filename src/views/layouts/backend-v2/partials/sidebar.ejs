@@ -1,18 +1,21 @@
 <!-- 사이드바 PC -->
 <nav
   id="sidebar"
-  class="fixed overflow-y-auto inset-x-0 top-[60px] lg:flex-col justify-between h-[calc(100vh-64px)] w-[260px] p-4 rounded-xl orb-shadow z-0 text-sm bg-default-bg dark:bg-gray-700"
->
+  class="inset-x-0 top-[60px] flex flex-col justify-between w-[240px] h-full p-4 pb-[30px] orb-shadow z-0 text-sm bg-default-bg dark:bg-gray-700">
   <div>
-    <!-- 로고 -->
-    <div class="flex gap-1 items-center justify-between p-2">
-      <a href="<%=backendRoutes.index.url%>">
-        <span class="text-base font-bold text-primary-main"><%=settings.companyInfo.name.toUpperCase()%></span>
-      </a>
-      <a class="flex items-center justify-start p-2" href="<%=`https://${settings.serviceDomain}`%>" target="_blank">
-        <span class="text-primary-main"> <%- include(`icons/home`) %> </span>
-      </a>
-    </div>
+    <a
+      class="block w-full flex items-center justify-start gap-2.5 p-2 border border-main-border rounded-lg hover:bg-surface-bg"
+      href="<%=`https://${settings.serviceDomain}`%>"
+      target="_blank">
+      <div class="w-[40px] h-[40px] rounded-lg bg-common-black flex items-center justify-center">
+        <span class="text-common-white"><%- include(`icons/home`) %></span>
+      </div>
+      <p class="flex flex-col">
+        <span class="text-primary-main font-bold">오르빗코드</span>
+        <span class="orb-remark">홈페이지로 이동</span>
+      </p>
+      <p class="ml-auto orb-remark pr-2">→</p>
+    </a>
 
     <!-- 메뉴 -->
     <div class="mt-4">
@@ -92,7 +95,7 @@
     <ul class="flex flex-col gap-2 font-medium text-gray-500 dark:text-gray-100">
       <li class="mt-2 rounded-lg transition-all dark:hover:text-common-white hover:bg-gray-100 dark:hover:bg-gray-600">
         <button id="logout" class="flex w-full items-center justify-start p-2 cursor-pointer">
-          <span class="text-left"> <%- include('icons/logout') %> </span>
+          <span class="text-left"><%- include('icons/logout') %></span>
           <span class="mx-3">관리자 로그아웃</span>
         </button>
       </li>

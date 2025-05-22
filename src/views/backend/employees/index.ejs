@@ -30,7 +30,7 @@
     const switchTab = (activeTab) => {
       // 모든 탭 버튼에서 active 클래스 제거
       document.querySelectorAll('[data-tab]').forEach((button) => {
-        button.classList.remove('active', 'bg-blue-50', 'text-blue-500');
+        button.classList.remove('active', 'bg-surface-bg', 'text-secondary-main');
         button.classList.add(
           'hover:bg-paper-bg',
           'hover:text-gray-700',
@@ -48,7 +48,7 @@
           'dark:hover:bg-gray-800',
           'dark:hover:text-gray-400'
         );
-        activeButton.classList.add('active', 'bg-blue-50', 'text-blue-500');
+        activeButton.classList.add('active', 'bg-surface-bg', 'text-secondary-main');
       }
 
       if (activeTab === 'employees') {

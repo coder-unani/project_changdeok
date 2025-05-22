@@ -1,17 +1,5 @@
 <script nonce="<%=nonce%>">
   document.addEventListener('DOMContentLoaded', () => {
-    const menuToggle = document.getElementById('menu-toggle');
-    const sidebarMobile = document.getElementById('sidebar-mobile');
-    const closeMenu = document.getElementById('menu-close');
-
-    menuToggle.addEventListener('click', () => {
-      sidebarMobile.classList.toggle('translate-x-full');
-    });
-
-    closeMenu.addEventListener('click', () => {
-      sidebarMobile.classList.add('translate-x-full');
-    });
-
     const logout = async () => {
       if (await confirmMessage('info', '로그아웃 하시겠습니까?', '로그아웃')) {
         try {
@@ -32,13 +20,7 @@
     };
 
     const buttonLogout = document.getElementById('logout');
-    const buttonLogoutMobile = document.getElementById('logout-mobile');
-
     buttonLogout.addEventListener('click', () => {
-      logout();
-    });
-
-    buttonLogoutMobile.addEventListener('click', () => {
       logout();
     });
   });

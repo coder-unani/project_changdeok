@@ -5,8 +5,6 @@
 @theme {
   /* font */
   --font-pretendard: 'Pretendard Variable', system-ui, sans-serif;
-  --font-oswald: 'Oswald', var(--font-pretendard);
-  --font-cinzel: 'Cinzel', var(--font-pretendard);
 
   /* color */
   /* common */
@@ -21,16 +19,20 @@
   --color-primary-darker: var(--color-gray-900);
 
   /* secondary */
+  --color-secondary-lighter: rgba(78, 65, 219, 0.15);
+  --color-secondary-light: rgba(78, 65, 219, 0.25);
+  --color-secondary-main: rgba(78, 65, 219, 1);
+  --color-secondary-dark: var(--color-gray-600);
+  --color-secondary-darker: var(--color-gray-700);
 
   /* info */
 
   /* success */
-  --color-success-lighter: var(--color-blue-50);
-  --color-success-light: var(--color-blue-100);
-  --color-success-main: var(--color-blue-500);
-  --color-success-dark: var(--color-blue-600);
-  --color-success-darker: var(--color-blue-700);
-  --color-success-contrast: var(--color-common-white);
+  --color-success-lighter: var(--color-secondary-lighter);
+  --color-success-light: var(--color-secondary-light);
+  --color-success-main: var(--color-secondary-main);
+  --color-success-dark: var(--color-secondary-dark);
+  --color-success-darker: var(--color-secondary-darker);
 
   /* warning */
   --color-warning-lighter: var(--color-amber-50);
@@ -51,6 +53,7 @@
   /* background */
   --color-default-bg: var(--color-common-white);
   --color-paper-bg: var(--color-gray-50);
+  --color-surface-bg: #f5f6f8;
 
   /* button */
 
@@ -88,52 +91,55 @@
   }
 
   .orb-label {
-    @apply flex-none text-[13px] text-gray-800;
+    @apply text-primary-dark flex-none text-[13px];
   }
   .orb-remark {
-    @apply text-[12px] text-gray-500;
+    @apply text-primary-light text-[12px];
   }
   .orb-input {
-    @apply w-full rounded-lg bg-gray-100 px-4 py-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none;
+    @apply bg-surface-bg placeholder:text-primary-lighter focus:ring-secondary-main w-full rounded-lg px-4 py-3 placeholder:text-sm focus:ring-1 focus:outline-none;
   }
   .orb-input-search {
-    @apply w-full rounded-lg bg-gray-100 py-3 pr-11 pl-4 text-sm text-gray-700 transition duration-200 ease-in-out placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none;
+    @apply bg-surface-bg focus:ring-secondary-main w-full rounded-lg py-3 pr-11 pl-4 text-sm text-gray-700 transition duration-200 ease-in-out placeholder:text-gray-400 focus:ring-1 focus:outline-none;
   }
   .orb-select {
-    @apply border-light-border w-full rounded-lg border-r-12 bg-gray-100 p-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 focus:outline-none;
+    @apply border-light-border bg-surface-bg focus:ring-secondary-main w-full rounded-lg border-r-12 p-3 placeholder:text-sm placeholder:text-gray-400 focus:ring-1 focus:outline-none;
   }
 
   .orb-head {
-    @apply text-xl font-bold text-slate-700 lg:text-2xl;
+    @apply text-primary-dark text-xl font-bold lg:text-2xl;
   }
 
   .orb-hightlight {
-    @apply dark:text-common-white bg-blue-50 text-blue-500 dark:bg-gray-600;
+    @apply bg-surface-bg text-secondary-main;
   }
   .orb-hightlight-warning {
-    @apply text-common-white dark:text-common-white bg-amber-500 dark:bg-amber-600;
+    @apply text-common-white bg-amber-500;
   }
   .orb-hightlight-error {
-    @apply text-common-white dark:text-common-white bg-red-300 dark:bg-red-300;
+    @apply text-common-white bg-red-300;
   }
 
   .orb-btn {
-    @apply block rounded-lg px-4 py-3 text-center text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50 lg:w-auto;
+    @apply block rounded-lg px-4 py-3 text-center text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50 lg:w-auto;
+    &:hover {
+      background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05));
+    }
   }
   .orb-btn-primary {
-    @apply text-common-white bg-common-black min-w-[80px] transition-all;
+    @apply bg-success-lighter text-success-main min-w-[80px] transition-all;
   }
   .orb-btn-primary-alert {
-    @apply text-common-white hover:bg-primary-main min-w-[80px] bg-gray-600 transition-all;
+    @apply text-common-white min-w-[80px] bg-gray-600 transition-all;
   }
   .orb-btn-success {
-    @apply text-common-white hover:bg-success-dark bg-success-main min-w-[80px] transition-all;
+    @apply text-common-white bg-success-main min-w-[80px] transition-all;
   }
   .orb-btn-delete {
-    @apply text-common-white bg-error-main hover:bg-error-dark min-w-[80px] transition-all;
+    @apply text-common-white bg-error-main min-w-[80px] transition-all;
   }
   .orb-btn-delete-alert {
-    @apply text-common-white hover:bg-error-main min-w-[80px] bg-red-400 transition-all;
+    @apply text-common-white min-w-[80px] bg-red-400 transition-all;
   }
   .orb-btn-info {
     @apply border-dark-border text-primary-light min-w-[80px] border bg-transparent leading-[18px];

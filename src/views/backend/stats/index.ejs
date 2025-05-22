@@ -8,43 +8,37 @@
   <div class="bg-default-bg rounded-xl p-4 text-sm shadow-[0_2px_30px_0_rgba(0,0,0,.06)] lg:p-6">
     <!-- 탭메뉴 -->
     <ul
-      class="border-main-border mb-4 flex overflow-x-auto border-b text-center text-sm font-medium text-gray-500 lg:mb-6 dark:border-gray-700 dark:text-gray-400"
+      class="border-main-border mb-4 flex overflow-x-auto border-b text-center text-sm font-medium text-gray-500 lg:mb-6"
     >
       <li class="me-2 flex-none">
         <button
-          class="hover:bg-paper-bg inline-block rounded-t-lg px-4 py-3 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-400"
+          class="hover:bg-paper-bg inline-block rounded-t-lg px-4 py-3 hover:text-gray-700"
           data-tab="access-logs"
         >
           접속 로그
         </button>
       </li>
       <li class="me-2 flex-none">
-        <button
-          class="hover:bg-paper-bg inline-block rounded-t-lg px-4 py-3 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-400"
-          data-tab="all-stats"
-        >
+        <button class="hover:bg-paper-bg inline-block rounded-t-lg px-4 py-3 hover:text-gray-700" data-tab="all-stats">
           사용자
         </button>
       </li>
       <li class="me-2 flex-none">
         <button
-          class="hover:bg-paper-bg inline-block rounded-t-lg px-4 py-3 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-400"
+          class="hover:bg-paper-bg inline-block rounded-t-lg px-4 py-3 hover:text-gray-700"
           data-tab="daily-stats"
         >
           일별 사용자
         </button>
       </li>
       <li class="me-2 flex-none">
-        <button
-          class="hover:bg-paper-bg inline-block rounded-t-lg px-4 py-3 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-400"
-          data-tab="page-stats"
-        >
+        <button class="hover:bg-paper-bg inline-block rounded-t-lg px-4 py-3 hover:text-gray-700" data-tab="page-stats">
           페이지 뷰
         </button>
       </li>
       <li class="me-2 flex-none">
         <button
-          class="hover:bg-paper-bg inline-block rounded-t-lg px-4 py-3 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-400"
+          class="hover:bg-paper-bg inline-block rounded-t-lg px-4 py-3 hover:text-gray-700"
           data-tab="referrer-stats"
         >
           출처
@@ -52,7 +46,7 @@
       </li>
       <li class="me-2 flex-none">
         <button
-          class="hover:bg-paper-bg inline-block rounded-t-lg px-4 py-3 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-400"
+          class="hover:bg-paper-bg inline-block rounded-t-lg px-4 py-3 hover:text-gray-700"
           data-tab="hourly-stats"
         >
           시간대
@@ -60,7 +54,7 @@
       </li>
       <li class="me-2 flex-none">
         <button
-          class="hover:bg-paper-bg inline-block rounded-t-lg px-4 py-3 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-400"
+          class="hover:bg-paper-bg inline-block rounded-t-lg px-4 py-3 hover:text-gray-700"
           data-tab="browser-stats"
         >
           브라우저
@@ -68,7 +62,7 @@
       </li>
       <li class="me-2 flex-none">
         <button
-          class="hover:bg-paper-bg inline-block rounded-t-lg px-4 py-3 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-400"
+          class="hover:bg-paper-bg inline-block rounded-t-lg px-4 py-3 hover:text-gray-700"
           data-tab="country-stats"
         >
           국가
@@ -158,7 +152,7 @@
     const switchTab = (activeTab) => {
       // 모든 탭 버튼에서 active 클래스 제거
       document.querySelectorAll('[data-tab]').forEach((button) => {
-        button.classList.remove('active', 'bg-blue-50', 'text-blue-500');
+        button.classList.remove('active', 'bg-surface-bg', 'text-secondary-main');
         button.classList.add(
           'hover:bg-paper-bg',
           'hover:text-gray-700',
@@ -176,7 +170,7 @@
           'dark:hover:bg-gray-800',
           'dark:hover:text-gray-400'
         );
-        activeButton.classList.add('active', 'bg-blue-50', 'text-blue-500');
+        activeButton.classList.add('active', 'bg-surface-bg', 'text-secondary-main');
       }
 
       if (activeTab === 'access-logs') {
