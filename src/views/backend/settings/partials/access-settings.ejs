@@ -6,7 +6,7 @@
     <ul class="mb-4 space-y-4">
       <!-- 차단 IP -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label for="blocked-ip" class="orb-label flex w-32 gap-1 lg:leading-11"> 차단 IP </label>
+        <label for="blocked-ip" class="orb-label flex w-32 gap-1 lg:leading-11">차단 IP</label>
         <div class="flex w-full flex-col gap-2">
           <!-- 차단 IP 입력 -->
           <div class="flex flex-col justify-between gap-2 lg:flex-row">
@@ -18,32 +18,31 @@
                   class="orb-input max-w-[80px]"
                   maxlength="3"
                   pattern="[0-9]*"
-                  inputmode="numeric"
-                />.
+                  inputmode="numeric" />
+                .
                 <input
                   type="text"
                   id="blocked-ip-b"
                   class="orb-input max-w-[80px]"
                   maxlength="3"
                   pattern="[0-9]*"
-                  inputmode="numeric"
-                />.
+                  inputmode="numeric" />
+                .
                 <input
                   type="text"
                   id="blocked-ip-c"
                   class="orb-input max-w-[80px]"
                   maxlength="3"
                   pattern="[0-9]*"
-                  inputmode="numeric"
-                />.
+                  inputmode="numeric" />
+                .
                 <input
                   type="text"
                   id="blocked-ip-d"
                   class="orb-input max-w-[80px]"
                   maxlength="3"
                   pattern="[0-9]*"
-                  inputmode="numeric"
-                />
+                  inputmode="numeric" />
               </div>
               <div class="orb-remark px-2 pt-2 leading-5">
                 <p>* 등록한 IP에 대해 웹사이트 접속이 차단됩니다.</p>
@@ -54,8 +53,7 @@
               <button
                 type="button"
                 id="btn-add-blocked-ip"
-                class="orb-btn orb-btn-info flex flex-none items-center gap-2"
-              >
+                class="orb-btn orb-btn-primary flex flex-none items-center gap-2">
                 <%- include('../../common/icons/plus') %> 추가
               </button>
             </div>
@@ -63,14 +61,13 @@
           <!-- 차단 IP 목록 -->
           <div
             id="blocked-ip-container"
-            class="border-main-border mt-2 flex max-h-[400px] min-h-[100px] flex-col gap-2 overflow-y-auto rounded-lg border p-2"
-          ></div>
+            class="border-main-border mt-2 flex max-h-[400px] min-h-[100px] flex-col gap-2 overflow-y-auto rounded-lg border p-2"></div>
         </div>
       </li>
 
       <!-- 차단 봇 패턴 -->
       <li class="flex flex-col gap-2 lg:flex-row">
-        <label for="blocked-bot" class="orb-label flex w-32 gap-1 lg:leading-11"> 차단 봇 패턴 </label>
+        <label for="blocked-bot" class="orb-label flex w-32 gap-1 lg:leading-11">차단 봇 패턴</label>
         <div class="flex flex-1 flex-col gap-2">
           <div class="flex flex-col justify-between gap-2 lg:flex-row">
             <div class="flex flex-1 flex-col">
@@ -84,8 +81,7 @@
               <button
                 type="button"
                 id="btn-add-blocked-bot"
-                class="orb-btn orb-btn-info flex flex-none items-center gap-2"
-              >
+                class="orb-btn orb-btn-primary flex flex-none items-center gap-2">
                 <%- include('../../common/icons/plus') %> 추가
               </button>
             </div>
@@ -93,8 +89,7 @@
 
           <div
             id="blocked-bot-container"
-            class="border-main-border mt-2 flex max-h-[400px] min-h-[100px] flex-col gap-2 overflow-y-auto rounded-lg border p-2"
-          ></div>
+            class="border-main-border mt-2 flex max-h-[400px] min-h-[100px] flex-col gap-2 overflow-y-auto rounded-lg border p-2"></div>
         </div>
       </li>
     </ul>
