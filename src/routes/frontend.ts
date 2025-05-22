@@ -1,8 +1,8 @@
-import { Router } from "express";
+import { Router } from 'express';
 
-import { apiRoutes, frontendRoutes } from "../config/routes";
-import { FrontendController } from "../controllers";
-import { Config } from "../config/config";
+import { Config } from '../config/config';
+import { frontendRoutes } from '../config/routes';
+import { FrontendController } from '../controllers';
 
 class FrontendRouter {
   private config: Config;
@@ -13,7 +13,7 @@ class FrontendRouter {
     this.config = config;
 
     this.router = Router();
-    this.frontendController = new FrontendController();
+    this.frontendController = new FrontendController(this.config);
 
     this.initializeMiddlewares();
     this.initializeRoutes();
@@ -23,32 +23,32 @@ class FrontendRouter {
 
   private initializeRoutes(): void {
     // 홈
-    this.router.get("/", (req, res) => {
+    this.router.get('/', (req, res) => {
       this.frontendController.index(frontendRoutes.index, req, res);
     });
 
     // 소개
-    this.router.get("/about", (req, res) => {
+    this.router.get('/about', (req, res) => {
       this.frontendController.about(frontendRoutes.about, req, res);
     });
 
     // 업무분야
-    this.router.get("/services", (req, res) => {
+    this.router.get('/services', (req, res) => {
       this.frontendController.services(frontendRoutes.services, req, res);
     });
 
     // 성공사례
-    this.router.get("/results", (req, res) => {
+    this.router.get('/results', (req, res) => {
       this.frontendController.results(frontendRoutes.results, req, res);
     });
 
     // Q&A
-    this.router.get("/qna", (req, res) => {
+    this.router.get('/qna', (req, res) => {
       this.frontendController.qna(frontendRoutes.qna, req, res);
     });
 
     // 상담 및 의뢰
-    this.router.get("/contact", (req, res) => {
+    this.router.get('/contact', (req, res) => {
       this.frontendController.contact(frontendRoutes.contact, req, res);
     });
   }
@@ -58,5 +58,4 @@ class FrontendRouter {
   }
 }
 
-export const frontendRouter = (config: Config) =>
-  new FrontendRouter(config).getRouter();
+export const frontendRouter = (config: Config) => new FrontendRouter(config).getRouter();

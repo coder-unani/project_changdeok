@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import { Config } from '../config/config';
-import { apiRoutes, backendRoutes } from '../config/routes';
+import { backendRoutes } from '../config/routes';
 import { BackendController } from '../controllers';
 import { AuthMiddleware } from '../middlewares/backend/auth';
 import { PermissionMiddleware } from '../middlewares/backend/permission';
