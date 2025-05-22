@@ -83,6 +83,10 @@
 
 /* 재사용 가능한 컴포넌트 클래스 */
 @layer components {
+  .orb-shadow {
+    @apply shadow-[0_2px_30px_rgba(0,0,0,.06)];
+  }
+
   .orb-label {
     @apply flex-none text-[13px] text-gray-800;
   }
