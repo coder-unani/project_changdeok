@@ -21,20 +21,22 @@ const config = {
   trailingComma: 'es5', // 여러 줄의 배열, 객체 속성 뒤에 쉼표 사용 여부. none: 사용 안 함, es5: ES5에서 사용, all: 항상 사용
   useTabs: false, // 탭 사용 여부
   vueIndentScriptAndStyle: false, // Vue 파일에서 <script>와 <style> 태그 들여쓰기 여부
-  plugins: [
-    '@trivago/prettier-plugin-sort-imports',
-    'prettier-plugin-tailwindcss',
-    'prettier-plugin-ejs',
-  ], // 사용할 플러그인
-  importOrder: ['^[^./(@/)]', '^(@/)', '^[./]'], // import 순서
-  importOrderSeparation: true, // import 그룹 사이에 빈 줄 삽입 여부
-  importOrderSortSpecifiers: true, // import 구문에서 명시자 정렬 여부
-  importOrderTypeScriptVersion: '5.0.0', // TypeScript 버전
+  plugins: ['@trivago/prettier-plugin-sort-imports', 'prettier-plugin-tailwindcss', 'prettier-plugin-ejs'],
+  importOrder: ['^[^./(@/)]', '^(@/)', '^[./]'],
+  importOrderSeparation: true,
+  importOrderSortSpecifiers: true,
+  importOrderTypeScriptVersion: '5.0.0',
   overrides: [
     {
       files: '*.ejs',
       options: {
         parser: 'html',
+        plugins: ['prettier-plugin-ejs'],
+        htmlWhitespaceSensitivity: 'ignore',
+        printWidth: 120,
+        singleAttributePerLine: false,
+        bracketSameLine: true,
+        embeddedLanguageFormatting: 'off',
       },
     },
   ],
